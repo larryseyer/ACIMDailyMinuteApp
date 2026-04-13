@@ -1,0 +1,1050 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001001 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
+		AA000001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
+		AA000001003 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002003 /* StoriesView.swift */; };
+		AA000001004 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002004 /* DigestView.swift */; };
+		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
+		AA000001006 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
+		AA000001007 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
+		AA000001008 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001009 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
+		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
+		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
+		AA000001013 /* FeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002013 /* FeedService.swift */; };
+		AA000001014 /* StoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002014 /* StoryCard.swift */; };
+		AA000001015 /* PodcastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002015 /* PodcastService.swift */; };
+		AA000001016 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002016 /* YouTubePlayerView.swift */; };
+		AA000001017 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002017 /* AudioPlayerView.swift */; };
+		AA000001018 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002018 /* AudioManager.swift */; };
+		AA000001019 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
+		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
+		AA000001022 /* GzipUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002022 /* GzipUtility.swift */; };
+		AA000001024 /* ArchiveSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002024 /* ArchiveSearchView.swift */; };
+		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
+		AA000001026 /* SourceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002026 /* SourceDetailView.swift */; };
+		AA000001027 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
+		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
+		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
+		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
+		AA000001031 /* WatchedTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002031 /* WatchedTermsView.swift */; };
+		AA000001032 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
+		AA000001033 /* ArchiveLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002033 /* ArchiveLineParser.swift */; };
+		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
+		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
+		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
+		AA000001037 /* SourceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002037 /* SourceCard.swift */; };
+		AA000001038 /* StoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002038 /* StoryDetailView.swift */; };
+		AA000001039 /* WatchedTermMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002039 /* WatchedTermMatcher.swift */; };
+		AA000001040 /* WatchedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002040 /* WatchedView.swift */; };
+		AA000001041 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002041 /* OnboardingView.swift */; };
+		AA000001042 /* ACIMDailyMinuteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002042 /* ACIMDailyMinuteWidget.swift */; };
+		AA000001043 /* ACIMDailyMinuteTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */; };
+		AA000001044 /* WidgetStoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002044 /* WidgetStoryEntry.swift */; };
+		AA000001045 /* SmallWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002045 /* SmallWidgetView.swift */; };
+		AA000001046 /* MediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002046 /* MediumWidgetView.swift */; };
+		AA000001047 /* LargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002047 /* LargeWidgetView.swift */; };
+		AA000001048 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
+		AA000001049 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
+		AA000001050 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
+		AA000001051 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
+		AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA000001053 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001054 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
+		AA000001055 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
+		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
+		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
+		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
+		AA000001059 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
+		AA000001060 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002055 /* LiveActivityManager.swift */; };
+		AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002056 /* ACIMDailyMinuteLiveActivity.swift */; };
+		AA000001062 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
+		AA000001063 /* GetTodaysFactsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002057 /* GetTodaysFactsIntent.swift */; };
+		AA000001064 /* ACIMDailyMinuteShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002058 /* ACIMDailyMinuteShortcuts.swift */; };
+		AA000001065 /* ACIMDailyMinuteWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002059 /* ACIMDailyMinuteWatchApp.swift */; };
+		AA000001066 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002060 /* WatchContentView.swift */; };
+		AA000001067 /* WatchStoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002061 /* WatchStoryRow.swift */; };
+		AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
+		AA000001069 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
+		AA000001070 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
+		AA000001071 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001072 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
+		AA000001073 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
+		AA000001074 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
+		AA000001075 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
+		AA000001076 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002064 /* Assets.xcassets */; };
+		AA000001078 /* WatchDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002065 /* WatchDataService.swift */; };
+		AA000001079 /* ACIMChime.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA000002066 /* ACIMChime.caf */; };
+		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
+		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
+		AA000001082 /* MacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* MacCalendarView.swift */; };
+		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA00000C001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA000009001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA000006002;
+			remoteInfo = ACIMDailyMinuteWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA00000D001 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA000002001 /* ACIMDailyMinuteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteApp.swift; sourceTree = "<group>"; };
+		AA000002002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA000002003 /* StoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
+		AA000002004 /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
+		AA000002005 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
+		AA000002006 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
+		AA000002007 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		AA000002008 /* Correction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Correction.swift; sourceTree = "<group>"; };
+		AA000002009 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		AA000002013 /* FeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedService.swift; sourceTree = "<group>"; };
+		AA000002014 /* StoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryCard.swift; sourceTree = "<group>"; };
+		AA000002015 /* PodcastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastService.swift; sourceTree = "<group>"; };
+		AA000002016 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
+		AA000002017 /* AudioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
+		AA000002018 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		AA000002019 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
+		AA000002022 /* GzipUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GzipUtility.swift; sourceTree = "<group>"; };
+		AA000002024 /* ArchiveSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveSearchView.swift; sourceTree = "<group>"; };
+		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AA000002026 /* SourceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDetailView.swift; sourceTree = "<group>"; };
+		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
+		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
+		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		AA000002031 /* WatchedTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermsView.swift; sourceTree = "<group>"; };
+		AA000002032 /* ArchivedStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedStory.swift; sourceTree = "<group>"; };
+		AA000002033 /* ArchiveLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveLineParser.swift; sourceTree = "<group>"; };
+		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
+		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
+		AA000002037 /* SourceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCard.swift; sourceTree = "<group>"; };
+		AA000002038 /* StoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailView.swift; sourceTree = "<group>"; };
+		AA000002039 /* WatchedTermMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermMatcher.swift; sourceTree = "<group>"; };
+		AA000002040 /* WatchedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedView.swift; sourceTree = "<group>"; };
+		AA000002041 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		AA000002042 /* ACIMDailyMinuteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWidget.swift; sourceTree = "<group>"; };
+		AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteTimelineProvider.swift; sourceTree = "<group>"; };
+		AA000002044 /* WidgetStoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetStoryEntry.swift; sourceTree = "<group>"; };
+		AA000002045 /* SmallWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetView.swift; sourceTree = "<group>"; };
+		AA000002046 /* MediumWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumWidgetView.swift; sourceTree = "<group>"; };
+		AA000002047 /* LargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetView.swift; sourceTree = "<group>"; };
+		AA000002048 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
+		AA000002049 /* ACIMDailyMinute.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinute.entitlements; sourceTree = "<group>"; };
+		AA000002050 /* ACIMDailyMinuteWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWidget.entitlements; sourceTree = "<group>"; };
+		AA000002051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
+		AA000002053 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		AA000002054 /* ACIMActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMActivityAttributes.swift; sourceTree = "<group>"; };
+		AA000002055 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		AA000002056 /* ACIMDailyMinuteLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteLiveActivity.swift; sourceTree = "<group>"; };
+		AA000002057 /* GetTodaysFactsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTodaysFactsIntent.swift; sourceTree = "<group>"; };
+		AA000002058 /* ACIMDailyMinuteShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteShortcuts.swift; sourceTree = "<group>"; };
+		AA000002059 /* ACIMDailyMinuteWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWatchApp.swift; sourceTree = "<group>"; };
+		AA000002060 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
+		AA000002061 /* WatchStoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStoryRow.swift; sourceTree = "<group>"; };
+		AA000002062 /* ACIMDailyMinuteWatchWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWatchWidget.swift; sourceTree = "<group>"; };
+		AA000002063 /* ACIMDailyMinuteWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWatch.entitlements; sourceTree = "<group>"; };
+		AA000002064 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000002065 /* WatchDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDataService.swift; sourceTree = "<group>"; };
+		AA000002066 /* ACIMChime.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = ACIMChime.caf; sourceTree = "<group>"; };
+		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
+		AA000002069 /* MacCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalendarView.swift; sourceTree = "<group>"; };
+		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000004001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000004002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000004003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA000005001 = {
+			isa = PBXGroup;
+			children = (
+				AA000005002 /* ACIMDailyMinute */,
+				AA000005015 /* ACIMDailyMinuteWidget */,
+				AA000005018 /* ACIMDailyMinuteWatch */,
+				AA000005009 /* Products */,
+				AA000002049 /* ACIMDailyMinute.entitlements */,
+			);
+			sourceTree = "<group>";
+		};
+		AA000005002 /* ACIMDailyMinute */ = {
+			isa = PBXGroup;
+			children = (
+				AA000005003 /* App */,
+				AA000005004 /* Models */,
+				AA000005005 /* Services */,
+				AA000005006 /* Views */,
+				AA000005010 /* Utilities */,
+				AA000005017 /* Shortcuts */,
+				AA000005019 /* Resources */,
+				AA000002011 /* Assets.xcassets */,
+			);
+			path = ACIMDailyMinute;
+			sourceTree = "<group>";
+		};
+		AA000005003 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002001 /* ACIMDailyMinuteApp.swift */,
+				AA000002002 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA000005004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002006 /* Story.swift */,
+				AA000002007 /* Source.swift */,
+				AA000002008 /* Correction.swift */,
+				AA000002009 /* Channel.swift */,
+				AA000002032 /* ArchivedStory.swift */,
+				AA000002035 /* Bookmark.swift */,
+				AA000002054 /* ACIMActivityAttributes.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA000005005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002012 /* DataService.swift */,
+				AA000002013 /* FeedService.swift */,
+				AA000002015 /* PodcastService.swift */,
+				AA000002018 /* AudioManager.swift */,
+				AA000002020 /* ArchiveService.swift */,
+				AA000002033 /* ArchiveLineParser.swift */,
+				AA000002027 /* BackgroundRefreshManager.swift */,
+				AA000002028 /* NotificationManager.swift */,
+				AA000002029 /* ConnectivityManager.swift */,
+				AA000002034 /* FetchCooldown.swift */,
+				AA000002039 /* WatchedTermMatcher.swift */,
+				AA000002055 /* LiveActivityManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA000005006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA000005007 /* Stories */,
+				AA000005008 /* Digest */,
+				AA000005011 /* Archive */,
+				AA000005012 /* Settings */,
+				AA000005016 /* Saved */,
+				AA000005013 /* Watched */,
+				AA000005014 /* Onboarding */,
+				AA000002070 /* AboutView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA000005007 /* Stories */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002003 /* StoriesView.swift */,
+				AA000002014 /* StoryCard.swift */,
+				AA000002037 /* SourceCard.swift */,
+				AA000002038 /* StoryDetailView.swift */,
+			);
+			path = Stories;
+			sourceTree = "<group>";
+		};
+		AA000005008 /* Digest */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002004 /* DigestView.swift */,
+				AA000002016 /* YouTubePlayerView.swift */,
+				AA000002017 /* AudioPlayerView.swift */,
+				AA000002019 /* MiniPlayerView.swift */,
+			);
+			path = Digest;
+			sourceTree = "<group>";
+		};
+		AA000005009 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000003001 /* ACIMDailyMinute.app */,
+				AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */,
+				AA000003003 /* ACIMDailyMinuteWatch Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA000005010 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002022 /* GzipUtility.swift */,
+				AA000002068 /* PlatformTypography.swift */,
+				AA000002052 /* ShareTextBuilder.swift */,
+				AA000002036 /* TermExtractor.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		AA000005011 /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002005 /* ArchiveView.swift */,
+				AA000002024 /* ArchiveSearchView.swift */,
+				AA000002069 /* MacCalendarView.swift */,
+			);
+			path = Archive;
+			sourceTree = "<group>";
+		};
+		AA000005012 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002025 /* SettingsView.swift */,
+				AA000002026 /* SourceDetailView.swift */,
+				AA000002030 /* PrivacyPolicyView.swift */,
+				AA000002031 /* WatchedTermsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AA000005013 /* Watched */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002040 /* WatchedView.swift */,
+			);
+			path = Watched;
+			sourceTree = "<group>";
+		};
+		AA000005014 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002041 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		AA000005015 /* ACIMDailyMinuteWidget */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002042 /* ACIMDailyMinuteWidget.swift */,
+				AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */,
+				AA000002044 /* WidgetStoryEntry.swift */,
+				AA000002045 /* SmallWidgetView.swift */,
+				AA000002046 /* MediumWidgetView.swift */,
+				AA000002047 /* LargeWidgetView.swift */,
+				AA000002048 /* SharedModelContainer.swift */,
+				AA000002056 /* ACIMDailyMinuteLiveActivity.swift */,
+				AA000002067 /* Assets.xcassets */,
+				AA000002050 /* ACIMDailyMinuteWidget.entitlements */,
+				AA000002051 /* Info.plist */,
+			);
+			path = ACIMDailyMinuteWidget;
+			sourceTree = "<group>";
+		};
+		AA000005016 /* Saved */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002053 /* SavedView.swift */,
+			);
+			path = Saved;
+			sourceTree = "<group>";
+		};
+		AA000005017 /* Shortcuts */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002057 /* GetTodaysFactsIntent.swift */,
+				AA000002058 /* ACIMDailyMinuteShortcuts.swift */,
+			);
+			path = Shortcuts;
+			sourceTree = "<group>";
+		};
+		AA000005018 /* ACIMDailyMinuteWatch */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002059 /* ACIMDailyMinuteWatchApp.swift */,
+				AA000002060 /* WatchContentView.swift */,
+				AA000002061 /* WatchStoryRow.swift */,
+				AA000002062 /* ACIMDailyMinuteWatchWidget.swift */,
+				AA000002065 /* WatchDataService.swift */,
+				AA000002064 /* Assets.xcassets */,
+				AA000002063 /* ACIMDailyMinuteWatch.entitlements */,
+			);
+			path = ACIMDailyMinuteWatch;
+			sourceTree = "<group>";
+		};
+		AA000005019 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002066 /* ACIMChime.caf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000006001 /* ACIMDailyMinute */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000008003 /* Build configuration list for PBXNativeTarget "ACIMDailyMinute" */;
+			buildPhases = (
+				AA000007001 /* Sources */,
+				AA000004001 /* Frameworks */,
+				AA000007002 /* Resources */,
+				AA00000D001 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA00000B001 /* PBXTargetDependency */,
+			);
+			name = ACIMDailyMinute;
+			productName = ACIMDailyMinute;
+			productReference = AA000003001 /* ACIMDailyMinute.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA000006002 /* ACIMDailyMinuteWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000008004 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWidgetExtension" */;
+			buildPhases = (
+				AA000007003 /* Sources */,
+				AA000004002 /* Frameworks */,
+				AA000007004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ACIMDailyMinuteWidgetExtension;
+			productName = ACIMDailyMinuteWidgetExtension;
+			productReference = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		AA000006003 /* ACIMDailyMinuteWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000008005 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWatch Watch App" */;
+			buildPhases = (
+				AA000007005 /* Sources */,
+				AA000004003 /* Frameworks */,
+				AA000007006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ACIMDailyMinuteWatch Watch App";
+			productName = "ACIMDailyMinuteWatch Watch App";
+			productReference = AA000003003 /* ACIMDailyMinuteWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000009001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					AA000006001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					AA000006002 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					AA000006003 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = AA000008001 /* Build configuration list for PBXProject "ACIMDailyMinute" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA000005001;
+			productRefGroup = AA000005009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000006001 /* ACIMDailyMinute */,
+				AA000006002 /* ACIMDailyMinuteWidgetExtension */,
+				AA000006003 /* ACIMDailyMinuteWatch Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000007002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001011 /* Assets.xcassets in Resources */,
+				AA000001079 /* ACIMChime.caf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001080 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001076 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000007001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001001 /* ACIMDailyMinuteApp.swift in Sources */,
+				AA000001002 /* ContentView.swift in Sources */,
+				AA000001003 /* StoriesView.swift in Sources */,
+				AA000001004 /* DigestView.swift in Sources */,
+				AA000001005 /* ArchiveView.swift in Sources */,
+				AA000001006 /* Story.swift in Sources */,
+				AA000001007 /* Source.swift in Sources */,
+				AA000001008 /* Correction.swift in Sources */,
+				AA000001009 /* Channel.swift in Sources */,
+				AA000001012 /* DataService.swift in Sources */,
+				AA000001013 /* FeedService.swift in Sources */,
+				AA000001014 /* StoryCard.swift in Sources */,
+				AA000001015 /* PodcastService.swift in Sources */,
+				AA000001016 /* YouTubePlayerView.swift in Sources */,
+				AA000001017 /* AudioPlayerView.swift in Sources */,
+				AA000001018 /* AudioManager.swift in Sources */,
+				AA000001019 /* MiniPlayerView.swift in Sources */,
+				AA000001020 /* ArchiveService.swift in Sources */,
+				AA000001022 /* GzipUtility.swift in Sources */,
+				AA000001024 /* ArchiveSearchView.swift in Sources */,
+				AA000001025 /* SettingsView.swift in Sources */,
+				AA000001026 /* SourceDetailView.swift in Sources */,
+				AA000001027 /* BackgroundRefreshManager.swift in Sources */,
+				AA000001028 /* NotificationManager.swift in Sources */,
+				AA000001029 /* ConnectivityManager.swift in Sources */,
+				AA000001030 /* PrivacyPolicyView.swift in Sources */,
+				AA000001031 /* WatchedTermsView.swift in Sources */,
+				AA000001032 /* ArchivedStory.swift in Sources */,
+				AA000001033 /* ArchiveLineParser.swift in Sources */,
+				AA000001034 /* FetchCooldown.swift in Sources */,
+				AA000001035 /* Bookmark.swift in Sources */,
+				AA000001036 /* TermExtractor.swift in Sources */,
+				AA000001037 /* SourceCard.swift in Sources */,
+				AA000001038 /* StoryDetailView.swift in Sources */,
+				AA000001039 /* WatchedTermMatcher.swift in Sources */,
+				AA000001040 /* WatchedView.swift in Sources */,
+				AA000001041 /* OnboardingView.swift in Sources */,
+				AA000001057 /* ShareTextBuilder.swift in Sources */,
+				AA000001081 /* PlatformTypography.swift in Sources */,
+				AA000001082 /* MacCalendarView.swift in Sources */,
+				AA000001083 /* AboutView.swift in Sources */,
+				AA000001058 /* SavedView.swift in Sources */,
+				AA000001051 /* SharedModelContainer.swift in Sources */,
+				AA000001059 /* ACIMActivityAttributes.swift in Sources */,
+				AA000001060 /* LiveActivityManager.swift in Sources */,
+				AA000001063 /* GetTodaysFactsIntent.swift in Sources */,
+				AA000001064 /* ACIMDailyMinuteShortcuts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001042 /* ACIMDailyMinuteWidget.swift in Sources */,
+				AA000001043 /* ACIMDailyMinuteTimelineProvider.swift in Sources */,
+				AA000001044 /* WidgetStoryEntry.swift in Sources */,
+				AA000001045 /* SmallWidgetView.swift in Sources */,
+				AA000001046 /* MediumWidgetView.swift in Sources */,
+				AA000001047 /* LargeWidgetView.swift in Sources */,
+				AA000001048 /* SharedModelContainer.swift in Sources */,
+				AA000001049 /* Story.swift in Sources */,
+				AA000001050 /* Source.swift in Sources */,
+				AA000001053 /* Correction.swift in Sources */,
+				AA000001054 /* Channel.swift in Sources */,
+				AA000001055 /* ArchivedStory.swift in Sources */,
+				AA000001056 /* Bookmark.swift in Sources */,
+				AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */,
+				AA000001062 /* ACIMActivityAttributes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001065 /* ACIMDailyMinuteWatchApp.swift in Sources */,
+				AA000001066 /* WatchContentView.swift in Sources */,
+				AA000001067 /* WatchStoryRow.swift in Sources */,
+				AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */,
+				AA000001069 /* Story.swift in Sources */,
+				AA000001070 /* Source.swift in Sources */,
+				AA000001071 /* Correction.swift in Sources */,
+				AA000001072 /* Channel.swift in Sources */,
+				AA000001073 /* ArchivedStory.swift in Sources */,
+				AA000001074 /* Bookmark.swift in Sources */,
+				AA000001075 /* SharedModelContainer.swift in Sources */,
+				AA000001078 /* WatchDataService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA00000B001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA000006002 /* ACIMDailyMinuteWidgetExtension */;
+			targetProxy = AA00000C001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AA00000A001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		AA00000A002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA00000A003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinute.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinute/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA00000A004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinute.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinute/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA00000A005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinuteWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA00000A006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinuteWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute Widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA00000A007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWatch/ACIMDailyMinuteWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.larryseyer.acimdailyminute;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		AA00000A008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWatch/ACIMDailyMinuteWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.larryseyer.acimdailyminute;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000008001 /* Build configuration list for PBXProject "ACIMDailyMinute" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000A001 /* Debug */,
+				AA00000A002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000008003 /* Build configuration list for PBXNativeTarget "ACIMDailyMinute" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000A003 /* Debug */,
+				AA00000A004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000008004 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000A005 /* Debug */,
+				AA00000A006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000008005 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000A007 /* Debug */,
+				AA00000A008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA000009001 /* Project object */;
+}

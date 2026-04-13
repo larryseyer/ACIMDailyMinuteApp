@@ -1,0 +1,81 @@
+ACIM Daily Minute — License
+
+Copyright (c) 2026 Larry Seyer
+
+================================================================================
+SCOPE
+================================================================================
+
+This license applies ONLY to the original works authored by the copyright
+holder and contained in this repository:
+
+  - The Swift source code, build scripts, and Xcode project configuration
+    for the ACIM Daily Minute iOS / iPadOS / macOS / watchOS applications.
+  - Original UI designs, layouts, color palettes, typographic arrangements,
+    and visual assets created by the copyright holder.
+  - Documentation, README files, and architectural notes authored by the
+    copyright holder.
+  - Audio recordings, video renderings, cover art, and other derivative
+    media produced by the copyright holder for the ACIM Daily Minute
+    content pipeline.
+
+The underlying text of *A Course in Miracles* distributed by this
+application is the PUBLIC DOMAIN "Sparkly Edition" of the Course, published
+by Teddy Poppe (Theodore Poppe) and associated with the Course in Miracles
+Society (CIMS). This text descends from the CIMS / Endeavor Academy
+lineage that prevailed in Penguin Books USA, Inc. v. New Christian Church
+of Full Endeavor, Ltd. (S.D.N.Y. 2003), in which the court held that the
+original Course manuscript had entered the public domain because it was
+distributed without copyright notice before registration. That text is therefore freely usable by anyone, owned by no
+one, and not licensed by this document.
+
+THIS APPLICATION DOES NOT USE, DISTRIBUTE, OR RELY ON THE FOUNDATION FOR
+INNER PEACE (FIP) EDITION OR ANY LATER FIP-EDITED EDITION OF THE COURSE.
+FIP's added prefaces, supplements, and editorial changes in the Second
+Edition and subsequent printings are not present in this application.
+This license makes no claim over the public-domain Course text itself and
+takes no position on any FIP-edited material, which is separate and outside
+the scope of this repository.
+
+================================================================================
+LICENSE TERMS
+================================================================================
+
+The original works described above are licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).
+
+You are free to:
+
+  Share — copy and redistribute the material in any medium or format for any
+  purpose, even commercially.
+
+  Adapt — remix, transform, and build upon the material for any purpose, even
+  commercially.
+
+Under the following terms:
+
+  Attribution — You must give appropriate credit, provide a link to the
+  license, and indicate if changes were made. You may do so in any reasonable
+  manner, but not in any way that suggests the licensor endorses you or your
+  use.
+
+  ShareAlike — If you remix, transform, or build upon the material, you must
+  distribute your contributions under the same license as the original.
+
+  No additional restrictions — You may not apply legal terms or technological
+  measures that legally restrict others from doing anything the license
+  permits.
+
+Full license text: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+================================================================================
+DISCLAIMER
+================================================================================
+
+THE SOFTWARE AND ORIGINAL WORKS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
