@@ -7,12 +7,11 @@ struct ACIMDailyMinuteApp: App {
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Story.self,
-            Source.self,
-            Correction.self,
-            Channel.self,
-            ArchivedStory.self,
-            Bookmark.self
+            DailyMinute.self,
+            DailyLesson.self,
+            Bookmark.self,
+            ArchivedReading.self,
+            Channel.self
         ])
         let containerURL = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!

@@ -1,12 +1,13 @@
-#if os(iOS)
+#if canImport(ActivityKit) && os(iOS)
 import ActivityKit
 import Foundation
 
 struct ACIMActivityAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
-        let storyCount: Int
-        let latestFact: String
-        let publishedDate: Date
+        var channel: String
+        var latestText: String
+        var publishedDate: Date
+        var lessonNumber: Int?
     }
 }
 #endif

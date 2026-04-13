@@ -12,9 +12,9 @@
 		AA000001003 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002003 /* StoriesView.swift */; };
 		AA000001004 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002004 /* DigestView.swift */; };
 		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
-		AA000001006 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
-		AA000001007 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
-		AA000001008 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001100 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001103 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001106 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
 		AA000001009 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
@@ -35,7 +35,6 @@
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
 		AA000001031 /* WatchedTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002031 /* WatchedTermsView.swift */; };
-		AA000001032 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
 		AA000001033 /* ArchiveLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002033 /* ArchiveLineParser.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
@@ -52,13 +51,12 @@
 		AA000001046 /* MediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002046 /* MediumWidgetView.swift */; };
 		AA000001047 /* LargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002047 /* LargeWidgetView.swift */; };
 		AA000001048 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
-		AA000001049 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
-		AA000001050 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
+		AA000001101 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001104 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
 		AA000001051 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		AA000001053 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001107 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
 		AA000001054 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
-		AA000001055 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
 		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
 		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
@@ -72,11 +70,10 @@
 		AA000001066 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002060 /* WatchContentView.swift */; };
 		AA000001067 /* WatchStoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002061 /* WatchStoryRow.swift */; };
 		AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
-		AA000001069 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002006 /* Story.swift */; };
-		AA000001070 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002007 /* Source.swift */; };
-		AA000001071 /* Correction.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002008 /* Correction.swift */; };
+		AA000001102 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001105 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001108 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
 		AA000001072 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
-		AA000001073 /* ArchivedStory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002032 /* ArchivedStory.swift */; };
 		AA000001074 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001075 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001076 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002064 /* Assets.xcassets */; };
@@ -118,9 +115,9 @@
 		AA000002003 /* StoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
 		AA000002004 /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
 		AA000002005 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
-		AA000002006 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
-		AA000002007 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
-		AA000002008 /* Correction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Correction.swift; sourceTree = "<group>"; };
+		AA000002100 /* DailyMinute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinute.swift; sourceTree = "<group>"; };
+		AA000002101 /* DailyLesson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLesson.swift; sourceTree = "<group>"; };
+		AA000002102 /* ArchivedReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReading.swift; sourceTree = "<group>"; };
 		AA000002009 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -141,7 +138,6 @@
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		AA000002031 /* WatchedTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermsView.swift; sourceTree = "<group>"; };
-		AA000002032 /* ArchivedStory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedStory.swift; sourceTree = "<group>"; };
 		AA000002033 /* ArchiveLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveLineParser.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
@@ -248,11 +244,10 @@
 		AA000005004 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002006 /* Story.swift */,
-				AA000002007 /* Source.swift */,
-				AA000002008 /* Correction.swift */,
+				AA000002100 /* DailyMinute.swift */,
+				AA000002101 /* DailyLesson.swift */,
+				AA000002102 /* ArchivedReading.swift */,
 				AA000002009 /* Channel.swift */,
-				AA000002032 /* ArchivedStory.swift */,
 				AA000002035 /* Bookmark.swift */,
 				AA000002054 /* ACIMActivityAttributes.swift */,
 			);
@@ -565,9 +560,9 @@
 				AA000001003 /* StoriesView.swift in Sources */,
 				AA000001004 /* DigestView.swift in Sources */,
 				AA000001005 /* ArchiveView.swift in Sources */,
-				AA000001006 /* Story.swift in Sources */,
-				AA000001007 /* Source.swift in Sources */,
-				AA000001008 /* Correction.swift in Sources */,
+				AA000001100 /* DailyMinute.swift in Sources */,
+				AA000001103 /* DailyLesson.swift in Sources */,
+				AA000001106 /* ArchivedReading.swift in Sources */,
 				AA000001009 /* Channel.swift in Sources */,
 				AA000001012 /* DataService.swift in Sources */,
 				AA000001013 /* FeedService.swift in Sources */,
@@ -587,7 +582,6 @@
 				AA000001029 /* ConnectivityManager.swift in Sources */,
 				AA000001030 /* PrivacyPolicyView.swift in Sources */,
 				AA000001031 /* WatchedTermsView.swift in Sources */,
-				AA000001032 /* ArchivedStory.swift in Sources */,
 				AA000001033 /* ArchiveLineParser.swift in Sources */,
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
@@ -621,11 +615,10 @@
 				AA000001046 /* MediumWidgetView.swift in Sources */,
 				AA000001047 /* LargeWidgetView.swift in Sources */,
 				AA000001048 /* SharedModelContainer.swift in Sources */,
-				AA000001049 /* Story.swift in Sources */,
-				AA000001050 /* Source.swift in Sources */,
-				AA000001053 /* Correction.swift in Sources */,
+				AA000001101 /* DailyMinute.swift in Sources */,
+				AA000001104 /* DailyLesson.swift in Sources */,
+				AA000001107 /* ArchivedReading.swift in Sources */,
 				AA000001054 /* Channel.swift in Sources */,
-				AA000001055 /* ArchivedStory.swift in Sources */,
 				AA000001056 /* Bookmark.swift in Sources */,
 				AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */,
 				AA000001062 /* ACIMActivityAttributes.swift in Sources */,
@@ -640,11 +633,10 @@
 				AA000001066 /* WatchContentView.swift in Sources */,
 				AA000001067 /* WatchStoryRow.swift in Sources */,
 				AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */,
-				AA000001069 /* Story.swift in Sources */,
-				AA000001070 /* Source.swift in Sources */,
-				AA000001071 /* Correction.swift in Sources */,
+				AA000001102 /* DailyMinute.swift in Sources */,
+				AA000001105 /* DailyLesson.swift in Sources */,
+				AA000001108 /* ArchivedReading.swift in Sources */,
 				AA000001072 /* Channel.swift in Sources */,
-				AA000001073 /* ArchivedStory.swift in Sources */,
 				AA000001074 /* Bookmark.swift in Sources */,
 				AA000001075 /* SharedModelContainer.swift in Sources */,
 				AA000001078 /* WatchDataService.swift in Sources */,

@@ -13,12 +13,11 @@ enum SharedModelContainer {
     /// Read-only container for widget extension (prevents accidental writes)
     static func createReadOnly() throws -> ModelContainer {
         let schema = Schema([
-            Story.self,
-            Source.self,
-            Correction.self,
-            Channel.self,
-            ArchivedStory.self,
-            Bookmark.self
+            DailyMinute.self,
+            DailyLesson.self,
+            Bookmark.self,
+            ArchivedReading.self,
+            Channel.self
         ])
         let config = ModelConfiguration(
             schema: schema,
