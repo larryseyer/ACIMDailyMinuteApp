@@ -10,8 +10,6 @@ struct ContentView: View {
     #if os(macOS)
     @State private var showAbout = false
     #endif
-    @AppStorage("watchedTabBadge") private var watchedBadge = 0
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
 
     var body: some View {
         tabContainer
@@ -19,20 +17,20 @@ struct ContentView: View {
             .environment(connectivity)
             .animation(.easeInOut(duration: 0.2), value: audioManager.hasActiveAudio)
             .onAppear { connectivity.start() }
-            .task {
-                ArchiveService.cleanupLegacySearchIndex()
-                await ArchiveService(modelContainer: modelContext.container).prefetchAll()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .watchedTermsTapped)) { _ in
-                selectedTab = 4
-            }
             .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequested)) { _ in
                 showSettings = true
             }
-            .onOpenURL { url in
-                handleDeepLink(url)
+            .onReceive(NotificationCenter.default.publisher(for: .phrasesTapped)) { _ in
+                // Phrases editor lives in Settings as of Phase 2 plan §8;
+                // route notification taps to the Settings sheet until 3.8
+                // wires the editor in-place.
+                showSettings = true
             }
-            .modifier(OnboardingPresenter(hasSeenOnboarding: $hasSeenOnboarding))
+            .onOpenURL { _ in
+                // Deep-link routing reactivates in Phase 3.8 alongside the
+                // onboarding + bookmark features. Scheme registration stays
+                // intact via Info.plist.
+            }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
@@ -44,15 +42,6 @@ struct ContentView: View {
                 AboutView()
             }
             #endif
-            .onChange(of: hasSeenOnboarding) { _, newValue in
-                // Guarantee a fresh stories fetch once onboarding dismisses —
-                // the underlying StoriesView's `.task` can be deferred by
-                // `fullScreenCover` on first launch, and that's why a brand-new
-                // install previously showed a single story until manual refresh.
-                if newValue {
-                    NotificationCenter.default.post(name: .forceStoriesRefresh, object: nil)
-                }
-            }
     }
 
     // MARK: - Tab container
@@ -62,31 +51,30 @@ struct ContentView: View {
         #if os(iOS)
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedTab) {
-                StoriesView()
-                    .tabItem { Label("Stories", systemImage: "newspaper") }
+                TodayView()
+                    .tabItem { Label("Today", systemImage: "sun.max.fill") }
                     .tag(0)
 
-                DigestView()
-                    .tabItem { Label("Digest", systemImage: "play.circle") }
+                LessonsPlaceholderView()
+                    .tabItem { Label("Lessons", systemImage: "book.closed.fill") }
                     .tag(1)
 
-                ArchiveView()
-                    .tabItem { Label("Archive", systemImage: "archivebox") }
+                DigestView()
+                    .tabItem { Label("Listen", systemImage: "play.circle.fill") }
                     .tag(2)
+
+                ArchiveView()
+                    .tabItem { Label("Archive", systemImage: "archivebox.fill") }
+                    .tag(3)
 
                 SavedView()
                     .tabItem { Label("Saved", systemImage: "bookmark.fill") }
-                    .tag(3)
-
-                WatchedView()
-                    .tabItem { Label("Watched", systemImage: "eye.fill") }
                     .tag(4)
-                    .badge(watchedBadge > 0 ? watchedBadge : 0)
             }
 
-            if audioManager.hasActiveAudio && selectedTab != 1 {
+            if audioManager.hasActiveAudio && selectedTab != 2 {
                 MiniPlayerView()
-                    .onTapGesture { selectedTab = 1 }
+                    .onTapGesture { selectedTab = 2 }
                     .padding(.bottom, 49) // tab bar height
                     .transition(.move(edge: .bottom))
             }
@@ -99,77 +87,23 @@ struct ContentView: View {
             ZStack(alignment: .bottom) {
                 Group {
                     switch selectedTab {
-                    case 1: DigestView()
-                    case 2: ArchiveView()
-                    case 3: SavedView()
-                    case 4: WatchedView()
-                    default: StoriesView()
+                    case 1: LessonsPlaceholderView()
+                    case 2: DigestView()
+                    case 3: ArchiveView()
+                    case 4: SavedView()
+                    default: TodayView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                if audioManager.hasActiveAudio && selectedTab != 1 {
+                if audioManager.hasActiveAudio && selectedTab != 2 {
                     MiniPlayerView()
-                        .onTapGesture { selectedTab = 1 }
+                        .onTapGesture { selectedTab = 2 }
                         .transition(.move(edge: .bottom))
                 }
             }
 
-            MacBottomTabBar(selectedTab: $selectedTab, watchedBadge: watchedBadge)
-        }
-        #endif
-    }
-
-    // MARK: - Deep Links
-
-    private func handleDeepLink(_ url: URL) {
-        guard url.scheme == "acimdailyminute" else { return }
-
-        switch url.host {
-        case "stories":
-            selectedTab = 0
-        case "story":
-            let storyId = url.lastPathComponent
-            let watchedTerms = WatchedTermsStorage.terms
-            let context = ModelContext(modelContext.container)
-            let descriptor = FetchDescriptor<Story>(
-                predicate: #Predicate { $0.id == storyId }
-            )
-            if let story = try? context.fetch(descriptor).first {
-                let matchesWatched = watchedTerms.contains { term in
-                    story.fact.localizedCaseInsensitiveContains(term)
-                }
-                selectedTab = matchesWatched ? 4 : 0
-            } else {
-                selectedTab = 0
-            }
-        default:
-            selectedTab = 0
-        }
-    }
-}
-
-/// Onboarding uses `fullScreenCover` on iOS (immersive) and `.sheet` on
-/// macOS — `fullScreenCover` is iOS-only, and a windowed sheet is the
-/// closest macOS equivalent for a first-launch takeover.
-private struct OnboardingPresenter: ViewModifier {
-    @Binding var hasSeenOnboarding: Bool
-
-    func body(content: Content) -> some View {
-        #if os(iOS)
-        content.fullScreenCover(isPresented: Binding(
-            get: { !hasSeenOnboarding },
-            set: { if !$0 { hasSeenOnboarding = true } }
-        )) {
-            OnboardingView()
-        }
-        #else
-        content.sheet(isPresented: Binding(
-            get: { !hasSeenOnboarding },
-            set: { if !$0 { hasSeenOnboarding = true } }
-        )) {
-            OnboardingView()
-                .frame(width: 500, height: 600)
+            MacBottomTabBar(selectedTab: $selectedTab)
         }
         #endif
     }
@@ -182,7 +116,6 @@ private struct OnboardingPresenter: ViewModifier {
 /// tint for the selected tab, 49pt-ish bar height, subtle top divider.
 private struct MacBottomTabBar: View {
     @Binding var selectedTab: Int
-    let watchedBadge: Int
 
     private static let accent = Color(red: 0.83, green: 0.69, blue: 0.22)
 
@@ -193,11 +126,11 @@ private struct MacBottomTabBar: View {
     }
 
     private let items: [Item] = [
-        .init(id: 0, title: "Stories", systemImage: "newspaper"),
-        .init(id: 1, title: "Digest", systemImage: "play.circle"),
-        .init(id: 2, title: "Archive", systemImage: "archivebox"),
-        .init(id: 3, title: "Saved", systemImage: "bookmark.fill"),
-        .init(id: 4, title: "Watched", systemImage: "eye.fill")
+        .init(id: 0, title: "Today", systemImage: "sun.max.fill"),
+        .init(id: 1, title: "Lessons", systemImage: "book.closed.fill"),
+        .init(id: 2, title: "Listen", systemImage: "play.circle.fill"),
+        .init(id: 3, title: "Archive", systemImage: "archivebox.fill"),
+        .init(id: 4, title: "Saved", systemImage: "bookmark.fill")
     ]
 
     var body: some View {
@@ -216,27 +149,14 @@ private struct MacBottomTabBar: View {
 
     private func tabButton(_ item: Item) -> some View {
         let isSelected = selectedTab == item.id
-        let showBadge = item.id == 4 && watchedBadge > 0
 
         return Button {
             selectedTab = item.id
         } label: {
             VStack(spacing: 3) {
-                ZStack(alignment: .topTrailing) {
-                    Image(systemName: item.systemImage)
-                        .font(.system(size: 22, weight: .regular))
-                        .frame(height: 26)
-
-                    if showBadge {
-                        Text("\(watchedBadge)")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 5)
-                            .padding(.vertical, 1)
-                            .background(Color.red, in: Capsule())
-                            .offset(x: 10, y: -4)
-                    }
-                }
+                Image(systemName: item.systemImage)
+                    .font(.system(size: 22, weight: .regular))
+                    .frame(height: 26)
 
                 Text(item.title)
                     .font(.system(size: 10, weight: .medium))
