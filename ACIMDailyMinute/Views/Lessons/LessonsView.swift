@@ -38,6 +38,9 @@ struct LessonsView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Lessons")
+            .navigationDestination(for: Int.self) { lessonNumber in
+                LessonDetailView(lessonNumber: lessonNumber)
+            }
         }
     }
 
