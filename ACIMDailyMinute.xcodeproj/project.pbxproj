@@ -77,7 +77,9 @@
 		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
 		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
 		AA000001202 /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
-		AA000001203 /* LessonsPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002203 /* LessonsPlaceholderView.swift */; };
+		AA000001210 /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
+		AA000001211 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
+		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
 		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
 		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
 		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
@@ -168,7 +170,9 @@
 		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
 		AA000002202 /* DailyLessonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLessonCard.swift; sourceTree = "<group>"; };
-		AA000002203 /* LessonsPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsPlaceholderView.swift; sourceTree = "<group>"; };
+		AA000002210 /* LessonMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonMeta.swift; sourceTree = "<group>"; };
+		AA000002211 /* LessonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonRow.swift; sourceTree = "<group>"; };
+		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
 		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
 		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
@@ -272,7 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000005020 /* Today */,
-				AA000005021 /* Placeholders */,
+				AA000005022 /* Lessons */,
 				AA000005008 /* Digest */,
 				AA000005011 /* Archive */,
 				AA000005012 /* Settings */,
@@ -411,12 +415,14 @@
 			path = Today;
 			sourceTree = "<group>";
 		};
-		AA000005021 /* Placeholders */ = {
+		AA000005022 /* Lessons */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002203 /* LessonsPlaceholderView.swift */,
+				AA000002210 /* LessonMeta.swift */,
+				AA000002211 /* LessonRow.swift */,
+				AA000002212 /* LessonsView.swift */,
 			);
-			path = Placeholders;
+			path = Lessons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -589,7 +595,9 @@
 				AA000001200 /* TodayView.swift in Sources */,
 				AA000001201 /* DailyMinuteCard.swift in Sources */,
 				AA000001202 /* DailyLessonCard.swift in Sources */,
-				AA000001203 /* LessonsPlaceholderView.swift in Sources */,
+				AA000001210 /* LessonMeta.swift in Sources */,
+				AA000001211 /* LessonRow.swift in Sources */,
+				AA000001212 /* LessonsView.swift in Sources */,
 				AA000001204 /* PhraseMatcher.swift in Sources */,
 				AA000001205 /* PhraseStorage.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,

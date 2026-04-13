@@ -55,7 +55,7 @@ struct ContentView: View {
                     .tabItem { Label("Today", systemImage: "sun.max.fill") }
                     .tag(0)
 
-                LessonsPlaceholderView()
+                LessonsView()
                     .tabItem { Label("Lessons", systemImage: "book.closed.fill") }
                     .tag(1)
 
@@ -87,7 +87,7 @@ struct ContentView: View {
             ZStack(alignment: .bottom) {
                 Group {
                     switch selectedTab {
-                    case 1: LessonsPlaceholderView()
+                    case 1: LessonsView()
                     case 2: DigestView()
                     case 3: ArchiveView()
                     case 4: SavedView()
