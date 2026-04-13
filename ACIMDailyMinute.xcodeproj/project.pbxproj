@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		AA000001001 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
 		AA000001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
-		AA000001003 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002003 /* StoriesView.swift */; };
 		AA000001004 /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002004 /* DigestView.swift */; };
 		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
 		AA000001100 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
@@ -19,7 +18,6 @@
 		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
 		AA000001013 /* FeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002013 /* FeedService.swift */; };
-		AA000001014 /* StoryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002014 /* StoryCard.swift */; };
 		AA000001015 /* PodcastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002015 /* PodcastService.swift */; };
 		AA000001016 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002016 /* YouTubePlayerView.swift */; };
 		AA000001017 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002017 /* AudioPlayerView.swift */; };
@@ -28,7 +26,6 @@
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
 		AA000001024 /* ArchiveSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002024 /* ArchiveSearchView.swift */; };
 		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
-		AA000001026 /* SourceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002026 /* SourceDetailView.swift */; };
 		AA000001027 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
 		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
@@ -37,10 +34,6 @@
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
-		AA000001037 /* SourceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002037 /* SourceCard.swift */; };
-		AA000001038 /* StoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002038 /* StoryDetailView.swift */; };
-		AA000001039 /* WatchedTermMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002039 /* WatchedTermMatcher.swift */; };
-		AA000001040 /* WatchedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002040 /* WatchedView.swift */; };
 		AA000001041 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002041 /* OnboardingView.swift */; };
 		AA000001042 /* ACIMDailyMinuteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002042 /* ACIMDailyMinuteWidget.swift */; };
 		AA000001043 /* ACIMDailyMinuteTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */; };
@@ -81,6 +74,13 @@
 		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
 		AA000001082 /* MacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* MacCalendarView.swift */; };
 		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
+		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
+		AA000001202 /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
+		AA000001203 /* LessonsPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002203 /* LessonsPlaceholderView.swift */; };
+		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
+		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
+		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,7 +110,6 @@
 /* Begin PBXFileReference section */
 		AA000002001 /* ACIMDailyMinuteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteApp.swift; sourceTree = "<group>"; };
 		AA000002002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		AA000002003 /* StoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesView.swift; sourceTree = "<group>"; };
 		AA000002004 /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
 		AA000002005 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		AA000002100 /* DailyMinute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinute.swift; sourceTree = "<group>"; };
@@ -120,7 +119,6 @@
 		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		AA000002013 /* FeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedService.swift; sourceTree = "<group>"; };
-		AA000002014 /* StoryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryCard.swift; sourceTree = "<group>"; };
 		AA000002015 /* PodcastService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastService.swift; sourceTree = "<group>"; };
 		AA000002016 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
 		AA000002017 /* AudioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
@@ -129,7 +127,6 @@
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
 		AA000002024 /* ArchiveSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveSearchView.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		AA000002026 /* SourceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDetailView.swift; sourceTree = "<group>"; };
 		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
 		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
@@ -138,10 +135,6 @@
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
-		AA000002037 /* SourceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCard.swift; sourceTree = "<group>"; };
-		AA000002038 /* StoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailView.swift; sourceTree = "<group>"; };
-		AA000002039 /* WatchedTermMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermMatcher.swift; sourceTree = "<group>"; };
-		AA000002040 /* WatchedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedView.swift; sourceTree = "<group>"; };
 		AA000002041 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		AA000002042 /* ACIMDailyMinuteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWidget.swift; sourceTree = "<group>"; };
 		AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteTimelineProvider.swift; sourceTree = "<group>"; };
@@ -172,6 +165,13 @@
 		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
 		AA000002069 /* MacCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalendarView.swift; sourceTree = "<group>"; };
 		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
+		AA000002202 /* DailyLessonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLessonCard.swift; sourceTree = "<group>"; };
+		AA000002203 /* LessonsPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsPlaceholderView.swift; sourceTree = "<group>"; };
+		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
+		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
+		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,7 +262,7 @@
 				AA000002028 /* NotificationManager.swift */,
 				AA000002029 /* ConnectivityManager.swift */,
 				AA000002034 /* FetchCooldown.swift */,
-				AA000002039 /* WatchedTermMatcher.swift */,
+				AA000002204 /* PhraseMatcher.swift */,
 				AA000002055 /* LiveActivityManager.swift */,
 			);
 			path = Services;
@@ -271,27 +271,16 @@
 		AA000005006 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AA000005007 /* Stories */,
+				AA000005020 /* Today */,
+				AA000005021 /* Placeholders */,
 				AA000005008 /* Digest */,
 				AA000005011 /* Archive */,
 				AA000005012 /* Settings */,
 				AA000005016 /* Saved */,
-				AA000005013 /* Watched */,
 				AA000005014 /* Onboarding */,
 				AA000002070 /* AboutView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		AA000005007 /* Stories */ = {
-			isa = PBXGroup;
-			children = (
-				AA000002003 /* StoriesView.swift */,
-				AA000002014 /* StoryCard.swift */,
-				AA000002037 /* SourceCard.swift */,
-				AA000002038 /* StoryDetailView.swift */,
-			);
-			path = Stories;
 			sourceTree = "<group>";
 		};
 		AA000005008 /* Digest */ = {
@@ -321,6 +310,8 @@
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002036 /* TermExtractor.swift */,
+				AA000002205 /* PhraseStorage.swift */,
+				AA000002206 /* HashUtility.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -339,19 +330,10 @@
 			isa = PBXGroup;
 			children = (
 				AA000002025 /* SettingsView.swift */,
-				AA000002026 /* SourceDetailView.swift */,
 				AA000002030 /* PrivacyPolicyView.swift */,
 				AA000002031 /* WatchedTermsView.swift */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		AA000005013 /* Watched */ = {
-			isa = PBXGroup;
-			children = (
-				AA000002040 /* WatchedView.swift */,
-			);
-			path = Watched;
 			sourceTree = "<group>";
 		};
 		AA000005014 /* Onboarding */ = {
@@ -417,6 +399,24 @@
 				AA000002066 /* ACIMChime.caf */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		AA000005020 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002200 /* TodayView.swift */,
+				AA000002201 /* DailyMinuteCard.swift */,
+				AA000002202 /* DailyLessonCard.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+		AA000005021 /* Placeholders */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002203 /* LessonsPlaceholderView.swift */,
+			);
+			path = Placeholders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -551,7 +551,6 @@
 			files = (
 				AA000001001 /* ACIMDailyMinuteApp.swift in Sources */,
 				AA000001002 /* ContentView.swift in Sources */,
-				AA000001003 /* StoriesView.swift in Sources */,
 				AA000001004 /* DigestView.swift in Sources */,
 				AA000001005 /* ArchiveView.swift in Sources */,
 				AA000001100 /* DailyMinute.swift in Sources */,
@@ -560,7 +559,6 @@
 				AA000001009 /* Channel.swift in Sources */,
 				AA000001012 /* DataService.swift in Sources */,
 				AA000001013 /* FeedService.swift in Sources */,
-				AA000001014 /* StoryCard.swift in Sources */,
 				AA000001015 /* PodcastService.swift in Sources */,
 				AA000001016 /* YouTubePlayerView.swift in Sources */,
 				AA000001017 /* AudioPlayerView.swift in Sources */,
@@ -569,7 +567,6 @@
 				AA000001020 /* ArchiveService.swift in Sources */,
 				AA000001024 /* ArchiveSearchView.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,
-				AA000001026 /* SourceDetailView.swift in Sources */,
 				AA000001027 /* BackgroundRefreshManager.swift in Sources */,
 				AA000001028 /* NotificationManager.swift in Sources */,
 				AA000001029 /* ConnectivityManager.swift in Sources */,
@@ -578,10 +575,6 @@
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
 				AA000001036 /* TermExtractor.swift in Sources */,
-				AA000001037 /* SourceCard.swift in Sources */,
-				AA000001038 /* StoryDetailView.swift in Sources */,
-				AA000001039 /* WatchedTermMatcher.swift in Sources */,
-				AA000001040 /* WatchedView.swift in Sources */,
 				AA000001041 /* OnboardingView.swift in Sources */,
 				AA000001057 /* ShareTextBuilder.swift in Sources */,
 				AA000001081 /* PlatformTypography.swift in Sources */,
@@ -593,6 +586,13 @@
 				AA000001060 /* LiveActivityManager.swift in Sources */,
 				AA000001063 /* GetTodaysFactsIntent.swift in Sources */,
 				AA000001064 /* ACIMDailyMinuteShortcuts.swift in Sources */,
+				AA000001200 /* TodayView.swift in Sources */,
+				AA000001201 /* DailyMinuteCard.swift in Sources */,
+				AA000001202 /* DailyLessonCard.swift in Sources */,
+				AA000001203 /* LessonsPlaceholderView.swift in Sources */,
+				AA000001204 /* PhraseMatcher.swift in Sources */,
+				AA000001205 /* PhraseStorage.swift in Sources */,
+				AA000001206 /* HashUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
