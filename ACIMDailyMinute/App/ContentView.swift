@@ -59,7 +59,7 @@ struct ContentView: View {
                     .tabItem { Label("Lessons", systemImage: "book.closed.fill") }
                     .tag(1)
 
-                DigestView()
+                ListenView()
                     .tabItem { Label("Listen", systemImage: "play.circle.fill") }
                     .tag(2)
 
@@ -88,7 +88,7 @@ struct ContentView: View {
                 Group {
                     switch selectedTab {
                     case 1: LessonsView()
-                    case 2: DigestView()
+                    case 2: ListenView()
                     case 3: ArchiveView()
                     case 4: SavedView()
                     default: TodayView()
