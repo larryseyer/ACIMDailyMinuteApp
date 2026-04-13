@@ -6,7 +6,7 @@ Paste into a fresh Claude Code session started in `/Users/larryseyer/ACIMDailyMi
 
 ## TL;DR
 
-Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), and **3.4 (Today tab + app wiring + 5-tab shell)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main` HEAD: post-3.4 scrub). The iOS target compiles clean. The Widget target and Watch UI files still use the old schema and remain broken by design — they are Phase 3.9 and 3.10 scope.
+Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), and **3.4 (Today tab + app wiring + 5-tab shell)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main @ 74ff6ac`, end of Phase 3.4 scrub). The iOS target compiles clean. The Widget target and Watch UI files still use the old schema and remain broken by design — they are Phase 3.9 and 3.10 scope.
 
 Resume at **Phase 3.5 — Lessons tab** (workbook browser with "Jump to Lesson N").
 
