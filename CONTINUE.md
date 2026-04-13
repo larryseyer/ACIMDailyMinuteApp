@@ -6,9 +6,9 @@ Paste into a fresh Claude Code session started in `/Users/larryseyer/ACIMDailyMi
 
 ## TL;DR
 
-Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), 3.4 (Today tab + app wiring + 5-tab shell), 3.5-pre (pbxproj repair + build.sh hardening), and **3.5a (Lessons tab spine — synthetic 1–365 list + row + metadata merge)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main @ 9058ee5`). The iOS main-app target compiles clean against iPad 10th gen / iOS 18.1 (0 errors in main-target files; 8 pre-existing Widget errors are expected and deferred to Phase 3.9). The Widget target and Watch UI files still use the old schema and remain broken **by design** — they are Phase 3.9 and 3.10 scope.
+Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), 3.4 (Today tab + app wiring + 5-tab shell), 3.5-pre (pbxproj repair + build.sh hardening), 3.5a (Lessons tab spine — 1–365 list + row + metadata merge), and **3.5b (`LessonDetailView` with Full / Metadata-only / Absent states + `.navigationDestination(for: Int.self)`)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main @ b526c5b`). The iOS main-app target compiles clean against iPad 10th gen / iOS 18.1 (0 errors in main-target files; 8 pre-existing Widget errors are expected and deferred to Phase 3.9). The Widget target and Watch UI files still use the old schema and remain broken **by design** — they are Phase 3.9 and 3.10 scope.
 
-Resume at **Phase 3.5b — `LessonDetailView`** with the three render states (Full / Metadata-only / Absent) + `.navigationDestination(for: Int.self)` wired on `LessonsView`. The full Phase 3.5 plan is approved and saved at `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md`.
+Resume at **Phase 3.5c — Lessons `.searchable` filter + Jump-to-N sheet (1–365 validation)**. The full Phase 3.5 plan is approved and saved at `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md`.
 
 ## Required reading (this order)
 
@@ -17,8 +17,9 @@ Resume at **Phase 3.5b — `LessonDetailView`** with the three render states (Fu
 3. `/Users/larryseyer/.claude/plans/harmonic-gliding-wilkes.md` — Phase 3.2 schema execution
 4. `/Users/larryseyer/.claude/plans/snuggly-greeting-manatee.md` — Phase 3.3 service execution
 5. `/Users/larryseyer/.claude/plans/fuzzy-booping-scone.md` — Phase 3.4 execution (Today tab)
-6. `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` — **Phase 3.5 plan (APPROVED, next to execute)**
-7. `/Users/larryseyer/ACIMDailyMinuteApp/README.md` — current feature overview
+6. `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` — **Phase 3.5 plan (APPROVED, authoritative; chunk 3.5c is next)**
+7. `/Users/larryseyer/.claude/plans/tranquil-drifting-flame.md` — Phase 3.5b execution plan (harness artifact; subset of abundant-herding-rabin)
+8. `/Users/larryseyer/ACIMDailyMinuteApp/README.md` — current feature overview
 
 ## Persistent memory
 
@@ -85,10 +86,11 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 │   │   │   ├── TodayView.swift              @Query minutes+lessons; pull-to-refresh; offline banner
 │   │   │   ├── DailyMinuteCard.swift        passage + bookmark + share + audio chip
 │   │   │   └── DailyLessonCard.swift        lesson N + title + bookmark + share + audio chip
-│   │   ├── Lessons/                         ✅ Phase 3.5a (spine only; detail/search/jump in 3.5b–c)
+│   │   ├── Lessons/                         ✅ Phases 3.5a + 3.5b (search/jump in 3.5c)
 │   │   │   ├── LessonMeta.swift             view-layer value type ({N, title?, dateRead?, hasFullText})
 │   │   │   ├── LessonRow.swift              gold capsule + Georgia title + bookmark dot; NavigationLink(value: Int)
-│   │   │   └── LessonsView.swift            NavigationStack + List(1...365) + 2-@Query merge
+│   │   │   ├── LessonsView.swift            NavigationStack + List(1...365) + 2-@Query merge + navigationDestination(for: Int.self)
+│   │   │   └── LessonDetailView.swift       3 render states (Full / Metadata-only / Absent) with parameterized @Query predicates
 │   │   ├── Digest/                          (stub — to become ListenView in 3.6)
 │   │   ├── Archive/                         (stub — Phase 3.7)
 │   │   ├── Saved/                           (stub — Phase 3.8)
@@ -122,7 +124,7 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 
 ## Build state
 
-- **iOS main app target**: compiles clean (verified at `9058ee5` against iPad 10th gen / iOS 18.1 — **zero errors in main-target files**; 8 Widget errors expected + deferred).
+- **iOS main app target**: compiles clean (verified at `b526c5b` against iPad 10th gen / iOS 18.1 — **zero errors in main-target files**; 8 Widget errors expected + deferred).
 - **macOS**: code-signing only (no provisioning profile in CI). Code compiles.
 - **Widget + Watch UI files**: still use old schema. Broken by design until Phases 3.9 / 3.10 — 10 Widget compile errors are expected.
 - **build.sh** now fails loudly. The old `| tail -5` pipe silently masked xcodebuild failures (which is how phantom-file pbxproj rot lingered undetected through Phase 3.4). The new `run_build` helper logs to `build/logs/{ios,macos,watchos}.log`, prints the last 80 lines on failure, and propagates exit codes via `set -o pipefail`. **Do not regress this** — running `build.sh` to its successful conclusion is meaningful again.
@@ -157,10 +159,11 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 
 **`Notification.Name`:** `.phrasesTapped`, `.forceMinuteRefresh`, `.forceLessonRefresh`, `.openSettingsRequested`, `.openAboutRequested`.
 
-## What's live at end of Phase 3.5a (`9058ee5`)
+## What's live at end of Phase 3.5b (`b526c5b`)
 
 - Today tab: live Daily Minute + Daily Lesson fetched from `https://www.acimdailyminute.org/daily-minute.json` and `/daily-lesson.json`. Pull-to-refresh resets cooldowns and re-fetches. Offline → last cached reading renders with a banner.
-- **Lessons tab: 1–365 spine renders.** Two `@Query`s (`DailyLesson` + `ArchivedReading` where `channel == "daily-lesson"`) merged into `[Int: LessonMeta]` via `.reduce(into:)`. `DailyLesson` wins on conflict. Today's lesson shows real title + date; recent archive rows show title; everything else shows "Not yet read." Bookmark dot renders for any lesson whose `Bookmark.itemKey` starts with `lesson:`. `NavigationLink(value: Int)` is wired on each row but **tap is inert until 3.5b adds `.navigationDestination(for: Int.self)`**.
+- **Lessons tab: 1–365 spine renders + tap navigates to detail.** Two `@Query`s (`DailyLesson` + `ArchivedReading` where `channel == "daily-lesson"`) merged into `[Int: LessonMeta]` via `.reduce(into:)`. `DailyLesson` wins on conflict. Today's lesson shows real title + date; recent archive rows show title; everything else shows "Not yet read." Bookmark dot renders for any lesson whose `Bookmark.itemKey` starts with `lesson:`.
+- **Lesson detail renders the right state for any N in 1–365.** `LessonDetailView` builds two parameterized `@Query`s in `init` (`DailyLesson.lessonNumber == n`; `ArchivedReading.channel == "daily-lesson" && lessonNumber == n`). Full state: ScrollView + detail-scale Georgia (24 title / 19 body) + bookmark + ShareLink + Listen chip. Metadata-only: lesson N + `archive.text`-as-title + dateString + audio chip if present + "Full text available once today's lesson fetches this entry." Absent: `ContentUnavailableView` + Refresh button that calls `DataService.fetchDailyLesson` / `persistLesson` (honest copy when today's lesson ≠ requested N or cooldown blocks).
 - Bookmark toggle on each Today card → writes `Bookmark` row with `itemKey "minute:{hash}"` or `"lesson:{N}"`.
 - ShareLink → `ShareTextBuilder.minuteShareText` / `.lessonShareText`.
 - Listen chip on each card → calls `AudioManager.play(url:title:)`. MiniPlayer overlay is reserved in `ContentView` but hidden until audio starts.
@@ -179,18 +182,17 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
 **Execution chunks** (one `./bu.sh` commit each):
 
 - **3.5a** ✅ `9058ee5` — spine only (`LessonsView` + `LessonRow` + `LessonMeta`), wired into `ContentView`, deleted placeholder + `Placeholders/` group. pbxproj surgery used IDs `AA000001210-1212` (buildFiles), `AA000002210-2212` (fileRefs), `AA000005022` (Lessons PBXGroup).
-- **3.5b** ⏭ NEXT — `LessonDetailView` with all three render states (Full / Metadata-only / Absent) + `.navigationDestination(for: Int.self)` wired on `LessonsView`. Commit: `Phase 3.5b: LessonDetailView with full/metadata-only/absent states`.
-- **3.5c** — `.searchable` filter + Jump-to-N sheet with 1–365 validation. Commit: `Phase 3.5c: Lessons search + Jump-to-N affordance`.
+- **3.5b** ✅ `b526c5b` — `LessonDetailView` with three render states; `.navigationDestination(for: Int.self)` in `LessonsView`. pbxproj used `AA000001213` (buildFile) + `AA000002213` (fileRef), appended to `AA000005022` group and main-target Sources phase.
+- **3.5c** ⏭ NEXT — `.searchable` filter + Jump-to-N sheet with 1–365 validation. Commit: `Phase 3.5c: Lessons search + Jump-to-N affordance`.
 
-**Files still to create** (for 3.5b):
+**Files to modify / create (for 3.5c):**
 
-- `ACIMDailyMinute/Views/Lessons/LessonDetailView.swift` — three render states:
-  - **Full**: `@Query` for `DailyLesson` where `lessonNumber == n` → render a detail-scale composition reusing primitives from `DailyLessonCard.swift` (header, word-count badge, body, bookmark, share, audio chip) at full width. **Do NOT embed `DailyLessonCard` wholesale** — it's a compact card; duplicate the primitives at full-width instead.
-  - **Metadata-only**: no `DailyLesson` but `ArchivedReading` with `lessonNumber == n` exists → show lesson number + `archive.text` (the title) + `archive.dateString` + audio chip (if `archive.audioURL` present) + "Full text available once today's lesson fetches this entry."
-  - **Absent**: neither exists → `ContentUnavailableView("Lesson N not yet cached", systemImage: "book.closed", description: "…")` + Refresh button that calls `DataService.fetchDailyLesson(baseURL:)` + `DataService.persistLesson(_:in:)`.
-- Add `.navigationDestination(for: Int.self) { LessonDetailView(lessonNumber: $0) }` inside the `NavigationStack` in `LessonsView.swift`. (`LessonRow` already emits `NavigationLink(value: lessonNumber)` — no row changes needed.)
-
-**pbxproj for 3.5b:** one new file → buildFile `AA000001213`, fileRef `AA000002213`. Add to `AA000005022 /* Lessons */` group children and to the main-target Sources build phase, adjacent to the existing `LessonsView.swift` entries.
+- **Modify** `ACIMDailyMinute/Views/Lessons/LessonsView.swift`:
+  - Add `@State private var searchText = ""` + `.searchable(text: $searchText, prompt: "Search lessons")` on the list.
+  - Wrap the filtered `ForEach(1...365)` in a private subview (the plan recommends `FilteredLessonsList`) so `@Query` re-evaluation on `searchText` change stays clean and `List` diffing stays correct.
+  - Filter predicate: keep lesson N if (a) `Int(searchText.trimmed) == N`, OR (b) `meta[N]?.title?.localizedStandardContains(searchText) == true`. Empty string = show all.
+  - Add a toolbar button ("Jump"): sheet-presents a compact view with `TextField` (`.keyboardType(.numberPad)` on iOS) accepting 1–365 + inline validation + submit pushes `LessonDetailView(lessonNumber: N)` onto the existing `NavigationStack`. On submit, dismiss sheet + append `N` to the stack's `NavigationPath` (promote the current `NavigationStack` to hold a `@State var path = NavigationPath()` so the sheet can drive navigation programmatically).
+- **Create** (optional but recommended) `ACIMDailyMinute/Views/Lessons/JumpToLessonSheet.swift` — the Jump sheet as its own view. Alternative: inline as a nested private struct inside `LessonsView.swift`. Pre-allocated pbxproj IDs if you split: buildFile `AA000001214`, fileRef `AA000002214`. Append to `AA000005022 /* Lessons */` group + main-target Sources phase, alongside the existing four Lessons entries.
 
 **Non-goals (explicitly deferred):** no full-index fetch, no pre-loading 365 lessons, no FTS5 search (that's Phase 3.7 Archive), no swipe-to-bookmark rows, no `acimdailyminute://lesson/47` deep link (Phase 3.8).
 
@@ -215,8 +217,8 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
 | 3.4 | ✅ | Today tab + app wiring + 5-tab shell |
 | 3.5-pre | ✅ | pbxproj repair + build.sh hardening (`ae93d5a`) |
 | 3.5a | ✅ | Lessons tab spine — 1–365 list + row + metadata merge (`9058ee5`) |
-| 3.5b | ⏭ NEXT | `LessonDetailView` (Full / Metadata-only / Absent) + `.navigationDestination(for: Int.self)` |
-| 3.5c | | Lessons `.searchable` filter + Jump-to-N sheet (1–365 validation) |
+| 3.5b | ✅ | `LessonDetailView` (Full / Metadata-only / Absent) + `.navigationDestination(for: Int.self)` (`b526c5b`) |
+| 3.5c | ⏭ NEXT | Lessons `.searchable` filter + Jump-to-N sheet (1–365 validation) |
 | 3.6 | | Listen tab (podcast feed, AVFoundation playback, MiniPlayer, YouTube embed) |
 | 3.7 | | Archive tab (calendar + FTS5 search over `ArchivedReading.searchableText`) |
 | 3.8 | | Saved + Settings (Phrases editor, notification toggles) + Onboarding |
@@ -227,16 +229,26 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
 
 ## First move for the new session
 
-1. Read the 7 required-reading files above (the Phase 3.5 plan `abundant-herding-rabin.md` remains authoritative).
+1. Read the 8 required-reading files above (the Phase 3.5 plan `abundant-herding-rabin.md` remains authoritative; `tranquil-drifting-flame.md` is the 3.5b execution record).
 2. Read the memory index at `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memory/MEMORY.md` and every file it points to.
 3. Confirm active model is Claude Opus 4.6 and `/fast` is OFF. Flag either if not.
 4. Verify the iOS main target is still green (main-target-only check shown in **Build state** above, using the `id=<UUID>` destination form — the `name=` form is ambiguous because multiple iPad 10th-gen sims on iOS 18.1 are installed). Do NOT require the full `./build.sh` to pass — Widget + Watch targets are broken by design until Phases 3.9 / 3.10.
-5. **Skip plan mode for 3.5b** — the plan is already approved and locked in `abundant-herding-rabin.md`. Execute **Phase 3.5b** directly:
-   - Create `ACIMDailyMinute/Views/Lessons/LessonDetailView.swift` with the three render states (Full / Metadata-only / Absent). **Do not embed `DailyLessonCard` wholesale** — duplicate its primitives at full width. For Metadata-only, remember `archive.text` IS the lesson title (see "Non-obvious wiring" note in Phase 3.5 scope above).
-   - Wire `.navigationDestination(for: Int.self) { LessonDetailView(lessonNumber: $0) }` inside the `NavigationStack` in `LessonsView.swift`. `LessonRow` already emits `NavigationLink(value: lessonNumber)` — no row changes needed.
-   - Register the new file in `project.pbxproj`: add buildFile `AA000001213`, fileRef `AA000002213`, place under the `AA000005022 /* Lessons */` group alongside the existing three entries, add to the main-target Sources build phase.
+5. **Skip plan mode for 3.5c** — the plan is already approved and locked in `abundant-herding-rabin.md`. Execute **Phase 3.5c** directly:
+   - Modify `ACIMDailyMinute/Views/Lessons/LessonsView.swift`:
+     - Add `@State private var searchText = ""` and `.searchable(text: $searchText, prompt: "Search lessons")` on the list.
+     - Wrap the filtered `ForEach(1...365)` in a private subview (`FilteredLessonsList` per the plan) so `@Query` re-evaluation on `searchText` change stays clean and `List` diffing stays correct.
+     - Filter: keep N if `Int(searchText.trimmed) == N` OR `meta[N]?.title?.localizedStandardContains(searchText) == true`. Empty = show all.
+     - Promote the `NavigationStack` to `NavigationStack(path: $path)` with `@State var path = NavigationPath()` so the Jump sheet can programmatically append lesson N.
+     - Add a toolbar "Jump" button (iOS `.topBarTrailing` / macOS `.primaryAction`) that sheet-presents a compact view.
+   - Create the Jump sheet — either inline as a nested private struct inside `LessonsView.swift`, or as its own file `ACIMDailyMinute/Views/Lessons/JumpToLessonSheet.swift` (pre-allocated pbxproj IDs if you split: buildFile `AA000001214`, fileRef `AA000002214`; append to `AA000005022 /* Lessons */` group + main-target Sources phase).
+     - `TextField` with `.keyboardType(.numberPad)` on iOS. Accepts 1–365. Inline validation ("Enter 1–365") for out-of-range + non-numeric.
+     - On submit: `path.append(N)`, dismiss sheet. `LessonDetailView` renders via the existing `.navigationDestination(for: Int.self)`.
    - Run the main-target verification command from **Build state** to confirm 0 errors before committing.
-   - Commit via `./bu.sh "Phase 3.5b: LessonDetailView with full/metadata-only/absent states"`.
-6. Proceed to **3.5c** (`.searchable` + Jump-to-N sheet) per the plan, committing via `./bu.sh`.
+   - Commit via `./bu.sh "Phase 3.5c: Lessons search + Jump-to-N affordance"`.
+6. Proceed to **Phase 3.6 — Listen tab** (podcast feed, AVFoundation playback, MiniPlayer overlay, YouTube embed). Re-enter plan mode for 3.6 — it's the first phase in weeks without an existing approved plan. `PodcastService` (actor) and `AudioManager` are already built; scope is UI + MiniPlayer wiring in `ContentView`.
 
-Parallel Explore agents are not needed — the approved plan already captures the inventory work done last session. Re-enter plan mode only if an unforeseen architectural fork appears mid-execution.
+## End-goal reminder
+
+Phase 3.5 is **one of eleven** remaining sub-phases. Full parity remains the bar: Today + Lessons + Listen + Archive + Saved + Settings + Onboarding + Widget + Watch + Shortcuts/deep-links + branding + ACIMChime.caf, all with the Sparkly Edition / Teddy Poppe / CIMS lineage framing intact and zero JTFNews mentions anywhere in this repo. The roadmap table above is the scope contract. Do not expand it mid-phase; do not silently drop items from it either. If a new requirement surfaces, flag it against the roadmap explicitly before acting.
+
+Parallel Explore agents are not needed for 3.5c — the approved plan already captures the inventory work. Re-enter plan mode only if an unforeseen architectural fork appears mid-execution, or when starting 3.6+.
