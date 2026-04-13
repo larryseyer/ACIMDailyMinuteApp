@@ -4,18 +4,17 @@ import Foundation
 import ActivityKit
 
 /// Drives the Live Activity surface (Lock Screen + Dynamic Island) for
-/// freshly published Daily Minute and Daily Lesson readings. Same shape as
-/// the JTFNews implementation: 5-minute auto-dismiss, gate on the
-/// `notifyLiveActivities` user preference, single shared activity per app
-/// session that updates in place.
+/// freshly published Daily Minute and Daily Lesson readings. 5-minute
+/// auto-dismiss, gated on the `notifyLiveActivities` user preference,
+/// single shared activity per app session that updates in place.
 ///
-/// The ContentState is the new ACIM shape: `channel` (`"daily-minute"` or
-/// `"daily-lesson"`), `latestText`, `publishedDate`, and an optional
-/// `lessonNumber` (only set for the lessons channel).
+/// The ContentState shape: `channel` (`"daily-minute"` or `"daily-lesson"`),
+/// `latestText`, `publishedDate`, and an optional `lessonNumber` (only set
+/// for the lessons channel).
 enum LiveActivityManager {
     /// Auto-dismiss window. Daily readings are short and once-a-day, so a
     /// long-lived activity would clutter the Lock Screen long after the user
-    /// has read it. 5 minutes matches the JTFNews precedent.
+    /// has read it.
     private static let dismissInterval: TimeInterval = 5 * 60
 
     /// Starts a Live Activity if none is running, or updates the existing

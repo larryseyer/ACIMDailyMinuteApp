@@ -5,11 +5,9 @@ import Foundation
 import SwiftData
 
 /// Coordinates BGTaskScheduler-driven and foreground catch-up notification
-/// checks. Mirrors the JTFNews two-channel design (BGTask primary +
-/// foreground debounce fallback) but the *content* checks are completely
-/// rewritten for ACIM: instead of stories/corrections, we watch for newly
-/// published Daily Minute segments, newly published Daily Lessons, and
-/// user-defined phrase matches against either.
+/// checks using a two-channel design (BGTask primary + foreground debounce
+/// fallback). Watches for newly published Daily Minute segments, newly
+/// published Daily Lessons, and user-defined phrase matches against either.
 enum BackgroundRefreshManager {
     static let taskIdentifier = "com.larryseyer.acimdailyminute.refresh"
 
@@ -73,8 +71,7 @@ enum BackgroundRefreshManager {
 
         // Fetch once, share across all enabled checks. The phrase matcher
         // needs both DTOs anyway, so coalescing here halves background
-        // bandwidth versus the JTFNews shape (which fetched stories.json
-        // separately for each check).
+        // bandwidth versus fetching each channel separately per check.
         async let minuteDTO = fetchMinuteDTO()
         async let lessonDTO = fetchLessonDTO()
         let (minute, lesson) = await (minuteDTO, lessonDTO)

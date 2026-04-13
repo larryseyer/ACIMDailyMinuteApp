@@ -4,11 +4,9 @@ import SwiftData
 /// Persists the inline `archive[]` arrays delivered alongside `/daily-minute.json`
 /// and `/daily-lesson.json` into SwiftData as `ArchivedReading` rows.
 ///
-/// Unlike the JTFNews reference architecture (which fetched per-day `.txt.gz`
-/// archive files from a separate endpoint), the ACIM publisher embeds the
-/// rolling archive directly inside each channel's JSON payload. This service
-/// therefore does no network I/O of its own — it's invoked by `DataService`
-/// after a successful fetch + decode.
+/// The ACIM publisher embeds the rolling archive directly inside each channel's
+/// JSON payload, so this service does no network I/O of its own — it's invoked
+/// by `DataService` after a successful fetch + decode.
 ///
 /// Runs on the main actor because SwiftData's `ModelContext` is itself
 /// main-actor-isolated. Idempotent by design: rows are upserted by `lineHash`,

@@ -2,10 +2,9 @@ import Foundation
 
 /// Shared phrase-matching logic used by both the foreground refresh
 /// (Daily Minute and Daily Lesson views) and the background refresh
-/// (`BackgroundRefreshManager`). Renamed from `WatchedTermMatcher` —
-/// "phrases" reflects ACIM's longer, sentence-shaped patterns the user
-/// is likely to watch (e.g. "the Holy Spirit", "real world") versus
-/// JTFNews's single-word terms.
+/// (`BackgroundRefreshManager`). "Phrases" reflects ACIM's longer,
+/// sentence-shaped patterns the user is likely to watch (e.g.
+/// "the Holy Spirit", "real world") rather than single-word terms.
 ///
 /// Dedup is keyed by `itemKey` (e.g. `"minute:{hash}"` or `"lesson:{N}"`)
 /// stored in `PhraseStorage.notifiedItemKeys`. The same item won't
