@@ -6,11 +6,11 @@ Paste into a fresh Claude Code session started in `/Users/larryseyer/ACIMDailyMi
 
 ## TL;DR
 
-Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), 3.4 (Today tab + app wiring + 5-tab shell), 3.5-pre (pbxproj repair + build.sh hardening), 3.5a (Lessons tab spine — 1–365 list + row + metadata merge), 3.5b (`LessonDetailView` with Full / Metadata-only / Absent states + `.navigationDestination(for: Int.self)`), and **3.5c (Lessons `.searchable` filter + Jump-to-N sheet with 1–365 validation)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main @ de318fa`). The iOS main-app target compiles clean against iPad 10th gen / iOS 18.1 (0 errors, 0 warnings in main-target files; 8 pre-existing Widget errors are expected and deferred to Phase 3.9). The Widget target and Watch UI files still use the old schema and remain broken **by design** — they are Phase 3.9 and 3.10 scope.
+Phases 1 (audit), 2 (architecture), 3.1 (scaffolding), 3.2 (SwiftData schema), 3.3 (service layer), 3.4 (Today tab + app wiring + 5-tab shell), 3.5-pre (pbxproj repair + build.sh hardening), 3.5a (Lessons tab spine — 1–365 list + row + metadata merge), 3.5b (`LessonDetailView` with Full / Metadata-only / Absent states + `.navigationDestination(for: Int.self)`), 3.5c (Lessons `.searchable` filter + Jump-to-N sheet with 1–365 validation), and **3.6 (Listen tab — segmented Minute/Lessons podcast feed + YouTube embed card + MiniPlayer overlay wired through existing `AudioManager`)** are complete and pushed to `https://github.com/larryseyer/ACIMDailyMinuteApp` (`main @ 475846c`). The iOS main-app target compiles clean against iPad 10th gen / iOS 18.1 (0 errors, 0 warnings in main-target files; 8 pre-existing Widget errors are expected and deferred to Phase 3.9). The Widget target and Watch UI files still use the old schema and remain broken **by design** — they are Phase 3.9 and 3.10 scope.
 
-Resume at **Phase 3.6 — Listen tab (podcast feed, AVFoundation playback, MiniPlayer, YouTube embed)**. No approved plan exists for 3.6 yet — **enter plan mode** at the start of that session to design it. `PodcastService` (actor) and `AudioManager` (@Observable @MainActor) are already built; scope is the Listen tab UI + MiniPlayer overlay wiring in `ContentView`.
+Resume at **Phase 3.7 — Archive tab (calendar + FTS5 search over `ArchivedReading.searchableText`)**. No approved plan exists for 3.7 yet — **enter plan mode** at the start of that session to design it. `ArchiveService` and the `ArchivedReading` SwiftData model (with `@unique lineHash` + FTS5 via `searchableText`) are already built; scope is the Archive tab UI — calendar date picker, per-date reading rendering, and full-text search across the archive.
 
-Phase 3.5 (all three chunks — a/b/c) is now **complete and closed**.
+Phases 3.5 (a/b/c) and 3.6 are now **complete and closed**.
 
 ## Required reading (this order)
 
@@ -22,7 +22,8 @@ Phase 3.5 (all three chunks — a/b/c) is now **complete and closed**.
 6. `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` — Phase 3.5 plan (completed across 3.5a/b/c; historical reference)
 7. `/Users/larryseyer/.claude/plans/tranquil-drifting-flame.md` — Phase 3.5b execution plan (harness artifact; subset of abundant-herding-rabin)
 8. `/Users/larryseyer/.claude/plans/squishy-bubbling-moonbeam.md` — Phase 3.5c execution plan (harness artifact; subset of abundant-herding-rabin)
-9. `/Users/larryseyer/ACIMDailyMinuteApp/README.md` — current feature overview
+9. `/Users/larryseyer/.claude/plans/starry-roaming-spring.md` — Phase 3.6 plan (Listen tab; completed at `475846c`)
+10. `/Users/larryseyer/ACIMDailyMinuteApp/README.md` — current feature overview
 
 ## Persistent memory
 
@@ -95,7 +96,11 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 │   │   │   ├── LessonsView.swift            NavigationStack(path:) + List(1...365) + 2-@Query merge + .searchable + Jump toolbar + FilteredLessonsList
 │   │   │   ├── LessonDetailView.swift       3 render states (Full / Metadata-only / Absent) with parameterized @Query predicates
 │   │   │   └── JumpToLessonSheet.swift      compact sheet; numberPad TextField; 1–365 validation; path.append(n) on submit
-│   │   ├── Digest/                          (stub — to become ListenView in 3.6)
+│   │   ├── Listen/                          ✅ Phase 3.6
+│   │   │   ├── ListenView.swift             NavigationStack + List(.plain) + segmented Minute/Lessons picker + YouTube card + load states
+│   │   │   ├── PodcastEpisodeRow.swift      whole-row Button → AudioManager.play; waveform symbol animates while active
+│   │   │   ├── YouTubePlayerView.swift      unchanged from scaffolding; 16:9 WKWebView iframe embed
+│   │   │   └── MiniPlayerView.swift         unchanged from scaffolding; bound to AudioManager in ContentView overlay
 │   │   ├── Archive/                         (stub — Phase 3.7)
 │   │   ├── Saved/                           (stub — Phase 3.8)
 │   │   ├── Settings/                        (stub sheet — Phase 3.8)
@@ -127,7 +132,7 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 
 ## Build state
 
-- **iOS main app target**: compiles clean (verified at `de318fa` against iPad 10th gen / iOS 18.1 — **zero errors and zero warnings in main-target files**; 8 Widget errors expected + deferred).
+- **iOS main app target**: compiles clean (verified at `475846c` against iPad 10th gen / iOS 18.1 — **zero errors and zero warnings in main-target files**; 8 Widget errors expected + deferred).
 - **macOS**: code-signing only (no provisioning profile in CI). Code compiles.
 - **Widget + Watch UI files**: still use old schema. Broken by design until Phases 3.9 / 3.10 — 10 Widget compile errors are expected.
 - **build.sh** now fails loudly. The old `| tail -5` pipe silently masked xcodebuild failures (which is how phantom-file pbxproj rot lingered undetected through Phase 3.4). The new `run_build` helper logs to `build/logs/{ios,macos,watchos}.log`, prints the last 80 lines on failure, and propagates exit codes via `set -o pipefail`. **Do not regress this** — running `build.sh` to its successful conclusion is meaningful again.
@@ -162,7 +167,7 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 
 **`Notification.Name`:** `.phrasesTapped`, `.forceMinuteRefresh`, `.forceLessonRefresh`, `.openSettingsRequested`, `.openAboutRequested`.
 
-## What's live at end of Phase 3.5c (`de318fa`)
+## What's live at end of Phase 3.6 (`475846c`)
 
 - Today tab: live Daily Minute + Daily Lesson fetched from `https://www.acimdailyminute.org/daily-minute.json` and `/daily-lesson.json`. Pull-to-refresh resets cooldowns and re-fetches. Offline → last cached reading renders with a banner.
 - **Lessons tab: 1–365 spine renders + tap navigates to detail.** Two `@Query`s (`DailyLesson` + `ArchivedReading` where `channel == "daily-lesson"`) merged into `[Int: LessonMeta]` via `.reduce(into:)`. `DailyLesson` wins on conflict. Today's lesson shows real title + date; recent archive rows show title; everything else shows "Not yet read." Bookmark dot renders for any lesson whose `Bookmark.itemKey` starts with `lesson:`.
@@ -170,9 +175,10 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 - **Lesson detail renders the right state for any N in 1–365.** `LessonDetailView` builds two parameterized `@Query`s in `init` (`DailyLesson.lessonNumber == n`; `ArchivedReading.channel == "daily-lesson" && lessonNumber == n`). Full state: ScrollView + detail-scale Georgia (24 title / 19 body) + bookmark + ShareLink + Listen chip. Metadata-only: lesson N + `archive.text`-as-title + dateString + audio chip if present + "Full text available once today's lesson fetches this entry." Absent: `ContentUnavailableView` + Refresh button that calls `DataService.fetchDailyLesson` / `persistLesson` (honest copy when today's lesson ≠ requested N or cooldown blocks).
 - Bookmark toggle on each Today card → writes `Bookmark` row with `itemKey "minute:{hash}"` or `"lesson:{N}"`.
 - ShareLink → `ShareTextBuilder.minuteShareText` / `.lessonShareText`.
-- Listen chip on each card → calls `AudioManager.play(url:title:)`. MiniPlayer overlay is reserved in `ContentView` but hidden until audio starts.
+- Listen chip on each card → calls `AudioManager.play(url:title:)`. MiniPlayer overlay in `ContentView` becomes visible once `audioManager.hasActiveAudio == true` (hidden on the Listen tab itself so the row's own waveform indicator is canonical there).
+- **Listen tab (3.6): segmented Minute / Lessons picker + newest-first episode list.** Each feed fetches lazily on first visit via `PodcastService.fetch{Minute,Lesson}Episodes` and caches in view-local `@State` per feed for the session. Pull-to-refresh flips `force=true` to bypass URLSession cache. Row tap routes to `AudioManager.play(url:title:)`; the currently-playing row swaps `play.fill` → animated `waveform` in gold accent. When today's `DailyMinute.youtubeURL` is non-nil, the top of the list renders a 16:9 inline `YouTubePlayerView` card — the existing `WKWebView`-based embed (only UIKit permitted per ground rules). Load states: `.loading` → ProgressView; `.failed` → `ContentUnavailableView` with wifi-slash + "Pull to retry"; `.loaded` + empty → "No episodes yet."
 - Settings sheet opens via toolbar button or ⌘, (macOS). Content is a "Phase 3.8" placeholder.
-- 3 other tabs (Listen / Archive / Saved) render "coming soon" placeholders.
+- 2 other tabs (Archive / Saved) render "coming soon" placeholders.
 - macOS About sheet (⌘ menu → About) renders the custom AboutView.
 
 ## Phase 3.5 scope — Lessons tab (plan locked)
@@ -214,8 +220,8 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
 | 3.5a | ✅ | Lessons tab spine — 1–365 list + row + metadata merge (`9058ee5`) |
 | 3.5b | ✅ | `LessonDetailView` (Full / Metadata-only / Absent) + `.navigationDestination(for: Int.self)` (`b526c5b`) |
 | 3.5c | ✅ | Lessons `.searchable` filter + Jump-to-N sheet (1–365 validation) (`de318fa`) |
-| 3.6 | ⏭ NEXT | Listen tab (podcast feed, AVFoundation playback, MiniPlayer, YouTube embed) |
-| 3.7 | | Archive tab (calendar + FTS5 search over `ArchivedReading.searchableText`) |
+| 3.6 | ✅ | Listen tab (segmented podcast feed + YouTube embed + MiniPlayer wiring) (`475846c`) |
+| 3.7 | ⏭ NEXT | Archive tab (calendar + FTS5 search over `ArchivedReading.searchableText`) |
 | 3.8 | | Saved + Settings (Phrases editor, notification toggles) + Onboarding |
 | 3.9 | | Widget target (3 families + Live Activity UI) |
 | 3.10 | | Watch companion UI + 3 complications |
@@ -224,19 +230,20 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
 
 ## First move for the new session
 
-1. Read the 9 required-reading files above. Plans traverse in **timeline order** starting at `gentle-gathering-pearl.md`; OTTO-prefixed plans in `~/.claude/plans/` belong to a separate app and are out of scope here.
-2. Read the memory index at `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memory/MEMORY.md` and every file it points to. **New rules** locked during 3.5c: (a) no TODOs/FIXMEs anywhere — pick a sensible default and fully implement; (b) planning is my job — enter plan mode for every code-producing sub-phase, even when a parent plan is pre-approved.
+1. Read the 10 required-reading files above. Plans traverse in **timeline order** starting at `gentle-gathering-pearl.md`; OTTO-prefixed plans in `~/.claude/plans/` belong to a separate app and are out of scope here.
+2. Read the memory index at `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memory/MEMORY.md` and every file it points to. Load-bearing rules locked during 3.5c: (a) no TODOs/FIXMEs anywhere — pick a sensible default and fully implement; (b) planning is my job — enter plan mode for every code-producing sub-phase, even when a parent plan is pre-approved.
 3. Confirm active model is Claude Opus 4.6 and `/fast` is OFF. Flag either if not.
-4. Verify the iOS main target is still green at `de318fa` (main-target-only check shown in **Build state** above, using the `id=<UUID>` destination form — the `name=` form is ambiguous because multiple iPad 10th-gen sims on iOS 18.1 are installed). Do NOT require the full `./build.sh` to pass — Widget + Watch targets are broken by design until Phases 3.9 / 3.10.
-5. **Enter plan mode for Phase 3.6 — Listen tab.** No approved plan exists yet. Scope:
-   - Listen tab view — podcast feed (Minute + Lessons endpoints already fetched by `PodcastService`), row rendering, tap-to-play via `AudioManager`.
-   - MiniPlayer overlay — wire the reserved slot in `ContentView` to become visible once `AudioManager` has an active URL. Transport controls (play/pause, skip ±15s, stop), title, progress.
-   - YouTube embed — WKWebView-based mini player for any `youtube_*` fields that surface on Minute / Lesson responses (only UIKit that's allowed per ground rules).
-   - Services already built: `PodcastService.fetchMinuteEpisodes / fetchLessonEpisodes`; `AudioManager.play / togglePlayback / skip / stop` with `MPNowPlayingInfoCenter` + remote commands.
-   - Files likely new: `Views/Listen/ListenView.swift`, `Views/Listen/PodcastEpisodeRow.swift`, `Views/Listen/MiniPlayerView.swift`, `Views/Listen/YouTubeEmbedView.swift`.
-   - Pre-allocate pbxproj IDs in the plan (suggest: buildFiles `AA000001220-1223`, fileRefs `AA000002220-2223`, group `AA000005023 /* Listen */`).
+4. Verify the iOS main target is still green at `475846c` (main-target-only check shown in **Build state** above, using the `id=<UUID>` destination form — the `name=` form is ambiguous because multiple iPad 10th-gen sims on iOS 18.1 are installed). Do NOT require the full `./build.sh` to pass — Widget + Watch targets are broken by design until Phases 3.9 / 3.10.
+5. **Enter plan mode for Phase 3.7 — Archive tab.** No approved plan exists yet. Scope:
+   - Archive tab view — calendar date picker (`DatePicker(.graphical)` or custom month grid) over available `ArchivedReading` rows.
+   - Per-date rendering: when a date is selected, show the Daily Minute + Daily Lesson `ArchivedReading` rows (`channel == "daily-minute"` / `"daily-lesson"`) for that date with full text + bookmark + share.
+   - Full-text search: `.searchable` across the archive, consuming `ArchivedReading.searchableText` via SwiftData's FTS5 hook (already wired in the schema). Highlight matches in results; tapping a result opens that date.
+   - Infinite/pull-to-load older archive pages via `ArchiveService` if the local cache is thin (cooldown key `FetchCooldownKey.archive` already exists).
+   - Services already built: `ArchiveService` (`@MainActor final class`; persists inline archive[] into `ArchivedReading` via `@unique lineHash`).
+   - Files likely new: `Views/Archive/ArchiveView.swift`, `Views/Archive/ArchiveCalendarView.swift` (or reuse system `DatePicker`), `Views/Archive/ArchiveSearchResultsView.swift`, `Views/Archive/ArchiveDateDetailView.swift`.
+   - Pre-allocate pbxproj IDs in the plan (suggest: buildFiles `AA000001220-1223`, fileRefs `AA000002220-2223`, possibly reuse group `AA000005011 /* Archive */` if it already exists — verify first).
    - Lock all design decisions in the plan itself — no TODOs allowed in committed code.
-6. After 3.6 ships, proceed to **Phase 3.7 — Archive tab** (calendar + FTS5 search over `ArchivedReading.searchableText`). Also needs a fresh plan.
+6. After 3.7 ships, proceed to **Phase 3.8 — Saved tab + Settings + Onboarding** (phrases editor, notification toggles, deep-link reactivation). Also needs a fresh plan.
 
 ## End-goal reminder
 
