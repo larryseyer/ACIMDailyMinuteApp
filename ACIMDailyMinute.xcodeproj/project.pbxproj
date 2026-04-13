@@ -26,7 +26,6 @@
 		AA000001018 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002018 /* AudioManager.swift */; };
 		AA000001019 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
-		AA000001022 /* GzipUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002022 /* GzipUtility.swift */; };
 		AA000001024 /* ArchiveSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002024 /* ArchiveSearchView.swift */; };
 		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
 		AA000001026 /* SourceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002026 /* SourceDetailView.swift */; };
@@ -35,7 +34,6 @@
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
 		AA000001031 /* WatchedTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002031 /* WatchedTermsView.swift */; };
-		AA000001033 /* ArchiveLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002033 /* ArchiveLineParser.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
@@ -129,7 +127,6 @@
 		AA000002018 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		AA000002019 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
-		AA000002022 /* GzipUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GzipUtility.swift; sourceTree = "<group>"; };
 		AA000002024 /* ArchiveSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveSearchView.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA000002026 /* SourceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDetailView.swift; sourceTree = "<group>"; };
@@ -138,7 +135,6 @@
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		AA000002031 /* WatchedTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermsView.swift; sourceTree = "<group>"; };
-		AA000002033 /* ArchiveLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveLineParser.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
@@ -262,7 +258,6 @@
 				AA000002015 /* PodcastService.swift */,
 				AA000002018 /* AudioManager.swift */,
 				AA000002020 /* ArchiveService.swift */,
-				AA000002033 /* ArchiveLineParser.swift */,
 				AA000002027 /* BackgroundRefreshManager.swift */,
 				AA000002028 /* NotificationManager.swift */,
 				AA000002029 /* ConnectivityManager.swift */,
@@ -323,7 +318,6 @@
 		AA000005010 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002022 /* GzipUtility.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002036 /* TermExtractor.swift */,
@@ -573,7 +567,6 @@
 				AA000001018 /* AudioManager.swift in Sources */,
 				AA000001019 /* MiniPlayerView.swift in Sources */,
 				AA000001020 /* ArchiveService.swift in Sources */,
-				AA000001022 /* GzipUtility.swift in Sources */,
 				AA000001024 /* ArchiveSearchView.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,
 				AA000001026 /* SourceDetailView.swift in Sources */,
@@ -582,7 +575,6 @@
 				AA000001029 /* ConnectivityManager.swift in Sources */,
 				AA000001030 /* PrivacyPolicyView.swift in Sources */,
 				AA000001031 /* WatchedTermsView.swift in Sources */,
-				AA000001033 /* ArchiveLineParser.swift in Sources */,
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
 				AA000001036 /* TermExtractor.swift in Sources */,

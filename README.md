@@ -132,7 +132,8 @@ ACIMDailyMinuteApp/
 │   │   │                             PrivacyPolicyView
 │   │   └── Onboarding/               OnboardingView
 │   ├── Utilities/                    BrandColors, PlatformTypography,
-│   │                                 ShareTextBuilder, GzipUtility
+│   │                                 ShareTextBuilder, HashUtility,
+│   │                                 PhraseStorage
 │   ├── Resources/                    ACIMChime.caf
 │   └── Assets.xcassets
 │

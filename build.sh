@@ -5,7 +5,11 @@
 set -e
 
 SCHEME="ACIMDailyMinute"
-IPHONE_SIM="iPhone 16"
+# iPad (10th generation) on iOS 18.1 is the current phased test target
+# (per memory project_test_targets.md). Physical iPhone 11 comes in when
+# we're close to shipping.
+IPHONE_SIM="iPad (10th generation)"
+IPHONE_OS="18.1"
 WATCH_SIM="Apple Watch Series 10 (46mm)"
 BUILD_DIR="$(pwd)/build"
 
@@ -15,10 +19,10 @@ echo "════════════════════════�
 echo ""
 
 # ── iOS Simulator (covers main app + widget + Live Activity) ──
-echo "▸ Building iOS (Debug) for ${IPHONE_SIM}..."
+echo "▸ Building iOS (Debug) for ${IPHONE_SIM} (iOS ${IPHONE_OS})..."
 xcodebuild \
   -scheme "$SCHEME" \
-  -destination "platform=iOS Simulator,name=${IPHONE_SIM}" \
+  -destination "platform=iOS Simulator,name=${IPHONE_SIM},OS=${IPHONE_OS}" \
   -configuration Debug \
   -derivedDataPath "$BUILD_DIR" \
   build \
