@@ -169,7 +169,7 @@ Based on the [acimdailyminute.org](https://www.acimdailyminute.org) design token
 
 ## Credits
 
-This app is architecturally derived from the [JTFNews iOS app](https://github.com/larryseyer/jtfnewsapp), repointed at the ACIM content stream. Same zero-dependency, privacy-first, pure-static-consumer philosophy.
+Built around a zero-dependency, privacy-first, pure-static-consumer philosophy: no tracking, no analytics, no third-party SDKs. Content is fetched directly from `acimdailyminute.org` static endpoints and cached locally via SwiftData.
 
 ### About the source text
 

@@ -101,9 +101,9 @@ final class FeedXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-        let isJTFSource = elementName == "source" || qName == "jtf:source"
+        let isSourceElement = elementName == "source" || qName == "acim:source"
 
-        guard isJTFSource,
+        guard isSourceElement,
               let name = attributeDict["name"],
               !seenNames.contains(name)
         else { return }

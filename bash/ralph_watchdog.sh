@@ -54,7 +54,7 @@ check_progress() {
     # Check if all done
     if [[ "$completed" == "$total" ]]; then
         log "ALL STORIES COMPLETE! ($completed/$total)"
-        log "Ralph has finished building the JTF News app."
+        log "Ralph has finished building the ACIM Daily Minute app."
         exit 0
     fi
 
@@ -91,7 +91,7 @@ check_progress() {
 
 main() {
     log "=========================================="
-    log "Ralph Watchdog Started - JTF News App"
+    log "Ralph Watchdog Started - ACIM Daily Minute"
     log "Check interval: ${CHECK_INTERVAL}s ($(($CHECK_INTERVAL / 60)) min)"
     log "Stall threshold: ${STALL_THRESHOLD}s ($(($STALL_THRESHOLD / 60)) min)"
     log "=========================================="
