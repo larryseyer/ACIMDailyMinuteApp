@@ -23,6 +23,7 @@
 		AA000001019 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
 		AA000001215 /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
 		AA000001216 /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
+		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
 		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
 		AA000001024 /* ArchiveSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002024 /* ArchiveSearchView.swift */; };
@@ -129,6 +130,7 @@
 		AA000002019 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		AA000002215 /* ListenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenView.swift; sourceTree = "<group>"; };
 		AA000002216 /* PodcastEpisodeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeRow.swift; sourceTree = "<group>"; };
+		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
 		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
 		AA000002024 /* ArchiveSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveSearchView.swift; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 				AA000002005 /* ArchiveView.swift */,
 				AA000002024 /* ArchiveSearchView.swift */,
 				AA000002069 /* MacCalendarView.swift */,
+				AA000002217 /* ArchiveDateDetailView.swift */,
 				AA000002218 /* ArchivedReadingCard.swift */,
 			);
 			path = Archive;
@@ -594,6 +597,7 @@
 				AA000001057 /* ShareTextBuilder.swift in Sources */,
 				AA000001081 /* PlatformTypography.swift in Sources */,
 				AA000001082 /* MacCalendarView.swift in Sources */,
+				AA000001217 /* ArchiveDateDetailView.swift in Sources */,
 				AA000001218 /* ArchivedReadingCard.swift in Sources */,
 				AA000001083 /* AboutView.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
