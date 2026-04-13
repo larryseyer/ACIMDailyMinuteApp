@@ -1,9 +1,16 @@
 import Foundation
 import SwiftData
 
-/// Same two-phase pattern as `DataService`: pure-I/O fetch returns DTOs;
-/// MainActor persist writes them through the caller's `ModelContext` so
-/// `@Query` observers update without cross-context merge flakiness.
+/// Fetches and parses `/feed.xml`. Same two-phase pattern as `DataService`:
+/// a pure-I/O fetch returns lightweight DTOs, then a `@MainActor` persist
+/// step records the fetch into `FetchCooldown`.
+///
+/// Unlike `DataService`, the feed does NOT write SwiftData rows. The Daily
+/// Minute and Daily Lesson JSON endpoints are the source of truth for
+/// content; `feed.xml` is a discovery surface (RSS readers, podcast apps,
+/// the in-app archive list in Phase 3.7). Persist exists only so callers
+/// can tag the fetch as completed and enforce the per-resource cooldown
+/// against the same `FetchCooldown` machinery the JSON services use.
 struct FeedService: Sendable {
     let modelContainer: ModelContainer
 
@@ -11,10 +18,10 @@ struct FeedService: Sendable {
         self.modelContainer = modelContainer
     }
 
-    /// Returns `nil` if the cooldown blocks the fetch.
-    func fetchSourceDTOs(baseURL: String = "https://www.acimdailyminute.org") async throws -> [SourceDTO]? {
+    /// Returns `nil` if the cooldown window blocks the fetch.
+    func fetchFeedItems(baseURL: String = "https://www.acimdailyminute.org") async throws -> [FeedItemDTO]? {
         guard FetchCooldown.shouldFetch(
-            key: FetchCooldownKey.sources,
+            key: FetchCooldownKey.feed,
             interval: FetchCooldownInterval.nearStatic
         ) else { return nil }
 
@@ -25,73 +32,63 @@ struct FeedService: Sendable {
         return parser.parse()
     }
 
+    /// Records the successful fetch in `FetchCooldown`. No SwiftData writes —
+    /// the JSON services own the canonical content rows. Kept as a separate
+    /// `@MainActor` entry point so callers can decide *when* to mark the
+    /// cooldown (e.g. after archive UI consumption succeeds, not just on
+    /// network success).
     @MainActor
-    static func persistSources(_ dtos: [SourceDTO], in context: ModelContext) throws {
-        for dto in dtos {
-            let name = dto.name
-            let descriptor = FetchDescriptor<Source>(
-                predicate: #Predicate { $0.name == name }
-            )
-            let existing = try context.fetch(descriptor)
-
-            if let source = existing.first {
-                source.accuracy = dto.accuracy
-                source.bias = dto.bias
-                source.speed = dto.speed
-                source.consensus = dto.consensus
-                source.controlType = dto.controlType
-                source.owner = dto.owner
-                source.ownerDisplay = dto.ownerDisplay
-            } else {
-                let source = Source()
-                source.id = dto.name.lowercased().replacingOccurrences(of: " ", with: "-")
-                source.name = dto.name
-                source.accuracy = dto.accuracy
-                source.bias = dto.bias
-                source.speed = dto.speed
-                source.consensus = dto.consensus
-                source.controlType = dto.controlType
-                source.owner = dto.owner
-                source.ownerDisplay = dto.ownerDisplay
-                context.insert(source)
-            }
-        }
-        try context.save()
-        FetchCooldown.markFetched(key: FetchCooldownKey.sources)
+    static func persistFeed(_ items: [FeedItemDTO], in context: ModelContext) throws {
+        _ = items
+        _ = context
+        FetchCooldown.markFetched(key: FetchCooldownKey.feed)
     }
 }
 
 // MARK: - DTO
 
-struct SourceDTO: Sendable {
-    let name: String
-    let url: String
-    let accuracy: Double
-    let bias: Double
-    let speed: Double
-    let consensus: Double
-    let controlType: String
-    let owner: String
-    let ownerDisplay: String
+/// One `<item>` in `/feed.xml`. `stream` is `"minute"` or `"lesson"` (the
+/// publisher's `<acim:stream>` discriminator). `sourceRef` is reserved for
+/// the publisher's optional `<acim:source>` element — currently never
+/// emitted, kept optional for forward compatibility.
+struct FeedItemDTO: Sendable {
+    let guid: String
+    let title: String
+    let link: String
+    let pubDate: String
+    let stream: String
+    let sourceRef: String?
 }
 
 // MARK: - XML Parser
 
+/// `XMLParserDelegate` is callback-based and inherently single-threaded;
+/// `@unchecked Sendable` is the standard escape hatch for NSObject delegate
+/// types under Swift 6 strict concurrency. Each parser instance is used
+/// exactly once on a single task — the `parse()` call.
 final class FeedXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
     private let data: Data
-    private var sources: [SourceDTO] = []
-    private var seenNames: Set<String> = []
+    private var items: [FeedItemDTO] = []
+
+    private var currentElement: String = ""
+    private var currentTitle: String = ""
+    private var currentLink: String = ""
+    private var currentPubDate: String = ""
+    private var currentGuid: String = ""
+    private var currentStream: String = ""
+    private var currentSourceRef: String? = nil
+    private var inItem: Bool = false
 
     init(data: Data) {
         self.data = data
     }
 
-    func parse() -> [SourceDTO] {
+    func parse() -> [FeedItemDTO] {
         let parser = XMLParser(data: data)
         parser.delegate = self
         parser.shouldProcessNamespaces = true
         parser.parse()
-        return sources
+        return items
     }
 
     func parser(
@@ -101,26 +98,52 @@ final class FeedXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-        let isSourceElement = elementName == "source" || qName == "acim:source"
+        currentElement = elementName
+        if elementName == "item" {
+            inItem = true
+            currentTitle = ""
+            currentLink = ""
+            currentPubDate = ""
+            currentGuid = ""
+            currentStream = ""
+            currentSourceRef = nil
+        }
+    }
 
-        guard isSourceElement,
-              let name = attributeDict["name"],
-              !seenNames.contains(name)
-        else { return }
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        guard inItem else { return }
+        let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
 
-        seenNames.insert(name)
+        switch currentElement {
+        case "title":   currentTitle += string
+        case "link":    currentLink += string
+        case "pubDate": currentPubDate += string
+        case "guid":    currentGuid += string
+        case "stream":  currentStream += string
+        case "source":  currentSourceRef = (currentSourceRef ?? "") + string
+        default: break
+        }
+    }
 
-        let dto = SourceDTO(
-            name: name,
-            url: attributeDict["url"] ?? "",
-            accuracy: Double(attributeDict["accuracy"] ?? "") ?? 0.0,
-            bias: Double(attributeDict["bias"] ?? "") ?? 0.0,
-            speed: Double(attributeDict["speed"] ?? "") ?? 0.0,
-            consensus: Double(attributeDict["consensus"] ?? "") ?? 0.0,
-            controlType: attributeDict["control_type"] ?? "",
-            owner: attributeDict["owner"] ?? "",
-            ownerDisplay: attributeDict["owner_display"] ?? attributeDict["owner"] ?? ""
-        )
-        sources.append(dto)
+    func parser(
+        _ parser: XMLParser,
+        didEndElement elementName: String,
+        namespaceURI: String?,
+        qualifiedName qName: String?
+    ) {
+        if elementName == "item" {
+            let dto = FeedItemDTO(
+                guid: currentGuid.trimmingCharacters(in: .whitespacesAndNewlines),
+                title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+                link: currentLink.trimmingCharacters(in: .whitespacesAndNewlines),
+                pubDate: currentPubDate.trimmingCharacters(in: .whitespacesAndNewlines),
+                stream: currentStream.trimmingCharacters(in: .whitespacesAndNewlines),
+                sourceRef: currentSourceRef?.trimmingCharacters(in: .whitespacesAndNewlines)
+            )
+            items.append(dto)
+            inItem = false
+        }
+        currentElement = ""
     }
 }

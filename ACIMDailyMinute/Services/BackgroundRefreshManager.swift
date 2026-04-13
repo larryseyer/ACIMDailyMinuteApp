@@ -4,13 +4,20 @@ import Foundation
 @preconcurrency import BackgroundTasks
 import SwiftData
 
+/// Coordinates BGTaskScheduler-driven and foreground catch-up notification
+/// checks. Mirrors the JTFNews two-channel design (BGTask primary +
+/// foreground debounce fallback) but the *content* checks are completely
+/// rewritten for ACIM: instead of stories/corrections, we watch for newly
+/// published Daily Minute segments, newly published Daily Lessons, and
+/// user-defined phrase matches against either.
 enum BackgroundRefreshManager {
     static let taskIdentifier = "com.larryseyer.acimdailyminute.refresh"
 
     /// Minimum gap between foreground catch-up runs. `BGAppRefreshTask` is
     /// opportunistic on iOS — on older devices it may never fire — so the
     /// foreground path is the *primary* notification trigger, not a fallback.
-    /// We debounce to avoid hammering www.acimdailyminute.org during rapid app switches.
+    /// We debounce to avoid hammering acimdailyminute.org during rapid app
+    /// switches.
     private static let foregroundDebounceInterval: TimeInterval = 60
     private static let lastForegroundCheckKey = "lastForegroundCheck"
 
@@ -26,7 +33,7 @@ enum BackgroundRefreshManager {
 
     static func scheduleRefresh() {
         let request = BGAppRefreshTaskRequest(identifier: taskIdentifier)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60) // 15 minutes
+        request.earliestBeginDate = Date(timeIntervalSinceNow: 15 * 60)
         try? BGTaskScheduler.shared.submit(request)
     }
 
@@ -42,7 +49,7 @@ enum BackgroundRefreshManager {
     }
 
     private static func handleRefresh(task: BGAppRefreshTask) {
-        scheduleRefresh() // Reschedule for next time
+        scheduleRefresh()
 
         let taskRunner = Task {
             await performBackgroundCheck()
@@ -54,132 +61,128 @@ enum BackgroundRefreshManager {
         }
     }
 
-    /// Runs all enabled text-only notification checks. Deliberately excludes
-    /// the daily digest: audio/video content drops once per day at 00:00 GMT
-    /// and the user will see the new episode whenever they next open the
-    /// Digest tab. Spending scarce `BGAppRefreshTask` budget on polling
-    /// `podcast.xml` would steal runway from the breaking-news, corrections,
-    /// and watched-term checks that actually warrant interrupting the user.
+    /// Runs all enabled text-only notification checks. Each check is gated
+    /// independently so the user's notification toggles in Settings map
+    /// directly to a network call (or its absence).
     private static func performBackgroundCheck() async {
-        let notifyCorrections = UserDefaults.standard.bool(forKey: "notifyCorrections")
-        let notifyBreaking = UserDefaults.standard.bool(forKey: "notifyBreakingFacts")
-        let notifyWatchedTerms = UserDefaults.standard.bool(forKey: "notifyWatchedTerms")
+        let notifyMinute = UserDefaults.standard.bool(forKey: "notifyNewMinute")
+        let notifyLesson = UserDefaults.standard.bool(forKey: "notifyNewLesson")
+        let notifyPhrases = UserDefaults.standard.bool(forKey: "notifyPhraseMatches")
 
-        guard notifyCorrections || notifyBreaking || notifyWatchedTerms else { return }
+        guard notifyMinute || notifyLesson || notifyPhrases else { return }
 
-        if notifyBreaking {
-            await checkForBreakingFacts()
+        // Fetch once, share across all enabled checks. The phrase matcher
+        // needs both DTOs anyway, so coalescing here halves background
+        // bandwidth versus the JTFNews shape (which fetched stories.json
+        // separately for each check).
+        async let minuteDTO = fetchMinuteDTO()
+        async let lessonDTO = fetchLessonDTO()
+        let (minute, lesson) = await (minuteDTO, lessonDTO)
+
+        if notifyMinute, let minute {
+            await checkForNewMinute(minute)
         }
-
-        if notifyCorrections {
-            await checkForCorrections()
+        if notifyLesson, let lesson {
+            await checkForNewLesson(lesson)
         }
-
-        if notifyWatchedTerms {
-            await checkForWatchedTerms()
+        if notifyPhrases {
+            await checkForPhraseMatches(minute: minute, lesson: lesson)
         }
     }
 
-    private static func checkForBreakingFacts() async {
+    // MARK: - Pure fetches
+
+    private static func fetchMinuteDTO() async -> DailyMinuteResponse? {
         do {
-            let url = URL(string: "https://www.acimdailyminute.org/stories.json")!
+            let url = URL(string: "https://www.acimdailyminute.org/daily-minute.json")!
             let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try JSONDecoder().decode(StoriesResponse.self, from: data)
-
-            let lastCheckKey = "lastBreakingCheck"
-            let hasRunBefore = UserDefaults.standard.object(forKey: lastCheckKey) != nil
-            let lastCheckDate = Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: lastCheckKey))
-
-            let newBreaking = response.stories.filter { story in
-                guard let publishedStr = story.publishedAt else { return false }
-                let formatter = ISO8601DateFormatter()
-                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                let date = formatter.date(from: publishedStr) ?? {
-                    formatter.formatOptions = [.withInternetDateTime]
-                    return formatter.date(from: publishedStr)
-                }()
-                guard let date else { return false }
-                return date > lastCheckDate
-            }
-
-            // First ever run: seed the baseline silently so we don't spam the
-            // user with "N new facts" on fresh install. Subsequent runs fire
-            // for anything newer than the previous check — no artificial 1hr
-            // window, which previously dropped valid stories whenever BGTask
-            // happened to wake more than an hour after publication.
-            if hasRunBefore, !newBreaking.isEmpty {
-                await NotificationManager.shared.sendNotification(
-                    title: "Breaking Facts",
-                    body: "\(newBreaking.count) new verified fact\(newBreaking.count == 1 ? "" : "s") published",
-                    identifier: "breaking-\(Date().timeIntervalSince1970)"
-                )
-                LiveActivityManager.startOrUpdate(
-                    storyCount: newBreaking.count,
-                    latestFact: newBreaking.first?.fact ?? "",
-                    publishedDate: Date()
-                )
-            }
-
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: lastCheckKey)
+            return try JSONDecoder().decode(DailyMinuteResponse.self, from: data)
         } catch {
-            print("[BackgroundRefresh] checkForBreakingFacts failed: \(String(reflecting: error))")
+            print("[BackgroundRefresh] fetchMinuteDTO failed: \(String(reflecting: error))")
+            return nil
         }
     }
 
-    private static func checkForCorrections() async {
+    private static func fetchLessonDTO() async -> DailyLessonResponse? {
         do {
-            let url = URL(string: "https://www.acimdailyminute.org/corrections.json")!
+            let url = URL(string: "https://www.acimdailyminute.org/daily-lesson.json")!
             let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try JSONDecoder().decode(CorrectionsResponse.self, from: data)
-            let corrections = response.corrections
-
-            let lastCountKey = "lastCorrectionCount"
-            // Distinguish "never checked" from "checked, count was zero" —
-            // the previous `lastCount > 0` guard made the first non-zero
-            // delta unreachable because UserDefaults.integer(forKey:) returns
-            // 0 for both cases.
-            let hasRunBefore = UserDefaults.standard.object(forKey: lastCountKey) != nil
-            let lastCount = UserDefaults.standard.integer(forKey: lastCountKey)
-
-            if hasRunBefore, corrections.count > lastCount {
-                let newCount = corrections.count - lastCount
-                await NotificationManager.shared.sendNotification(
-                    title: "Corrections Posted",
-                    body: "\(newCount) new correction\(newCount == 1 ? "" : "s") published",
-                    identifier: "corrections-\(Date().timeIntervalSince1970)"
-                )
-            }
-
-            UserDefaults.standard.set(corrections.count, forKey: lastCountKey)
+            return try JSONDecoder().decode(DailyLessonResponse.self, from: data)
         } catch {
-            print("[BackgroundRefresh] checkForCorrections failed: \(String(reflecting: error))")
+            print("[BackgroundRefresh] fetchLessonDTO failed: \(String(reflecting: error))")
+            return nil
         }
     }
 
-    private static func checkForWatchedTerms() async {
-        guard !WatchedTermsStorage.terms.isEmpty else { return }
+    // MARK: - Per-channel checks
 
-        do {
-            let url = URL(string: "https://www.acimdailyminute.org/stories.json")!
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let response = try JSONDecoder().decode(StoriesResponse.self, from: data)
+    /// Detects a freshly published Daily Minute by comparing
+    /// `(segment_id, date)` against the values seen on the previous run.
+    /// First-ever run seeds the baseline silently to avoid a "1 new" pop on
+    /// fresh install.
+    private static func checkForNewMinute(_ dto: DailyMinuteResponse) async {
+        let lastIdKey = "lastMinuteSegmentId"
+        let lastDateKey = "lastMinuteDate"
+        let hasRunBefore = UserDefaults.standard.object(forKey: lastIdKey) != nil
+        let lastId = UserDefaults.standard.integer(forKey: lastIdKey)
+        let lastDate = UserDefaults.standard.string(forKey: lastDateKey) ?? ""
 
-            let matches = WatchedTermMatcher.findNewMatches(in: response.stories)
-            if !matches.isEmpty {
-                UserDefaults.standard.set(matches.count, forKey: "watchedTabBadge")
-                await NotificationManager.shared.sendNotification(
-                    title: "Watched Terms",
-                    body: "\(matches.count) new stor\(matches.count == 1 ? "y matches" : "ies match") your watched terms",
-                    identifier: "watched-terms-\(Date().timeIntervalSince1970)",
-                    userInfo: ["type": "watchedTerms"]
-                )
-            }
+        let isNew = dto.segment_id != lastId || dto.date != lastDate
 
-            WatchedTermMatcher.markAllNotified(hashes: Set(response.stories.map(\.hash)))
-        } catch {
-            print("[BackgroundRefresh] checkForWatchedTerms failed: \(String(reflecting: error))")
+        if hasRunBefore, isNew {
+            await NotificationManager.shared.sendNotification(
+                title: "New Daily Minute",
+                body: dto.text,
+                identifier: "minute-\(dto.segment_id)"
+            )
         }
+
+        UserDefaults.standard.set(dto.segment_id, forKey: lastIdKey)
+        UserDefaults.standard.set(dto.date, forKey: lastDateKey)
     }
 
+    /// Detects a freshly published Daily Lesson by comparing `lesson_id`
+    /// against the value seen on the previous run.
+    private static func checkForNewLesson(_ dto: DailyLessonResponse) async {
+        let lastIdKey = "lastLessonId"
+        let hasRunBefore = UserDefaults.standard.object(forKey: lastIdKey) != nil
+        let lastId = UserDefaults.standard.integer(forKey: lastIdKey)
+
+        if hasRunBefore, dto.lesson_id != lastId {
+            await NotificationManager.shared.sendNotification(
+                title: "Lesson \(dto.lesson_id)",
+                body: dto.title,
+                identifier: "lesson-\(dto.lesson_id)"
+            )
+        }
+
+        UserDefaults.standard.set(dto.lesson_id, forKey: lastIdKey)
+    }
+
+    /// Runs the user's phrase watchlist against today's minute and lesson.
+    /// `PhraseMatcher` handles dedup via `PhraseStorage.notifiedItemKeys` so
+    /// re-running on the same content is idempotent.
+    private static func checkForPhraseMatches(
+        minute: DailyMinuteResponse?,
+        lesson: DailyLessonResponse?
+    ) async {
+        guard !PhraseStorage.phrases.isEmpty else { return }
+
+        var matches: [PhraseMatcher.Match] = []
+        if let minute { matches.append(contentsOf: PhraseMatcher.findNewMatches(inMinute: minute)) }
+        if let lesson { matches.append(contentsOf: PhraseMatcher.findNewMatches(inLesson: lesson)) }
+
+        guard !matches.isEmpty else { return }
+
+        UserDefaults.standard.set(matches.count, forKey: "phraseMatchBadge")
+        await NotificationManager.shared.sendNotification(
+            title: "Phrase Match",
+            body: "\(matches.count) new reading\(matches.count == 1 ? "" : "s") match\(matches.count == 1 ? "es" : "") your phrases",
+            identifier: "phrase-match-\(Date().timeIntervalSince1970)",
+            userInfo: ["type": "phraseMatch"]
+        )
+
+        PhraseMatcher.markAllNotified(itemKeys: matches.map(\.itemKey))
+    }
 }
 #endif

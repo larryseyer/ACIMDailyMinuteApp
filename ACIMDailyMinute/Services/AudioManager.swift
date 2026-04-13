@@ -17,7 +17,7 @@ final class AudioManager {
     func play(url: String, title: String) {
         stop()
 
-        guard let audioURL = URL(string: url) else { return }
+        guard let audioURL = URL(string: Self.resolve(url)) else { return }
 
         configureAudioSession()
 
@@ -64,6 +64,20 @@ final class AudioManager {
         duration = 0
         currentTitle = ""
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
+    // MARK: - URL Resolution
+
+    /// The ACIM publisher emits relative `audio_url` paths
+    /// (e.g. `/audio/2026-04-13.mp3`) inside the JSON and podcast feeds.
+    /// `AVPlayer` requires absolute URLs, so prepend the canonical host
+    /// when the input lacks a scheme. Already-absolute URLs (podcast
+    /// enclosure URLs that point to a CDN, manually-pasted external
+    /// links) pass through unchanged.
+    static func resolve(_ url: String) -> String {
+        if url.hasPrefix("http://") || url.hasPrefix("https://") { return url }
+        let host = "https://www.acimdailyminute.org"
+        return url.hasPrefix("/") ? "\(host)\(url)" : "\(host)/\(url)"
     }
 
     // MARK: - Audio Session

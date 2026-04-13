@@ -6,7 +6,7 @@ import WidgetKit
 /// and writes into a caller-supplied `ModelContext`. Writing through the
 /// SwiftUI-injected context lets `@Query` observe the changes immediately
 /// without relying on cross-context auto-merge (which isn't reliable on
-/// iOS 17 and caused the "only one story on first launch" bug).
+/// iOS 17).
 struct DataService: Sendable {
     let modelContainer: ModelContainer
 
@@ -16,179 +16,200 @@ struct DataService: Sendable {
 
     // MARK: - Fetch (pure I/O — returns DTOs, no persistence)
 
-    /// Returns `nil` if the cooldown window blocks the fetch, otherwise the
-    /// decoded stories. Callers are responsible for persisting the DTOs on
-    /// the MainActor via `persistStories(_:in:)`.
-    func fetchStoryDTOs(baseURL: String = "https://www.acimdailyminute.org") async throws -> [StoryDTO]? {
+    /// Returns `nil` if the cooldown window blocks the fetch.
+    func fetchDailyMinute(baseURL: String = "https://www.acimdailyminute.org") async throws -> DailyMinuteResponse? {
         guard FetchCooldown.shouldFetch(
-            key: FetchCooldownKey.stories,
+            key: FetchCooldownKey.dailyMinute,
             interval: FetchCooldownInterval.live
         ) else { return nil }
 
-        let url = URL(string: "\(baseURL)/stories.json")!
+        let url = URL(string: "\(baseURL)/daily-minute.json")!
         let (data, _) = try await URLSession.shared.data(from: url)
-        let response = try JSONDecoder().decode(StoriesResponse.self, from: data)
-        return response.stories
+        return try JSONDecoder().decode(DailyMinuteResponse.self, from: data)
     }
 
-    func fetchCorrectionDTOs(baseURL: String = "https://www.acimdailyminute.org") async throws -> [CorrectionDTO]? {
+    /// Returns `nil` if the cooldown window blocks the fetch.
+    func fetchDailyLesson(baseURL: String = "https://www.acimdailyminute.org") async throws -> DailyLessonResponse? {
         guard FetchCooldown.shouldFetch(
-            key: FetchCooldownKey.corrections,
+            key: FetchCooldownKey.dailyLesson,
             interval: FetchCooldownInterval.live
         ) else { return nil }
 
-        let url = URL(string: "\(baseURL)/corrections.json")!
+        let url = URL(string: "\(baseURL)/daily-lesson.json")!
         let (data, _) = try await URLSession.shared.data(from: url)
-        let response = try JSONDecoder().decode(CorrectionsResponse.self, from: data)
-        return response.corrections
+        return try JSONDecoder().decode(DailyLessonResponse.self, from: data)
     }
 
     // MARK: - Persist (MainActor — writes into caller's ModelContext)
 
-    /// Upserts the DTOs into `context`, saves, marks the cooldown, and fires
-    /// downstream side-effects (widget reload, LiveActivity update). Returns
-    /// the DTOs so callers can feed watched-term matching, etc.
+    /// Upserts the Daily Minute and its inline archive into `context`, saves,
+    /// marks the cooldown, and fires downstream side-effects (widget reload,
+    /// Live Activity start when a *new* segment arrives).
     @MainActor
     @discardableResult
-    static func persistStories(_ dtos: [StoryDTO], in context: ModelContext) throws -> [StoryDTO] {
-        var newCount = 0
-        var latestNewFact = ""
-        var latestNewDate = Date.distantPast
+    static func persistMinute(_ dto: DailyMinuteResponse, in context: ModelContext) throws -> DailyMinuteResponse {
+        let segmentHash = HashUtility.sha256Truncated("minute:\(dto.segment_id)|\(dto.date)|\(dto.text)")
+        let publishedAt = parseISODate(dto.date) ?? Date()
 
-        for dto in dtos {
-            let descriptor = FetchDescriptor<Story>(
-                predicate: #Predicate { $0.storyHash == dto.hash }
-            )
-            let existing = try context.fetch(descriptor)
+        let descriptor = FetchDescriptor<DailyMinute>(
+            predicate: #Predicate { $0.segmentHash == segmentHash }
+        )
+        let existing = try context.fetch(descriptor).first
+        let isNew = existing == nil
 
-            if let story = existing.first {
-                story.fact = dto.fact
-                story.sourceDisplay = dto.source
-                story.sourceURLs = dto.sourceURLs ?? [:]
-                story.audioURL = dto.audio
-                story.status = dto.status ?? ""
-            } else {
-                let story = Story()
-                story.id = dto.id
-                story.storyHash = dto.hash
-                story.fact = dto.fact
-                story.sourceDisplay = dto.source
-                story.sourceURLs = dto.sourceURLs ?? [:]
-                story.audioURL = dto.audio
-                story.publishedAt = parseDate(dto.publishedAt) ?? Date()
-                story.status = dto.status ?? ""
-                context.insert(story)
-                newCount += 1
-                if story.publishedAt > latestNewDate {
-                    latestNewDate = story.publishedAt
-                    latestNewFact = dto.fact
-                }
-            }
-        }
+        let minute = existing ?? DailyMinute()
+        minute.segmentId = dto.segment_id
+        minute.segmentHash = segmentHash
+        minute.date = dto.date
+        minute.publishedAt = publishedAt
+        minute.text = dto.text
+        minute.sourcePDF = dto.source_pdf
+        minute.sourceReference = dto.source_reference
+        minute.wordCount = dto.word_count
+        minute.audioURL = dto.audio_url.isEmpty ? nil : dto.audio_url
+        minute.youtubeURL = dto.youtube_url.isEmpty ? nil : dto.youtube_url
+        minute.youtubeID = dto.youtube_id.isEmpty ? nil : dto.youtube_id
+        minute.tiktokURL = dto.tiktok_url.isEmpty ? nil : dto.tiktok_url
+        if isNew { context.insert(minute) }
+
+        try ArchiveService.persistInlineMinutes(dto.archive, in: context)
+
         try context.save()
-        FetchCooldown.markFetched(key: FetchCooldownKey.stories)
+        FetchCooldown.markFetched(key: FetchCooldownKey.dailyMinute)
         WidgetCenter.shared.reloadAllTimelines()
 
         #if os(iOS)
-        if newCount > 0 {
+        if isNew {
             LiveActivityManager.startOrUpdate(
-                storyCount: newCount,
-                latestFact: latestNewFact,
-                publishedDate: latestNewDate
+                channel: "daily-minute",
+                latestText: dto.text,
+                publishedDate: publishedAt
             )
         }
         #endif
 
-        return dtos
+        return dto
     }
 
+    /// Upserts the Daily Lesson and its inline archive. Mirrors `persistMinute`
+    /// but keys uniqueness on `lessonNumber` (the `@Attribute(.unique)` field
+    /// on `DailyLesson`).
     @MainActor
-    static func persistCorrections(_ dtos: [CorrectionDTO], in context: ModelContext) throws {
-        for dto in dtos {
-            let descriptor = FetchDescriptor<Correction>(
-                predicate: #Predicate { $0.storyId == dto.storyId }
-            )
-            let existing = try context.fetch(descriptor)
+    @discardableResult
+    static func persistLesson(_ dto: DailyLessonResponse, in context: ModelContext) throws -> DailyLessonResponse {
+        let lessonNumber = dto.lesson_id
+        let segmentHash = HashUtility.sha256Truncated("lesson:\(dto.lesson_id)|\(dto.date)|\(dto.text)")
+        let publishedAt = parseISODate(dto.date) ?? Date()
 
-            if let correction = existing.first {
-                correction.originalFact = dto.originalFact
-                correction.correctedFact = dto.correctedFact
-                correction.reason = dto.reason
-                correction.correctingSources = dto.correctingSources
-                correction.type = dto.type
-            } else {
-                let correction = Correction()
-                correction.storyId = dto.storyId
-                correction.originalFact = dto.originalFact
-                correction.correctedFact = dto.correctedFact
-                correction.reason = dto.reason
-                correction.correctingSources = dto.correctingSources
-                correction.correctedAt = parseDate(dto.correctedAt) ?? Date()
-                correction.type = dto.type
-                context.insert(correction)
-            }
-        }
+        let descriptor = FetchDescriptor<DailyLesson>(
+            predicate: #Predicate { $0.lessonNumber == lessonNumber }
+        )
+        let existing = try context.fetch(descriptor).first
+        let isNew = existing == nil
+
+        let lesson = existing ?? DailyLesson()
+        lesson.lessonNumber = lessonNumber
+        lesson.lessonTitle = dto.title
+        lesson.segmentHash = segmentHash
+        lesson.date = dto.date
+        lesson.publishedAt = publishedAt
+        lesson.text = dto.text
+        lesson.wordCount = dto.word_count
+        lesson.audioURL = dto.audio_url.isEmpty ? nil : dto.audio_url
+        lesson.youtubeURL = dto.youtube_url.isEmpty ? nil : dto.youtube_url
+        lesson.youtubeID = dto.youtube_id.isEmpty ? nil : dto.youtube_id
+        if isNew { context.insert(lesson) }
+
+        try ArchiveService.persistInlineLessons(dto.archive, in: context)
+
         try context.save()
-        FetchCooldown.markFetched(key: FetchCooldownKey.corrections)
+        FetchCooldown.markFetched(key: FetchCooldownKey.dailyLesson)
+        WidgetCenter.shared.reloadAllTimelines()
+
+        #if os(iOS)
+        if isNew {
+            LiveActivityManager.startOrUpdate(
+                channel: "daily-lesson",
+                latestText: dto.text,
+                publishedDate: publishedAt,
+                lessonNumber: lessonNumber
+            )
+        }
+        #endif
+
+        return dto
     }
 
     // MARK: - Date Parsing
 
+    /// Parses the `YYYY-MM-DD` strings the publisher emits in `date` fields.
+    /// Falls back to ISO-8601 with time component for forward compatibility
+    /// in case the publisher ever upgrades to richer timestamps.
     @MainActor
-    private static func parseDate(_ string: String?) -> Date? {
-        guard let string else { return nil }
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = formatter.date(from: string) { return date }
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter.date(from: string)
+    static func parseISODate(_ string: String) -> Date? {
+        let dayOnly = DateFormatter()
+        dayOnly.locale = Locale(identifier: "en_US_POSIX")
+        dayOnly.timeZone = TimeZone(secondsFromGMT: 0)
+        dayOnly.dateFormat = "yyyy-MM-dd"
+        if let date = dayOnly.date(from: string) { return date }
+
+        let iso = ISO8601DateFormatter()
+        iso.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = iso.date(from: string) { return date }
+        iso.formatOptions = [.withInternetDateTime]
+        return iso.date(from: string)
     }
 }
 
 // MARK: - DTOs
 
-struct StoriesResponse: Codable, Sendable {
+/// Top-level shape of `/daily-minute.json`.
+///
+/// Field names use snake_case to match the publisher (`github_push.py`)
+/// verbatim — no `CodingKeys` needed, which keeps drift detection trivial:
+/// any new server field becomes a compile error if added here, and any
+/// renamed field becomes a decode error at runtime.
+struct DailyMinuteResponse: Codable, Sendable {
+    let segment_id: Int
     let date: String
-    let source: String?
-    let stories: [StoryDTO]
+    let text: String
+    let source_pdf: String
+    let source_reference: String
+    let word_count: Int
+    let audio_url: String
+    let youtube_url: String
+    let youtube_id: String
+    let tiktok_url: String
+    let archive: [InlineArchiveMinuteDTO]
 }
 
-struct StoryDTO: Codable, Sendable {
-    let id: String
-    let hash: String
-    let fact: String
-    let source: String
-    let sourceURLs: [String: String]?
-    let audio: String?
-    let publishedAt: String?
-    let status: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id, hash, fact, source, audio, status
-        case sourceURLs = "source_urls"
-        case publishedAt = "published_at"
-    }
+struct InlineArchiveMinuteDTO: Codable, Sendable {
+    let date: String
+    let text: String
+    let source_reference: String
+    let audio_url: String
 }
 
-struct CorrectionsResponse: Codable, Sendable {
-    let corrections: [CorrectionDTO]
+/// Top-level shape of `/daily-lesson.json`. The publisher omits
+/// `segment_id`, `source_pdf`, `source_reference`, and `tiktok_url` from
+/// the lesson endpoint by design — model defaults handle those fields
+/// (parallel-schema choice, see Phase 3.2 handoff).
+struct DailyLessonResponse: Codable, Sendable {
+    let lesson_id: Int
+    let date: String
+    let title: String
+    let text: String
+    let word_count: Int
+    let audio_url: String
+    let youtube_url: String
+    let youtube_id: String
+    let total_lessons: Int
+    let archive: [InlineArchiveLessonDTO]
 }
 
-struct CorrectionDTO: Codable, Sendable {
-    let storyId: String
-    let originalFact: String
-    let correctedFact: String
-    let reason: String
-    let correctingSources: [String]
-    let correctedAt: String
-    let type: String
-
-    enum CodingKeys: String, CodingKey {
-        case reason, type
-        case storyId = "story_id"
-        case originalFact = "original_fact"
-        case correctedFact = "corrected_fact"
-        case correctingSources = "correcting_sources"
-        case correctedAt = "corrected_at"
-    }
+struct InlineArchiveLessonDTO: Codable, Sendable {
+    let lesson_id: Int
+    let title: String
+    let date: String
+    let audio_url: String
 }

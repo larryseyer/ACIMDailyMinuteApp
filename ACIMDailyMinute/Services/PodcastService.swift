@@ -1,5 +1,9 @@
 import Foundation
 
+/// One episode parsed from a podcast RSS feed. The audio URL is also used as
+/// the stable `id` since RSS doesn't ship a guaranteed-unique GUID and the
+/// enclosure URL is the natural primary key (it's what the audio player
+/// streams from).
 struct PodcastEpisode: Sendable, Identifiable {
     let id: String
     let title: String
@@ -8,23 +12,44 @@ struct PodcastEpisode: Sendable, Identifiable {
     let duration: String
 }
 
+/// Fetches and parses the two ACIM podcast feeds:
+/// `/podcast-minute.xml` (one-minute readings) and `/podcast-lessons.xml`
+/// (365 Workbook Lessons). Each feed is independent so they're modeled as
+/// separate methods rather than one call with a discriminator parameter —
+/// callers always know which feed they want.
+///
+/// `actor` because each fetch reuses no state but we want a single
+/// serialized owner for the (eventual) per-feed memo cache. For now the
+/// methods are stateless; the actor still gives us a Sendable boundary
+/// without sprinkling `@unchecked Sendable` on a reference type.
 actor PodcastService {
-    /// Fetches and parses `podcast.xml`, returning episodes sorted newest first.
+    /// GitHub Pages serves the podcast feeds with `Cache-Control: max-age=600`.
+    /// Within that 10-minute window `URLSession.shared` will return cached
+    /// data without revalidating against origin. That's fine for passive
+    /// on-appear loads but wrong for a cold start or pull-to-refresh, when
+    /// the user expects to see today's freshly-published episode.
     ///
-    /// GitHub Pages serves `podcast.xml` with `Cache-Control: max-age=600`, so
-    /// within a 10-minute window `URLSession.shared` will happily return the
-    /// cached response without even revalidating against the origin. That
-    /// behaviour is what we want for the passive on-appear fetch, but it is
-    /// actively wrong for a cold start or a pull-to-refresh — which is exactly
-    /// when the newly-published daily digest needs to show up.
-    ///
-    /// Pass `force: true` in those cases: the request uses
+    /// Pass `force: true` from those code paths: the request switches to
     /// `.reloadRevalidatingCacheData`, which sends `If-None-Match` /
     /// `If-Modified-Since` and accepts a 304 fast path when the feed is
-    /// unchanged. We get the freshness guarantee without re-downloading 68 KB
-    /// of XML on every refresh.
-    func fetchEpisodes(baseURL: String = "https://www.acimdailyminute.org", force: Bool = false) async throws -> [PodcastEpisode] {
-        let url = URL(string: "\(baseURL)/podcast.xml")!
+    /// unchanged. Freshness without re-downloading the whole XML.
+    func fetchMinuteEpisodes(
+        baseURL: String = "https://www.acimdailyminute.org",
+        force: Bool = false
+    ) async throws -> [PodcastEpisode] {
+        try await fetch(path: "/podcast-minute.xml", baseURL: baseURL, force: force)
+    }
+
+    /// Same shape as `fetchMinuteEpisodes`, but for the lessons feed.
+    func fetchLessonEpisodes(
+        baseURL: String = "https://www.acimdailyminute.org",
+        force: Bool = false
+    ) async throws -> [PodcastEpisode] {
+        try await fetch(path: "/podcast-lessons.xml", baseURL: baseURL, force: force)
+    }
+
+    private func fetch(path: String, baseURL: String, force: Bool) async throws -> [PodcastEpisode] {
+        let url = URL(string: "\(baseURL)\(path)")!
         let request = URLRequest(
             url: url,
             cachePolicy: force ? .reloadRevalidatingCacheData : .useProtocolCachePolicy
@@ -33,80 +58,14 @@ actor PodcastService {
         let parser = PodcastXMLParser(data: data)
         return parser.parse().sorted { $0.date > $1.date }
     }
-
-    func fetchYouTubeURL(baseURL: String = "https://www.acimdailyminute.org") async throws -> String? {
-        let url = URL(string: "\(baseURL)/monitor.json")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let monitor = try JSONDecoder().decode(MonitorResponse.self, from: data)
-        return monitor.dailyDigest?.youtubeURL
-    }
-
-    private static let playlistID = "PLm8mlmJgzmMfqH8YkhdRVFET200vZGRWN"
-
-    func fetchYouTubePlaylist() async throws -> [String: String] {
-        let url = URL(string: "https://www.youtube.com/playlist?list=\(Self.playlistID)")!
-        var request = URLRequest(url: url)
-        request.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
-        request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
-        let (data, _) = try await URLSession.shared.data(for: request)
-        guard let html = String(data: data, encoding: .utf8) else { return [:] }
-
-        // Parse videoId and title pairs from playlist page
-        var dateToVideoURL: [String: String] = [:]
-        let videoIDs = matches(in: html, pattern: #""videoId":"([^"]+)""#)
-        let titles = matches(in: html, pattern: #""title":\{"runs":\[\{"text":"([^"]+)"\}"#)
-
-        let uniqueVideoIDs = videoIDs.uniqued()
-
-        for (videoID, title) in zip(uniqueVideoIDs, titles) {
-            // Title format: "ACIM Daily Minute Daily Digest - YYYY-MM-DD"
-            if let dateRange = title.range(of: #"\d{4}-\d{2}-\d{2}"#, options: .regularExpression) {
-                let dateString = String(title[dateRange])
-                dateToVideoURL[dateString] = "https://youtube.com/watch?v=\(videoID)"
-            }
-        }
-        return dateToVideoURL
-    }
-
-    private func matches(in string: String, pattern: String) -> [String] {
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return [] }
-        let range = NSRange(string.startIndex..., in: string)
-        return regex.matches(in: string, range: range).compactMap { match in
-            guard let captureRange = Range(match.range(at: 1), in: string) else { return nil }
-            return String(string[captureRange])
-        }
-    }
-}
-
-// MARK: - Array Extension
-
-private extension Array where Element: Hashable {
-    func uniqued() -> [Element] {
-        var seen = Set<Element>()
-        return filter { seen.insert($0).inserted }
-    }
-}
-
-// MARK: - Monitor DTO
-
-struct MonitorResponse: Codable, Sendable {
-    let dailyDigest: DailyDigestInfo?
-
-    enum CodingKeys: String, CodingKey {
-        case dailyDigest = "daily_digest"
-    }
-}
-
-struct DailyDigestInfo: Codable, Sendable {
-    let youtubeURL: String?
-
-    enum CodingKeys: String, CodingKey {
-        case youtubeURL = "youtube_url"
-    }
 }
 
 // MARK: - Podcast XML Parser
 
+/// `XMLParserDelegate` is callback-based and inherently single-threaded;
+/// `@unchecked Sendable` is the standard escape hatch for NSObject delegate
+/// types under Swift 6 strict concurrency. Each parser instance is used
+/// exactly once on a single task — the `parse()` call.
 final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
     private let data: Data
     private var episodes: [PodcastEpisode] = []

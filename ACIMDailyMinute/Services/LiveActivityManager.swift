@@ -3,20 +3,42 @@ import Foundation
 #if os(iOS)
 import ActivityKit
 
+/// Drives the Live Activity surface (Lock Screen + Dynamic Island) for
+/// freshly published Daily Minute and Daily Lesson readings. Same shape as
+/// the JTFNews implementation: 5-minute auto-dismiss, gate on the
+/// `notifyLiveActivities` user preference, single shared activity per app
+/// session that updates in place.
+///
+/// The ContentState is the new ACIM shape: `channel` (`"daily-minute"` or
+/// `"daily-lesson"`), `latestText`, `publishedDate`, and an optional
+/// `lessonNumber` (only set for the lessons channel).
 enum LiveActivityManager {
-    private static let dismissInterval: TimeInterval = 5 * 60 // 5 minutes
+    /// Auto-dismiss window. Daily readings are short and once-a-day, so a
+    /// long-lived activity would clutter the Lock Screen long after the user
+    /// has read it. 5 minutes matches the JTFNews precedent.
+    private static let dismissInterval: TimeInterval = 5 * 60
 
-    static func startOrUpdate(storyCount: Int, latestFact: String, publishedDate: Date) {
+    /// Starts a Live Activity if none is running, or updates the existing
+    /// one in place. Caller is responsible for only invoking this when a
+    /// genuinely new segment arrives — `DataService.persistMinute/Lesson`
+    /// gates on `existing == nil` so spurious re-fetches don't reset the
+    /// 5-minute timer.
+    static func startOrUpdate(
+        channel: String,
+        latestText: String,
+        publishedDate: Date,
+        lessonNumber: Int? = nil
+    ) {
         guard UserDefaults.standard.bool(forKey: "notifyLiveActivities") else { return }
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
 
         let state = ACIMActivityAttributes.ContentState(
-            storyCount: storyCount,
-            latestFact: latestFact,
-            publishedDate: publishedDate
+            channel: channel,
+            latestText: latestText,
+            publishedDate: publishedDate,
+            lessonNumber: lessonNumber
         )
 
-        // Update existing activity if one is running
         if let current = Activity<ACIMActivityAttributes>.activities.first {
             let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(dismissInterval))
             Task { @MainActor in
@@ -25,7 +47,6 @@ enum LiveActivityManager {
             return
         }
 
-        // Start a new activity
         let attributes = ACIMActivityAttributes()
         let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(dismissInterval))
 
@@ -35,36 +56,41 @@ enum LiveActivityManager {
                 content: content,
                 pushType: nil
             )
-            scheduleDismissal(for: activity.id)
+            scheduleDismissal(for: activity.id, channel: channel, lessonNumber: lessonNumber)
         } catch {
             print("[LiveActivity] Failed to start: \(error)")
         }
     }
 
+    /// Ends every running activity with a "reading complete" final state.
+    /// Preserves `channel` from each activity so the dismissal frame doesn't
+    /// suddenly switch context (e.g. lessons activity ending with a minute
+    /// label).
     static func endAllActivities() {
-        let finalState = ACIMActivityAttributes.ContentState(
-            storyCount: 0,
-            latestFact: "Caught up",
-            publishedDate: Date()
-        )
-        let finalContent = ActivityContent(state: finalState, staleDate: nil)
-
         let activities = Activity<ACIMActivityAttributes>.activities
         Task { @MainActor in
             for activity in activities {
+                let finalState = ACIMActivityAttributes.ContentState(
+                    channel: activity.content.state.channel,
+                    latestText: "Today's reading complete",
+                    publishedDate: Date(),
+                    lessonNumber: activity.content.state.lessonNumber
+                )
+                let finalContent = ActivityContent(state: finalState, staleDate: nil)
                 await activity.end(finalContent, dismissalPolicy: .after(Date().addingTimeInterval(30)))
             }
         }
     }
 
-    private static func scheduleDismissal(for activityId: String) {
+    private static func scheduleDismissal(for activityId: String, channel: String, lessonNumber: Int?) {
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(dismissInterval))
             for activity in Activity<ACIMActivityAttributes>.activities where activity.id == activityId {
                 let finalState = ACIMActivityAttributes.ContentState(
-                    storyCount: 0,
-                    latestFact: "Caught up",
-                    publishedDate: Date()
+                    channel: channel,
+                    latestText: "Today's reading complete",
+                    publishedDate: Date(),
+                    lessonNumber: lessonNumber
                 )
                 let finalContent = ActivityContent(state: finalState, staleDate: nil)
                 await activity.end(finalContent, dismissalPolicy: .after(Date().addingTimeInterval(30)))
