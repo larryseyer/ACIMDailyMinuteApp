@@ -1,34 +1,21 @@
 import Foundation
 
 enum ShareTextBuilder {
-    static func shareText(
-        fact: String,
-        sourceDisplay: String,
-        sources: [Source]
-    ) -> String {
-        let badges = parseSourceDisplay(sourceDisplay)
-
-        let sourceLines = badges.map { badge -> String in
-            let accuracy = String(format: "%.1f", badge.accuracy)
-            let matched = sources.first { $0.name == badge.name }
-            let ownerPart: String
-            if let source = matched {
-                let display = source.ownerDisplay.isEmpty ? source.owner : source.ownerDisplay
-                ownerPart = display.isEmpty ? "" : " · \(display)"
-            } else {
-                ownerPart = ""
-            }
-            return "  \(badge.name) (\(accuracy))\(ownerPart)"
+    static func minuteShareText(_ minute: DailyMinute) -> String {
+        var parts: [String] = [minute.text]
+        let reference = minute.sourceReference.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !reference.isEmpty {
+            parts.append("— A Course in Miracles, \(reference)")
         }
-
-        var parts: [String] = [fact]
-
-        if !sourceLines.isEmpty {
-            parts.append("Sources:\n" + sourceLines.joined(separator: "\n"))
-        }
-
         parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
 
+    static func lessonShareText(_ lesson: DailyLesson) -> String {
+        let header = "Lesson \(lesson.lessonNumber): \(lesson.lessonTitle)"
+        var parts: [String] = [header, lesson.text]
+        parts.append("— A Course in Miracles, Workbook for Students")
+        parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
 }

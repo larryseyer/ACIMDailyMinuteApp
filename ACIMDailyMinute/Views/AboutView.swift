@@ -70,11 +70,11 @@ struct AboutView: View {
 
     private var tagline: some View {
         VStack(spacing: 4) {
-            Text("Just The Facts.")
+            Text("A Minute of Inspiration.")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundStyle(.primary)
-            Text("No opinions. No adjectives. No interpretation.")
+            Text("The timeless wisdom of A Course in Miracles, delivered daily.")
                 .font(.acimSubheadline)
                 .italic()
                 .foregroundStyle(.primary.opacity(0.75))
@@ -85,7 +85,7 @@ struct AboutView: View {
     // MARK: - Mission
 
     private var missionCard: some View {
-        Text("Every fact confirmed by 2+ independent sources. Every source rated for bias and reliability. Ownership disclosed on every story.")
+        Text("A daily passage from A Course in Miracles paired with today's Workbook Lesson. Drawn from the Sparkly Edition, offered freely, without interpretation.")
             .font(.acimCallout)
             .foregroundStyle(.primary.opacity(0.9))
             .multilineTextAlignment(.center)
@@ -97,15 +97,15 @@ struct AboutView: View {
 
     private var pillars: some View {
         VStack(spacing: 10) {
-            pillar(icon: "shield.lefthalf.filled",
-                   title: "Transparent",
-                   body: "Source ratings and ownership on every fact.")
+            pillar(icon: "book.closed",
+                   title: "The Course",
+                   body: "Daily passages and Workbook lessons in their original form.")
             pillar(icon: "lock.shield",
                    title: "Private",
                    body: "Zero tracking. No analytics, no accounts.")
-            pillar(icon: "checkmark.seal",
-                   title: "Verified",
-                   body: "Corrections and retractions logged openly.")
+            pillar(icon: "heart.text.square",
+                   title: "Offered Freely",
+                   body: "Open-source companion; the text itself lives in the public domain.")
         }
     }
 

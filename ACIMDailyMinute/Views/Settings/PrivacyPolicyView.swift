@@ -15,12 +15,12 @@ struct PrivacyPolicyView: View {
 
                 policySection(
                     title: "Network Requests",
-                    body: "The app makes network requests only to www.acimdailyminute.org to fetch stories, corrections, source metadata, podcast audio links, and archive data. No data is sent from your device to any server."
+                    body: "The app makes network requests only to www.acimdailyminute.org to fetch daily passages, workbook lessons, audio links, and archive data. No data is sent from your device to any server."
                 )
 
                 policySection(
                     title: "On-Device Storage",
-                    body: "Stories, sources, and archive data are cached on your device using SwiftData for offline access. This data never leaves your device."
+                    body: "Daily passages, lessons, bookmarks, and archive data are cached on your device using SwiftData for offline access. This data never leaves your device."
                 )
 
                 policySection(

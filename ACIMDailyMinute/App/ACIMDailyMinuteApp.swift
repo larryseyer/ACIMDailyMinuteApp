@@ -30,7 +30,11 @@ struct ACIMDailyMinuteApp: App {
 
     init() {
         UserDefaults.standard.register(defaults: [
-            "useCustomNotificationSound": true
+            "useCustomNotificationSound": true,
+            "notifyNewMinute": true,
+            "notifyNewLesson": true,
+            "notifyPhraseMatches": true,
+            "notifyLiveActivities": false
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()

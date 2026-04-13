@@ -6,16 +6,16 @@ struct OnboardingView: View {
 
     private var pages: [(systemImage: String, title: String, description: String)] {
         [
-            ("checkmark.shield", "Facts Without Opinion",
-             "No tracking. No ads. No accounts. Just verified facts from independent sources."),
-            ("newspaper", "Verified Stories",
-             "Every fact checked against two independent sources with different owners. Source ratings and ownership on every card."),
-            ("play.circle", "Daily Digest",
-             "Watch or listen to the daily news digest. Video and audio, your choice."),
-            ("archivebox", "Full Archive",
-             "Browse by date or search across every fact ever published."),
-            ("eye", "Watch What Matters",
-             "Track stories by keyword. Get notified when matching facts are published.")
+            ("sun.max", "A Minute a Day",
+             "A short passage from A Course in Miracles, delivered every day. Nothing added, nothing taken away."),
+            ("book.closed", "Today's Lesson",
+             "The Workbook for Students, one lesson at a time, on the day you're meant to read it."),
+            ("play.circle", "Listen",
+             "Every passage and lesson, read aloud. Listen while you commute, walk, or sit still."),
+            ("archivebox", "Archive",
+             "Browse past readings by date. Return to any passage when it calls you back."),
+            ("bookmark", "Save Your Favorites",
+             "Keep the passages that speak to you. Return to them anytime, online or off.")
         ]
     }
 
