@@ -81,6 +81,7 @@
 		AA000001211 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
 		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
 		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
+		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
 		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
 		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
 		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
@@ -175,6 +176,7 @@
 		AA000002211 /* LessonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonRow.swift; sourceTree = "<group>"; };
 		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
 		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
+		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
 		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
 		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				AA000002211 /* LessonRow.swift */,
 				AA000002212 /* LessonsView.swift */,
 				AA000002213 /* LessonDetailView.swift */,
+				AA000002214 /* JumpToLessonSheet.swift */,
 			);
 			path = Lessons;
 			sourceTree = "<group>";
@@ -602,6 +605,7 @@
 				AA000001211 /* LessonRow.swift in Sources */,
 				AA000001212 /* LessonsView.swift in Sources */,
 				AA000001213 /* LessonDetailView.swift in Sources */,
+				AA000001214 /* JumpToLessonSheet.swift in Sources */,
 				AA000001204 /* PhraseMatcher.swift in Sources */,
 				AA000001205 /* PhraseStorage.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,
