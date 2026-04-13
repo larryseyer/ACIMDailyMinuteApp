@@ -26,7 +26,6 @@
 		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
 		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
-		AA000001024 /* ArchiveSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002024 /* ArchiveSearchView.swift */; };
 		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
 		AA000001027 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
 		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
@@ -133,7 +132,6 @@
 		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
 		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
-		AA000002024 /* ArchiveSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveSearchView.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
 		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -332,7 +330,6 @@
 			isa = PBXGroup;
 			children = (
 				AA000002005 /* ArchiveView.swift */,
-				AA000002024 /* ArchiveSearchView.swift */,
 				AA000002069 /* MacCalendarView.swift */,
 				AA000002217 /* ArchiveDateDetailView.swift */,
 				AA000002218 /* ArchivedReadingCard.swift */,
@@ -583,7 +580,6 @@
 				AA000001215 /* ListenView.swift in Sources */,
 				AA000001216 /* PodcastEpisodeRow.swift in Sources */,
 				AA000001020 /* ArchiveService.swift in Sources */,
-				AA000001024 /* ArchiveSearchView.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,
 				AA000001027 /* BackgroundRefreshManager.swift in Sources */,
 				AA000001028 /* NotificationManager.swift in Sources */,
