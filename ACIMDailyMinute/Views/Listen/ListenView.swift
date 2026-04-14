@@ -68,6 +68,10 @@ struct ListenView: View {
                 guard newPhase == .active, hasLoadedOnce else { return }
                 Task { await reload(force: false) }
             }
+            .onChange(of: connectivity.isConnected) { oldValue, newValue in
+                guard !oldValue, newValue, hasLoadedOnce else { return }
+                Task { await reload(force: true) }
+            }
         }
     }
 

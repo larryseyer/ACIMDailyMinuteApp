@@ -65,6 +65,11 @@ struct TodayView: View {
                 guard newPhase == .active, hasLoadedOnce else { return }
                 Task { await refresh(force: false) }
             }
+            .onChange(of: connectivity.isConnected) { oldValue, newValue in
+                guard !oldValue, newValue, hasLoadedOnce else { return }
+                showOfflineToast = false
+                Task { await refresh(force: true) }
+            }
             .onReceive(NotificationCenter.default.publisher(for: .forceMinuteRefresh)) { _ in
                 Task { await refresh(force: true) }
             }
