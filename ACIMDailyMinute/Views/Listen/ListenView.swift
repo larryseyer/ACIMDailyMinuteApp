@@ -19,6 +19,7 @@ import SwiftData
 struct ListenView: View {
     @Environment(AudioManager.self) private var audio
     @Environment(ConnectivityManager.self) private var connectivity
+    @Environment(\.scenePhase) private var scenePhase
 
     @Query(sort: \DailyMinute.publishedAt, order: .reverse)
     private var minutes: [DailyMinute]
@@ -26,6 +27,7 @@ struct ListenView: View {
     @State private var selectedFeed: PodcastFeed = .minute
     @State private var episodesByFeed: [PodcastFeed: [PodcastEpisode]] = [:]
     @State private var loadState: LoadState = .idle
+    @State private var hasLoadedOnce = false
 
     private let service = PodcastService()
 
@@ -61,6 +63,10 @@ struct ListenView: View {
             }
             .task(id: selectedFeed) {
                 await reload(force: false)
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                guard newPhase == .active, hasLoadedOnce else { return }
+                Task { await reload(force: false) }
             }
         }
     }
@@ -173,6 +179,7 @@ struct ListenView: View {
             }
             episodesByFeed[feed] = fetched
             loadState = .loaded
+            hasLoadedOnce = true
         } catch {
             loadState = .failed
         }

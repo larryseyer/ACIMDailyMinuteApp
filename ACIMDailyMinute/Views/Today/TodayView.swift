@@ -4,6 +4,7 @@ import SwiftData
 struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(ConnectivityManager.self) private var connectivity
+    @Environment(\.scenePhase) private var scenePhase
 
     @Query(sort: \DailyMinute.publishedAt, order: .reverse) private var minutes: [DailyMinute]
     @Query(sort: \DailyLesson.publishedAt, order: .reverse) private var lessons: [DailyLesson]
@@ -59,6 +60,10 @@ struct TodayView: View {
                     await refresh(force: true)
                     hasLoadedOnce = true
                 }
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                guard newPhase == .active, hasLoadedOnce else { return }
+                Task { await refresh(force: false) }
             }
             .onReceive(NotificationCenter.default.publisher(for: .forceMinuteRefresh)) { _ in
                 Task { await refresh(force: true) }
