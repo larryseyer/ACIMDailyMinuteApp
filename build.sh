@@ -9,12 +9,38 @@ SCHEME="ACIMDailyMinute"
 # iPad (10th generation) on iOS 18.1 is the current phased test target
 # (per memory project_test_targets.md). Physical iPhone 11 comes in when
 # we're close to shipping.
-IPHONE_SIM="iPad (10th generation)"
+#
+# The name "iPad (10th generation)" matches multiple installed simulators
+# (one per architecture/runtime slot), so xcodebuild emits "Using the first
+# of multiple matching destinations" when given name= form. Resolve to a
+# single UUID up front and fail loudly if none is available.
 IPHONE_OS="18.1"
 WATCH_SIM="Apple Watch Series 10 (46mm)"
 BUILD_DIR="$(pwd)/build"
 LOG_DIR="$(pwd)/build/logs"
 mkdir -p "$LOG_DIR"
+
+resolve_ipad_sim_uuid() {
+  xcrun simctl list devices available -j | /usr/bin/python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+for runtime, devices in data.get('devices', {}).items():
+    if 'iOS-18-1' not in runtime:
+        continue
+    for d in devices:
+        if d.get('name') == 'iPad (10th generation)' and d.get('isAvailable', False):
+            print(d['udid'])
+            sys.exit(0)
+sys.exit(1)
+"
+}
+
+IPAD_UUID="$(resolve_ipad_sim_uuid || true)"
+if [[ -z "$IPAD_UUID" ]]; then
+  echo "✗ No available iPad (10th generation) simulator on iOS ${IPHONE_OS}."
+  echo "  Install one via Xcode → Settings → Platforms, then retry."
+  exit 1
+fi
 
 echo "═══════════════════════════════════════════════"
 echo "  ACIM Daily Minute — Debug Build Verification"
@@ -49,10 +75,10 @@ run_build() {
 }
 
 # ── iOS Simulator (covers main app + widget + Live Activity) ──
-run_build "iOS (Debug) ${IPHONE_SIM} (iOS ${IPHONE_OS})" \
+run_build "iOS (Debug) iPad (10th generation) iOS ${IPHONE_OS} [${IPAD_UUID}]" \
   "$LOG_DIR/ios.log" \
   -scheme "$SCHEME" \
-  -destination "platform=iOS Simulator,name=${IPHONE_SIM},OS=${IPHONE_OS}" \
+  -destination "platform=iOS Simulator,id=${IPAD_UUID}" \
   -configuration Debug \
   -derivedDataPath "$BUILD_DIR" \
   build
