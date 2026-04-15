@@ -281,7 +281,7 @@
     {
       "id": "ACIM-012",
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-009"],
       "title": "5c — ACIMChime.caf custom notification sound wiring",
       "why": "ACIMChime.caf already exists at ACIMDailyMinute/Resources/ACIMChime.caf per 2026-04-14 inspection. UserDefaults key 'useCustomNotificationSound' is registered but NotificationManager always uses .default. Wire the toggle.",
