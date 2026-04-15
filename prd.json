@@ -81,7 +81,7 @@
     {
       "id": "ACIM-103",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bug 1 — Listen tab per-feed YouTube playlist embed with remembered lesson position",
       "why": "Screenshot 'Daily Lesson shows wrong video and should start at lesson 1 but remember which lesson they are on.png' shows the Listen tab with the Lessons sub-tab selected, but the YouTube embed at the top still shows 'ACIM Daily Minute for 2026-04-14 — Day 26' (the Daily Minute video). Root cause: ListenView.todaysYouTubeURL (lines 53–58) always returns DailyMinute.youtubeURL regardless of the segmented picker selection. The embed must vary by feed: Minute sub-tab plays the Daily Minute YouTube playlist, Lessons sub-tab plays the Daily Lesson YouTube playlist starting at Lesson 1 by default and remembering the last-watched lesson across launches.",
