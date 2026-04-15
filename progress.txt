@@ -193,3 +193,14 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
 - **Parity results:** 19/21 surfaces Pass (all functional features verified). 2 surfaces deferred to Phase 5 stories (launch screen + accent color → ACIM-011; App Store metadata → ACIM-013). App icon set and ACIMChime.caf wiring already present from prior work. No unexpected gaps found.
 - **Build verification:** iOS build exit=0. watchOS build exit=0. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008). Zero non-signing code errors.
 - **Grep checks:** zero JTFNews/FIP/Foundation for Inner Peace/TODO/FIXME/XXX/HACK in PARITY.md.
+
+### ACIM-010 — 5a — App icon set (pre-staged Apple iconset installed)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/` — replaced all PNGs with pre-staged high-quality icons from `assets/AppIcon.appiconset/` (10 files: 16/32/64/128/256/512/1024 incl. @2x retina); removed old `AppIcon.png` placeholder
+  - `ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/Contents.json` — merged Contents.json with iOS universal entry (icon_512x512@2x.png as 1024x1024) + all macOS mac-idiom entries
+  - `ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png` — NEW: copied 1024x1024 master from staged assets, replacing old `AppIcon.png` placeholder
+  - `ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/Contents.json` — updated to reference `AppIcon-1024.png` under watchOS universal 1024x1024
+- **Build verification:** iOS build exit=0. watchOS build exit=0. Zero actool asset compiler errors. Zero non-signing code errors. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008/009).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
