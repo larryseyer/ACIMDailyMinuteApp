@@ -46,6 +46,10 @@ struct ArchiveView: View {
                 .navigationDestination(for: String.self) { dateString in
                     ArchiveDateDetailView(dateString: dateString)
                 }
+                .onReceive(NotificationCenter.default.publisher(for: .deepLinkArchive)) { note in
+                    guard let date = note.object as? Date else { return }
+                    path.append(Self.dateString(from: date))
+                }
         }
     }
 

@@ -59,6 +59,10 @@ struct LessonsView: View {
             .navigationDestination(for: Int.self) { lessonNumber in
                 LessonDetailView(lessonNumber: lessonNumber)
             }
+            .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
+                guard let n = note.object as? Int, (1...365).contains(n) else { return }
+                path.append(n)
+            }
         }
     }
 

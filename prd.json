@@ -54,7 +54,7 @@
     {
       "id": "ACIM-002",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "title": "3.8c — Onboarding gate via @AppStorage + first-launch presentation + lineage line",
       "why": "OnboardingView has 156 lines of finished UI but nothing presents it. ContentView needs a first-launch gate. Also: the master plan said to 'verify' the lineage line but grep on 2026-04-14 found NO 'Sparkly Edition · Teddy Poppe · CIMS' line anywhere in OnboardingView — it must be added, not just verified.",
       "type": "code",

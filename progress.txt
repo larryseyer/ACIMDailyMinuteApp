@@ -80,3 +80,10 @@ All 4 are independent. Ralph picks lowest priority with `passes:false` first per
 - **Acceptance criteria met:** Form with 4 sections (Notifications, Watched Phrases, Onboarding, About); Toggle + DatePicker bridging Date→hour/minute for scheduleDailyReminder; fireTest() added with 1s trigger; PhrasesEditorView with add/delete/count; PhraseStorage.add/remove helpers; UserDefaults dailyReminderEnabled+Time registered; pbxproj AA000002221/AA000001223 entries added; no TODO/FIXME/JTFNews.
 - **Build verification:** Skipped per user instruction (code-only phase).
 - **Status:** passes:true
+
+### ACIM-002 / 3.8c — Onboarding gate via @AppStorage + first-launch presentation
+- **Commit:** fcf4c47 on `ralph/acim-3.8-finish-2026-04-14`
+- **Files touched:** ContentView.swift (+@AppStorage hasSeenOnboarding, +fullScreenCover/sheet gate), OnboardingView.swift (+lineage line on iOS below dot indicators, +lineage line on macOS above chevron row)
+- **Acceptance criteria met:** @AppStorage("hasSeenOnboarding") added; Binding(get: { !hasSeenOnboarding }, set: { _ in }) shape used (locked decision); #if os(iOS) fullScreenCover / #else sheet; lineage line "Sparkly Edition · Teddy Poppe · CIMS" added both platforms; no FIP/Foundation/facts/news copy; no TODO/FIXME/JTFNews.
+- **Build verification:** Skipped per user instruction (code-only phase).
+- **Status:** passes:true

@@ -27,10 +27,24 @@ struct ContentView: View {
                 // wires the editor in-place.
                 showSettings = true
             }
-            .onOpenURL { _ in
-                // Deep-link routing reactivates in Phase 3.8 alongside the
-                // onboarding + bookmark features. Scheme registration stays
-                // intact via Info.plist.
+            .onOpenURL { url in
+                guard let route = DeepLinkRoute.parse(url) else { return }
+                switch route {
+                case .today:
+                    selectedTab = 0
+                case .lesson(let n):
+                    selectedTab = 1
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .deepLinkLesson, object: n)
+                    }
+                case .archive(let d):
+                    selectedTab = 3
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .deepLinkArchive, object: d)
+                    }
+                case .saved:
+                    selectedTab = 4
+                }
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
