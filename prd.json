@@ -28,7 +28,7 @@
     {
       "id": "ACIM-001",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "3.9a — Widget schema parity (kill pre-3.2 references; bring Widget target compile-clean)",
       "why": "ACIMDailyMinuteWidget target has been broken-by-design since Phase 3.2 (SwiftData schema rewrite). It still references the old schema names. This story is pure repair — no new features, no UI changes — just bring the Widget target to 0 compile errors so subsequent 3.9b–e stories can layer real UI on top.",

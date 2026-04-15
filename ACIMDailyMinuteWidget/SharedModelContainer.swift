@@ -10,8 +10,7 @@ enum SharedModelContainer {
             .appending(path: "ACIMDailyMinute.sqlite")
     }
 
-    /// Read-only container for widget extension (prevents accidental writes)
-    static func createReadOnly() throws -> ModelContainer {
+    static let shared: ModelContainer = {
         let schema = Schema([
             DailyMinute.self,
             DailyLesson.self,
@@ -25,6 +24,10 @@ enum SharedModelContainer {
             url: containerURL,
             allowsSave: false
         )
-        return try ModelContainer(for: schema, configurations: [config])
-    }
+        do {
+            return try ModelContainer(for: schema, configurations: [config])
+        } catch {
+            fatalError("Could not create widget ModelContainer: \(error)")
+        }
+    }()
 }
