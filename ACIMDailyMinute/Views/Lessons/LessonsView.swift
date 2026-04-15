@@ -38,7 +38,9 @@ struct LessonsView: View {
             FilteredLessonsList(
                 searchText: searchText,
                 meta: meta,
-                bookmarkedNumbers: bookmarkedNumbers
+                bookmarkedNumbers: bookmarkedNumbers,
+                latestLessonNumber: lessons.last?.lessonNumber ?? 0,
+                latestPublishedAt: lessons.last?.publishedAt
             )
             .listStyle(.plain)
             .navigationTitle("Lessons")
@@ -122,10 +124,17 @@ private struct FilteredLessonsList: View {
     let searchText: String
     let meta: [Int: LessonMeta]
     let bookmarkedNumbers: Set<Int>
+    let latestLessonNumber: Int
+    let latestPublishedAt: Date?
 
     var body: some View {
         let visible = filteredLessonNumbers()
         List {
+            if latestLessonNumber > 0 {
+                cadenceHeader
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+            }
             if visible.isEmpty {
                 ContentUnavailableView.search(text: searchText)
                     .listRowSeparator(.hidden)
@@ -140,6 +149,21 @@ private struct FilteredLessonsList: View {
                 }
             }
         }
+    }
+
+    private var cadenceHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Lesson \(latestLessonNumber) of 365")
+            if let date = latestPublishedAt {
+                Text("Published \(date, format: .relative(presentation: .named))")
+            }
+            Text("After Lesson 365, the Text begins.")
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
     }
 
     /// Filter contract (locked for Phase 3.5c):

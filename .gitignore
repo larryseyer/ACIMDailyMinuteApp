@@ -55,3 +55,7 @@ docs/
 
 # App Store submission instructions
 ACIMDailyMinute/metadata/
+
+# Ignored
+untracked/
+

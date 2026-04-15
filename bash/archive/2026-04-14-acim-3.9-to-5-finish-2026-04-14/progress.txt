@@ -1,0 +1,53 @@
+# Ralph Progress Log — ACIM Daily Minute Bug-Fix Sprint (2026-04-14)
+Started: 2026-04-14
+Branch: main (work commits directly to main — no feature branches)
+Mission: Ship four user-visible bug fixes Larry identified by dropping screenshots into /Users/larryseyer/ACIMDailyMinuteApp/untracked/ on 2026-04-14. One story per screenshot. Each story = one Ralph iteration = one ./bu.sh commit straight to origin/main.
+---
+
+## Seed context (read before first iteration)
+
+The full ACIM Daily Minute roadmap (Phases 1–5: Today, Lessons, Listen, Archive, Saved, Settings, Onboarding, Deep Links, Shortcut, Widget all 3 families, Live Activity, Watch app + complications + WCSession sync, branding, ACIMChime.caf, App Store metadata) shipped at commit **2e456ce** on `ralph/acim-3.9-to-5-finish-2026-04-14`. That branch is closed; main is current.
+
+This PRD pair starts a **new bug-fix cycle on main**. Larry dropped four screenshots into `untracked/` whose filenames describe each defect:
+
+| Screenshot filename | Story | One-line |
+|---|---|---|
+| `Lesson 1 and 2 are missing.png` | ACIM-101 | Bundle Workbook365.json + WorkbookCatalog helper + LessonRow title fallback + release-cadence header on Lessons tab |
+| `Formatting is wrong for Lessons - also font looks weird - wrong font? Listen button does not play audio.png` | ACIM-102 | Replace `.custom("Georgia")` with `.system(.serif)` on Today + LessonDetail; fix AudioManager (AVAudioSession activation + KVO error surfacing) |
+| `Daily Lesson shows wrong video and should start at lesson 1 but remember which lesson they are on.png` | ACIM-103 | ListenView per-feed YouTube playlist embed (Daily Minute playlist for Minute sub-tab; Daily Lesson playlist for Lessons sub-tab); persist `listen.lessons.lastWatchedIndex` in UserDefaults |
+| `Daily Minute list should list other minutes below decending.png` | ACIM-104 | Force `PodcastService.fetchMinuteEpisodes()` on Listen `.task`, remove any fetchLimit, render full historical list newest-first below today's |
+
+After ACIM-104 passes AND `./build.sh` exits 0: emit `<promise>COMPLETE</promise>` so `run_ralph.sh` exits.
+
+## Pre-flight (verified facts as of 2026-04-14)
+
+- [x] Working directory: `/Users/larryseyer/ACIMDailyMinuteApp/`. Git status clean except for the four screenshots in `untracked/`.
+- [x] iPad sim UUID `86F64729-D28D-44F7-BEB9-EF34AA7B7F28` (iPad 10th gen, iOS 18.1) and Apple Watch Series 10 (46mm) sim are both wired through `./build.sh`.
+- [x] `bu.sh` pushes to `origin main` — correct for this PRD pair (we are on main). No branch fix-up needed.
+- [x] Two YouTube playlist IDs confirmed by Larry on 2026-04-14:
+  - Daily Minute playlist: `PLP1KDMu51tB7o5hMs2ck69gZZidrg-ltD`
+  - Daily Lesson playlist: `PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS`
+- [x] Backend repo (read-only ground truth): `/Volumes/MacLive/Users/larryseyer/acim-daily-minute`. Backend publishes `daily-lesson.json`, `daily-minute.json`, `podcast-lessons.xml`, `podcast-minute.xml` to `https://www.acimdailyminute.org`. Audio served at relative paths like `audio/daily-lessons/lesson-001.mp3` (NOT archive.org — not confirmed to exist; do not change the iOS audio source).
+- [x] `daily-lesson.json` carries an embedded `archive[]` with **only the last 7 entries**. That's why lessons 3–10 are present locally but lessons 1–2 are missing — they aged out before the user installed the app. There is no per-lesson endpoint and no full-archive endpoint on the backend, so iOS cannot fetch the missing bodies/audio without backend changes (out of scope; ACIM-101 ships title-only fallback).
+
+## Execution model (hard rules for every iteration)
+
+- **Verification command (every story):** `./build.sh > /tmp/full-build.log 2>&1; echo exit=$?` — must report `exit=0`. Then `grep "error:" /tmp/full-build.log | wc -l` — must report `0`. Both gates required.
+- **Commit format:** `./bu.sh "<chunk-id> — <chunk title>"` — exact format. One commit per story, straight to `origin/main` (bu.sh handles this). Examples: `./bu.sh "ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header"`.
+- **After commit succeeds:** set the story's `passes:true` in `prd.json` AND append a completion block to this file under `## --- Iteration Log ---` (template at the bottom of this file).
+- **No TODOs, no dead code, no backwards-compat shims, no JTFNews refs, no placeholder assets.** See `prd.json` rules block for the exact grep gates per story.
+
+## Story dependencies
+
+All four stories are independent (`depends_on: []`). Ralph picks lowest priority number first that still has `passes:false`. Order: ACIM-101 → ACIM-102 → ACIM-103 → ACIM-104.
+
+## Verified gotchas
+
+- **Georgia is everywhere** — at least four call sites (DailyMinuteCard line 27, DailyLessonCard lines 27 + 31, LessonDetailView line 81). After ACIM-102, `grep -rIn 'Georgia' /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/` MUST return 0 matches. If a fifth call site exists, fix it in the same story — do not leave a stray reference.
+- **AudioManager is shared via @EnvironmentObject** — Today cards already inject it. After ACIM-102 adds `@Published var lastError`, the Today cards bind to it directly; no plumbing changes needed beyond the inline `Text(audio.lastError ?? "")` rendering.
+- **WKWebView for YouTube embeds** — check whether the codebase already has a YouTube embed wrapper view before introducing a new WKWebView in ACIM-103. If one exists (e.g., a `YouTubeEmbedView` taking a URL), reuse it. Reuse beats new code.
+- **Podcast feed item count** — to know how many entries ACIM-104 should render, run `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` from the build host. If the feed only contains today's entry (backend regenerates fresh per day per the backend code), the iOS-side fix only ensures we render whatever is in the feed; we cannot show entries that aren't there. Note this in the iteration log if the feed is single-item — backend pagination would be a separate concern.
+
+## --- Iteration Log ---
+
+(Ralph appends one block per completed story below this line.)

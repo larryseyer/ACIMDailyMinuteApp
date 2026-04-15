@@ -19,3 +19,13 @@
 [2026-04-14 22:21:52] Progress: 7/13 complete | Next: ACIM-008: 3.10c — Watch/phone WCSession one-way connectivity (phone → watch latest minute) | Commit: cc4f059
 [2026-04-14 22:31:52] Progress: 9/13 complete | Next: ACIM-010: 5a — App icon set (install pre-staged Apple iconset + watchOS icon) | Commit: 40faa33
 [2026-04-14 22:41:52] Watchdog stopped by user
+[2026-04-14 23:46:29] ==========================================
+[2026-04-14 23:46:29] Ralph Watchdog Started - ACIM Daily Minute
+[2026-04-14 23:46:29] Check interval: 600s (10 min)
+[2026-04-14 23:46:29] Stall threshold: 1800s (30 min)
+[2026-04-14 23:46:29] ==========================================
+[2026-04-14 23:46:29] Starting state: 0/4 stories complete
+[2026-04-14 23:46:29] STALL DETECTED: No commits for 40 minutes
+[2026-04-14 23:46:29]     Last story: ACIM-101: Bug 4 — Workbook365 catalog + lesson title fallback + release-cadence header
+[2026-04-14 23:46:29]     Claude running: yes
+[2026-04-14 23:46:29]     Ralph running: yes

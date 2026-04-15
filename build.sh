@@ -84,12 +84,15 @@ run_build "iOS (Debug) iPad (10th generation) iOS ${IPHONE_OS} [${IPAD_UUID}]" \
   build
 
 # ── macOS (unified target with #if os(macOS) guards) ──
+# Skip code signing for Debug verification — no provisioning profiles
+# are needed when we only care about "does it compile?"
 run_build "macOS (Debug)" \
   "$LOG_DIR/macos.log" \
   -scheme "$SCHEME" \
   -destination "platform=macOS" \
   -configuration Debug \
   -derivedDataPath "$BUILD_DIR" \
+  CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
   build
 
 # ── watchOS Simulator ──
