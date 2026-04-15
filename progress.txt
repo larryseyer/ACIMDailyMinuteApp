@@ -25,3 +25,12 @@ to exit the loop.
 
 ## --- Iteration Log ---
 
+### ACIM-201 — Settings ACIM Sparkly tagline + strip Sparkly refs from Onboarding and About
+- **Commit:** 409cd6d
+- **Date:** 2026-04-15
+- **Changes:**
+  - SettingsView.swift: tagline changed from "Sparkly Edition · Teddy Poppe · CIMS lineage" to "ACIM Sparkly Edition · Teddy Poppe · CIMS lineage"
+  - OnboardingView.swift: removed both "Sparkly Edition · Teddy Poppe · CIMS" Text views (iOS line 44 and macOS line 67) and their modifier chains
+  - AboutView.swift: rewrote mission card text removing "Drawn from the Sparkly Edition, " clause
+- **Verification:** grep confirms exactly 1 "Sparkly Edition" match (SettingsView only). ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
+

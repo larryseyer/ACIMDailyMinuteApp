@@ -124,12 +124,9 @@ actor NotificationManager {
         )
     }
 
-    /// Falls back to `.default` if ACIMChime.caf is missing from the bundle to prevent silent notification drops.
     private func preferredSound() -> UNNotificationSound {
-        let useCustom = UserDefaults.standard.bool(forKey: "useCustomNotificationSound")
-        guard useCustom,
-              Bundle.main.url(forResource: "ACIMChime", withExtension: "caf") != nil
-        else {
+        guard Bundle.main.url(forResource: "ACIMChime", withExtension: "caf") != nil else {
+            assertionFailure("ACIMChime.caf missing from bundle")
             return .default
         }
         return UNNotificationSound(named: UNNotificationSoundName("ACIMChime.caf"))
