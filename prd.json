@@ -76,7 +76,7 @@
     {
       "id": "ACIM-003",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "title": "3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch",
       "why": "ContentView.onOpenURL is currently `{ _ in }` — comment says deep links reactivate in 3.8. Need URL scheme in Info.plist, a parser, and dispatch to tab + path. Also fixes the BookmarkRow non-interactive state from 3.8a (this story does NOT add tap handlers to BookmarkRow — that's optional follow-up; row swipe-delete remains the only interaction in 3.8a, which is fine).",
       "type": "code",

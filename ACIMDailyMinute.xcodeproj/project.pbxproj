@@ -62,7 +62,7 @@
 		AA000001060 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002055 /* LiveActivityManager.swift */; };
 		AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002056 /* ACIMDailyMinuteLiveActivity.swift */; };
 		AA000001062 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
-		AA000001063 /* GetTodaysFactsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002057 /* GetTodaysFactsIntent.swift */; };
+		AA000001063 /* GetTodaysReadingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002057 /* GetTodaysReadingIntent.swift */; };
 		AA000001064 /* ACIMDailyMinuteShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002058 /* ACIMDailyMinuteShortcuts.swift */; };
 		AA000001065 /* ACIMDailyMinuteWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002059 /* ACIMDailyMinuteWatchApp.swift */; };
 		AA000001066 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002060 /* WatchContentView.swift */; };
@@ -167,7 +167,7 @@
 		AA000002054 /* ACIMActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMActivityAttributes.swift; sourceTree = "<group>"; };
 		AA000002055 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		AA000002056 /* ACIMDailyMinuteLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteLiveActivity.swift; sourceTree = "<group>"; };
-		AA000002057 /* GetTodaysFactsIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTodaysFactsIntent.swift; sourceTree = "<group>"; };
+		AA000002057 /* GetTodaysReadingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetTodaysReadingIntent.swift; sourceTree = "<group>"; };
 		AA000002058 /* ACIMDailyMinuteShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteShortcuts.swift; sourceTree = "<group>"; };
 		AA000002059 /* ACIMDailyMinuteWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWatchApp.swift; sourceTree = "<group>"; };
 		AA000002060 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
@@ -398,7 +398,7 @@
 		AA000005017 /* Shortcuts */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002057 /* GetTodaysFactsIntent.swift */,
+				AA000002057 /* GetTodaysReadingIntent.swift */,
 				AA000002058 /* ACIMDailyMinuteShortcuts.swift */,
 			);
 			path = Shortcuts;
@@ -618,7 +618,7 @@
 				AA000001051 /* SharedModelContainer.swift in Sources */,
 				AA000001059 /* ACIMActivityAttributes.swift in Sources */,
 				AA000001060 /* LiveActivityManager.swift in Sources */,
-				AA000001063 /* GetTodaysFactsIntent.swift in Sources */,
+				AA000001063 /* GetTodaysReadingIntent.swift in Sources */,
 				AA000001064 /* ACIMDailyMinuteShortcuts.swift in Sources */,
 				AA000001200 /* TodayView.swift in Sources */,
 				AA000001201 /* DailyMinuteCard.swift in Sources */,

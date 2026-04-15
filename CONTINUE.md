@@ -114,7 +114,7 @@ At `/Users/larryseyer/.claude/projects/-Users-larryseyer-ACIMDailyMinuteApp/memo
 │   │   ├── Onboarding/                      (dead code; wired back in 3.8)
 │   │   └── AboutView.swift                  macOS About sheet
 │   ├── Shortcuts/
-│   │   └── GetTodaysFactsIntent.swift       stubbed "coming soon" dialog (rename + real impl in 3.8)
+│   │   └── GetTodaysReadingIntent.swift       Siri Shortcut — fetches latest DailyMinute via SwiftData
 │   ├── Utilities/
 │   │   ├── HashUtility.swift                SHA-256 truncated hex (also in Widget target)
 │   │   ├── PhraseStorage.swift              UserDefaults-backed phrases + notifiedItemKeys
@@ -259,7 +259,7 @@ Full plan: `/Users/larryseyer/.claude/plans/abundant-herding-rabin.md` (approved
      - `acimdailyminute://archive/2026-04-10` → select Archive tab + `path.append("2026-04-10")`.
      - `acimdailyminute://saved` → select Saved tab.
      - Invalid URLs: no-op, log to console only.
-   - **Shortcuts** — the `Shortcuts/GetTodaysFactsIntent.swift` stub needs a real implementation or a rename + new intent. Coming-soon dialog is a placeholder from scaffolding.
+   - **Shortcuts** — the `Shortcuts/GetTodaysReadingIntent.swift` stub needs a real implementation or a rename + new intent. Coming-soon dialog is a placeholder from scaffolding.
    - Files likely new: `Views/Saved/SavedView.swift` (may exist as stub per `AA000001058` — verify), `Views/Saved/BookmarkRow.swift`, `Views/Settings/PhrasesEditorView.swift`, possibly `Views/Settings/NotificationToggleRow.swift`. Modify `SettingsView.swift`, `OnboardingView.swift`, `ContentView.swift` (deep-link dispatch + onboarding sheet), `ACIMDailyMinuteApp.swift` (register `hasSeenOnboarding` default).
    - Pre-allocate pbxproj IDs in the plan. Next free range after 3.7: buildFiles `AA000001219+`, fileRefs `AA000002219+`. Saved PBXGroup and Settings PBXGroup likely already exist — verify first via grep.
    - Lock all design decisions in the plan — no TODOs allowed in committed code.

@@ -12,7 +12,7 @@ Four chunks remain (one Ralph story each):
 1. **ACIM-001 / 3.8b** — Settings rewrite + PhrasesEditorView + PhraseStorage helpers + NotificationManager.fireTest + UserDefaults defaults registration. Largest chunk; touches 5 source files + pbxproj.
 2. **ACIM-002 / 3.8c** — ContentView onboarding gate via @AppStorage + lineage line insertion in OnboardingView. Smallest chunk; no pbxproj edit.
 3. **ACIM-003 / 3.8d** — Info.plist URL scheme + new DeepLinkRoute.swift parser + ContentView.onOpenURL dispatch + Lessons/Archive .onReceive listeners. Touches 5 source files + pbxproj.
-4. **ACIM-004 / 3.8e** — Rename GetTodaysFactsIntent.swift → GetTodaysReadingIntent.swift via git mv, real perform() reading from shared ModelContainer, update AppShortcutsProvider phrases + intent ref. Touches 2 source files + pbxproj path attr.
+4. **ACIM-004 / 3.8e** — Rename GetTodaysReadingIntent.swift → GetTodaysReadingIntent.swift via git mv, real perform() reading from shared ModelContainer, update AppShortcutsProvider phrases + intent ref. Touches 2 source files + pbxproj path attr.
 
 After all 4 pass: emit `<promise>COMPLETE</promise>` so run_ralph.sh exits. Phase 3.8.5 (xcrun simctl install + manual smoke checklist) is NOT a Ralph story — Larry runs it on the iPad sim afterward.
 
@@ -78,6 +78,13 @@ All 4 are independent. Ralph picks lowest priority with `passes:false` first per
 - **Commit:** c9e94d0 on `ralph/acim-3.8-finish-2026-04-14`
 - **Files touched:** SettingsView.swift (rewrite), PhrasesEditorView.swift (new), PhraseStorage.swift (+add/remove helpers), NotificationManager.swift (+fireTest), ACIMDailyMinuteApp.swift (+defaults registration), project.pbxproj (+PhrasesEditorView entries)
 - **Acceptance criteria met:** Form with 4 sections (Notifications, Watched Phrases, Onboarding, About); Toggle + DatePicker bridging Date→hour/minute for scheduleDailyReminder; fireTest() added with 1s trigger; PhrasesEditorView with add/delete/count; PhraseStorage.add/remove helpers; UserDefaults dailyReminderEnabled+Time registered; pbxproj AA000002221/AA000001223 entries added; no TODO/FIXME/JTFNews.
+- **Build verification:** Skipped per user instruction (code-only phase).
+- **Status:** passes:true
+
+### ACIM-003 / 3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch
+- **Commit:** dbebb81 on `ralph/acim-3.8-finish-2026-04-14`
+- **Files touched:** Info.plist (+CFBundleURLTypes), DeepLinkRoute.swift (new), ContentView.swift (.onOpenURL dispatch), LessonsView.swift (+.onReceive deepLinkLesson), ArchiveView.swift (+.onReceive deepLinkArchive), project.pbxproj (+DeepLinkRoute entries)
+- **Acceptance criteria met:** URL scheme "acimdailyminute" registered; DeepLinkRoute enum with parse() + Notification.Name extensions; ContentView dispatches tab + notification per route; LessonsView appends Int to path; ArchiveView converts Date→dateString and appends; pbxproj AA000002222/AA000001224 entries added; no TODO/FIXME/JTFNews.
 - **Build verification:** Skipped per user instruction (code-only phase).
 - **Status:** passes:true
 

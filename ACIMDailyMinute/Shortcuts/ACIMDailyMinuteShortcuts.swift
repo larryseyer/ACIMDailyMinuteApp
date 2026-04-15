@@ -3,14 +3,14 @@ import AppIntents
 struct ACIMDailyMinuteShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
-            intent: GetTodaysFactsIntent(),
+            intent: GetTodaysReadingIntent(),
             phrases: [
-                "What are today's facts in \(.applicationName)",
-                "Read today's news from \(.applicationName)",
-                "Get today's facts from \(.applicationName)"
+                "Today's Daily Minute from \(.applicationName)",
+                "What's today's reading from \(.applicationName)",
+                "Read today's lesson from \(.applicationName)"
             ],
-            shortTitle: "Today's Facts",
-            systemImageName: "newspaper"
+            shortTitle: "Today's Reading",
+            systemImageName: "sun.max"
         )
     }
 }
