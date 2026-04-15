@@ -43,3 +43,13 @@
 [2026-04-15 09:04:40]     Ralph running: yes
 [2026-04-15 09:14:40] Progress: 4/8 complete | Next: ACIM-205: Bug 3 — Today view + LessonDetailView: full-width text flow on iPad + bottom safe-area inset under mini-player | Commit: 44641a4
 [2026-04-15 09:24:40] Progress: 5/8 complete | Next: ACIM-206: Bug 1 — Listen Minute sub-tab lists every cached historical daily minute in descending order | Commit: e38f916
+[2026-04-15 16:46:58] ==========================================
+[2026-04-15 16:46:58] Ralph Watchdog Started - ACIM Daily Minute
+[2026-04-15 16:46:58] Check interval: 600s (10 min)
+[2026-04-15 16:46:58] Stall threshold: 1800s (30 min)
+[2026-04-15 16:46:58] ==========================================
+[2026-04-15 16:46:58] Starting state: 5/8 stories complete
+[2026-04-15 16:46:58] STALL DETECTED: No commits for 425 minutes
+[2026-04-15 16:46:58]     Last story: ACIM-206: Bug 1 — Listen Minute sub-tab lists every cached historical daily minute in descending order
+[2026-04-15 16:46:58]     Claude running: yes
+[2026-04-15 16:46:58]     Ralph running: yes
