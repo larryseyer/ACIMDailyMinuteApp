@@ -94,7 +94,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   else
     # Claude Code: run with autonomous permissions, passing the task as a prompt
     # Claude automatically reads CLAUDE.md from project root for instructions
-    OUTPUT=$(claude --dangerously-skip-permissions --print "Follow the Ralph Agent Instructions in CLAUDE.md. Read prd.json and progress.txt, then implement the next user story. IMPORTANT: Do NOT run builds or tests during this phase - focus only on code fixes and git commits." 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(claude --dangerously-skip-permissions --print "You are Ralph for the ACIM Daily Minute app. Read /Users/larryseyer/ACIMDailyMinuteApp/prd.json and /Users/larryseyer/ACIMDailyMinuteApp/progress.txt fully. Pick the lowest-priority story with passes:false whose depends_on are all passes:true. Implement EXACTLY that one story per its acceptanceCriteria — no more, no less. Hard rules: (1) MUST run ./build.sh and meet the per-phase errorFilter for the story before committing — never skip the build. (2) Commit with ./bu.sh using format '<chunk-id> — <title>'. (3) After commit, set passes:true for that story in prd.json and append a completion block to progress.txt under '## --- Iteration Log ---'. (4) Decide, do not ask — autonomy mode is on; pick defensible defaults and proceed. (5) No TODO/FIXME/XXX/JTFNews in any code. (6) If ACIM-013 passes AND ./build.sh exits 0 across all targets, emit <promise>COMPLETE</promise> and stop. Implement exactly one story this iteration." 2>&1 | tee /dev/stderr) || true
   fi
 
   # Check for completion signal
@@ -119,7 +119,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
     if [[ "$TOOL" == "amp" ]]; then
       VERIFY_OUTPUT=$(echo "All $TOTAL stories are now marked as passed in prd.json. Run full build and test verification: xcodebuild -scheme ACIMDailyMinute -destination 'platform=iOS Simulator,name=iPhone 16' build test. If all tests pass, output <promise>COMPLETE</promise>. If tests fail, fix the issues and re-run tests until they pass." | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
     else
-      VERIFY_OUTPUT=$(claude --dangerously-skip-permissions --print "All $TOTAL stories are now marked as passed in prd.json. Run full build and test verification: xcodebuild -scheme ACIMDailyMinute -destination 'platform=iOS Simulator,name=iPhone 16' build test. If all tests pass, output <promise>COMPLETE</promise>. If tests fail, fix the issues and re-run tests until they pass." 2>&1 | tee /dev/stderr) || true
+      VERIFY_OUTPUT=$(claude --dangerously-skip-permissions --print "All $TOTAL stories in /Users/larryseyer/ACIMDailyMinuteApp/prd.json are passes:true. Run /Users/larryseyer/ACIMDailyMinuteApp/build.sh — it builds all three targets (main app on iPad 10th gen iOS 18.1 sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28, Widget extension, Watch on Apple Watch Series 10 46mm). If ./build.sh exits 0 with zero errors across all targets, output <promise>COMPLETE</promise> exactly. If errors remain, fix them, commit via ./bu.sh, then re-run ./build.sh until it passes." 2>&1 | tee /dev/stderr) || true
     fi
 
     if echo "$VERIFY_OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
