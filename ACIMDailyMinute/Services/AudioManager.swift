@@ -10,18 +10,43 @@ final class AudioManager {
     var currentTime: Double = 0
     var duration: Double = 0
     var hasActiveAudio = false
+    var lastError: String?
 
     private var player: AVPlayer?
     private var timeObserver: Any?
+    private var statusObservation: NSKeyValueObservation?
 
     func play(url: String, title: String) {
         stop()
+        lastError = nil
 
         guard let audioURL = URL(string: Self.resolve(url)) else { return }
 
-        configureAudioSession()
+        #if os(iOS) || os(watchOS)
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .spokenAudio, options: [])
+            try session.setActive(true, options: [])
+        } catch {
+            lastError = "Audio session error: \(error.localizedDescription)"
+            return
+        }
+        #endif
 
         let item = AVPlayerItem(url: audioURL)
+        statusObservation = item.observe(\.status, options: [.new]) { [weak self] playerItem, _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                switch playerItem.status {
+                case .failed:
+                    self.lastError = playerItem.error?.localizedDescription ?? "Audio failed to load"
+                case .readyToPlay:
+                    self.lastError = nil
+                default:
+                    break
+                }
+            }
+        }
         player = AVPlayer(playerItem: item)
         currentTitle = title
         hasActiveAudio = true
@@ -52,6 +77,8 @@ final class AudioManager {
     }
 
     func stop() {
+        statusObservation?.invalidate()
+        statusObservation = nil
         if let observer = timeObserver {
             player?.removeTimeObserver(observer)
             timeObserver = nil
@@ -78,19 +105,6 @@ final class AudioManager {
         if url.hasPrefix("http://") || url.hasPrefix("https://") { return url }
         let host = "https://www.acimdailyminute.org"
         return url.hasPrefix("/") ? "\(host)\(url)" : "\(host)/\(url)"
-    }
-
-    // MARK: - Audio Session
-
-    private func configureAudioSession() {
-        #if os(iOS)
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            // Best effort
-        }
-        #endif
     }
 
     // MARK: - Time Observer

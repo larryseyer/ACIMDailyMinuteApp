@@ -52,7 +52,7 @@ struct PodcastEpisodeRow: View {
     private var textColumn: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(episode.title)
-                .font(.custom("Georgia", size: 15))
+                .font(.system(.subheadline, design: .serif))
                 .foregroundStyle(.primary)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
