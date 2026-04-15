@@ -31,3 +31,13 @@
 [2026-04-14 23:46:29]     Ralph running: yes
 [2026-04-15 00:06:29] Progress: 2/4 complete | Next: ACIM-103: Bug 1 — Listen tab per-feed YouTube playlist embed with remembered lesson position | Commit: 382e765
 [2026-04-15 00:16:29] Watchdog stopped by user
+[2026-04-15 09:04:40] ==========================================
+[2026-04-15 09:04:40] Ralph Watchdog Started - ACIM Daily Minute
+[2026-04-15 09:04:40] Check interval: 600s (10 min)
+[2026-04-15 09:04:40] Stall threshold: 1800s (30 min)
+[2026-04-15 09:04:40] ==========================================
+[2026-04-15 09:04:40] Starting state: 0/8 stories complete
+[2026-04-15 09:04:40] STALL DETECTED: No commits for 61 minutes
+[2026-04-15 09:04:40]     Last story: ACIM-201: Bug 7b — Settings tagline gets 'ACIM' prefix; strip 'Sparkly Edition' refs from Onboarding and About
+[2026-04-15 09:04:40]     Claude running: yes
+[2026-04-15 09:04:40]     Ralph running: yes

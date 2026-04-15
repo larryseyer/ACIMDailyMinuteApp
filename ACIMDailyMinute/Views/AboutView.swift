@@ -85,7 +85,7 @@ struct AboutView: View {
     // MARK: - Mission
 
     private var missionCard: some View {
-        Text("A daily passage from A Course in Miracles paired with today's Workbook Lesson. Drawn from the Sparkly Edition, offered freely, without interpretation.")
+        Text("A daily passage from A Course in Miracles paired with today's Workbook Lesson, offered freely, without interpretation.")
             .font(.acimCallout)
             .foregroundStyle(.primary.opacity(0.9))
             .multilineTextAlignment(.center)

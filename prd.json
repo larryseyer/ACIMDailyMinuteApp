@@ -1,128 +1,225 @@
 {
   "branchName": "main",
   "project": "ACIM Daily Minute — iOS / macOS / watchOS / Widget",
-  "mission": "Bug-fix sprint targeting four user-visible defects identified by Larry on 2026-04-14 via screenshots dropped into /Users/larryseyer/ACIMDailyMinuteApp/untracked/. Phases 3.9 → 5 of the roadmap shipped at commit 2e456ce (now merged to main; the ralph/acim-3.9-to-5-finish-2026-04-14 branch is closed). All work in this PRD lands directly on main — no branches, no backwards-compat shims, no dead code. Each story = one Ralph iteration = one ./bu.sh commit straight to origin/main.",
+  "mission": "Post-ship bug sprint (2026-04-15) targeting seven user-visible defects identified by Larry via screenshots dropped into /Users/larryseyer/ACIMDailyMinuteApp/untracked/ after testing on iPad Sim (iOS 18.1). Prior sprint ACIM-101 → ACIM-104 is merged to main (commits ac090c5, 382e765, 3dbd2bd, c00a3c7). Screenshot filename 'Wrong notification sound plays - Add ACIM to Sparkly edition…' is intentionally two defects (wrong sound + missing ACIM prefix on tagline) and ships as two stories (ACIM-202 + ACIM-201). All work in this PRD lands directly on main — no branches, no backwards-compat shims, no dead code. Each story = one Ralph iteration = one ./bu.sh commit straight to origin/main.",
   "executionModel": {
     "ralphRunsOn": "M4 / current machine. Working directory: /Users/larryseyer/ACIMDailyMinuteApp. Ralph has full bash + Xcode toolchain. No Python or external services required.",
-    "buildTarget": "iPad (10th generation) / iOS 18.1, simulator UUID 86F64729-D28D-44F7-BEB9-EF34AA7B7F28. Use ./build.sh which already resolves the iPad sim and the Apple Watch Series 10 (46mm) sim. Watch + Widget targets are already compile-clean as of commit 2e456ce.",
+    "buildTarget": "iPad (10th generation) / iOS 18.1, simulator UUID 86F64729-D28D-44F7-BEB9-EF34AA7B7F28. Use ./build.sh which already resolves the iPad sim and the Apple Watch Series 10 (46mm) sim. Watch + Widget targets compile clean as of the ACIM-104 commit.",
     "commitCommand": "./bu.sh \"<id> — <chunk title>\" — runs git add -A + commit + push + Dropbox zip backup. bu.sh's hard-coded `git push origin main` is correct for this PRD (we are on main). No branch fix-up needed.",
     "verificationCommand": "./build.sh > /tmp/full-build.log 2>&1; echo exit=$?  — builds all 3 targets (main app + Widget + Watch). Every story in this PRD MUST produce ./build.sh exit code 0. Main must always build clean.",
     "errorFilter": "grep 'error:' /tmp/full-build.log | wc -l — must equal 0 for every story. If non-zero, the story is incomplete; do not commit, fix the errors first.",
-    "alreadyShipped": "Phases 1–5 complete (Today, Lessons, Listen, Archive, Saved, Settings, Onboarding, Deep Links, Shortcut, Widget all 3 families, Live Activity, Watch app + complications + WCSession sync, branding, ACIMChime.caf, App Store metadata). Do not regress shipped surfaces. The four bugs in this PRD are post-ship defect repair — touch only what each story names."
+    "alreadyShipped": "Phases 1–5 complete plus the ACIM-101 → ACIM-104 bug-fix sprint (Workbook365 catalog + lesson title fallback + release-cadence header, system serif font + AudioManager session activation, Listen per-feed YouTube playlist embed with remembered lesson position, Listen Minute sub-tab full descending list). Do not regress these shipped surfaces. The seven bugs in this PRD are post-ship defect repair on top of that baseline — touch only what each story names.",
+    "untrackedScreenshots": "/Users/larryseyer/ACIMDailyMinuteApp/untracked/ holds the seven source screenshots for this sprint. Ralph MUST NOT delete, rename, or modify any file in that directory. It is Larry's evidence folder."
   },
   "rules": {
     "onePerIteration": "Implement exactly one story per Ralph iteration, lowest priority number first that still has passes:false AND whose depends_on stories all have passes:true.",
     "buildPolicy": "Each story MUST run the verificationCommand from executionModel before committing. ./build.sh MUST exit 0. Run the errorFilter as a secondary sanity check. Story is incomplete if either gate fails.",
-    "commitFormat": "./bu.sh \"<chunk-id> — <chunk title>\" — exact format. Examples: \"ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header\". One commit per story. After commit succeeds, set the story's passes:true in this prd.json AND append a story-completion block to progress.txt under '## --- Iteration Log ---'.",
+    "commitFormat": "./bu.sh \"<chunk-id> — <chunk title>\" — exact format. Example: \"ACIM-201 — Settings ACIM Sparkly tagline + strip Sparkly refs from Onboarding and About\". One commit per story. After commit succeeds, set the story's passes:true in this prd.json AND append a story-completion block to progress.txt under '## --- Iteration Log ---'.",
     "mainOnly": "All work commits directly to main. Do NOT create feature branches. Do NOT open PRs. Do NOT amend prior commits — every story is a fresh commit on main.",
     "noTodos": "No TODO / FIXME / XXX / HACK comments anywhere in committed code. Pick a sensible default and fully implement. Verify per story: grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK' on the changed files must be empty.",
-    "noDeadCode": "Delete anything being replaced. No commented-out code, no unused symbols, no `_ = oldVar` re-binds, no shim functions that just call the new function. If a Georgia .custom() font call is being replaced, the old line is gone — not commented out, not preserved as a reference. Verify per story: review the diff and confirm zero deletions are present-but-commented.",
-    "noBackwardsCompat": "No legacy fallbacks for the prior implementation. If a UserDefaults key is being added (e.g., listen.lessons.lastWatchedIndex), do not also read an older key. If LessonRow fallback chain changes, do not preserve the old 'Not yet read' string for the same condition. Cut clean.",
+    "noDeadCode": "Delete anything being replaced. No commented-out code, no unused symbols, no `_ = oldVar` re-binds, no shim functions that just call the new function. Verify per story: review the diff and confirm zero deletions are present-but-commented.",
+    "noBackwardsCompat": "No legacy fallbacks for the prior implementation. No deprecated-key reads, no dual-write shims, no 'old' branches kept alive. Cut clean.",
     "noJtfnewsRefs": "Absolute rule — zero 'JTFNews' / 'jtfnews' / 'JTF News' mentions in any committed file (code, comments, docs, plist, pbxproj). The pattern library at /Users/larryseyer/jtfnewsapp/ is read-only; never name it inside this repo. Verify per story: grep -rIn 'JTFNews\\|jtfnews\\|JTF News' on the changed files must be empty.",
-    "noPlaceholderAssets": "Workbook365.json (story ACIM-101) MUST contain real public-domain ACIM Workbook lesson titles for all 365 entries — not stubs, not 'Lesson N' placeholders, not empty strings. If the engineer cannot source all 365 titles in one pass, the story BLOCKS, sets passes:false with `blocked: \"<reason>\"`, and surfaces to Larry instead of shipping a partial catalog.",
     "scopeFence": "No refactors beyond what each story requires. No feature additions. Don't touch shipped surfaces other than the specific files each story names.",
-    "completionSignal": "After story ACIM-104 commits AND ./build.sh exits 0, output the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly."
+    "untrackedFolderReadOnly": "Files in /Users/larryseyer/ACIMDailyMinuteApp/untracked/ are evidence artifacts. Ralph MUST NOT delete, move, rename, or edit them. Read-only reference only.",
+    "completionSignal": "After story ACIM-208 commits AND ./build.sh exits 0, output the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly."
   },
   "stories": [
     {
-      "id": "ACIM-101",
+      "id": "ACIM-201",
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "depends_on": [],
-      "title": "Bug 4 — Workbook365 catalog + lesson title fallback + release-cadence header",
-      "why": "Screenshot 'Lesson 1 and 2 are missing.png' shows the Lessons tab with rows 1 and 2 displaying 'Not yet read' while rows 3–10 show titles. Verified root cause: backend's daily-lesson.json only retains the last 7 entries in its embedded archive[] field; the user installed the app after lessons 1 and 2 had aged out of that rolling window, so they were never persisted to DailyLesson. There is no per-lesson endpoint and no full-archive endpoint on the backend, so the app cannot fetch the missing bodies/audio without backend changes (out of scope here). The iOS-side fix is to bundle the canonical 365 ACIM Workbook lesson titles so every row always shows its title, and to add a release-cadence header so users understand lessons publish one per day over ~1.5 years and the Text begins after Lesson 365.",
+      "title": "Bug 7b — Settings tagline gets 'ACIM' prefix; strip 'Sparkly Edition' refs from Onboarding and About",
+      "why": "Screenshot 'Wrong notification sound plays - Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage.png' shows the Settings sheet with the bottom-of-sheet tagline reading 'Sparkly Edition · Teddy Poppe · CIMS lineage'. Larry wants the word 'ACIM' prepended so the tagline reads 'ACIM Sparkly Edition · Teddy Poppe · CIMS lineage', and confirmed (chat, 2026-04-15) that the Settings sheet is the ONLY place this tagline should appear. Grep currently finds 'Sparkly Edition' in three other locations: OnboardingView.swift lines 44 and 67 (two 'Sparkly Edition · Teddy Poppe · CIMS' occurrences), and AboutView.swift line 88 (prose: 'Drawn from the Sparkly Edition, offered freely, without interpretation.'). All three must be removed. Onboarding lines get the tagline deleted outright. AboutView sentence is rewritten so it still makes sense without the 'Sparkly Edition' clause.",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/Workbook365.json",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/WorkbookCatalog.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonRow.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonsView.swift"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Settings/SettingsView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/AboutView.swift"
       ],
       "acceptanceCriteria": [
-        "Create /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/Workbook365.json. JSON shape: top-level array of 365 objects, each `{ \"lessonNumber\": Int, \"title\": String }`. lessonNumber values are exactly 1..365 in ascending order, no gaps, no duplicates. titles are the canonical public-domain ACIM Workbook for Students lesson headings. Spot-check anchors that MUST be present verbatim: lesson 1 = \"Nothing I see in this room means anything.\", lesson 2 = \"I have given everything I see in this room all the meaning that it has for me.\", lesson 3 = \"I do not understand anything I see in this room.\", lesson 7 = \"I see only the past.\", lesson 10 = \"My thoughts do not mean anything.\", lesson 365 = \"This holy instant would I give to You.\" If the engineer cannot source all 365 canonical titles in one pass, the story BLOCKS per rules.noPlaceholderAssets — do not commit stubs.",
-        "Create /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/WorkbookCatalog.swift. Public enum (or struct) `WorkbookCatalog` with: (a) private static let `entries: [Int: String]` lazily loaded once from Workbook365.json in the main bundle (use Bundle.main.url(forResource: \"Workbook365\", withExtension: \"json\") + JSONDecoder), (b) public static func `title(for lessonNumber: Int) -> String?` returning entries[lessonNumber]. Crash-loud on JSON missing/malformed via fatalError with diagnostic — this is a bundled asset, not user input.",
-        "Edit /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonRow.swift. The existing logic that renders 'Not yet read' when meta?.title is nil/empty (around lines 45–66 per current HEAD) must be replaced with a fallback chain: (1) meta?.title (from DailyLesson or ArchivedReading), else (2) WorkbookCatalog.title(for: lessonNumber), else (3) the literal string \"Not yet read\" only if both above are nil. Result: lessons 1 and 2 display their canonical titles in the same style as lessons 3–10. The 'Not yet read' affordance now appears only for future un-published lessons (e.g., 11–365 today).",
-        "Edit /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonsView.swift. Add a release-cadence header card at the top of the list (above the 1..365 spine). Header shows three lines: line 1 = \"Lesson \\(latestLessonNumber) of 365\" where latestLessonNumber is the max lessonNumber in the @Query DailyLesson results (fallback to 0 if empty); line 2 = \"Published \\(relativeDateString)\" where relativeDateString is computed from the latest DailyLesson.publishedAt using Date.RelativeFormatStyle (e.g., \"today\", \"yesterday\", \"3 days ago\"); line 3 = \"After Lesson 365, the Text begins.\" Style as a compact card with secondary background color, .footnote font, .secondary foregroundStyle, 12pt padding, 12pt corner radius. Card is hidden if latestLessonNumber == 0.",
+        "Edit SettingsView.swift line 63: change `Text(\"Sparkly Edition · Teddy Poppe · CIMS lineage\")` to `Text(\"ACIM Sparkly Edition · Teddy Poppe · CIMS lineage\")`. Exact string, exact middle-dot character (U+00B7). No other change to SettingsView.",
+        "Edit OnboardingView.swift line 44: delete the entire `Text(\"Sparkly Edition · Teddy Poppe · CIMS\")` view and any immediately-surrounding styling modifiers that exist solely for that Text (e.g., if a `.font(...)`, `.foregroundStyle(...)`, `.padding(...)` chain is attached only to this Text and lives on the same line or the next modifier-only lines, delete them too). If the Text is inside a VStack that becomes empty, leave the VStack only if it still contains another child; otherwise delete the empty VStack as well.",
+        "Edit OnboardingView.swift line 67: same treatment as line 44 — delete the `Text(\"Sparkly Edition · Teddy Poppe · CIMS\")` view and any modifier chain attached only to it. If it was inside a container that now becomes empty, remove the empty container.",
+        "Edit AboutView.swift line 88: replace `Text(\"A daily passage from A Course in Miracles paired with today's Workbook Lesson. Drawn from the Sparkly Edition, offered freely, without interpretation.\")` with `Text(\"A daily passage from A Course in Miracles paired with today's Workbook Lesson, offered freely, without interpretation.\")`. The 'Drawn from the Sparkly Edition, ' clause is fully removed; the surrounding sentence reads naturally without it.",
+        "Global verification: `grep -rIn 'Sparkly Edition\\|Sparkly edition\\|sparkly edition' /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/ /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/ /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/` MUST return exactly ONE match, and that match MUST be the SettingsView.swift line with the new 'ACIM Sparkly Edition · Teddy Poppe · CIMS lineage' string. Zero matches anywhere else in the repo source tree.",
         "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
-        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Lessons tab. Confirm rows 1 and 2 now show their canonical titles (\"Nothing I see in this room means anything.\" and \"I have given everything I see in this room all the meaning that it has for me.\") instead of 'Not yet read'. Confirm header card appears at top showing current lesson number, published date, and the 'After Lesson 365, the Text begins.' footnote.",
-        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the four touched files must be empty.",
-        "Commit: ./bu.sh \"ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header\". Mark passes:true in prd.json and append progress log."
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Settings → scroll to bottom of sheet → tagline reads exactly 'ACIM Sparkly Edition · Teddy Poppe · CIMS lineage'. Tap 'Replay introduction' in Settings → step through onboarding → NO 'Sparkly Edition' text appears on any onboarding slide. Open About (from Settings or wherever it is reached) → first paragraph reads 'A daily passage from A Course in Miracles paired with today's Workbook Lesson, offered freely, without interpretation.' with no 'Sparkly Edition' reference.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the three touched files must be empty.",
+        "Commit: ./bu.sh \"ACIM-201 — Settings ACIM Sparkly tagline + strip Sparkly refs from Onboarding and About\". Mark passes:true in prd.json and append progress log."
       ]
     },
     {
-      "id": "ACIM-102",
+      "id": "ACIM-202",
       "priority": 2,
-      "passes": true,
-      "depends_on": [],
-      "title": "Bug 3 — Replace Georgia with system serif font + fix AudioManager session activation and error surfacing",
-      "why": "Screenshot 'Formatting is wrong for Lessons - also font looks weird - wrong font? Listen button does not play audio.png' shows two distinct defects on the Today screen. (1) Lesson body text uses .font(.custom(\"Georgia\", size: 18)) which renders inconsistently because Georgia is not registered in Info.plist UIAppFonts and the .custom() lookup is fragile. (2) Tapping the Listen button produces no audio because AudioManager.play() never activates AVAudioSession with .playback category — iOS 18 silently no-ops AVPlayer.play() in that state — and there is no KVO observation on AVPlayerItem.status, so URL load failures are invisible. Both defects ship together because they live on the same screen and the user reported them as one bug.",
+      "passes": false,
+      "depends_on": ["ACIM-201"],
+      "title": "Bug 7a — Test notification + daily reminder audibly play ACIMChime.caf",
+      "why": "Screenshot 'Wrong notification sound plays - Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage.png' shows a successful notification banner ('ACIM Daily Minute — Test notification — your daily reminder is configured.') but Larry reports the audible sound is wrong (system default, not the ACIM chime). NotificationManager.preferredSound() at /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift line 128 already references ACIMChime.caf and returns UNNotificationSound(named: UNNotificationSoundName(\"ACIMChime.caf\")) when the asset is found in the bundle, falling back to .default when it is not. ACIMChime.caf exists at /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/ACIMChime.caf (507148 bytes). The likely root cause is that ACIMChime.caf is NOT a member of the iOS app target's 'Copy Bundle Resources' build phase, so Bundle.main.url(forResource:withExtension:) returns nil at runtime and preferredSound() silently falls through to .default. pbxproj currently has 4 references to 'ACIMChime' — need to verify at least one is a PBXBuildFile on the iOS app target (not only the Watch target or not only a PBXFileReference with no membership).",
       "type": "code",
       "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift"
+      ],
+      "acceptanceCriteria": [
+        "Diagnose: open project.pbxproj and confirm ACIMChime.caf has (a) a PBXFileReference entry pointing to ACIMDailyMinute/Resources/ACIMChime.caf with lastKnownFileType of file or audio, (b) a PBXBuildFile entry referencing that file, AND (c) the PBXBuildFile ID is listed in the PBXResourcesBuildPhase files[] array of the ACIMDailyMinute (iOS app) target. If (a), (b), or (c) is missing, add what is missing so ACIMChime.caf is copied into the iOS app bundle at build time. If the existing 4 references already cover iOS target membership, the root cause is elsewhere — proceed to the Swift-side check.",
+        "Verify bundle inclusion post-build: after ./build.sh runs, `find /Users/larryseyer/ACIMDailyMinuteApp/build -name 'ACIMChime.caf' -path '*ACIMDailyMinute.app*'` MUST return at least one path inside the iOS .app bundle (not only inside the Watch .app or the xcarchive intermediates).",
+        "Swift-side verification in NotificationManager.swift preferredSound() (line 128): keep the existing logic that calls Bundle.main.url(forResource: \"ACIMChime\", withExtension: \"caf\"). Do NOT add any sim-vs-device branches, do NOT add a second fallback path, do NOT wrap in #if. The function stays a clean two-branch guard: if bundle URL exists return UNNotificationSound(named: UNNotificationSoundName(\"ACIMChime.caf\")), else return .default. The only permitted new line inside this function is an `assertionFailure(\"ACIMChime.caf missing from bundle\")` immediately before the `return .default` fallback — so the next build-from-clean catches a regression loud.",
+        "Scheduled notification paths (NotificationManager.swift lines 69, 90, 111 where `content.sound = preferredSound()` is set) already call preferredSound(). Do NOT duplicate the sound assignment. Do NOT inline UNNotificationSound(named:) at any of those call sites.",
+        "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28 (simulator must have audio routing enabled — Settings → Sound & Haptics or Hardware → Audio Output on host Mac): open app → Settings → Send test notification. Banner must appear AND ACIMChime.caf must audibly play through the host Mac speakers (distinctive chime, not the iOS tri-tone default). If the simulator is muted, unmute before verifying.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the two touched files (pbxproj and NotificationManager.swift) must be empty.",
+        "Commit: ./bu.sh \"ACIM-202 — Test notification plays ACIMChime.caf via bundled asset\". Mark passes:true in prd.json and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-203",
+      "priority": 3,
+      "passes": false,
+      "depends_on": ["ACIM-202"],
+      "title": "Bug 4 — Archive tab gains a 'Today' button that jumps calendar to today's date",
+      "why": "Screenshot 'Missing the TODAY button.png' shows the Archive tab with April 2026 displayed and April 1 selected (Wednesday). Today is April 15 but the user is stuck looking at April 1 with no one-tap affordance to jump back to today. The month nav chevrons work but are slow. ArchiveView.swift already has `Self.today()` as a static helper (line 33) and the DatePicker is bounded by `earliestDate...Self.today()` (line 103), so 'today' is a well-defined anchor. Task: add a SwiftUI Button titled 'Today' in the Archive toolbar (iOS) or next to the month header that sets `selectedDate = Self.today()`. The calendar must visually scroll to today's month (April 2026 → whatever month 'today' falls in). MacCalendarView (used on macOS) needs the same treatment so both platforms have the affordance.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Archive/ArchiveView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Archive/MacCalendarView.swift"
+      ],
+      "acceptanceCriteria": [
+        "ArchiveView.swift: add a Button labeled 'Today' to the navigation bar trailing position via `.toolbar { ToolbarItem(placement: .topBarTrailing) { Button(\"Today\") { withAnimation { selectedDate = Self.today() } } } }`. The button is always enabled (never hidden/disabled) because scrolling the calendar to today is always a valid action. If a .toolbar already exists on ArchiveView, ADD the ToolbarItem alongside existing items; do not replace them.",
+        "On platforms using the inline DatePicker (iOS/iPadOS), tapping Today must visually animate the calendar to the month containing today's date (handled automatically by DatePicker when its binding changes — withAnimation wrapper ensures smooth transition). On macOS, the MacCalendarView must honor the new selection and display the month containing today.",
+        "MacCalendarView.swift: read the current implementation and confirm the selection binding drives which month is displayed. If the currently-displayed month is a separate @State independent of the selection, add an `.onChange(of: selection)` modifier that sets the displayed month to `Calendar.current.component(.month, from: newValue)` and the displayed year to the corresponding year component. If the displayed month is already derived from selection, no edit is needed to MacCalendarView.",
+        "The new Today button uses system font and default tinted style (no custom colors). Label is exactly the English word 'Today' — no emoji, no icon prefix, no all-caps.",
+        "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Archive tab → navigate back two months using the calendar's chevrons so the display shows Feb 2026 with a non-today date selected → tap the 'Today' button in the top-right toolbar → calendar animates forward to the current month (April 2026) AND today's date (the 15th) becomes the selected cell. The selectedDateRow at the bottom of ArchiveView updates to 'Wednesday, April 15, 2026' (or whatever today is at test time).",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the two touched files must be empty.",
+        "Commit: ./bu.sh \"ACIM-203 — Archive Today button jumps calendar to current date\". Mark passes:true in prd.json and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-204",
+      "priority": 4,
+      "passes": false,
+      "depends_on": ["ACIM-203"],
+      "title": "Bug 5 — LessonsView list gains bottom safe-area inset so mini-player never covers titles",
+      "why": "Screenshot 'Player at bottom covers up lesson titles.png' shows the Lessons tab (1 of 365 spine) with row 17 ('I am not alone in experiencing the effects of my seeing.') partially covered by the 'Daily Minute' mini-player docked at the bottom of the screen. The mini-player is ~56pt tall and overlays the list content because LessonsView doesn't reserve bottom space while audio is active. Fix: add a bottom safeAreaInset to the scrollable list whose height equals the mini-player height when AudioManager.hasActiveAudio is true, zero otherwise. Standard SwiftUI pattern — no GeometryReader hacks, no explicit .padding(.bottom, 56) hardcodes.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonsView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Listen/MiniPlayerView.swift"
+      ],
+      "acceptanceCriteria": [
+        "Read MiniPlayerView.swift and confirm the mini-player renders at a fixed height. If the height is not already a static public constant, add one: `public static let height: CGFloat = 56` (or whatever the current rendered height is — measure by reading the VStack/HStack + padding combo; typical ACIM mini-player layouts come out to 56pt). Use this constant in ACIM-205 too.",
+        "LessonsView.swift: add `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` modifier on the outermost scrollable container (the List or ScrollView that holds the 365 rows and the release-cadence header). The inset reserves space above the mini-player so the last row is always fully visible. When no audio is active, the inset is zero and the list uses the full screen.",
+        "The AudioManager must already be accessible in LessonsView via @EnvironmentObject or @Environment — use the existing injection pattern from ACIM-102. Do NOT create a new instance.",
+        "Do NOT add bottom padding to individual rows (LessonRow). The inset belongs to the scroll container, not each row.",
+        "Do NOT introduce a new `.padding(.bottom, 56)` hardcode anywhere. The inset is driven by the MiniPlayerView.height constant.",
+        "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Listen → Minute → tap any episode → audio starts → mini-player appears at bottom → switch to Lessons tab → scroll to row 17+ → row 17 title ('I am not alone in experiencing the effects of my seeing.') MUST be fully visible above the mini-player. Stop audio → mini-player disappears → list extends to bottom safe area with no empty gap.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the two touched files must be empty.",
+        "Commit: ./bu.sh \"ACIM-204 — Lessons list bottom safe-area inset prevents mini-player overlap\". Mark passes:true in prd.json and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-205",
+      "priority": 5,
+      "passes": false,
+      "depends_on": ["ACIM-204"],
+      "title": "Bug 3 — Today view + LessonDetailView: full-width text flow on iPad + bottom safe-area inset under mini-player",
+      "why": "Screenshot 'Lesson text does not flow - why right side blank - player at bottom covers up text.png' shows the Today tab on iPad. The Daily Minute body and Lesson 11 body both render in what looks like phone-width (~375pt), leaving a large blank margin on the right half of the iPad screen. Additionally, the mini-player at the bottom covers the last couple of lines of the lesson body. Larry confirmed (chat, 2026-04-15) the desired flow treatment is 'full width minus standard 20pt horizontal padding' — no max-width cap, no centered reading column. Fix applies to DailyMinuteCard, DailyLessonCard (on Today view), and LessonDetailView (for consistency when viewing an individual lesson's full body). Bottom inset reuses the MiniPlayerView.height constant introduced in ACIM-204.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Today/TodayView.swift",
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Today/DailyMinuteCard.swift",
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Today/DailyLessonCard.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonDetailView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/AudioManager.swift"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonDetailView.swift"
       ],
       "acceptanceCriteria": [
-        "Font fix — DailyMinuteCard.swift line 27: replace `.font(.custom(\"Georgia\", size: 18))` with `.font(.system(.body, design: .serif))`. Delete the old .custom call entirely (no comment, no shim).",
-        "Font fix — DailyLessonCard.swift line 27 (lesson title): replace `.font(.custom(\"Georgia\", size: 20).weight(.semibold))` with `.font(.system(.title3, design: .serif).weight(.semibold))`.",
-        "Font fix — DailyLessonCard.swift line 31 (lesson body): replace `.font(.custom(\"Georgia\", size: 18))` with `.font(.system(.body, design: .serif))`.",
-        "Font fix — LessonDetailView.swift line 81 (lesson body): replace `.font(.custom(\"Georgia\", size: 19))` with `.font(.system(.body, design: .serif))`. Also replace any sibling .custom(\"Georgia\", ...) call for the lesson title in the same file with `.font(.system(.title2, design: .serif).weight(.semibold))`.",
-        "Font fix verification: grep -rIn 'Georgia' /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/ MUST return 0 matches after the edits. The string 'Georgia' should not appear anywhere in the touched files or their callers.",
-        "Audio fix — AudioManager.swift: at the top of the file add `import AVFoundation` if not already present. The AudioManager class must be ObservableObject with a `@Published var lastError: String?` property (default nil).",
-        "Audio fix — AudioManager.swift play(url:title:) function (currently around lines 17–35): before calling `player?.play()`, configure and activate the audio session. Add this block immediately after the `guard let audioURL = URL(string: Self.resolve(url)) else { return }` line: `do { let session = AVAudioSession.sharedInstance(); try session.setCategory(.playback, mode: .spokenAudio, options: []); try session.setActive(true, options: []) } catch { lastError = \"Audio session error: \\(error.localizedDescription)\"; return }`. After creating the AVPlayerItem, KVO-observe its status: on `.failed` set `lastError = playerItem.error?.localizedDescription ?? \"Audio failed to load\"`, on `.readyToPlay` set `lastError = nil`. Use NSKeyValueObservation stored on the AudioManager instance so it persists; invalidate any prior observation when starting a new playback.",
-        "Audio fix — DailyMinuteCard.swift around line 87 and DailyLessonCard.swift around line 86: bind to `audio.lastError` (the AudioManager from @EnvironmentObject or the existing injection). Below the Listen button, when lastError is non-nil, render `Text(lastError).font(.caption).foregroundStyle(.red)`. When the user taps Listen and a fresh play attempt starts, lastError is reset to nil first (handled inside AudioManager.play).",
+        "DailyMinuteCard.swift: on the body Text view, apply `.frame(maxWidth: .infinity, alignment: .leading)` and `.fixedSize(horizontal: false, vertical: true)` so the text expands to the available horizontal width and wraps accordingly. Outer card padding is 20pt horizontal (standard). Do NOT cap maxWidth at 720 or any other value.",
+        "DailyLessonCard.swift: apply the same treatment to the lesson body Text — `.frame(maxWidth: .infinity, alignment: .leading)` + `.fixedSize(horizontal: false, vertical: true)`. Title retains its existing alignment.",
+        "LessonDetailView.swift: apply the same treatment to the lesson body Text in the Full state (not the MetadataOnly state — MetadataOnly shows centered status messaging). Title retains its existing alignment.",
+        "TodayView.swift: add `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` modifier on the outermost ScrollView/List that contains the cards. AudioManager comes from the existing @EnvironmentObject injection. If TodayView currently uses a ScrollView wrapper, apply the modifier there; if it is already inside a List, apply on the List.",
+        "LessonDetailView.swift: add the same bottom safeAreaInset to its outermost ScrollView/List so the full-body text isn't covered by the mini-player when audio is active.",
+        "Do NOT introduce a new `.padding(.bottom, 56)` hardcode. The inset uses MiniPlayerView.height (constant from ACIM-204).",
+        "Do NOT remove any existing .padding(.horizontal, 20) / .padding(.horizontal) calls on the cards — those provide the 20pt side padding this story requires.",
         "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
-        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Today tab. Confirm Lesson body text renders in Apple's New York serif (looks like a clean modern serif, not Georgia's distinctive narrow letterforms). Tap the Listen button on the Daily Minute card AND the Daily Lesson card. Audio MUST play through the simulator's audio output. If a URL is intentionally broken for testing, the red error caption MUST appear beneath the Listen button.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28 in landscape orientation: open Today tab → Daily Minute body and Daily Lesson body both span the full iPad width minus 20pt on each side (no huge right-side blank region) → start audio playback of the Daily Minute → mini-player appears at bottom → the last line of each body is still fully visible above the mini-player. Rotate to portrait — same behavior, just narrower. Open a specific lesson via Lessons tab → LessonDetailView full body also flows full-width with bottom inset when audio is active.",
         "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the four touched files must be empty.",
-        "Commit: ./bu.sh \"ACIM-102 — System serif font + AudioManager session activation and error surfacing\". Mark passes:true and append progress log."
+        "Commit: ./bu.sh \"ACIM-205 — Today and LessonDetail full-width body flow + mini-player bottom inset\". Mark passes:true in prd.json and append progress log."
       ]
     },
     {
-      "id": "ACIM-103",
-      "priority": 3,
-      "passes": true,
-      "depends_on": [],
-      "title": "Bug 1 — Listen tab per-feed YouTube playlist embed with remembered lesson position",
-      "why": "Screenshot 'Daily Lesson shows wrong video and should start at lesson 1 but remember which lesson they are on.png' shows the Listen tab with the Lessons sub-tab selected, but the YouTube embed at the top still shows 'ACIM Daily Minute for 2026-04-14 — Day 26' (the Daily Minute video). Root cause: ListenView.todaysYouTubeURL (lines 53–58) always returns DailyMinute.youtubeURL regardless of the segmented picker selection. The embed must vary by feed: Minute sub-tab plays the Daily Minute YouTube playlist, Lessons sub-tab plays the Daily Lesson YouTube playlist starting at Lesson 1 by default and remembering the last-watched lesson across launches.",
+      "id": "ACIM-206",
+      "priority": 6,
+      "passes": false,
+      "depends_on": ["ACIM-205"],
+      "title": "Bug 1 — Listen Minute sub-tab lists every cached historical daily minute in descending order",
+      "why": "Screenshot 'Bottom list of daily minute links should contain all previous - sort decending from today or latest daily minute.png' shows the Listen tab with Minute sub-tab selected, but the list below the YouTube embed contains only ONE row: 'Daily Minute — April 14, 2026'. Expected: every cached Daily Minute episode, newest-first, descending by publishedAt. ACIM-104 claimed to ship this behavior, but the screenshot dated 2026-04-15 proves the list is still sparse. Likely root causes to diagnose in order: (1) PodcastXMLParser is only extracting the <item> inside the feed's <channel> and stopping after the first item because SAX state isn't resetting correctly between items, (2) the RSS feed URL itself only returns 1 item (verify with curl), (3) persist() is hitting a constraint failure silently for older items, (4) the @Query has a stale fetchDescriptor limit. Engineer must instrument briefly (print parse counts, persist counts), identify which, fix, remove the instrumentation, and ship a list that actually renders all episodes.",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Listen/ListenView.swift"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Listen/ListenView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/PodcastService.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/FeedService.swift"
       ],
       "acceptanceCriteria": [
-        "Define two private constants at the top of ListenView (file-private if outside the struct): `private let dailyMinutePlaylistID = \"PLP1KDMu51tB7o5hMs2ck69gZZidrg-ltD\"` and `private let dailyLessonPlaylistID = \"PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS\"`. These are the canonical YouTube playlist IDs Larry confirmed on 2026-04-14.",
-        "Define a UserDefaults-backed property using @AppStorage: `@AppStorage(\"listen.lessons.lastWatchedIndex\") private var lessonsLastWatchedIndex: Int = 1`. This persists the 1-indexed lesson number the user last watched on the Lessons sub-tab. Default 1 (Lesson 1) on first launch.",
-        "Replace the existing `todaysYouTubeURL` computed property (lines 53–58) with a new computed property `private var embedURL: URL?` that branches on the existing selectedFeed state: if selectedFeed == .minute, return URL(string: \"https://www.youtube.com/embed/videoseries?list=\\(dailyMinutePlaylistID)\"); if selectedFeed == .lessons, return URL(string: \"https://www.youtube.com/embed/videoseries?list=\\(dailyLessonPlaylistID)&index=\\(lessonsLastWatchedIndex)\"). The embed URL pattern uses YouTube's playlist videoseries endpoint with 1-indexed `index` query param.",
-        "Update the existing video container at the top of ListenView's body to render a WKWebView (or an existing YouTube embed View if one already exists in the codebase — check for a YouTubePlayerView or similar wrapper) loading embedURL. Maintain the existing 16:9 aspect ratio. The embed must reload when selectedFeed changes (use .id(selectedFeed) on the player view to force re-instantiation, or .onChange(of: selectedFeed) to call .load on the WKWebView).",
-        "When the user taps a lesson row in the Lessons sub-tab list, set `lessonsLastWatchedIndex = tappedRow.lessonNumber` so the embed updates AND the value persists. The existing row tap handler should be extended; do not introduce a separate gesture. The embed view re-renders to point at the new index via .onChange(of: lessonsLastWatchedIndex).",
-        "Delete the old `todaysYouTubeURL` computed property entirely (no comment, no shim). Delete any code path that previously read DailyMinute.youtubeURL for display purposes inside ListenView — that field is no longer the source for the embed.",
+        "Diagnose step 1: run `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` from the Ralph shell. Record the expected episode count in progress.txt. If the count is 1, the upstream feed is the bottleneck and the story BLOCKS with `blocked: \"Upstream feed returns only 1 item — backend issue\"` and surfaces to Larry. If the count is >1, proceed.",
+        "Diagnose step 2: add a temporary `print(\"Parsed \\(episodes.count) minute episodes\")` in PodcastService.fetchMinuteEpisodes() right before persist() is called. Run the app once via `xcrun simctl launch booted com.acimdailyminute.app` (or the equivalent bundle ID — read from project.pbxproj if unknown) and capture simctl spawn logs. Compare the parsed count to the curl count from step 1. Record findings in progress.txt.",
+        "Diagnose step 3: in ListenView, add a temporary `print(\"Query returned \\(cachedMinutes.count) cached minutes\")` inside the body to compare the SwiftData @Query count to the parsed count. If parsed == expected but query returns 1, the persist() or SwiftData query is the bug. Record findings in progress.txt.",
+        "Fix root cause as diagnosed in steps 2–3. Typical fixes: (a) PodcastXMLParser resets per-item accumulators (title, enclosure, pubDate) only on <item> start, not on channel start; (b) persist() doesn't early-return after the first upsert; (c) the @Query descriptor has no fetchLimit and sorts by publishedAt descending. Apply the specific fix, rebuild, verify.",
+        "Remove all temporary print statements added for diagnosis. The final diff MUST NOT contain any `print(` calls that weren't already present pre-story. `grep -n 'print(' on changed files must match the pre-story baseline exactly.",
+        "ListenView.swift: confirm the Minute list ForEach binds to `cachedMinutes` (the @Query result) and sorts by publishedAt descending (newest on top). If the sort is on a computed array, make sure it's `cachedMinutes.sorted { $0.publishedAt > $1.publishedAt }` — but preferred is letting SwiftData sort via SortDescriptor on the @Query itself.",
         "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
-        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Listen tab. With Minute sub-tab selected, confirm the embed shows the Daily Minute playlist (videos titled 'ACIM Daily Minute…'). Switch to Lessons sub-tab — embed MUST switch to the Daily Lesson playlist starting at Lesson 1 on first launch. Tap Lesson 5 in the list — embed MUST jump to Lesson 5. Force-quit and relaunch the app, return to Listen → Lessons — embed MUST resume at Lesson 5 (the remembered index).",
-        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the touched file must be empty.",
-        "Commit: ./bu.sh \"ACIM-103 — Listen per-feed YouTube playlist embed with remembered lesson position\". Mark passes:true and append progress log."
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Listen → Minute sub-tab → wait up to 5 seconds for fetch → list contains at least 7 episodes (or whatever the curl count from step 1 was, within 1 of that count allowing for publish-time drift). Top entry is the most recent. Subsequent entries are in strictly descending publishedAt order. Pull-to-refresh does not duplicate or lose rows.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the three touched files must be empty.",
+        "Commit: ./bu.sh \"ACIM-206 — Listen Minute list renders all cached episodes descending\". Mark passes:true in prd.json and append progress log."
       ]
     },
     {
-      "id": "ACIM-104",
-      "priority": 4,
-      "passes": true,
-      "depends_on": [],
-      "title": "Bug 2 — Listen Minute sub-tab renders full historical Daily Minute list in descending order",
-      "why": "Screenshot 'Daily Minute list should list other minutes below decending.png' shows the Listen tab Minute sub-tab containing only one row: 'Daily Minute — April 14, 2026'. There should be additional rows below for prior daily minutes, sorted newest-first. The CachedPodcastEpisode SwiftData @Query in ListenView is correctly filtered to channel == \"minute\" and sorted by publishedAt descending, so the data-binding side is right; the bug is that PodcastService.fetchMinuteEpisodes() either is not being called on view appearance or the parser is dropping items. The XML feed at https://www.acimdailyminute.org/podcast-minute.xml is the source of truth — every <item> must be parsed and persisted.",
+      "id": "ACIM-207",
+      "priority": 7,
+      "passes": false,
+      "depends_on": ["ACIM-206"],
+      "title": "Bug 2 — Listen Lessons sub-tab lists every cached lesson episode descending from today",
+      "why": "Screenshot 'Daily Lessons only show 1 lesson at bottom - should show all available starting from today lesson not just lesson 10.png' shows Listen → Lessons sub-tab with the YouTube embed showing Lesson 11 ('My meaningless thoughts are showing me a meaningless world.') but the list below contains only ONE row: 'Lesson 10: My thoughts do not mean anything.' Expected: every cached Daily Lesson episode, starting from today's lesson (Lesson 11 as of 2026-04-15) and descending back through Lesson 10, 9, 8, etc. Same class of bug as ACIM-206 but on the Lessons channel. Most likely the same root cause; once ACIM-206 fixes the parse/persist pipeline, this story verifies the Lessons channel now works too and adds any channel-specific polish needed.",
       "type": "code",
       "files": [
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Listen/ListenView.swift",
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/PodcastService.swift"
       ],
       "acceptanceCriteria": [
-        "Audit PodcastService.fetchMinuteEpisodes() (around line 63–68) and the underlying parser PodcastXMLParser. Confirm that all <item> elements in the RSS feed are parsed and that PodcastService.persist (around lines 140–146) writes ALL parsed items to CachedPodcastEpisode (not just the first or the most recent). If the parser or persister currently caps the count, remove the cap. Each item's <enclosure url> populates audioURL, <title> populates title, <pubDate> populates publishedAt.",
-        "In ListenView.swift, ensure PodcastService.fetchMinuteEpisodes() is invoked on view appearance via a .task modifier on the root content. Same for fetchLessonEpisodes() so the Lessons sub-tab list also stays current. Use Swift's structured concurrency: `.task { await podcastService.fetchMinuteEpisodes(); await podcastService.fetchLessonEpisodes() }`. Do not block the UI thread — these run async and the @Query auto-refreshes when the SwiftData store updates.",
-        "Confirm the @Query for CachedPodcastEpisode in ListenView (lines 29–33) has NO fetchLimit set and uses sort: [SortDescriptor(\\.publishedAt, order: .reverse)]. If a fetchLimit exists, remove it.",
-        "The Minute sub-tab list MUST render every CachedPodcastEpisode where channel == \"minute\" — newest at top, oldest at bottom — using the existing row layout. The Lessons sub-tab is unaffected by this story (its row rendering is governed by ACIM-103).",
+        "Diagnose: run `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` (or whatever the Lessons feed URL actually is — read FeedService.swift to find the correct URL). Record expected count in progress.txt. If ACIM-206 already fixed the shared parse/persist code, the Lessons channel may already render correctly — in that case this story reduces to verification only, no code changes.",
+        "If the Lessons list is already complete after ACIM-206: the only change needed is to confirm ListenView's Lessons ForEach binds to `cachedLessons` (the @Query result filtered on channel == 'lesson') and sorts descending by publishedAt. No code edit, just verification.",
+        "If the Lessons list is still sparse: apply the same-shape fix as ACIM-206 on the Lessons channel. The filter predicate, sort descriptor, and display logic must mirror the Minute channel.",
+        "ListenView.swift: the Lessons list title display MUST prefer the canonical Workbook365 title over the RSS feed title when available. Chain: `WorkbookCatalog.title(for: episode.lessonNumber) ?? episode.title`. This keeps row titles consistent with the Lessons spine in the main Lessons tab (shipped in ACIM-101). `episode.lessonNumber` is derived from the RSS <title> — if CachedPodcastEpisode doesn't yet have a lessonNumber field, parse it from the title string (regex `^Lesson (\\d+)`) at display time inside a small helper on the view; do NOT add a new SwiftData field.",
         "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
-        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Listen → Minute sub-tab. Wait up to 5 seconds for the feed fetch to complete. The list MUST contain every episode currently in the podcast-minute.xml feed (curl https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>' to know the expected count). Top entry is today's. Subsequent entries are in descending date order. Pull-to-refresh re-fetches and updates the list.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Listen → Lessons sub-tab → wait up to 5 seconds → list contains at least today's lesson (Lesson 11) AND prior lessons back to whatever date the feed retains. Top entry is today's lesson. Entries descend by lessonNumber (11, 10, 9, 8…). Each row's title matches the Workbook365 canonical title.",
         "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the two touched files must be empty.",
-        "Commit: ./bu.sh \"ACIM-104 — Listen Minute sub-tab renders full historical list descending\". Mark passes:true and append progress log.",
+        "Commit: ./bu.sh \"ACIM-207 — Listen Lessons list renders all cached lessons descending with canonical titles\". Mark passes:true in prd.json and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-208",
+      "priority": 8,
+      "passes": false,
+      "depends_on": ["ACIM-207"],
+      "title": "Bug 6 — LessonDetailView shows ACIM YouTube playlist embed for any not-yet-cached lesson",
+      "why": "Screenshot 'Why is Lesson 1 missing . it exists on YouTube and Website.png' shows LessonDetailView for Lesson 1 rendering an empty state: 'Lesson 1 not yet cached — Open this lesson when it's the Daily Lesson, or tap Refresh to pull the latest entry.' plus a 'Refresh' button. The root cause is the backend daily-lesson.json API retains only the last 7 entries, so historical lessons can never be pulled via the existing endpoint. However, the ACIM Daily Lesson YouTube playlist contains every lesson publicly. Larry confirmed (chat, 2026-04-15) that tapping a not-yet-cached lesson should open the YouTube playlist embed (reusing the same mechanism from ACIM-103) positioned at that lesson's video, with the Workbook365 canonical title as heading. No website scraping, no Refresh button in this state.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonDetailView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Listen/YouTubePlayerView.swift"
+      ],
+      "acceptanceCriteria": [
+        "Reuse the existing YouTubePlayerView (shipped in ACIM-103). Read YouTubePlayerView.swift to confirm it accepts a playlist ID + 1-indexed start index and renders a WKWebView with the embed URL `https://www.youtube.com/embed/videoseries?list=<id>&index=<n>`. If YouTubePlayerView currently requires additional setup from ListenView, extract or expose a view-level initializer that LessonDetailView can use standalone with just a lessonNumber.",
+        "LessonDetailView.swift: the 'not yet cached' empty state (currently shows book icon + 'Lesson N not yet cached' + 'Refresh' button) must be REPLACED — not added-to, not conditionally-kept — with a new state that renders: (a) heading Text(WorkbookCatalog.title(for: lessonNumber) ?? \"Lesson \\(lessonNumber)\") in .font(.system(.title2, design: .serif).weight(.semibold)), (b) a YouTubePlayerView loading the ACIM Daily Lesson playlist at index = lessonNumber, 16:9 aspect ratio, full-width minus 20pt horizontal padding. Delete the old 'not yet cached' + book-icon + 'Refresh' button views entirely. No Refresh affordance in this state — the YouTube embed itself is the user's path to the content.",
+        "The playlist ID constant comes from a shared location — either import it from ListenView's existing `dailyLessonPlaylistID` constant (if file-private, move it to a small shared struct/enum in the same folder, e.g., `YouTubePlaylists.dailyLesson`), or redeclare the same ID `PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS` in a new `Services/YouTubePlaylists.swift` file with both IDs as public static constants. Preferred: create YouTubePlaylists.swift with `public enum YouTubePlaylists { public static let dailyMinute = \"PLP1KDMu51tB7o5hMs2ck69gZZidrg-ltD\"; public static let dailyLesson = \"PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS\" }` and update ListenView to reference YouTubePlaylists.dailyMinute / .dailyLesson (delete its own private constants).",
+        "The Full state of LessonDetailView (lesson body cached) is unchanged by this story except for the horizontal padding treatment applied in ACIM-205. Do NOT touch the cached-body rendering path.",
+        "Do NOT add a website-scraping path. Do NOT fetch from acim.org or any other source. YouTube embed only.",
+        "Do NOT keep any remnant of the old 'Refresh' button or the 'Lesson N not yet cached' copy anywhere in LessonDetailView. grep 'not yet cached' and grep 'Refresh' on LessonDetailView.swift must both return 0 matches after the edit (unless 'Refresh' appears in the Full state for a different purpose — if so, scope the grep accordingly and document in progress.txt).",
+        "Run verification: ./build.sh > /tmp/full-build.log 2>&1. ./build.sh MUST exit 0. grep 'error:' /tmp/full-build.log | wc -l MUST equal 0.",
+        "Verify on iPad sim 86F64729-D28D-44F7-BEB9-EF34AA7B7F28: open Lessons tab → tap Lesson 1 → LessonDetailView opens → NO 'not yet cached' text → NO Refresh button → heading shows 'Nothing I see in this room means anything.' (Workbook365 canonical title for lesson 1) → YouTube embed loads showing Lesson 1's video from the ACIM Daily Lesson playlist → tapping play in the embed starts the video. Repeat for Lesson 2 — same behavior with Lesson 2's title and video. Tap today's lesson (Lesson 11) which IS cached — LessonDetailView shows the Full state (body text), not the YouTube embed; no regression.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews\\|jtfnews\\|JTF News' on the touched files must be empty.",
+        "Commit: ./bu.sh \"ACIM-208 — LessonDetailView YouTube playlist fallback for not-yet-cached lessons\". Mark passes:true in prd.json and append progress log.",
         "After this commit, emit the literal string <promise>COMPLETE</promise> on a new line so run_ralph.sh exits cleanly."
       ]
     }
