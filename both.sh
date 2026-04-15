@@ -68,6 +68,21 @@ resolve_bundle_id() {
     | awk -F' = ' '/^[[:space:]]*PRODUCT_BUNDLE_IDENTIFIER /{print $2; exit}'
 }
 
+# Ask xcodebuild where the built .app actually lives for a given destination.
+# Survives project-level SYMROOT / CONFIGURATION_BUILD_DIR overrides — with
+# -derivedDataPath this project puts products at $BUILD_DIR/<Config>-<Platform>/,
+# not at the default $BUILD_DIR/Build/Products/<Config>-<Platform>/.
+resolve_products_dir() {
+  local destination="$1"
+  xcodebuild \
+      -scheme "$SCHEME" \
+      -configuration "$CONFIG" \
+      -destination "$destination" \
+      -derivedDataPath "$BUILD_DIR" \
+      -showBuildSettings 2>/dev/null \
+    | awk -F' = ' '/^[[:space:]]*BUILT_PRODUCTS_DIR /{print $2; exit}'
+}
+
 # Find connected iPhone 11 Pro Max via devicectl (Apple's modern replacement
 # for ios-deploy; required for iOS 17+).
 resolve_iphone_device_id() {
@@ -87,7 +102,9 @@ for d in data.get('result', {}).get('devices', []):
     name = props.get('name', '') or ''
     marketing = hw.get('marketingName', '') or ''
     if match in name or match in marketing:
-        ident = d.get('identifier') or hw.get('udid', '') or ''
+        # xcodebuild -destination id=... requires the hardware UDID (e.g. 00008030-…),
+        # not devicectl's logical identifier (a UUID). devicectl itself accepts either.
+        ident = hw.get('udid', '') or d.get('identifier') or ''
         if ident:
             print(ident); sys.exit(0)
 sys.exit(1)
@@ -147,7 +164,8 @@ if ! xcodebuild \
 fi
 echo "✓ iPad Sim build succeeded"
 
-APP_SIM="$BUILD_DIR/Build/Products/${CONFIG}-iphonesimulator/${SCHEME}.app"
+SIM_PRODUCTS_DIR="$(resolve_products_dir "platform=iOS Simulator,id=$IPAD_UUID")"
+APP_SIM="${SIM_PRODUCTS_DIR}/${SCHEME}.app"
 if [[ ! -d "$APP_SIM" ]]; then
   echo "✗ Expected app bundle missing: $APP_SIM"
   exit 1
@@ -193,7 +211,8 @@ if ! xcodebuild \
 fi
 echo "✓ iPhone device build succeeded"
 
-APP_DEVICE="$BUILD_DIR/Build/Products/${CONFIG}-iphoneos/${SCHEME}.app"
+DEVICE_PRODUCTS_DIR="$(resolve_products_dir "platform=iOS,id=$IPHONE_DEVICE_ID")"
+APP_DEVICE="${DEVICE_PRODUCTS_DIR}/${SCHEME}.app"
 if [[ ! -d "$APP_DEVICE" ]]; then
   echo "✗ Expected device app bundle missing: $APP_DEVICE"
   exit 1
