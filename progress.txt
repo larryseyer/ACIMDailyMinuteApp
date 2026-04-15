@@ -184,3 +184,12 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinute/Views/Settings/SettingsView.swift` — fixed pre-existing iOS 18 @AppStorage(Date) error: changed to Double-backed @AppStorage("dailyReminderTimeInterval") with computed property + Binding wrapper
 - **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0. iOS build exit=0. watchOS standalone build exit=0. macOS build has pre-existing provisioning profile signing error (not code-related).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-009 — 4.0 — Feature parity verification + PARITY.md
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `PARITY.md` — NEW: feature parity verification table with 21 surface rows, all Phase 3.x/4.x surfaces Pass, 2 Phase 5 surfaces (launch screen, accent color) marked as planned/pending their respective stories
+- **Parity results:** 19/21 surfaces Pass (all functional features verified). 2 surfaces deferred to Phase 5 stories (launch screen + accent color → ACIM-011; App Store metadata → ACIM-013). App icon set and ACIMChime.caf wiring already present from prior work. No unexpected gaps found.
+- **Build verification:** iOS build exit=0. watchOS build exit=0. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008). Zero non-signing code errors.
+- **Grep checks:** zero JTFNews/FIP/Foundation for Inner Peace/TODO/FIXME/XXX/HACK in PARITY.md.
