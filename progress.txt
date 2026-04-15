@@ -130,3 +130,16 @@ to exit the loop.
   - RSS feed titles are truncated (e.g., `Lesson 1: "Nothing I see in this room [on this street,"`); canonical titles from Workbook365.json provide the full, consistent text matching the Lessons tab spine.
 - **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements. Feed returns 12 items; @Query has no fetchLimit and sorts by publishedAt descending.
 
+### ACIM-208 — LessonDetailView YouTube playlist fallback for not-yet-cached lessons
+- **Commit:** 498db6c
+- **Date:** 2026-04-15
+- **Changes:**
+  - Created `Services/YouTubePlaylists.swift` with shared `dailyMinute` and `dailyLesson` playlist ID constants
+  - Updated `ListenView.swift` to reference `YouTubePlaylists.dailyMinute` / `.dailyLesson` instead of file-private string literals
+  - Replaced `AbsentLessonView` in `LessonDetailView.swift`: deleted the old "not yet cached" ContentUnavailableView + Refresh button + refresh() logic entirely; replaced with YouTube playlist embed showing `videoseries?list=<dailyLesson>&index=<lessonNumber>` at 16:9 aspect ratio, full-width minus 20pt horizontal padding, with heading from `WorkbookCatalog.title(for:)` in serif title2 semibold
+  - Lesson 0 (Introduction) guard: AbsentLessonView queries `CachedPodcastEpisode` channel "lesson" and falls through to podcast audio URL for the Introduction — no YouTube embed rendered for `lessonNumber == 0` since the playlist is 1-indexed
+  - Added bottom `safeAreaInset` on AbsentLessonView's ScrollView for mini-player clearance
+  - Added `YouTubePlaylists.swift` to pbxproj with PBXFileReference, PBXBuildFile, Services group membership, and iOS Sources build phase
+  - Updated doc comment on LessonDetailView to reflect new Absent state behavior
+- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. grep 'not yet cached' and grep 'Refresh' on LessonDetailView.swift both return 0 matches.
+

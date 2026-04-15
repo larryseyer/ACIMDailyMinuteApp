@@ -202,7 +202,7 @@
     {
       "id": "ACIM-208",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-207"],
       "title": "Bug 6 — LessonDetailView shows ACIM YouTube playlist embed for any not-yet-cached lesson",
       "why": "Screenshot 'Why is Lesson 1 missing . it exists on YouTube and Website.png' shows LessonDetailView for Lesson 1 rendering an empty state: 'Lesson 1 not yet cached — Open this lesson when it's the Daily Lesson, or tap Refresh to pull the latest entry.' plus a 'Refresh' button. The root cause is the backend daily-lesson.json API retains only the last 7 entries, so historical lessons can never be pulled via the existing endpoint. However, the ACIM Daily Lesson YouTube playlist contains every lesson publicly. Larry confirmed (chat, 2026-04-15) that tapping a not-yet-cached lesson should open the YouTube playlist embed (reusing the same mechanism from ACIM-103) positioned at that lesson's video, with the Workbook365 canonical title as heading. No website scraping, no Refresh button in this state.",
