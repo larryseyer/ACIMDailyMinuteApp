@@ -28,7 +28,7 @@
     {
       "id": "ACIM-201",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bug 7b — Settings tagline gets 'ACIM' prefix; strip 'Sparkly Edition' refs from Onboarding and About",
       "why": "Screenshot 'Wrong notification sound plays - Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage.png' shows the Settings sheet with the bottom-of-sheet tagline reading 'Sparkly Edition · Teddy Poppe · CIMS lineage'. Larry wants the word 'ACIM' prepended so the tagline reads 'ACIM Sparkly Edition · Teddy Poppe · CIMS lineage', and confirmed (chat, 2026-04-15) that the Settings sheet is the ONLY place this tagline should appear. Grep currently finds 'Sparkly Edition' in three other locations: OnboardingView.swift lines 44 and 67 (two 'Sparkly Edition · Teddy Poppe · CIMS' occurrences), and AboutView.swift line 88 (prose: 'Drawn from the Sparkly Edition, offered freely, without interpretation.'). All three must be removed. Onboarding lines get the tagline deleted outright. AboutView sentence is rewritten so it still makes sense without the 'Sparkly Edition' clause.",
