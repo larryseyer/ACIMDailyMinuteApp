@@ -86,6 +86,7 @@ struct DataService: Sendable {
                 publishedDate: publishedAt
             )
         }
+        PhoneWatchSyncService.shared.sendLatestMinute(minute)
         #endif
 
         return dto

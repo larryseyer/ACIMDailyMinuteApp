@@ -168,7 +168,7 @@
     {
       "id": "ACIM-007",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-006"],
       "title": "3.10b — Watch complications (circular, rectangular, inline)",
       "why": "Three complication families so the user can pin the lesson number to their watch face. Uses WidgetKit-on-watchOS (the modern approach — ComplicationController is deprecated since watchOS 10).",

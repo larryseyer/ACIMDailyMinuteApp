@@ -1,13 +1,14 @@
 import Foundation
 import SwiftData
 import CryptoKit
+import WatchConnectivity
 
-final class WatchDataService: @unchecked Sendable {
+final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
     static let shared = WatchDataService()
 
     let container: ModelContainer
 
-    private init() {
+    private override init() {
         let schema = Schema([
             DailyMinute.self,
             DailyLesson.self,
@@ -28,6 +29,47 @@ final class WatchDataService: @unchecked Sendable {
             container = try ModelContainer(for: schema, configurations: [config])
         } catch {
             fatalError("Could not create Watch ModelContainer: \(error)")
+        }
+        super.init()
+        if WCSession.isSupported() {
+            WCSession.default.delegate = self
+            WCSession.default.activate()
+        }
+    }
+
+    // MARK: - WCSessionDelegate
+
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+        handleIncomingPayload(message)
+    }
+
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
+        handleIncomingPayload(applicationContext)
+    }
+
+    private func handleIncomingPayload(_ payload: [String: Any]) {
+        guard let text = payload["text"] as? String,
+              let publishedInterval = payload["publishedAt"] as? TimeInterval,
+              let dateString = payload["date"] as? String,
+              let segmentHash = payload["segmentHash"] as? String else { return }
+
+        let publishedAt = Date(timeIntervalSince1970: publishedInterval)
+        Task { @MainActor in
+            let descriptor = FetchDescriptor<DailyMinute>(
+                predicate: #Predicate { $0.segmentHash == segmentHash }
+            )
+            let existing = try? container.mainContext.fetch(descriptor)
+            guard existing?.isEmpty ?? true else { return }
+
+            let minute = DailyMinute()
+            minute.segmentHash = segmentHash
+            minute.date = dateString
+            minute.publishedAt = publishedAt
+            minute.text = text
+            container.mainContext.insert(minute)
+            try? container.mainContext.save()
         }
     }
 
