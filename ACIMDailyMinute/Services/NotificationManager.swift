@@ -124,11 +124,7 @@ actor NotificationManager {
         )
     }
 
-    /// Resolves the notification sound respecting the user's
-    /// `useCustomNotificationSound` preference. Falls back to `.default`
-    /// when the custom asset isn't bundled (true until Phase 5 ships
-    /// `ACIMChime.caf`), which prevents the notification from being
-    /// silently dropped by the system.
+    /// Falls back to `.default` if ACIMChime.caf is missing from the bundle to prevent silent notification drops.
     private func preferredSound() -> UNNotificationSound {
         let useCustom = UserDefaults.standard.bool(forKey: "useCustomNotificationSound")
         guard useCustom,
