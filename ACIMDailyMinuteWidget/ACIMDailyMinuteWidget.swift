@@ -7,7 +7,6 @@ struct ACIMDailyMinuteWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: ACIMDailyMinuteTimelineProvider()) { entry in
             WidgetEntryView(entry: entry)
-                .containerBackground(Color(white: 0.1), for: .widget)
         }
         .configurationDisplayName("ACIM Daily Minute")
         .description("Today's daily minute at a glance.")
