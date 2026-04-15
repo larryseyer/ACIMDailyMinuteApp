@@ -53,7 +53,7 @@
     {
       "id": "ACIM-202",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-201"],
       "title": "Bug 7a — Test notification + daily reminder audibly play ACIMChime.caf",
       "why": "Screenshot 'Wrong notification sound plays - Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage.png' shows a successful notification banner ('ACIM Daily Minute — Test notification — your daily reminder is configured.') but Larry reports the audible sound is wrong (system default, not the ACIM chime). NotificationManager.preferredSound() at /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift line 128 already references ACIMChime.caf and returns UNNotificationSound(named: UNNotificationSoundName(\"ACIMChime.caf\")) when the asset is found in the bundle, falling back to .default when it is not. ACIMChime.caf exists at /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/ACIMChime.caf (507148 bytes). The likely root cause is that ACIMChime.caf is NOT a member of the iOS app target's 'Copy Bundle Resources' build phase, so Bundle.main.url(forResource:withExtension:) returns nil at runtime and preferredSound() silently falls through to .default. pbxproj currently has 4 references to 'ACIMChime' — need to verify at least one is a PBXBuildFile on the iOS app target (not only the Watch target or not only a PBXFileReference with no membership).",

@@ -46,6 +46,25 @@ struct ArchiveView: View {
                 .navigationDestination(for: String.self) { dateString in
                     ArchiveDateDetailView(dateString: dateString)
                 }
+                .toolbar {
+                    #if os(iOS)
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Today") {
+                            withAnimation {
+                                selectedDate = Self.today()
+                            }
+                        }
+                    }
+                    #else
+                    ToolbarItem(placement: .automatic) {
+                        Button("Today") {
+                            withAnimation {
+                                selectedDate = Self.today()
+                            }
+                        }
+                    }
+                    #endif
+                }
                 .onReceive(NotificationCenter.default.publisher(for: .deepLinkArchive)) { note in
                     guard let date = note.object as? Date else { return }
                     path.append(Self.dateString(from: date))

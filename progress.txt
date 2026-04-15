@@ -34,3 +34,13 @@ to exit the loop.
   - AboutView.swift: rewrote mission card text removing "Drawn from the Sparkly Edition, " clause
 - **Verification:** grep confirms exactly 1 "Sparkly Edition" match (SettingsView only). ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
 
+### ACIM-202 — Test notification plays ACIMChime.caf via bundled asset
+- **Commit:** b7a523c
+- **Date:** 2026-04-15
+- **Diagnosis:**
+  - pbxproj: ACIMChime.caf already has PBXFileReference (audio.caf), PBXBuildFile (AA000001079), and is listed in PBXResourcesBuildPhase (AA000007002) of iOS target (AA000006001). No pbxproj edit needed.
+  - Root cause: preferredSound() gated on UserDefaults "useCustomNotificationSound" before checking bundle URL. AC specifies clean two-branch guard.
+- **Changes:**
+  - NotificationManager.swift: simplified preferredSound() to two-branch guard — checks Bundle.main.url(forResource:withExtension:) only; returns UNNotificationSound(named:) if present, .default with assertionFailure if not. Removed UserDefaults "useCustomNotificationSound" gate.
+- **Verification:** ACIMChime.caf found in build/Debug-iphonesimulator/ACIMDailyMinute.app/, build/Debug-iphoneos/ACIMDailyMinute.app/, and build/Debug/ACIMDailyMinute.app/Contents/Resources/. ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
+
