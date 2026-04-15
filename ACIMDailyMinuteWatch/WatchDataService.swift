@@ -2,30 +2,59 @@ import Foundation
 import SwiftData
 import CryptoKit
 
-/// Lightweight data service for the watch — fetches both ACIM channels
-/// directly from acimdailyminute.org and persists into the shared App
-/// Group container. The watch is a standalone consumer; it deliberately
-/// has no dependency on the iPhone target's `DataService`.
-///
-/// Future cleanup (Phase 5+) may hoist the DTOs into a file shared between
-/// targets to remove the duplicated decoder shape; for now they're
-/// duplicated and marked with a `MIRROR:` comment so drift is obvious.
-actor WatchDataService {
-    private let modelContainer: ModelContainer
+final class WatchDataService: @unchecked Sendable {
+    static let shared = WatchDataService()
 
-    init(modelContainer: ModelContainer) {
-        self.modelContainer = modelContainer
+    let container: ModelContainer
+
+    private init() {
+        let schema = Schema([
+            DailyMinute.self,
+            DailyLesson.self,
+            Bookmark.self,
+            ArchivedReading.self,
+            Channel.self,
+            CachedPodcastEpisode.self
+        ])
+        let containerURL = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!
+            .appending(path: "ACIMDailyMinute.sqlite")
+        let config = ModelConfiguration(
+            schema: schema,
+            url: containerURL,
+            allowsSave: true
+        )
+        do {
+            container = try ModelContainer(for: schema, configurations: [config])
+        } catch {
+            fatalError("Could not create Watch ModelContainer: \(error)")
+        }
     }
 
-    /// One-shot fetch of the Daily Minute and Daily Lesson endpoints.
-    /// Both run concurrently (via `async let`) so the watch UI doesn't
-    /// pay sequential round-trip latency on a small device.
+    @MainActor
+    func fetchTodaysMinute() -> DailyMinute? {
+        var descriptor = FetchDescriptor<DailyMinute>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        return try? container.mainContext.fetch(descriptor).first
+    }
+
+    @MainActor
+    func fetchTodaysLessonNumber() -> Int? {
+        var descriptor = FetchDescriptor<DailyLesson>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        return try? container.mainContext.fetch(descriptor).first?.lessonNumber
+    }
+
     func fetchDailyContent() async throws {
         async let minute = fetchMinute()
         async let lesson = fetchLesson()
         let (minuteDTO, lessonDTO) = try await (minute, lesson)
 
-        let context = ModelContext(modelContainer)
+        let context = ModelContext(container)
         try persistMinute(minuteDTO, in: context)
         try persistLesson(lessonDTO, in: context)
         try context.save()
@@ -91,7 +120,7 @@ actor WatchDataService {
         if isNew { context.insert(lesson) }
     }
 
-    // MARK: - Helpers (self-contained — no dependency on phone target)
+    // MARK: - Helpers
 
     private func parseDate(_ string: String) -> Date? {
         let dayOnly = DateFormatter()
@@ -107,9 +136,6 @@ actor WatchDataService {
         return iso.date(from: string)
     }
 
-    /// SHA-256 truncated to 16 hex chars. Duplicates the phone target's
-    /// `HashUtility` to keep the watch target self-contained.
-    /// MIRROR: keep in sync with HashUtility.sha256Truncated.
     private func sha256Truncated(_ input: String) -> String {
         var hasher = SHA256()
         hasher.update(data: Data(input.utf8))
@@ -119,10 +145,7 @@ actor WatchDataService {
     }
 }
 
-// MARK: - DTOs (self-contained, no dependency on phone target's DataService)
-// MIRROR: keep in sync with DailyMinuteResponse / DailyLessonResponse in
-// ACIMDailyMinute/Services/DataService.swift. Field shape must stay
-// byte-identical so both targets decode the same JSON without divergence.
+// MARK: - DTOs
 
 private struct WatchMinuteResponse: Codable, Sendable {
     let segment_id: Int
