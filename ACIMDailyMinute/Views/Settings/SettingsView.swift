@@ -60,7 +60,7 @@ struct SettingsView: View {
                        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                         LabeledContent("Version", value: "\(version) (\(build))")
                     }
-                    Text("Sparkly Edition · Teddy Poppe · CIMS lineage")
+                    Text("ACIM Sparkly Edition · Teddy Poppe · CIMS lineage")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

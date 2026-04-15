@@ -41,10 +41,6 @@ struct OnboardingView: View {
                 .tabViewStyle(.page(indexDisplayMode: .always))
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
 
-                Text("Sparkly Edition · Teddy Poppe · CIMS")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 24)
             }
             #else
             // macOS: no page-style TabView exists in plain SwiftUI, so
@@ -63,11 +59,6 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .id(currentPage)
                 .transition(.opacity)
-
-                Text("Sparkly Edition · Teddy Poppe · CIMS")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 8)
 
                 HStack(spacing: 16) {
                     Button {

@@ -1,34 +1,27 @@
-# Ralph Progress Log
-Started: Tue Apr 14 23:46:29 CDT 2026
+# Ralph Progress Log — ACIM Post-Ship Bug Sprint (2026-04-15)
+Started: Wed Apr 15 2026
+Prior sprint (ACIM-101 → ACIM-104) already merged to main (commits ac090c5, 382e765, 3dbd2bd, c00a3c7).
+
+This sprint covers 7 bugs identified from screenshots in /Users/larryseyer/ACIMDailyMinuteApp/untracked/,
+decomposed into 8 stories (ACIM-201 → ACIM-208). The screenshot filename "Wrong notification sound plays -
+Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage" is two defects (missing ACIM prefix on tagline
++ wrong notification sound) and ships as two stories: ACIM-201 (tagline) + ACIM-202 (sound).
+
+Story order and bug mapping:
+  ACIM-201 → Bug 7b: Settings tagline "ACIM Sparkly Edition · Teddy Poppe · CIMS lineage"; strip from Onboarding + About
+  ACIM-202 → Bug 7a: Test notification + daily reminder audibly play ACIMChime.caf
+  ACIM-203 → Bug 4:  Archive tab gains a "Today" button
+  ACIM-204 → Bug 5:  Lessons list bottom safe-area inset under mini-player
+  ACIM-205 → Bug 3:  Today view + LessonDetail full-width text flow + bottom inset
+  ACIM-206 → Bug 1:  Listen Minute list shows all historical minutes descending
+  ACIM-207 → Bug 2:  Listen Lessons list shows all lessons descending from today
+  ACIM-208 → Bug 6:  LessonDetailView YouTube playlist embed for not-yet-cached lessons
+
+Execution rules: one commit per story directly on main via ./bu.sh. Each story depends on the previous
+so Ralph executes them strictly in order. After ACIM-208 passes, Ralph emits <promise>COMPLETE</promise>
+to exit the loop.
+
 ---
 
 ## --- Iteration Log ---
 
-### ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header
-- **Status:** PASS
-- **Commit:** ac090c5
-- **Files created:** Workbook365.json (365 canonical ACIM lesson titles), WorkbookCatalog.swift (lazy-load enum with title(for:) lookup)
-- **Files edited:** LessonRow.swift (3-tier fallback: meta?.title → WorkbookCatalog → "Not yet read"; Georgia font → system serif), LessonsView.swift (release-cadence header card at top of list showing lesson N of 365 + relative published date + "After Lesson 365, the Text begins."), project.pbxproj (added both new files to targets), build.sh (macOS Debug signing bypass for compile-only verification)
-- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
-- **Verification:** All 6 PRD spot-check anchors pass (lessons 1, 2, 3, 7, 10, 365). No TODO/FIXME/XXX/HACK/JTFNews in touched files.
-
-### ACIM-102 — System serif font + AudioManager session activation and error surfacing
-- **Status:** PASS
-- **Commit:** 382e765
-- **Files edited:** DailyMinuteCard.swift (Georgia → system serif), DailyLessonCard.swift (Georgia → system serif for title + body, added lastError display), LessonDetailView.swift (Georgia → system serif for title + body in Full + MetadataOnly states), AudioManager.swift (added lastError property, KVO statusObservation, AVAudioSession .playback/.spokenAudio activation with error surfacing, removed old configureAudioSession), PodcastEpisodeRow.swift (Georgia → system serif), ArchivedReadingCard.swift (Georgia → system serif for minute body + lesson title, updated doc comment)
-- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
-- **Verification:** grep Georgia returns 0 matches across ACIMDailyMinute/. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
-
-### ACIM-103 — Listen per-feed YouTube playlist embed with remembered lesson position
-- **Status:** PASS
-- **Commit:** 3dbd2bd
-- **Files edited:** ListenView.swift (replaced todaysYouTubeURL with embedURL computed property branching on selectedFeed; added @AppStorage for lessonsLastWatchedIndex; added playlist ID constants; removed DailyMinute @Query; updated ForEach to set lesson index on tap; updated youtubeCard label to be feed-aware), YouTubePlayerView.swift (loadVideoIfNeeded now supports full embed URLs with query params for playlist/index passthrough)
-- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
-- **Verification:** No TODO/FIXME/XXX/HACK/JTFNews in touched files. Embed URL switches between Daily Minute and Daily Lesson playlists based on segmented picker. Lesson tap sets lessonsLastWatchedIndex persisted via @AppStorage.
-
-### ACIM-104 — Listen Minute sub-tab renders full historical list descending
-- **Status:** PASS
-- **Commit:** c00a3c7
-- **Files edited:** ListenView.swift (reload() now fetches both minute and lesson feeds on every load via new fetchAndPersistFeed helper; ensures both feeds are populated on view appearance regardless of selected tab; loadState determined by selected feed's success)
-- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
-- **Verification:** No TODO/FIXME/XXX/HACK/JTFNews in touched files. @Query has no fetchLimit, sorts by publishedAt descending. Parser and persister have no caps — all RSS items are parsed and upserted. Both feeds fetched on view appearance via structured concurrency.
