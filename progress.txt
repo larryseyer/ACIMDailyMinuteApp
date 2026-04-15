@@ -25,3 +25,10 @@ Started: Tue Apr 14 23:46:29 CDT 2026
 - **Files edited:** ListenView.swift (replaced todaysYouTubeURL with embedURL computed property branching on selectedFeed; added @AppStorage for lessonsLastWatchedIndex; added playlist ID constants; removed DailyMinute @Query; updated ForEach to set lesson index on tap; updated youtubeCard label to be feed-aware), YouTubePlayerView.swift (loadVideoIfNeeded now supports full embed URLs with query params for playlist/index passthrough)
 - **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
 - **Verification:** No TODO/FIXME/XXX/HACK/JTFNews in touched files. Embed URL switches between Daily Minute and Daily Lesson playlists based on segmented picker. Lesson tap sets lessonsLastWatchedIndex persisted via @AppStorage.
+
+### ACIM-104 — Listen Minute sub-tab renders full historical list descending
+- **Status:** PASS
+- **Commit:** c00a3c7
+- **Files edited:** ListenView.swift (reload() now fetches both minute and lesson feeds on every load via new fetchAndPersistFeed helper; ensures both feeds are populated on view appearance regardless of selected tab; loadState determined by selected feed's success)
+- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
+- **Verification:** No TODO/FIXME/XXX/HACK/JTFNews in touched files. @Query has no fetchLimit, sorts by publishedAt descending. Parser and persister have no caps — all RSS items are parsed and upserted. Both feeds fetched on view appearance via structured concurrency.
