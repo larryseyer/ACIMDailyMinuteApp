@@ -151,3 +151,15 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWidget/ACIMDailyMinuteLiveActivity.swift` — full rewrite: Lock Screen UI with VStack header (sun.max icon + title + lesson number) + minute text (4-line limit); Dynamic Island expanded with leading (sun.max + ACIM label), trailing (lesson number), empty center, bottom (minute text 3-line limit); compact leading (sun.max), compact trailing (lesson number), minimal (sun.max)
 - **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched. Watch errors still allowed (pre-3.10a).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-006 — 3.10a — Watch schema parity + Today view
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWatch/WatchDataService.swift` — converted from actor to final class singleton (.shared); creates own ModelContainer with same Schema/App Group as main app; added @MainActor fetchTodaysMinute() and fetchTodaysLessonNumber(); retained existing network fetch (fetchDailyContent) and DTOs
+  - `ACIMDailyMinuteWatch/WatchContentView.swift` — full rewrite: removed old Story/@Query pattern; NavigationStack > List > Section("Today") with WatchStoryRow or "No content yet" empty state; @State minute/lessonNumber populated via .task from WatchDataService.shared
+  - `ACIMDailyMinuteWatch/WatchStoryRow.swift` — full rewrite: takes DailyMinute + optional lessonNumber; VStack with lesson badge + minute text (6-line limit); no tap action per AC
+  - `ACIMDailyMinuteWatch/ACIMDailyMinuteWatchApp.swift` — simplified: removed inline sharedModelContainer; uses .modelContainer(WatchDataService.shared.container)
+  - `ACIMDailyMinuteWatch/ACIMDailyMinuteWatchWidget.swift` — cleaned old schema refs (WatchStoryEntry→WatchTimelineEntry, storyCount/latestFact→lessonNumber/minuteSnippet, Story→DailyMinute, SharedModelContainer.createReadOnly()→SharedModelContainer.shared); minimal update for grep compliance, full rewrite deferred to ACIM-007
+- **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0 (grep 'error:' | grep ACIMDailyMinuteWatch | wc -l = 0). watchOS standalone build exit=0. Pre-existing SettingsView.swift iOS 18 availability error in main target — not watch-related, not touched.
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in Watch target. Zero StoryEntry/FactItem/NewsItem/JTFStory in Watch target.

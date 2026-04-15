@@ -5,12 +5,12 @@ import SwiftData
 struct WatchTimelineEntry: TimelineEntry {
     let date: Date
     let lessonNumber: Int?
-    let minuteSnippet: String
+    let firstPhraseSnippet: String?
 }
 
-struct WatchComplicationProvider: TimelineProvider {
+struct WatchTimelineProvider: TimelineProvider {
     func placeholder(in context: Context) -> WatchTimelineEntry {
-        WatchTimelineEntry(date: .now, lessonNumber: nil, minuteSnippet: "Loading...")
+        WatchTimelineEntry(date: .now, lessonNumber: nil, firstPhraseSnippet: "Loading...")
     }
 
     func getSnapshot(in context: Context, completion: @escaping (WatchTimelineEntry) -> Void) {
@@ -24,13 +24,13 @@ struct WatchComplicationProvider: TimelineProvider {
     }
 
     private func fetchEntry() -> WatchTimelineEntry {
-        let context = ModelContext(SharedModelContainer.shared)
+        let context = ModelContext(WatchDataService.shared.container)
         var descriptor = FetchDescriptor<DailyMinute>(
             sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
         )
         descriptor.fetchLimit = 1
         guard let minute = try? context.fetch(descriptor).first else {
-            return WatchTimelineEntry(date: .now, lessonNumber: nil, minuteSnippet: "No daily minute yet")
+            return WatchTimelineEntry(date: .now, lessonNumber: nil, firstPhraseSnippet: nil)
         }
 
         var lessonDescriptor = FetchDescriptor<DailyLesson>(
@@ -42,61 +42,55 @@ struct WatchComplicationProvider: TimelineProvider {
         return WatchTimelineEntry(
             date: .now,
             lessonNumber: lessonNumber,
-            minuteSnippet: String(minute.text.prefix(100))
+            firstPhraseSnippet: String(minute.text.prefix(100))
         )
     }
 }
 
-struct WatchCircularView: View {
+struct ComplicationView: View {
+    @Environment(\.widgetFamily) var widgetFamily
     let entry: WatchTimelineEntry
 
     var body: some View {
-        ZStack {
-            AccessoryWidgetBackground()
-            VStack(spacing: 0) {
-                Text("L")
-                    .font(.caption2)
-                Text(entry.lessonNumber.map(String.init) ?? "—")
-                    .font(.system(.title3, design: .rounded))
-                    .fontWeight(.semibold)
+        switch widgetFamily {
+        case .accessoryCircular:
+            ZStack {
+                AccessoryWidgetBackground()
+                VStack(spacing: 0) {
+                    Text("L")
+                        .font(.caption2)
+                    Text(entry.lessonNumber.map(String.init) ?? "\u{2014}")
+                        .font(.system(.title3, design: .rounded))
+                        .fontWeight(.semibold)
+                }
             }
-        }
-    }
-}
-
-struct WatchRectangularView: View {
-    let entry: WatchTimelineEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            HStack {
-                Image(systemName: "sun.max")
+        case .accessoryRectangular:
+            VStack(alignment: .leading) {
                 Text("ACIM")
-                    .fontWeight(.semibold)
+                    .font(.caption2)
+                    .foregroundStyle(.tint)
+                Text(entry.lessonNumber.map { "Lesson \($0)" } ?? "No lesson")
+                    .font(.headline)
+                if let snippet = entry.firstPhraseSnippet {
+                    Text(snippet)
+                        .font(.caption)
+                        .lineLimit(2)
+                }
             }
-            .font(.caption)
-            Text(entry.minuteSnippet)
-                .font(.caption2)
-                .lineLimit(2)
-                .foregroundStyle(.secondary)
+        case .accessoryInline:
+            Text(entry.lessonNumber.map { "ACIM Lesson \($0)" } ?? "ACIM")
+        default:
+            Text("ACIM")
         }
-    }
-}
-
-struct WatchInlineView: View {
-    let entry: WatchTimelineEntry
-
-    var body: some View {
-        Text(entry.lessonNumber.map { "ACIM Lesson \($0)" } ?? "ACIM")
     }
 }
 
 struct ACIMDailyMinuteWatchWidget: Widget {
-    let kind = "ACIMDailyMinuteWatchWidget"
+    let kind = "com.larryseyer.acimdailyminute.watch.complication"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: WatchComplicationProvider()) { entry in
-            WatchCircularView(entry: entry)
+        StaticConfiguration(kind: kind, provider: WatchTimelineProvider()) { entry in
+            ComplicationView(entry: entry)
         }
         .configurationDisplayName("ACIM Daily Minute")
         .description("Today's lesson at a glance")

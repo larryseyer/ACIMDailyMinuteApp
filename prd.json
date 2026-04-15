@@ -143,7 +143,7 @@
     {
       "id": "ACIM-006",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-001"],
       "title": "3.10a — Watch schema parity + Today view",
       "why": "ACIMDailyMinuteWatch target has the same pre-3.2 schema drift as the Widget target had. Repair it AND render today's DailyMinute in WatchContentView so the user sees real content on the wrist.",
