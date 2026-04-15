@@ -18,3 +18,10 @@ Started: Tue Apr 14 23:46:29 CDT 2026
 - **Files edited:** DailyMinuteCard.swift (Georgia → system serif), DailyLessonCard.swift (Georgia → system serif for title + body, added lastError display), LessonDetailView.swift (Georgia → system serif for title + body in Full + MetadataOnly states), AudioManager.swift (added lastError property, KVO statusObservation, AVAudioSession .playback/.spokenAudio activation with error surfacing, removed old configureAudioSession), PodcastEpisodeRow.swift (Georgia → system serif), ArchivedReadingCard.swift (Georgia → system serif for minute body + lesson title, updated doc comment)
 - **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
 - **Verification:** grep Georgia returns 0 matches across ACIMDailyMinute/. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-103 — Listen per-feed YouTube playlist embed with remembered lesson position
+- **Status:** PASS
+- **Commit:** 3dbd2bd
+- **Files edited:** ListenView.swift (replaced todaysYouTubeURL with embedURL computed property branching on selectedFeed; added @AppStorage for lessonsLastWatchedIndex; added playlist ID constants; removed DailyMinute @Query; updated ForEach to set lesson index on tap; updated youtubeCard label to be feed-aware), YouTubePlayerView.swift (loadVideoIfNeeded now supports full embed URLs with query params for playlist/index passthrough)
+- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
+- **Verification:** No TODO/FIXME/XXX/HACK/JTFNews in touched files. Embed URL switches between Daily Minute and Daily Lesson playlists based on segmented picker. Lesson tap sets lessonsLastWatchedIndex persisted via @AppStorage.

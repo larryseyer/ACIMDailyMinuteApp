@@ -189,7 +189,6 @@ struct ListenView: View {
     }
 
     private func reload(force: Bool) async {
-        let feed = selectedFeed
         let hasCache = !currentEpisodes.isEmpty
 
         if hasCache && !force {
@@ -199,6 +198,16 @@ struct ListenView: View {
         }
 
         if !hasCache { loadState = .loading }
+
+        let minuteOK = await fetchAndPersistFeed(.minute, force: force)
+        let lessonOK = await fetchAndPersistFeed(.lesson, force: force)
+
+        let selectedOK = (selectedFeed == .minute) ? minuteOK : lessonOK
+        loadState = (selectedOK || hasCache) ? .loaded : .failed
+        hasLoadedOnce = true
+    }
+
+    private func fetchAndPersistFeed(_ feed: PodcastFeed, force: Bool) async -> Bool {
         do {
             let fetched: [PodcastEpisode]
             switch feed {
@@ -208,18 +217,15 @@ struct ListenView: View {
                 fetched = try await service.fetchLessonEpisodes(force: force)
             }
             try PodcastService.persist(fetched, channel: feed.rawValue, in: modelContext)
-            loadState = .loaded
-            hasLoadedOnce = true
+            return !fetched.isEmpty
         } catch let PodcastError.unparseableFeed(partial) {
-            // Persist whatever survived — better to keep a partial cache
-            // than discard real episodes. If the partial is empty and we
-            // have no prior cache, surface the failure UI.
             if !partial.isEmpty {
                 try? PodcastService.persist(partial, channel: feed.rawValue, in: modelContext)
+                return true
             }
-            loadState = (hasCache || !partial.isEmpty) ? .loaded : .failed
+            return false
         } catch {
-            loadState = hasCache ? .loaded : .failed
+            return false
         }
     }
 }
