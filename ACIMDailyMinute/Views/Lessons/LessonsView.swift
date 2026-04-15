@@ -19,6 +19,7 @@ import SwiftData
 ///   * Jump-to-N sheet — toolbar button opens `JumpToLessonSheet`, which
 ///     programmatically appends an `Int` to the shared `NavigationPath`.
 struct LessonsView: View {
+    @Environment(AudioManager.self) private var audio
     @Query(sort: \DailyLesson.lessonNumber) private var lessons: [DailyLesson]
     @Query(
         filter: #Predicate<ArchivedReading> { $0.channel == "daily-lesson" },
@@ -43,6 +44,9 @@ struct LessonsView: View {
                 latestPublishedAt: lessons.last?.publishedAt
             )
             .listStyle(.plain)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+            }
             .navigationTitle("Lessons")
             .searchable(text: $searchText, prompt: "Search lessons")
             .toolbar {
