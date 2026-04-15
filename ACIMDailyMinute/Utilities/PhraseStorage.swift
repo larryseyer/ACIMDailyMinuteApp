@@ -24,6 +24,24 @@ enum PhraseStorage {
         }
     }
 
+    static func add(_ phrase: String) {
+        let trimmed = phrase.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        var current = phrases
+        guard current.count < maxPhrases else { return }
+        let isDuplicate = current.contains { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        guard !isDuplicate else { return }
+        current.append(trimmed)
+        phrases = current
+    }
+
+    static func remove(at index: Int) {
+        var current = phrases
+        guard current.indices.contains(index) else { return }
+        current.remove(at: index)
+        phrases = current
+    }
+
     /// itemKeys (`"minute:{hash}"` / `"lesson:{N}"`) that have already triggered
     /// a phrase-match notification and must not re-trigger.
     static var notifiedItemKeys: Set<String> {

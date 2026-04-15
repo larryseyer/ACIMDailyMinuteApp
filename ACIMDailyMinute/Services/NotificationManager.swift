@@ -103,6 +103,21 @@ actor NotificationManager {
         try? await UNUserNotificationCenter.current().add(request)
     }
 
+    func fireTest() async {
+        await requestPermissionIfNeeded()
+        let content = UNMutableNotificationContent()
+        content.title = "ACIM Daily Minute"
+        content.body = "Test notification — your daily reminder is configured."
+        content.sound = preferredSound()
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: "acim.testNotification",
+            content: content,
+            trigger: trigger
+        )
+        try? await UNUserNotificationCenter.current().add(request)
+    }
+
     func cancelDailyReminder() async {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
             withIdentifiers: [Self.dailyReminderID]

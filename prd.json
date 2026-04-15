@@ -1,0 +1,127 @@
+{
+  "branchName": "ralph/acim-3.8-finish-2026-04-14",
+  "project": "ACIM Daily Minute — iOS / macOS / watchOS / Widget",
+  "mission": "Finish Phase 3.8 so all 5 tabs render real content before the Phase 3.8.5 sim install. Saved (3.8a) shipped at commit 7f73dce on main. Four chunks remain: 3.8b Settings + Phrases editor, 3.8c Onboarding gate, 3.8d Deep links, 3.8e Shortcut rename + real perform(). Each chunk = one Ralph story = one ./bu.sh commit. Master plan: /Users/larryseyer/.claude/plans/declarative-humming-lantern.md (approved, do not relitigate locked decisions).",
+  "executionModel": {
+    "ralphRunsOn": "M4 / current machine. Working directory: /Users/larryseyer/ACIMDailyMinuteApp. Ralph has full bash + Xcode toolchain. No Python or external services required.",
+    "buildTarget": "iPad (10th generation) / iOS 18.1, simulator UUID 86F64729-D28D-44F7-BEB9-EF34AA7B7F28. Use this UUID for all xcodebuild invocations — name= form is ambiguous because multiple iPad 10th-gen sims exist.",
+    "commitCommand": "./bu.sh \"<message>\" — runs git add -A + commit + push + Dropbox zip backup. Do NOT use raw git commit. One commit per story.",
+    "verificationCommand": "xcodebuild -scheme ACIMDailyMinute -destination 'id=86F64729-D28D-44F7-BEB9-EF34AA7B7F28' -configuration Debug -derivedDataPath ./build build > /tmp/ios.log 2>&1; echo exit=$?",
+    "errorFilter": "grep 'error:' /tmp/ios.log | grep -vE '(ACIMDailyMinuteWidget|WidgetExtension|Watch)' | wc -l — must equal 0. Widget + Watch errors are pre-existing Phase 3.9/3.10 scope and explicitly out of scope.",
+    "masterPlan": "/Users/larryseyer/.claude/plans/declarative-humming-lantern.md — read this before each story to get the full chunk spec, including code templates and pre-allocated pbxproj IDs.",
+    "alreadyShipped": "3.8a (Saved tab + BookmarkRow) is at commit 7f73dce on main. Do not touch Saved tab files."
+  },
+  "rules": {
+    "onePerIteration": "Implement exactly one story per Ralph iteration, lowest priority number first that still has passes:false.",
+    "buildPolicy": "OVERRIDES the run_ralph.sh launcher prompt 'IMPORTANT: Do NOT run builds or tests' instruction. Each story MUST run the verificationCommand from executionModel before committing. Story is incomplete if errorFilter > 0. Per-chunk build-clean is non-negotiable for this project — see memory feedback_verify_continue_claims.md.",
+    "commitFormat": "./bu.sh \"3.8X — <chunk title>\" — exact format from master plan §Commit cadence. One commit per story. After commit succeeds, set the story's passes:true in this prd.json AND append a story-completion block to progress.txt under '## --- Iteration Log ---'.",
+    "noTodos": "No TODO / FIXME / XXX / HACK comments anywhere in committed code. Pick a sensible default and fully implement. Verify per story: grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK' on the changed files must be empty.",
+    "noJtfnewsRefs": "Absolute rule — zero 'JTFNews' / 'jtfnews' / 'JTF News' mentions in any committed file (code, comments, docs, plist, pbxproj). The pattern library at /Users/larryseyer/jtfnewsapp/ is read-only; never name it inside this repo. Verify per story: grep -rIn 'JTFNews\\|jtfnews\\|JTF News' on the changed files must be empty.",
+    "scopeFence": "No refactors beyond what the story requires. No feature additions. Don't touch Saved tab (3.8a, shipped). Don't touch Widget or Watch UI files (Phase 3.9/3.10). Don't relitigate the master plan's locked decisions.",
+    "pbxprojIds": "Pre-allocated in master plan §pbxproj IDs. Use them exactly: PhrasesEditorView.swift fileRef=AA000002221 buildFile=AA000001223 (3.8b); DeepLinkRoute.swift fileRef=AA000002222 buildFile=AA000001224 (3.8d); GetTodaysReadingIntent.swift reuses existing fileRef AA000002057 + buildFile AA000001063 from GetTodaysFactsIntent.swift, only path attribute changes (3.8e). BookmarkRow IDs are already consumed by 3.8a.",
+    "verifiedGotchas": "Three plan-doc inaccuracies caught during 3.8a grep-verify; encoded into the relevant stories below: (1) NotificationManager.fireTest() does NOT exist in current code — story 3.8b adds it. (2) scheduleDailyReminder takes Ints (hour:minute:) not Date — story 3.8b bridges via Calendar.dateComponents. (3) OnboardingView has NO lineage line at all — story 3.8c inserts it (not just 'verifies'). Trust these; do not re-derive.",
+    "completionSignal": "When all 4 stories pass and the verification phase build is clean, output the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly."
+  },
+  "stories": [
+    {
+      "id": "ACIM-001",
+      "priority": 1,
+      "passes": false,
+      "title": "3.8b — Settings: notifications + reminder + phrases editor + replay onboarding",
+      "why": "Settings tab is currently a 27-line ContentUnavailableView stub. First-install users need notification opt-in, phrase watchlist editing, and a replay-onboarding escape hatch. This is the largest chunk — touches 5 files plus pbxproj.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Settings/SettingsView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Settings/PhrasesEditorView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Utilities/PhraseStorage.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ACIMDailyMinuteApp.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+      ],
+      "acceptanceCriteria": [
+        "Rewrite SettingsView.swift as a Form with four sections per master plan §3.8b: Notifications (Toggle 'Daily reminder' bound to @AppStorage('dailyReminderEnabled'); DatePicker 'Reminder time' bound to @AppStorage('dailyReminderTime'); 'Send test notification' Button), Watched phrases (NavigationLink to PhrasesEditorView with subtitle '\\(PhraseStorage.phrases.count) of 10'), Onboarding (Button 'Replay introduction' that sets @AppStorage('hasSeenOnboarding') = false then dismisses), About (app version + build from Bundle.main.infoDictionary, credit line 'Sparkly Edition · Teddy Poppe · CIMS lineage'). Keep the existing Done toolbar button (iOS .topBarTrailing / macOS .confirmationAction).",
+        "On Toggle change: if true, call Task { await NotificationManager.shared.requestPermissionIfNeeded(); await NotificationManager.shared.scheduleDailyReminder(hour: h, minute: m) } where h,m derive from the stored reminder time via Calendar.current.dateComponents([.hour, .minute], from: reminderTime). If false, call Task { await NotificationManager.shared.cancelDailyReminder() }. On DatePicker change, if reminder is enabled, re-schedule with the new time.",
+        "On 'Send test notification' tap: Task { await NotificationManager.shared.fireTest() }. fireTest() must be added to NotificationManager (see next criterion) — it does NOT currently exist (verified via grep on 2026-04-14).",
+        "Add to NotificationManager.swift: a new public method `func fireTest() async` that builds a UNMutableNotificationContent with title 'ACIM Daily Minute' and body 'Test notification — your daily reminder is configured.', uses preferredSound(), schedules with a UNTimeIntervalNotificationTrigger of 1 second (non-repeating) under identifier 'acim.testNotification'. Calls UNUserNotificationCenter.current().add. Wraps with try?. Also call requestPermissionIfNeeded() at the start so a first-time tester gets the auth prompt.",
+        "Create new file PhrasesEditorView.swift in Views/Settings/ per master plan §3.8b: NavigationStack title 'Watched Phrases'; HStack with TextField('Add a phrase', text: $draft) + Button('Add', action: addPhrase) disabled when draft.trimmingCharacters(in: .whitespaces).isEmpty || PhraseStorage.phrases.count >= PhraseStorage.maxPhrases; List of current phrases via @State var phrases: [String] = PhraseStorage.phrases with .onDelete that calls PhraseStorage.remove(at:) then refreshes phrases. Show a footer caption '\\(phrases.count) of \\(PhraseStorage.maxPhrases)'. Keep file ~80 lines or under.",
+        "Add helpers to PhraseStorage.swift: `static func add(_ phrase: String)` that appends if non-empty trimmed and count < maxPhrases (no duplicates — use case-insensitive contains check); `static func remove(at index: Int)` that removes if index in bounds. Both wrap the existing JSON-backed setter so the View doesn't reach into encoding.",
+        "In ACIMDailyMinuteApp.swift init() (or wherever existing UserDefaults defaults are registered), add UserDefaults.standard.register(defaults: ['dailyReminderEnabled': false, 'dailyReminderTime': <Date for today 09:00 local>]). The Date can be computed once via Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date(). Place these alongside the existing notify* defaults — find the existing register call via grep 'register(defaults' in App/.",
+        "pbxproj: Add 4 entries for PhrasesEditorView.swift only (PhrasesEditorView fileRef=AA000002221 buildFile=AA000001223): (1) PBXBuildFile insert near AA000001222 BookmarkRow line, (2) PBXFileReference insert near AA000002220 BookmarkRow line, (3) Settings PBXGroup children list — find via grep 'path = Settings' — add the new fileRef as a child, (4) main ACIMDailyMinute target Sources phase — find via grep 'AA000001222 /\\* BookmarkRow.swift in Sources' — add new buildFile entry adjacent.",
+        "Run verification: xcodebuild as in executionModel.verificationCommand. Filter Widget/Watch errors as in executionModel.errorFilter — must equal 0. Then grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files — must be empty.",
+        "Commit: ./bu.sh \"3.8b — Settings: notifications + phrases editor + onboarding replay\". Then mark passes:true in prd.json and append iteration log to progress.txt."
+      ]
+    },
+    {
+      "id": "ACIM-002",
+      "priority": 2,
+      "passes": false,
+      "title": "3.8c — Onboarding gate via @AppStorage + first-launch presentation + lineage line",
+      "why": "OnboardingView has 156 lines of finished UI but nothing presents it. ContentView needs a first-launch gate. Also: the master plan said to 'verify' the lineage line but grep on 2026-04-14 found NO 'Sparkly Edition · Teddy Poppe · CIMS' line anywhere in OnboardingView — it must be added, not just verified.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ContentView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift"
+      ],
+      "acceptanceCriteria": [
+        "Add to ContentView: @AppStorage('hasSeenOnboarding') private var hasSeenOnboarding = false. Place near the existing @State declarations.",
+        "Apply onboarding gate to the body. Use Binding(get: { !hasSeenOnboarding }, set: { _ in }) — NOT $hasSeenOnboarding-negated, because flipping the @AppStorage from inside the cover would race the dismiss animation (locked decision, master plan §Locked decisions item 3). On iOS use .fullScreenCover; on macOS use .sheet (no full-screen cover exists). Wrap with #if os(iOS) / #else / #endif. Place the modifier at the same level as the existing .sheet(isPresented: $showSettings).",
+        "OnboardingView already writes hasSeenOnboarding = true on the 'Get Started' tap (verified in OnboardingView.swift at line 36 for iOS, line 55 for macOS). Do NOT modify that write — only add the lineage line below.",
+        "Add a lineage line to OnboardingView. The cleanest location is below the dot indicators on iOS (or above the chevron row on macOS) so it appears persistently across all 5 pages. Render as: Text('Sparkly Edition · Teddy Poppe · CIMS').font(.caption).foregroundStyle(.secondary).padding(.bottom, 8). For iOS .page TabView this means restructuring slightly — wrap the existing TabView in a VStack and append the lineage Text below it with .padding(.bottom, 24). For macOS, append it inside the existing VStack(spacing: 0) just before the HStack(spacing: 16) chevron row.",
+        "Verify NO copy contains 'FIP' / 'Foundation for Inner Peace' / 'facts' / 'news' anywhere in OnboardingView (grep these literal strings — should be zero hits in the current file, but confirm post-edit).",
+        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files must be empty.",
+        "Commit: ./bu.sh \"3.8c — Onboarding gate via @AppStorage + first-launch presentation\". Mark passes:true and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-003",
+      "priority": 3,
+      "passes": false,
+      "title": "3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch",
+      "why": "ContentView.onOpenURL is currently `{ _ in }` — comment says deep links reactivate in 3.8. Need URL scheme in Info.plist, a parser, and dispatch to tab + path. Also fixes the BookmarkRow non-interactive state from 3.8a (this story does NOT add tap handlers to BookmarkRow — that's optional follow-up; row swipe-delete remains the only interaction in 3.8a, which is fine).",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Info.plist",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Utilities/DeepLinkRoute.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ContentView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonsView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Archive/ArchiveView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+      ],
+      "acceptanceCriteria": [
+        "Edit Info.plist to add CFBundleURLTypes per master plan §3.8d (exact XML block in the master plan). One CFBundleURLSchemes entry: 'acimdailyminute'. CFBundleURLName: 'com.larryseyer.acimdailyminute.deeplink'. Verify with: plutil -p ACIMDailyMinute/Info.plist | grep -A 5 CFBundleURLTypes — should show the new array.",
+        "Create new file ACIMDailyMinute/Utilities/DeepLinkRoute.swift containing the exact code in master plan §3.8d (enum DeepLinkRoute with cases today/lesson(Int)/archive(Date)/saved + static parse(_:) + Notification.Name extension for .deepLinkLesson and .deepLinkArchive). Do not modify the parser logic; the master plan's regex/host/segments handling is intentional.",
+        "ContentView.onOpenURL: replace the empty `{ _ in }` body with the dispatch block per master plan §3.8d — switch on DeepLinkRoute.parse(url), set selectedTab to (0 today / 1 lesson / 3 archive / 4 saved), and for lesson/archive cases post a NotificationCenter.default notification on the next runloop tick (DispatchQueue.main.async) so the destination view's NavigationStack mounts before the path append.",
+        "LessonsView: add `.onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in ... }` to the NavigationStack root. Handler: guard let n = note.object as? Int, (1...365).contains(n) else { return }; path.append(n). Find the existing path NavigationPath via grep '@State.*path' or 'NavigationStack(path:'.",
+        "ArchiveView: same shape as LessonsView but for .deepLinkArchive — handler appends the date to the existing String-typed NavigationPath (Archive uses YYYY-MM-DD strings as path values per the existing .navigationDestination(for: String.self)). Convert the Date to its YYYY-MM-DD string via the same DateFormatter that ArchiveView already uses (locate via grep 'yyyy-MM-dd' in Archive/) — reuse it; do not re-define.",
+        "pbxproj: Add 4 entries for DeepLinkRoute.swift (fileRef=AA000002222 buildFile=AA000001224): PBXBuildFile near existing AA000001xxx Utilities entries; PBXFileReference near AA000002xxx Utilities entries; Utilities PBXGroup children — grep 'path = Utilities' to find; main target Sources phase entry.",
+        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files must be empty.",
+        "Commit: ./bu.sh \"3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch\". Mark passes:true and append progress log."
+      ]
+    },
+    {
+      "id": "ACIM-004",
+      "priority": 4,
+      "passes": false,
+      "title": "3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()",
+      "why": "GetTodaysFactsIntent.swift is misnamed (legacy placeholder term) and returns 'coming soon'. Siri Shortcuts must speak today's actual reading. Also locks Hard Rule: zero 'JTFNews' / 'facts' / 'news' refs anywhere in this app — the file rename closes the last residual.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Shortcuts/GetTodaysFactsIntent.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Shortcuts/ACIMDailyMinuteShortcuts.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+      ],
+      "acceptanceCriteria": [
+        "Rename file: git mv ACIMDailyMinute/Shortcuts/GetTodaysFactsIntent.swift ACIMDailyMinute/Shortcuts/GetTodaysReadingIntent.swift. Use git mv (not raw mv) so git tracks the rename.",
+        "Rewrite the renamed file: struct GetTodaysReadingIntent: AppIntent. title 'Get Today\\'s Reading'. perform() opens the shared ModelContainer (use ACIMDailyMinuteApp.sharedModelContainer if accessible, else build one with the same App Group identifier 'group.com.larryseyer.acimdailyminute' and the canonical Schema). FetchDescriptor<DailyMinute> sortBy publishedAt descending, fetchLimit = 1. If a minute exists, return .result(value: minute.text, dialog: IntentDialog(stringLiteral: \"Today's Daily Minute: \\(minute.text)\")). If none, return .result(dialog: 'No Daily Minute available yet today.'). Use @MainActor on perform if needed for ModelContext access.",
+        "Update ACIMDailyMinuteShortcuts.swift: change the AppShortcutsProvider provider's intent reference from GetTodaysFactsIntent() to GetTodaysReadingIntent(). Update phrases array to: [\"Today's Daily Minute from \\(.applicationName)\", \"What's today's reading from \\(.applicationName)\", \"Read today's lesson from \\(.applicationName)\"]. Update shortTitle: 'Today\\'s Reading'. systemImageName: 'sun.max' (or keep current if already 'sun.max').",
+        "pbxproj: update path attribute on existing AA000002057 PBXFileReference entry from `path = GetTodaysFactsIntent.swift;` to `path = GetTodaysReadingIntent.swift;`. Update the comment in the buildFile line `AA000001063 /* GetTodaysFactsIntent.swift in Sources */` to `AA000001063 /* GetTodaysReadingIntent.swift in Sources */` (and the matching PBXFileReference comment, and any Group children comment). Comments are cosmetic but git diff cleanliness expects them updated. The fileRef + buildFile UUIDs themselves do NOT change.",
+        "Verify zero residual mentions: grep -rIn 'GetTodaysFactsIntent\\|TodaysFacts' /Users/larryseyer/ACIMDailyMinuteApp/ — must be empty after rename + comment updates. Also grep -rIn 'JTFNews\\|facts' on the Shortcuts/ files — empty.",
+        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0. App Intents register at first run; build success is sufficient for this story.",
+        "Commit: ./bu.sh \"3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()\". Mark passes:true and append progress log.",
+        "After this commit lands, all 4 stories are passes:true. Output the literal string <promise>COMPLETE</promise> in your final iteration response so run_ralph.sh exits cleanly. Phase 3.8.5 sim install + smoke checklist is NOT a Ralph story — Larry runs it manually on his iPad sim."
+      ]
+    }
+  ]
+}

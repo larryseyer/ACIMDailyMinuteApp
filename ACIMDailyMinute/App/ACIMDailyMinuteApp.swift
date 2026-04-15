@@ -30,12 +30,15 @@ struct ACIMDailyMinuteApp: App {
     }()
 
     init() {
+        let defaultReminderTime = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
         UserDefaults.standard.register(defaults: [
             "useCustomNotificationSound": true,
             "notifyNewMinute": true,
             "notifyNewLesson": true,
             "notifyPhraseMatches": true,
-            "notifyLiveActivities": false
+            "notifyLiveActivities": false,
+            "dailyReminderEnabled": false,
+            "dailyReminderTime": defaultReminderTime
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()
