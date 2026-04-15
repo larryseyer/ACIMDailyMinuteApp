@@ -7,7 +7,8 @@ fi
 
 git add .
 git commit -m "$1"
-git push origin main
+BRANCH="$(git symbolic-ref --short HEAD)"
+git push -u origin "$BRANCH"
 
 # Backup
 SOURCE="/Users/larryseyer/ACIMDailyMinuteApp"
