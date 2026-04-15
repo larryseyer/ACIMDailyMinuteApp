@@ -1,126 +1,330 @@
 {
-  "branchName": "ralph/acim-3.8-finish-2026-04-14",
+  "branchName": "ralph/acim-3.9-to-5-finish-2026-04-14",
   "project": "ACIM Daily Minute — iOS / macOS / watchOS / Widget",
-  "mission": "Finish Phase 3.8 so all 5 tabs render real content before the Phase 3.8.5 sim install. Saved (3.8a) shipped at commit 7f73dce on main. Four chunks remain: 3.8b Settings + Phrases editor, 3.8c Onboarding gate, 3.8d Deep links, 3.8e Shortcut rename + real perform(). Each chunk = one Ralph story = one ./bu.sh commit. Master plan: /Users/larryseyer/.claude/plans/declarative-humming-lantern.md (approved, do not relitigate locked decisions).",
+  "mission": "Finish the entire remaining roadmap (Phases 3.9, 3.10, 4, 5) so the app ships. Phase 3.8 closed at commit 814731e on `ralph/acim-3.8-finish-2026-04-14` with all 5 tabs rendering real content. Thirteen stories remain across Widget target (3.9), Watch companion (3.10), feature-parity verification (4), and branding + ACIMChime.caf wiring + App Store metadata (5). Each story = one Ralph iteration = one ./bu.sh commit. NOTE: bu.sh hard-codes `git push origin main` — Ralph must (a) cut branch `ralph/acim-3.9-to-5-finish-2026-04-14` off main before the first iteration, and (b) before each ./bu.sh, edit `bu.sh` line `git push origin main` to push to the branch instead, OR Ralph runs raw git for the push step. Larry to confirm preferred path before iteration 1.",
   "executionModel": {
     "ralphRunsOn": "M4 / current machine. Working directory: /Users/larryseyer/ACIMDailyMinuteApp. Ralph has full bash + Xcode toolchain. No Python or external services required.",
-    "buildTarget": "iPad (10th generation) / iOS 18.1, simulator UUID 86F64729-D28D-44F7-BEB9-EF34AA7B7F28. Use this UUID for all xcodebuild invocations — name= form is ambiguous because multiple iPad 10th-gen sims exist.",
-    "commitCommand": "./bu.sh \"<message>\" — runs git add -A + commit + push + Dropbox zip backup. Do NOT use raw git commit. One commit per story.",
-    "verificationCommand": "xcodebuild -scheme ACIMDailyMinute -destination 'id=86F64729-D28D-44F7-BEB9-EF34AA7B7F28' -configuration Debug -derivedDataPath ./build build > /tmp/ios.log 2>&1; echo exit=$?",
-    "errorFilter": "grep 'error:' /tmp/ios.log | grep -vE '(ACIMDailyMinuteWidget|WidgetExtension|Watch)' | wc -l — must equal 0. Widget + Watch errors are pre-existing Phase 3.9/3.10 scope and explicitly out of scope.",
-    "masterPlan": "/Users/larryseyer/.claude/plans/declarative-humming-lantern.md — read this before each story to get the full chunk spec, including code templates and pre-allocated pbxproj IDs.",
-    "alreadyShipped": "3.8a (Saved tab + BookmarkRow) is at commit 7f73dce on main. Do not touch Saved tab files."
+    "buildTarget": "iPad (10th generation) / iOS 18.1, simulator UUID 86F64729-D28D-44F7-BEB9-EF34AA7B7F28. Use this UUID for all xcodebuild invocations on the main app target. For the Watch target, use Watch sim 'Apple Watch Series 10 (46mm)' (resolve UUID via xcrun simctl list devices available). Use ./build.sh which already resolves both correctly.",
+    "commitCommand": "./bu.sh \"<message>\" — runs git add -A + commit + push + Dropbox zip backup. WARNING: bu.sh pushes to origin/main. For this branch, either edit bu.sh's push line to `git push origin ralph/acim-3.9-to-5-finish-2026-04-14`, or run raw `git push origin HEAD` after a manual commit. Larry confirms strategy before iteration 1.",
+    "verificationCommand": "./build.sh > /tmp/full-build.log 2>&1; echo exit=$?  — builds all 3 targets (main app + Widget + Watch). After 3.9a lands, the Widget portion must be clean. After 3.10a lands, the Watch portion must be clean. By story 4.0, the entire ./build.sh exit code MUST equal 0.",
+    "errorFilterPhase39": "After story 3.9a: grep 'error:' /tmp/full-build.log | grep -E '(ACIMDailyMinuteWidget|WidgetExtension)' | wc -l — must equal 0. Watch errors still allowed until 3.10a.",
+    "errorFilterPhase310": "After story 3.10a: grep 'error:' /tmp/full-build.log | grep -E 'ACIMDailyMinuteWatch' | wc -l — must equal 0. Combined with errorFilterPhase39, all targets clean.",
+    "errorFilterPhase4": "After story 4.0: ./build.sh must exit 0. Zero errors anywhere. Used as the gate for the <promise>COMPLETE</promise> emission at end of story 5d.",
+    "alreadyShipped": "Phase 3.8 (Saved + Settings + Onboarding + Deep links + Shortcut) complete on `ralph/acim-3.8-finish-2026-04-14` through commit 814731e. Phases 3.1–3.7 already on main. Do not re-touch shipped surfaces."
   },
   "rules": {
-    "onePerIteration": "Implement exactly one story per Ralph iteration, lowest priority number first that still has passes:false.",
-    "buildPolicy": "OVERRIDES the run_ralph.sh launcher prompt 'IMPORTANT: Do NOT run builds or tests' instruction. Each story MUST run the verificationCommand from executionModel before committing. Story is incomplete if errorFilter > 0. Per-chunk build-clean is non-negotiable for this project — see memory feedback_verify_continue_claims.md.",
-    "commitFormat": "./bu.sh \"3.8X — <chunk title>\" — exact format from master plan §Commit cadence. One commit per story. After commit succeeds, set the story's passes:true in this prd.json AND append a story-completion block to progress.txt under '## --- Iteration Log ---'.",
+    "onePerIteration": "Implement exactly one story per Ralph iteration, lowest priority number first that still has passes:false AND whose depends_on stories all have passes:true.",
+    "buildPolicy": "Each story MUST run the verificationCommand from executionModel before committing. Use the per-phase errorFilter that matches the story's phase. Story is incomplete if its phase's errorFilter is non-zero. This is non-negotiable for Phases 3.9 onward — schema repair is the entire point of 3.9a / 3.10a, so build verification is the only way to prove the work landed.",
+    "commitFormat": "./bu.sh \"<chunk-id> — <chunk title>\" — exact format. Examples: \"3.9a — Widget schema parity\", \"5c — ACIMChime.caf custom notification sound wiring\". One commit per story. After commit succeeds, set the story's passes:true in this prd.json AND append a story-completion block to progress.txt under '## --- Iteration Log ---'.",
     "noTodos": "No TODO / FIXME / XXX / HACK comments anywhere in committed code. Pick a sensible default and fully implement. Verify per story: grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK' on the changed files must be empty.",
     "noJtfnewsRefs": "Absolute rule — zero 'JTFNews' / 'jtfnews' / 'JTF News' mentions in any committed file (code, comments, docs, plist, pbxproj). The pattern library at /Users/larryseyer/jtfnewsapp/ is read-only; never name it inside this repo. Verify per story: grep -rIn 'JTFNews\\|jtfnews\\|JTF News' on the changed files must be empty.",
-    "scopeFence": "No refactors beyond what the story requires. No feature additions. Don't touch Saved tab (3.8a, shipped). Don't touch Widget or Watch UI files (Phase 3.9/3.10). Don't relitigate the master plan's locked decisions.",
-    "pbxprojIds": "Pre-allocated in master plan §pbxproj IDs. Use them exactly: PhrasesEditorView.swift fileRef=AA000002221 buildFile=AA000001223 (3.8b); DeepLinkRoute.swift fileRef=AA000002222 buildFile=AA000001224 (3.8d); GetTodaysReadingIntent.swift reuses existing fileRef AA000002057 + buildFile AA000001063 from GetTodaysFactsIntent.swift, only path attribute changes (3.8e). BookmarkRow IDs are already consumed by 3.8a.",
-    "verifiedGotchas": "Three plan-doc inaccuracies caught during 3.8a grep-verify; encoded into the relevant stories below: (1) NotificationManager.fireTest() does NOT exist in current code — story 3.8b adds it. (2) scheduleDailyReminder takes Ints (hour:minute:) not Date — story 3.8b bridges via Calendar.dateComponents. (3) OnboardingView has NO lineage line at all — story 3.8c inserts it (not just 'verifies'). Trust these; do not re-derive.",
-    "completionSignal": "When all 4 stories pass and the verification phase build is clean, output the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly."
+    "noPlaceholderAssets": "Phase 5 stories (5a / 5b / 5c) must NOT commit 1×1 png stubs, solid-color filler tiles, or empty .caf placeholders. If the required source asset (icon master, accent color spec, ACIMChime.caf at ACIMDailyMinute/Resources/ACIMChime.caf — already on disk per 2026-04-14 inspection) is missing or visibly placeholder-quality, the story BLOCKS, sets passes:false with a `blocked: \"<reason>\"` annotation, and surfaces to Larry instead of shipping garbage.",
+    "scopeFence": "No refactors beyond what the story requires. No feature additions. Don't touch shipped surfaces (Today, Lessons, Listen, Archive, Saved, Settings, Onboarding, Deep links, Shortcut). Don't relitigate locked decisions from prior phases.",
+    "pbxprojIds": "Pre-allocated. Use exactly: (3.9b) SmallWidgetView wiring updates reuse existing fileRef — only edit if pbxproj membership is missing; (3.9c) MediumWidgetView same; (3.9d) LargeWidgetView same; (3.9e) ACIMDailyMinuteLiveActivity already exists per 2026-04-14 inspection — verify pbxproj membership and only add entries if missing. NEW files for this PRD pair: any new complication provider files in Phase 3.10b use buildFile range AA000001225-1230 / fileRef range AA000002225-2230. Asset catalog edits in Phase 5 do NOT need new pbxproj entries (Assets.xcassets is a folder reference). PARITY.md (4.0) and APP_STORE_LISTING.md (5d) are repo-root markdown — no pbxproj membership.",
+    "verifiedGotchas": "Three facts grep-confirmed against HEAD on 2026-04-14: (1) ACIMChime.caf already exists at /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/ACIMChime.caf and at /Users/larryseyer/ACIMDailyMinuteApp/assets/ACIMChime.caf — story 5c does NOT need to create the file, only verify pbxproj membership on the Resources/ copy and wire NotificationManager. (2) Asset catalog already has AppIcon.appiconset and AccentColor.colorset directories — story 5a/5b populate them, do not create them. (3) bu.sh pushes to `main` hard-coded; Ralph must handle branch push manually (see executionModel.commitCommand).",
+    "completionSignal": "After story 5d (ACIM-013) commits AND ./build.sh exits 0, output the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly."
   },
   "stories": [
     {
       "id": "ACIM-001",
       "priority": 1,
-      "passes": true,
-      "title": "3.8b — Settings: notifications + reminder + phrases editor + replay onboarding",
-      "why": "Settings tab is currently a 27-line ContentUnavailableView stub. First-install users need notification opt-in, phrase watchlist editing, and a replay-onboarding escape hatch. This is the largest chunk — touches 5 files plus pbxproj.",
+      "passes": false,
+      "depends_on": [],
+      "title": "3.9a — Widget schema parity (kill pre-3.2 references; bring Widget target compile-clean)",
+      "why": "ACIMDailyMinuteWidget target has been broken-by-design since Phase 3.2 (SwiftData schema rewrite). It still references the old schema names. This story is pure repair — no new features, no UI changes — just bring the Widget target to 0 compile errors so subsequent 3.9b–e stories can layer real UI on top.",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Settings/SettingsView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Settings/PhrasesEditorView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Utilities/PhraseStorage.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ACIMDailyMinuteApp.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/SharedModelContainer.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteTimelineProvider.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/WidgetStoryEntry.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift"
       ],
       "acceptanceCriteria": [
-        "Rewrite SettingsView.swift as a Form with four sections per master plan §3.8b: Notifications (Toggle 'Daily reminder' bound to @AppStorage('dailyReminderEnabled'); DatePicker 'Reminder time' bound to @AppStorage('dailyReminderTime'); 'Send test notification' Button), Watched phrases (NavigationLink to PhrasesEditorView with subtitle '\\(PhraseStorage.phrases.count) of 10'), Onboarding (Button 'Replay introduction' that sets @AppStorage('hasSeenOnboarding') = false then dismisses), About (app version + build from Bundle.main.infoDictionary, credit line 'Sparkly Edition · Teddy Poppe · CIMS lineage'). Keep the existing Done toolbar button (iOS .topBarTrailing / macOS .confirmationAction).",
-        "On Toggle change: if true, call Task { await NotificationManager.shared.requestPermissionIfNeeded(); await NotificationManager.shared.scheduleDailyReminder(hour: h, minute: m) } where h,m derive from the stored reminder time via Calendar.current.dateComponents([.hour, .minute], from: reminderTime). If false, call Task { await NotificationManager.shared.cancelDailyReminder() }. On DatePicker change, if reminder is enabled, re-schedule with the new time.",
-        "On 'Send test notification' tap: Task { await NotificationManager.shared.fireTest() }. fireTest() must be added to NotificationManager (see next criterion) — it does NOT currently exist (verified via grep on 2026-04-14).",
-        "Add to NotificationManager.swift: a new public method `func fireTest() async` that builds a UNMutableNotificationContent with title 'ACIM Daily Minute' and body 'Test notification — your daily reminder is configured.', uses preferredSound(), schedules with a UNTimeIntervalNotificationTrigger of 1 second (non-repeating) under identifier 'acim.testNotification'. Calls UNUserNotificationCenter.current().add. Wraps with try?. Also call requestPermissionIfNeeded() at the start so a first-time tester gets the auth prompt.",
-        "Create new file PhrasesEditorView.swift in Views/Settings/ per master plan §3.8b: NavigationStack title 'Watched Phrases'; HStack with TextField('Add a phrase', text: $draft) + Button('Add', action: addPhrase) disabled when draft.trimmingCharacters(in: .whitespaces).isEmpty || PhraseStorage.phrases.count >= PhraseStorage.maxPhrases; List of current phrases via @State var phrases: [String] = PhraseStorage.phrases with .onDelete that calls PhraseStorage.remove(at:) then refreshes phrases. Show a footer caption '\\(phrases.count) of \\(PhraseStorage.maxPhrases)'. Keep file ~80 lines or under.",
-        "Add helpers to PhraseStorage.swift: `static func add(_ phrase: String)` that appends if non-empty trimmed and count < maxPhrases (no duplicates — use case-insensitive contains check); `static func remove(at index: Int)` that removes if index in bounds. Both wrap the existing JSON-backed setter so the View doesn't reach into encoding.",
-        "In ACIMDailyMinuteApp.swift init() (or wherever existing UserDefaults defaults are registered), add UserDefaults.standard.register(defaults: ['dailyReminderEnabled': false, 'dailyReminderTime': <Date for today 09:00 local>]). The Date can be computed once via Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date(). Place these alongside the existing notify* defaults — find the existing register call via grep 'register(defaults' in App/.",
-        "pbxproj: Add 4 entries for PhrasesEditorView.swift only (PhrasesEditorView fileRef=AA000002221 buildFile=AA000001223): (1) PBXBuildFile insert near AA000001222 BookmarkRow line, (2) PBXFileReference insert near AA000002220 BookmarkRow line, (3) Settings PBXGroup children list — find via grep 'path = Settings' — add the new fileRef as a child, (4) main ACIMDailyMinute target Sources phase — find via grep 'AA000001222 /\\* BookmarkRow.swift in Sources' — add new buildFile entry adjacent.",
-        "Run verification: xcodebuild as in executionModel.verificationCommand. Filter Widget/Watch errors as in executionModel.errorFilter — must equal 0. Then grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files — must be empty.",
-        "Commit: ./bu.sh \"3.8b — Settings: notifications + phrases editor + onboarding replay\". Then mark passes:true in prd.json and append iteration log to progress.txt."
+        "Read the canonical SwiftData schema from /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Models/ (DailyMinute.swift, DailyLesson.swift, ArchivedReading.swift, Bookmark.swift). The Widget's SharedModelContainer.swift must register the SAME Schema with the SAME ModelConfiguration App Group identifier 'group.com.larryseyer.acimdailyminute' as the main app does in ACIMDailyMinuteApp.swift. Match field-for-field; do not re-derive.",
+        "Rewrite WidgetStoryEntry.swift so its TimelineEntry struct fields match what the new TimelineProvider can actually produce: at minimum `date: Date`, `minuteText: String`, `lessonNumber: Int?`, `publishedAt: Date?`. Drop any fields named after the old schema (e.g., 'storyTitle', 'factText', 'newsItem' — grep for these and remove if present).",
+        "Rewrite ACIMDailyMinuteTimelineProvider.swift's getTimeline / getSnapshot / placeholder to (a) open SharedModelContainer.shared.mainContext, (b) FetchDescriptor<DailyMinute> sortBy publishedAt descending, fetchLimit 1, (c) build a single TimelineEntry from the fetched DailyMinute (or a placeholder entry with text 'No daily minute available' if none), (d) return Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(3600))). Use @MainActor on async paths if needed for ModelContext.",
+        "ACIMDailyMinuteWidget.swift's Widget body should compile against the new entry struct — leave the actual UI layout to stories 3.9b/c/d. For now, a placeholder body returning Text(entry.minuteText.prefix(60)) is acceptable since UI lands in the next 3 stories.",
+        "Verify zero residual references to old schema names: grep -rIn 'StoryEntry\\|FactItem\\|NewsItem\\|JTFStory' /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ — must be empty.",
+        "Run verification: ./build.sh > /tmp/full-build.log 2>&1. Then grep 'error:' /tmp/full-build.log | grep -E '(ACIMDailyMinuteWidget|WidgetExtension)' | wc -l — must equal 0. Watch errors still allowed in this story.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files must be empty.",
+        "Commit: ./bu.sh \"3.9a — Widget schema parity\". Mark passes:true and append progress log."
       ]
     },
     {
       "id": "ACIM-002",
       "priority": 2,
-      "passes": true,
-      "title": "3.8c — Onboarding gate via @AppStorage + first-launch presentation + lineage line",
-      "why": "OnboardingView has 156 lines of finished UI but nothing presents it. ContentView needs a first-launch gate. Also: the master plan said to 'verify' the lineage line but grep on 2026-04-14 found NO 'Sparkly Edition · Teddy Poppe · CIMS' line anywhere in OnboardingView — it must be added, not just verified.",
+      "passes": false,
+      "depends_on": ["ACIM-001"],
+      "title": "3.9b — Small widget family (today's minute excerpt + date)",
+      "why": "Smallest widget face. Single-line excerpt from today's DailyMinute + relative date (e.g., 'Today'). Tap deep-links to acimdailyminute://today which Phase 3.8d already routes to the Today tab.",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ContentView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/SmallWidgetView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift"
       ],
       "acceptanceCriteria": [
-        "Add to ContentView: @AppStorage('hasSeenOnboarding') private var hasSeenOnboarding = false. Place near the existing @State declarations.",
-        "Apply onboarding gate to the body. Use Binding(get: { !hasSeenOnboarding }, set: { _ in }) — NOT $hasSeenOnboarding-negated, because flipping the @AppStorage from inside the cover would race the dismiss animation (locked decision, master plan §Locked decisions item 3). On iOS use .fullScreenCover; on macOS use .sheet (no full-screen cover exists). Wrap with #if os(iOS) / #else / #endif. Place the modifier at the same level as the existing .sheet(isPresented: $showSettings).",
-        "OnboardingView already writes hasSeenOnboarding = true on the 'Get Started' tap (verified in OnboardingView.swift at line 36 for iOS, line 55 for macOS). Do NOT modify that write — only add the lineage line below.",
-        "Add a lineage line to OnboardingView. The cleanest location is below the dot indicators on iOS (or above the chevron row on macOS) so it appears persistently across all 5 pages. Render as: Text('Sparkly Edition · Teddy Poppe · CIMS').font(.caption).foregroundStyle(.secondary).padding(.bottom, 8). For iOS .page TabView this means restructuring slightly — wrap the existing TabView in a VStack and append the lineage Text below it with .padding(.bottom, 24). For macOS, append it inside the existing VStack(spacing: 0) just before the HStack(spacing: 16) chevron row.",
-        "Verify NO copy contains 'FIP' / 'Foundation for Inner Peace' / 'facts' / 'news' anywhere in OnboardingView (grep these literal strings — should be zero hits in the current file, but confirm post-edit).",
-        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0.",
-        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files must be empty.",
-        "Commit: ./bu.sh \"3.8c — Onboarding gate via @AppStorage + first-launch presentation\". Mark passes:true and append progress log."
+        "SmallWidgetView.swift: View struct that takes the WidgetStoryEntry and renders for systemSmall family. Layout: VStack(alignment: .leading, spacing: 4) { Text(relativeDateString).font(.caption2).foregroundStyle(.secondary); Text(entry.minuteText).font(.callout).lineLimit(4).truncationMode(.tail); Spacer(min: 0); if let n = entry.lessonNumber { Text(\"Lesson \\(n)\").font(.caption2).foregroundStyle(.tint) } }. Padding 12. Wrap with .containerBackground(.fill.tertiary, for: .widget).",
+        "Compute relativeDateString from entry.publishedAt: if Calendar.current.isDateInToday(date) → 'Today'; else if isDateInYesterday → 'Yesterday'; else date.formatted(.dateTime.month(.abbreviated).day()). If publishedAt nil, render 'No date'.",
+        "Add .widgetURL(URL(string: \"acimdailyminute://today\")!) to the view body so a tap routes to the Today tab via the existing Phase 3.8d DeepLinkRoute.parse path.",
+        "ACIMDailyMinuteWidget.swift: in the Widget body's switch on family, add `case .systemSmall: SmallWidgetView(entry: entry)`. Register .systemSmall in supportedFamilies if not already present.",
+        "Run verification: ./build.sh. Widget errorFilter (executionModel.errorFilterPhase39) must be 0. Watch errors still ignored.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.9b — Small widget family (today's minute + date)\". Mark passes:true."
       ]
     },
     {
       "id": "ACIM-003",
       "priority": 3,
-      "passes": true,
-      "title": "3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch",
-      "why": "ContentView.onOpenURL is currently `{ _ in }` — comment says deep links reactivate in 3.8. Need URL scheme in Info.plist, a parser, and dispatch to tab + path. Also fixes the BookmarkRow non-interactive state from 3.8a (this story does NOT add tap handlers to BookmarkRow — that's optional follow-up; row swipe-delete remains the only interaction in 3.8a, which is fine).",
+      "passes": false,
+      "depends_on": ["ACIM-001"],
+      "title": "3.9c — Medium widget family (minute + lesson number + CTA)",
+      "why": "Medium face has room for a one-line CTA below the minute excerpt. Layout uses HStack with vertical divider — minute on the left, lesson + CTA on the right.",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Info.plist",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Utilities/DeepLinkRoute.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ContentView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Lessons/LessonsView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Views/Archive/ArchiveView.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/MediumWidgetView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift"
       ],
       "acceptanceCriteria": [
-        "Edit Info.plist to add CFBundleURLTypes per master plan §3.8d (exact XML block in the master plan). One CFBundleURLSchemes entry: 'acimdailyminute'. CFBundleURLName: 'com.larryseyer.acimdailyminute.deeplink'. Verify with: plutil -p ACIMDailyMinute/Info.plist | grep -A 5 CFBundleURLTypes — should show the new array.",
-        "Create new file ACIMDailyMinute/Utilities/DeepLinkRoute.swift containing the exact code in master plan §3.8d (enum DeepLinkRoute with cases today/lesson(Int)/archive(Date)/saved + static parse(_:) + Notification.Name extension for .deepLinkLesson and .deepLinkArchive). Do not modify the parser logic; the master plan's regex/host/segments handling is intentional.",
-        "ContentView.onOpenURL: replace the empty `{ _ in }` body with the dispatch block per master plan §3.8d — switch on DeepLinkRoute.parse(url), set selectedTab to (0 today / 1 lesson / 3 archive / 4 saved), and for lesson/archive cases post a NotificationCenter.default notification on the next runloop tick (DispatchQueue.main.async) so the destination view's NavigationStack mounts before the path append.",
-        "LessonsView: add `.onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in ... }` to the NavigationStack root. Handler: guard let n = note.object as? Int, (1...365).contains(n) else { return }; path.append(n). Find the existing path NavigationPath via grep '@State.*path' or 'NavigationStack(path:'.",
-        "ArchiveView: same shape as LessonsView but for .deepLinkArchive — handler appends the date to the existing String-typed NavigationPath (Archive uses YYYY-MM-DD strings as path values per the existing .navigationDestination(for: String.self)). Convert the Date to its YYYY-MM-DD string via the same DateFormatter that ArchiveView already uses (locate via grep 'yyyy-MM-dd' in Archive/) — reuse it; do not re-define.",
-        "pbxproj: Add 4 entries for DeepLinkRoute.swift (fileRef=AA000002222 buildFile=AA000001224): PBXBuildFile near existing AA000001xxx Utilities entries; PBXFileReference near AA000002xxx Utilities entries; Utilities PBXGroup children — grep 'path = Utilities' to find; main target Sources phase entry.",
-        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0.",
-        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on the touched files must be empty.",
-        "Commit: ./bu.sh \"3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch\". Mark passes:true and append progress log."
+        "MediumWidgetView.swift: HStack(spacing: 12) { VStack(alignment: .leading, spacing: 4) { Text(relativeDateString).font(.caption2).foregroundStyle(.secondary); Text(entry.minuteText).font(.subheadline).lineLimit(5).truncationMode(.tail) }; Divider(); VStack(alignment: .leading, spacing: 6) { if let n = entry.lessonNumber { Text(\"Lesson\").font(.caption2).foregroundStyle(.secondary); Text(\"\\(n)\").font(.title2).fontWeight(.semibold) }; Spacer(min: 0); Text(\"Open today's minute\").font(.caption).foregroundStyle(.tint) } .frame(width: 100) }. Padding 12. .containerBackground(.fill.tertiary, for: .widget).",
+        "Reuse the relativeDateString helper from SmallWidgetView (extract to a private free function in the file or a small helper struct in the Widget target — do NOT cross the target boundary into the main app).",
+        ".widgetURL(URL(string: \"acimdailyminute://today\")!).",
+        "ACIMDailyMinuteWidget.swift: add `case .systemMedium: MediumWidgetView(entry: entry)` and ensure .systemMedium is in supportedFamilies.",
+        "Run ./build.sh. Widget errorFilter must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.9c — Medium widget family (minute + lesson + CTA)\". Mark passes:true."
       ]
     },
     {
       "id": "ACIM-004",
       "priority": 4,
-      "passes": true,
-      "title": "3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()",
-      "why": "GetTodaysFactsIntent.swift is misnamed (legacy placeholder term) and returns 'coming soon'. Siri Shortcuts must speak today's actual reading. Also locks Hard Rule: zero 'JTFNews' / 'facts' / 'news' refs anywhere in this app — the file rename closes the last residual.",
+      "passes": false,
+      "depends_on": ["ACIM-001"],
+      "title": "3.9d — Large widget family (full minute text + lesson + bookmark indicator)",
+      "why": "Largest widget face shows the full minute text (truncated only if necessary) and a small bookmark-status indicator if the user has bookmarked today's minute (lookup via the same Bookmark @Query the Saved tab uses — single-key check by 'minute:{segmentHash}').",
       "type": "code",
       "files": [
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Shortcuts/GetTodaysFactsIntent.swift",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Shortcuts/ACIMDailyMinuteShortcuts.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/LargeWidgetView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/WidgetStoryEntry.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteTimelineProvider.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift"
+      ],
+      "acceptanceCriteria": [
+        "Extend WidgetStoryEntry to include `isBookmarked: Bool` (default false). Update the timeline provider to populate it: after fetching the DailyMinute, run a second fetch FetchDescriptor<Bookmark> with predicate #Predicate { $0.itemKey == \"minute:\\(minute.segmentHash)\" }, fetchLimit 1; isBookmarked = !results.isEmpty.",
+        "LargeWidgetView.swift: VStack(alignment: .leading, spacing: 8) { HStack { Text(relativeDateString).font(.caption).foregroundStyle(.secondary); Spacer(); if entry.isBookmarked { Image(systemName: \"bookmark.fill\").foregroundStyle(.tint).font(.caption) } }; Text(entry.minuteText).font(.body).lineLimit(12).truncationMode(.tail); Spacer(min: 0); if let n = entry.lessonNumber { HStack { Image(systemName: \"book.closed\"); Text(\"Lesson \\(n)\") }.font(.caption).foregroundStyle(.tint) } }. Padding 16. .containerBackground(.fill.tertiary, for: .widget).",
+        ".widgetURL(URL(string: \"acimdailyminute://today\")!).",
+        "ACIMDailyMinuteWidget.swift: add `case .systemLarge: LargeWidgetView(entry: entry)` and ensure .systemLarge is in supportedFamilies.",
+        "Run ./build.sh. Widget errorFilter must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.9d — Large widget family (full text + bookmark indicator)\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-005",
+      "priority": 5,
+      "passes": false,
+      "depends_on": ["ACIM-001"],
+      "title": "3.9e — Live Activity UI (ActivityAttributes + Dynamic Island layouts)",
+      "why": "Lock Screen Live Activity for the Daily Minute. UI definitions only — no start/stop logic in this story. Start/stop wiring is deferred (NotificationManager already has a stub field 'notifyLiveActivities' UserDefaults key that would gate start; actual ActivityKit start is a Phase 5 polish item out of scope here).",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWidget/ACIMDailyMinuteLiveActivity.swift"
+      ],
+      "acceptanceCriteria": [
+        "Define struct ACIMDailyMinuteAttributes: ActivityAttributes with nested struct ContentState: Codable, Hashable containing: minuteText: String, lessonNumber: Int?, publishedAt: Date. Plus a static field on Attributes: name: String (e.g., 'Daily Minute').",
+        "Define struct ACIMDailyMinuteLiveActivity: Widget with body returning ActivityConfiguration(for: ACIMDailyMinuteAttributes.self). Three closures: lockScreen UI, dynamicIsland (with three regions: leading, trailing, center, bottom), and minimal/compact closures.",
+        "Lock Screen UI: VStack(alignment: .leading, spacing: 6) { HStack { Image(systemName: \"sun.max\"); Text(\"ACIM Daily Minute\").font(.caption).fontWeight(.semibold); Spacer(); if let n = state.lessonNumber { Text(\"Lesson \\(n)\").font(.caption).foregroundStyle(.tint) } }; Text(state.minuteText).font(.subheadline).lineLimit(4) }.padding().activityBackgroundTint(Color.clear).activitySystemActionForegroundColor(Color.primary).",
+        "Dynamic Island expanded: leading region shows Image(systemName: \"sun.max\") + 'ACIM' label; trailing region shows lesson number if available; center region empty; bottom region shows Text(state.minuteText).font(.callout).lineLimit(3). Compact leading: Image(systemName: \"sun.max\"). Compact trailing: lesson number text. Minimal: Image(systemName: \"sun.max\").",
+        "Register the Live Activity widget in the WidgetBundle. Find the @main WidgetBundle in ACIMDailyMinuteWidget.swift — append `ACIMDailyMinuteLiveActivity()` to its body alongside the existing widget.",
+        "Run ./build.sh. Widget errorFilter must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.9e — Live Activity UI (ActivityAttributes + Dynamic Island)\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-006",
+      "priority": 6,
+      "passes": false,
+      "depends_on": ["ACIM-001"],
+      "title": "3.10a — Watch schema parity + Today view",
+      "why": "ACIMDailyMinuteWatch target has the same pre-3.2 schema drift as the Widget target had. Repair it AND render today's DailyMinute in WatchContentView so the user sees real content on the wrist.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/WatchDataService.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/WatchContentView.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/WatchStoryRow.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/ACIMDailyMinuteWatchApp.swift"
+      ],
+      "acceptanceCriteria": [
+        "WatchDataService.swift: open ModelContainer with the same Schema and App Group identifier 'group.com.larryseyer.acimdailyminute' as the main app and Widget target. Expose `func fetchTodaysMinute() -> DailyMinute?` that runs FetchDescriptor<DailyMinute> sortBy publishedAt descending fetchLimit 1 and returns the first result. @MainActor on the function.",
+        "WatchContentView.swift: NavigationStack containing a List with one section. Section header 'Today'. List rows: (1) WatchStoryRow showing today's minute (text + lesson number); (2) future-proof: leave a 'No content yet' empty-state row for when fetchTodaysMinute() returns nil. Use @State var minute: DailyMinute? = nil and .task { minute = await WatchDataService.shared.fetchTodaysMinute() } on the body.",
+        "WatchStoryRow.swift: small View struct that takes a DailyMinute. VStack(alignment: .leading, spacing: 4) { if let n = minute.lessonNumber { Text(\"Lesson \\(n)\").font(.caption2).foregroundStyle(.tint) }; Text(minute.text).font(.footnote).lineLimit(6) }. No tap action in this story (deep-link to phone happens in 3.10c).",
+        "ACIMDailyMinuteWatchApp.swift: @main WindowGroup containing WatchContentView(). Ensure ModelContainer is set on the WindowGroup so SwiftData @Query works inside subviews if added later — use .modelContainer(WatchDataService.shared.container).",
+        "Verify zero residual old-schema names: grep -rIn 'StoryEntry\\|FactItem\\|NewsItem\\|JTFStory' /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/ — must be empty.",
+        "Run ./build.sh. Both errorFilterPhase39 (Widget=0) AND errorFilterPhase310 (Watch=0) must hold after this story.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.10a — Watch schema parity + Today view\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-007",
+      "priority": 7,
+      "passes": false,
+      "depends_on": ["ACIM-006"],
+      "title": "3.10b — Watch complications (circular, rectangular, inline)",
+      "why": "Three complication families so the user can pin the lesson number to their watch face. Uses WidgetKit-on-watchOS (the modern approach — ComplicationController is deprecated since watchOS 10).",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/ACIMDailyMinuteWatchWidget.swift",
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
       ],
       "acceptanceCriteria": [
-        "Rename file: git mv ACIMDailyMinute/Shortcuts/GetTodaysFactsIntent.swift ACIMDailyMinute/Shortcuts/GetTodaysReadingIntent.swift. Use git mv (not raw mv) so git tracks the rename.",
-        "Rewrite the renamed file: struct GetTodaysReadingIntent: AppIntent. title 'Get Today\\'s Reading'. perform() opens the shared ModelContainer (use ACIMDailyMinuteApp.sharedModelContainer if accessible, else build one with the same App Group identifier 'group.com.larryseyer.acimdailyminute' and the canonical Schema). FetchDescriptor<DailyMinute> sortBy publishedAt descending, fetchLimit = 1. If a minute exists, return .result(value: minute.text, dialog: IntentDialog(stringLiteral: \"Today's Daily Minute: \\(minute.text)\")). If none, return .result(dialog: 'No Daily Minute available yet today.'). Use @MainActor on perform if needed for ModelContext access.",
-        "Update ACIMDailyMinuteShortcuts.swift: change the AppShortcutsProvider provider's intent reference from GetTodaysFactsIntent() to GetTodaysReadingIntent(). Update phrases array to: [\"Today's Daily Minute from \\(.applicationName)\", \"What's today's reading from \\(.applicationName)\", \"Read today's lesson from \\(.applicationName)\"]. Update shortTitle: 'Today\\'s Reading'. systemImageName: 'sun.max' (or keep current if already 'sun.max').",
-        "pbxproj: update path attribute on existing AA000002057 PBXFileReference entry from `path = GetTodaysFactsIntent.swift;` to `path = GetTodaysReadingIntent.swift;`. Update the comment in the buildFile line `AA000001063 /* GetTodaysFactsIntent.swift in Sources */` to `AA000001063 /* GetTodaysReadingIntent.swift in Sources */` (and the matching PBXFileReference comment, and any Group children comment). Comments are cosmetic but git diff cleanliness expects them updated. The fileRef + buildFile UUIDs themselves do NOT change.",
-        "Verify zero residual mentions: grep -rIn 'GetTodaysFactsIntent\\|TodaysFacts' /Users/larryseyer/ACIMDailyMinuteApp/ — must be empty after rename + comment updates. Also grep -rIn 'JTFNews\\|facts' on the Shortcuts/ files — empty.",
-        "Run verification: xcodebuild per executionModel.verificationCommand. Error filter must be 0. App Intents register at first run; build success is sufficient for this story.",
-        "Commit: ./bu.sh \"3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()\". Mark passes:true and append progress log.",
-        "After this commit lands, all 4 stories are passes:true. Output the literal string <promise>COMPLETE</promise> in your final iteration response so run_ralph.sh exits cleanly. Phase 3.8.5 sim install + smoke checklist is NOT a Ralph story — Larry runs it manually on his iPad sim."
+        "ACIMDailyMinuteWatchWidget.swift: define WatchTimelineEntry (date + lessonNumber: Int? + firstPhraseSnippet: String?) and WatchTimelineProvider conforming to TimelineProvider — getTimeline opens WatchDataService.shared, fetches today's DailyMinute, builds one entry, returns Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(3600))).",
+        "Define struct ACIMDailyMinuteWatchWidget: Widget with body StaticConfiguration(kind: 'com.larryseyer.acimdailyminute.watch.complication', provider: WatchTimelineProvider()) { entry in ComplicationView(entry: entry) }.supportedFamilies([.accessoryCircular, .accessoryRectangular, .accessoryInline]).",
+        "Define ComplicationView that switches on @Environment(\\.widgetFamily): (1) .accessoryCircular: ZStack { AccessoryWidgetBackground(); VStack(spacing: 0) { Text(\"L\").font(.caption2); Text(entry.lessonNumber.map(String.init) ?? \"—\").font(.system(.title3, design: .rounded)).fontWeight(.semibold) } }; (2) .accessoryRectangular: VStack(alignment: .leading) { Text(\"ACIM\").font(.caption2).foregroundStyle(.tint); Text(entry.lessonNumber.map { \"Lesson \\($0)\" } ?? \"No lesson\").font(.headline); if let snippet = entry.firstPhraseSnippet { Text(snippet).font(.caption).lineLimit(2) } }; (3) .accessoryInline: Text(entry.lessonNumber.map { \"ACIM Lesson \\($0)\" } ?? \"ACIM\").",
+        "Register in @main WidgetBundle if a watch widget bundle exists; otherwise mark ACIMDailyMinuteWatchWidget itself with @main and Widget protocol — verify by reading the existing file, choose whichever is consistent.",
+        "pbxproj: confirm ACIMDailyMinuteWatchWidget.swift is in the Watch target's Sources phase. If not, add buildFile + fileRef using AA000001225 / AA000002225 (next free pair).",
+        "Run ./build.sh — both Widget AND Watch error filters must be 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.10b — Watch complications (circular, rectangular, inline)\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-008",
+      "priority": 8,
+      "passes": false,
+      "depends_on": ["ACIM-006"],
+      "title": "3.10c — Watch/phone WCSession one-way connectivity (phone → watch latest minute)",
+      "why": "Watch can read the App Group SwiftData store directly (3.10a established that), but App Group sync between phone and watch is not automatic across devices. Use WCSession to push the latest DailyMinute payload from phone to watch when the phone fetches a new one. One-way only in this story; two-way bookmark sync is out of scope.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/PhoneWatchSyncService.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/WatchDataService.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/App/ACIMDailyMinuteApp.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+      ],
+      "acceptanceCriteria": [
+        "Create new file ACIMDailyMinute/Services/PhoneWatchSyncService.swift containing: final class PhoneWatchSyncService: NSObject, WCSessionDelegate. Singleton .shared. init activates WCSession.default if WCSession.isSupported(). Expose `func sendLatestMinute(_ minute: DailyMinute)` that builds a [String: Any] payload [\"text\": minute.text, \"lessonNumber\": minute.lessonNumber as Any, \"publishedAt\": minute.publishedAt]. If WCSession.default.isReachable, call sendMessage(payload, replyHandler: nil); else call updateApplicationContext(payload) so it delivers on next wake. Implement required WCSessionDelegate stubs (activationDidComplete, sessionDidBecomeInactive, sessionDidDeactivate — last two iOS-only, gate with #if os(iOS)).",
+        "Hook PhoneWatchSyncService.shared into ACIMDailyMinuteApp.swift init() so the session activates at app launch. Then in the existing DataService.fetchTodaysMinute (or wherever a new DailyMinute is persisted — find via grep 'modelContext.insert' on DailyMinute), call PhoneWatchSyncService.shared.sendLatestMinute(minute) after the save. Wrap in #if os(iOS) since macOS doesn't have WCSession.",
+        "On the watch side: extend WatchDataService.swift with a paired NSObject WCSessionDelegate that activates WCSession on init. Implement session(_:didReceiveMessage:) and session(_:didReceiveApplicationContext:) — both decode the payload and write a DailyMinute into the Watch ModelContext (upsert by publishedAt match — if a minute with that publishedAt already exists, skip; else insert).",
+        "pbxproj: add buildFile AA000001226 / fileRef AA000002226 for PhoneWatchSyncService.swift in the main app target's Services group + Sources phase. WatchDataService.swift edits don't need new pbxproj entries (file already a member).",
+        "Run ./build.sh — Widget=0, Watch=0 error filters both clean. Note: WCSession behavior at runtime is NOT verified in this story; build success is sufficient. Larry runs paired-device test manually after the loop.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"3.10c — Watch/phone WCSession one-way sync\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-009",
+      "priority": 9,
+      "passes": false,
+      "depends_on": ["ACIM-005", "ACIM-008"],
+      "title": "4.0 — Feature parity verification + PARITY.md artifact",
+      "why": "Single sweep against the end-state checklist. Produces a pass/fail table at repo root. Forces an honest accounting before branding work. If any gap surfaces, this story BLOCKS with a `blocked: \"<gap description>\"` annotation and Larry decides whether to add a follow-up story or accept the gap.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/PARITY.md"
+      ],
+      "acceptanceCriteria": [
+        "Create new file PARITY.md at repo root. Header: '# ACIM Daily Minute — Feature Parity Verification\\nDate: <YYYY-MM-DD>\\nBranch: ralph/acim-3.9-to-5-finish-2026-04-14\\nVerified at commit: <git rev-parse HEAD>'.",
+        "Body: a single Markdown table with columns | Surface | Required | Current state | Pass/Fail | Evidence (file:line or commit hash) |. Rows: Today tab, Lessons tab (incl. search + Jump-to-N), Listen tab (podcast feed + YouTube embed + MiniPlayer), Archive tab (calendar + search + per-date detail), Saved tab (BookmarkRow + swipe-delete), Settings (notifications + reminder + phrases editor + replay onboarding + About), Onboarding (5-page intro + lineage line), Deep links (4 routes: today / lesson/N / archive/YYYY-MM-DD / saved), Shortcut (GetTodaysReadingIntent), Widget Small / Medium / Large, Live Activity UI, Watch Today view, Watch complications × 3, Watch/phone sync (one-way), App icon set, Launch screen, Accent color, ACIMChime.caf custom sound wired, App Store metadata artifact.",
+        "For each row, fill in actual evidence from the codebase: e.g., `Lessons tab — Required: spine + detail + search + Jump-to-N — Current: present per LessonsView.swift, LessonDetailView.swift, JumpToLessonSheet.swift — Pass — commit de318fa`. Run greps and reads as needed; do NOT trust prior docs.",
+        "If any row is Fail: append a section '## Gaps requiring follow-up' listing each gap with a proposed story-id placeholder (e.g., 'ACIM-010-extra'). Set this story's passes to false with `blocked: \"<gap summary>\"` annotation in prd.json instead of true. Larry resolves by either accepting the gap (manually marking pass) or appending follow-up stories.",
+        "If all rows Pass: set passes:true and proceed to ACIM-010.",
+        "No code changes in this story — PARITY.md is the only artifact written. Run ./build.sh anyway as a sanity check; full build must exit 0 (per executionModel.errorFilterPhase4).",
+        "grep -rIn 'JTFNews' PARITY.md must be empty (zero JTFNews mentions even in evidence quotes).",
+        "Commit: ./bu.sh \"4.0 — Feature parity verification + PARITY.md\". Mark passes:true (or passes:false with blocked annotation)."
+      ]
+    },
+    {
+      "id": "ACIM-010",
+      "priority": 10,
+      "passes": false,
+      "depends_on": ["ACIM-009"],
+      "title": "5a — App icon set (1024×1024 master + all required iOS/watchOS sizes)",
+      "why": "AppIcon.appiconset directory exists per 2026-04-14 inspection but contains placeholder tiles. Need real Sparkly Edition branding artwork. This story BLOCKS if the 1024×1024 master is not on disk — it does not generate placeholder art.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/Contents.json",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/"
+      ],
+      "acceptanceCriteria": [
+        "Pre-flight check: ls /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png OR equivalent 1024×1024 source. If missing, this story BLOCKS — set passes:false with `blocked: \"Phase 5a — no 1024×1024 icon master found at AppIcon.appiconset/. Larry must drop a master png before this story runs.\"`. Per rules.noPlaceholderAssets — do NOT generate placeholder art.",
+        "If master exists: use sips (built-in macOS tool) to derive the standard sizes. Required iOS sizes (per Xcode 16 single-tile-per-idiom): 1024×1024 (App Store marketing). For watchOS (Watch target): 1024×1024 marketing icon under the Watch target's Assets.xcassets if present.",
+        "Update AppIcon.appiconset/Contents.json to reference the 1024×1024 file under the 'idiom: universal, platform: ios, size: 1024x1024' slot (Xcode 14+ single-size convention). Verify the JSON is valid: python3 -c \"import json; json.load(open('AppIcon.appiconset/Contents.json'))\".",
+        "If watchOS icon is also being shipped this story (combined): same JSON shape under ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/. Otherwise defer to a 5a-watch follow-up.",
+        "Run ./build.sh — full exit 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"5a — App icon set (1024×1024 master)\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-011",
+      "priority": 11,
+      "passes": false,
+      "depends_on": ["ACIM-009"],
+      "title": "5b — Launch screen + accent color polish",
+      "why": "AccentColor.colorset exists per 2026-04-14 inspection but is at default blue. Set Sparkly Edition tint. Add a SwiftUI launch screen via Info.plist UILaunchScreen dict (Xcode 14+ approach — no storyboard needed).",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AccentColor.colorset/Contents.json",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Info.plist"
+      ],
+      "acceptanceCriteria": [
+        "Edit AccentColor.colorset/Contents.json: replace the default blue with a chosen Sparkly Edition tint. Default proposed: warm gold #C9A961 (RGB 0.788, 0.663, 0.380, alpha 1.0) for both light and dark appearance. Use float-0-to-1 components in the JSON `color.components` block.",
+        "Edit Info.plist to add UILaunchScreen dict: <key>UILaunchScreen</key><dict><key>UIColorName</key><string>AccentColor</string><key>UIImageName</key><string>AppIcon</string></dict>. This produces a tinted background with the app icon centered — the simplest valid SwiftUI-era launch screen. Verify with plutil -p Info.plist | grep -A 4 UILaunchScreen.",
+        "Run ./build.sh — full exit 0. Visual verification of launch screen requires sim install (Larry's job).",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"5b — Launch screen + accent color polish\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-012",
+      "priority": 12,
+      "passes": false,
+      "depends_on": ["ACIM-009"],
+      "title": "5c — ACIMChime.caf custom notification sound wiring",
+      "why": "ACIMChime.caf already exists at ACIMDailyMinute/Resources/ACIMChime.caf per 2026-04-14 inspection. UserDefaults key 'useCustomNotificationSound' is registered but NotificationManager always uses .default. Wire the toggle.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Services/NotificationManager.swift",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute.xcodeproj/project.pbxproj"
+      ],
+      "acceptanceCriteria": [
+        "Verify pbxproj membership: grep 'ACIMChime.caf' ACIMDailyMinute.xcodeproj/project.pbxproj. If absent, add a PBXBuildFile + PBXFileReference (use buildFile AA000001227 / fileRef AA000002227) and add to the main app target's Resources phase (NOT Sources). Group: Resources PBXGroup if present, else direct child of the main group. Verify with: plutil -p build/Build/Products/Debug-iphonesimulator/ACIMDailyMinute.app/Info.plist after a build, then ls build/.../ACIMDailyMinute.app/ACIMChime.caf — the file should land in the app bundle root.",
+        "Edit NotificationManager.swift: locate the UNMutableNotificationContent construction sites (likely in scheduleDailyReminder, fireTest, and any phrase-match notification path — grep for 'UNMutableNotificationContent'). Add a private helper: `private func preferredSound() -> UNNotificationSound { let useCustom = UserDefaults.standard.bool(forKey: \"useCustomNotificationSound\"); return useCustom ? UNNotificationSound(named: UNNotificationSoundName(\"ACIMChime.caf\")) : .default }`. Replace existing `.sound = .default` and any direct UNNotificationSound construction with `.sound = preferredSound()`.",
+        "Verify UserDefaults default for 'useCustomNotificationSound' is registered in ACIMDailyMinuteApp.swift — grep 'useCustomNotificationSound' on the App file. If missing, add to the existing register(defaults:) call with default value `true` (custom sound on by default — it's the whole point of shipping it).",
+        "Run ./build.sh — full exit 0.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
+        "Commit: ./bu.sh \"5c — ACIMChime.caf custom notification sound wiring\". Mark passes:true."
+      ]
+    },
+    {
+      "id": "ACIM-013",
+      "priority": 13,
+      "passes": false,
+      "depends_on": ["ACIM-010", "ACIM-011", "ACIM-012"],
+      "title": "5d — App Store metadata dry-run (APP_STORE_LISTING.md artifact)",
+      "why": "Final story. Produces a markdown artifact with the exact title / subtitle / description / keywords / screenshot spec Larry will paste into App Store Connect. No submission, no asset upload — just the text artifact so Larry has everything in one place.",
+      "type": "code",
+      "files": [
+        "/Users/larryseyer/ACIMDailyMinuteApp/APP_STORE_LISTING.md"
+      ],
+      "acceptanceCriteria": [
+        "Create new file APP_STORE_LISTING.md at repo root with these sections (filled in with concrete proposed copy, NOT placeholders):",
+        "## App name (max 30 chars) — proposed: 'ACIM Daily Minute'",
+        "## Subtitle (max 30 chars) — proposed: 'A Course in Miracles, daily'",
+        "## Promotional text (max 170 chars) — proposed: a 1-2 sentence Sparkly Edition framing focusing on the daily minute as a contemplative practice. No FIP / Foundation for Inner Peace references.",
+        "## Description (max 4000 chars) — 4-6 paragraphs covering: what the app delivers (daily minute + 365 lessons + archive + saved + settings + reminders + widgets + watch); the Sparkly Edition / Teddy Poppe / CIMS lineage framing (mandatory); features list; privacy posture (no tracking, no ads, no account required — verify against current Info.plist before claiming).",
+        "## Keywords (max 100 chars, comma-separated) — proposed: 'ACIM, A Course in Miracles, daily, lesson, meditation, contemplation, spiritual, mindfulness'",
+        "## Support URL — placeholder per https://www.acimdailyminute.org/support (Larry confirms)",
+        "## Marketing URL — https://www.acimdailyminute.org/",
+        "## Screenshots required — table listing required screen sizes per Apple's 2026 spec: 6.7-inch iPhone, 5.5-inch iPhone (legacy if still required), 12.9-inch iPad Pro, Apple Watch. For each: 3-5 proposed screenshot scenes with caption ideas (Today tab, Lessons spine, Lesson detail, Archive calendar, Settings) — but DO NOT generate actual screenshots in this story; that's a manual step for Larry.",
+        "## Age rating questionnaire — proposed answers: no objectionable content; suitable for 4+.",
+        "## Privacy nutrition label — proposed: no data collected, no data linked to user, no tracking. Verify against current Info.plist + any analytics SDKs (none expected per scopeFence).",
+        "Verify zero JTFNews / FIP / Foundation for Inner Peace references: grep -i 'jtfnews\\|FIP\\|foundation for inner peace' APP_STORE_LISTING.md — must be empty.",
+        "Run ./build.sh — full exit 0 (per executionModel.errorFilterPhase4). This is the final gate.",
+        "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK' APP_STORE_LISTING.md must be empty (the file must be ship-ready, not a draft with TODOs).",
+        "Commit: ./bu.sh \"5d — App Store metadata dry-run\". Mark passes:true.",
+        "After commit lands AND ./build.sh exits 0: emit the literal string <promise>COMPLETE</promise> so run_ralph.sh exits cleanly. The app is now feature-complete; remaining work is App Store Connect submission + paid-account TestFlight + actual screenshot capture, all of which Larry handles outside Ralph."
       ]
     }
   ]
