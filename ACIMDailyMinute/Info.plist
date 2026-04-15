@@ -19,5 +19,12 @@
 	<array>
 		<string>fetch</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>AccentColor</string>
+		<key>UIImageName</key>
+		<string>AppIcon</string>
+	</dict>
 </dict>
 </plist>

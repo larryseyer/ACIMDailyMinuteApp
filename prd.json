@@ -237,7 +237,7 @@
     {
       "id": "ACIM-010",
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-009"],
       "title": "5a — App icon set (install pre-staged Apple iconset + watchOS icon)",
       "why": "Larry pre-staged a complete Apple iconset on 2026-04-14 at /Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/ (10 PNGs sized 16/32/64/128/256/512/1024 including @2x retina) plus assets/ACIM.iconset/ (macOS iconutil format, identical sizes) plus assets/ACIM.icns (compiled macOS .icns). The 1024×1024 master is the file named icon_512x512@2x.png inside either iconset folder. Story copies the staged set into the live asset catalogs (main app + Watch target). NO source-asset blocking — assets verified present.",
