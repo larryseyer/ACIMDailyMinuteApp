@@ -204,3 +204,12 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/Contents.json` — updated to reference `AppIcon-1024.png` under watchOS universal 1024x1024
 - **Build verification:** iOS build exit=0. watchOS build exit=0. Zero actool asset compiler errors. Zero non-signing code errors. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008/009).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-011 — 5b — Launch screen + accent color polish
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinute/Assets.xcassets/AccentColor.colorset/Contents.json` — set warm gold #C9A961 (RGB 0.788, 0.663, 0.380) for both light and dark appearances; was previously unset (no color defined)
+  - `ACIMDailyMinute/Info.plist` — added UILaunchScreen dict with UIColorName=AccentColor and UIImageName=AppIcon (SwiftUI-era launch screen, no storyboard)
+- **Build verification:** iOS build exit=0. watchOS build exit=0. Zero non-signing code errors. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008/009/010).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.

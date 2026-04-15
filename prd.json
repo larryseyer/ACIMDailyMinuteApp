@@ -261,7 +261,7 @@
     {
       "id": "ACIM-011",
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-009"],
       "title": "5b — Launch screen + accent color polish",
       "why": "AccentColor.colorset exists per 2026-04-14 inspection but is at default blue. Set Sparkly Edition tint. Add a SwiftUI launch screen via Info.plist UILaunchScreen dict (Xcode 14+ approach — no storyboard needed).",
