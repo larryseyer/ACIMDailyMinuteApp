@@ -78,6 +78,8 @@
 		AA000001076 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002064 /* Assets.xcassets */; };
 		AA000001078 /* WatchDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002065 /* WatchDataService.swift */; };
 		AA000001079 /* ACIMChime.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA000002066 /* ACIMChime.caf */; };
+		AA000001300 /* Workbook365.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002300 /* Workbook365.json */; };
+		AA000001301 /* WorkbookCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002301 /* WorkbookCatalog.swift */; };
 		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
 		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
 		AA000001082 /* MacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* MacCalendarView.swift */; };
@@ -179,6 +181,8 @@
 		AA000002064 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002065 /* WatchDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDataService.swift; sourceTree = "<group>"; };
 		AA000002066 /* ACIMChime.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = ACIMChime.caf; sourceTree = "<group>"; };
+		AA000002300 /* Workbook365.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365.json; sourceTree = "<group>"; };
+		AA000002301 /* WorkbookCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookCatalog.swift; sourceTree = "<group>"; };
 		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
 		AA000002069 /* MacCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalendarView.swift; sourceTree = "<group>"; };
@@ -288,6 +292,7 @@
 				AA000002204 /* PhraseMatcher.swift */,
 				AA000002055 /* LiveActivityManager.swift */,
 				AA000002226 /* PhoneWatchSyncService.swift */,
+				AA000002301 /* WorkbookCatalog.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -425,6 +430,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000002066 /* ACIMChime.caf */,
+				AA000002300 /* Workbook365.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -555,6 +561,7 @@
 			files = (
 				AA000001011 /* Assets.xcassets in Resources */,
 				AA000001079 /* ACIMChime.caf in Resources */,
+				AA000001300 /* Workbook365.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,6 +642,7 @@
 				AA000001205 /* PhraseStorage.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,
 				AA000001226 /* PhoneWatchSyncService.swift in Sources */,
+				AA000001301 /* WorkbookCatalog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

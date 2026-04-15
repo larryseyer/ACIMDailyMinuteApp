@@ -42,18 +42,23 @@ struct LessonRow: View {
             .accessibilityLabel("Lesson \(lessonNumber)")
     }
 
+    private var resolvedTitle: String? {
+        if let title = meta?.title, !title.isEmpty { return title }
+        return WorkbookCatalog.title(for: lessonNumber)
+    }
+
     @ViewBuilder
     private var titleColumn: some View {
         VStack(alignment: .leading, spacing: 2) {
-            if let title = meta?.title, !title.isEmpty {
+            if let title = resolvedTitle {
                 Text(title)
-                    .font(.custom("Georgia", size: 15))
+                    .font(.system(.subheadline, design: .serif))
                     .foregroundStyle(.primary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("Not yet read")
-                    .font(.custom("Georgia", size: 15).italic())
+                    .font(.system(.subheadline, design: .serif).italic())
                     .foregroundStyle(.secondary)
             }
 
