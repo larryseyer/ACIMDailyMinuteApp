@@ -2,12 +2,13 @@
 import ActivityKit
 import Foundation
 
-struct ACIMActivityAttributes: ActivityAttributes {
+struct ACIMDailyMinuteAttributes: ActivityAttributes {
+    static let name: String = "Daily Minute"
+
     struct ContentState: Codable, Hashable {
-        var channel: String
-        var latestText: String
-        var publishedDate: Date
+        var minuteText: String
         var lessonNumber: Int?
+        var publishedAt: Date
     }
 }
 #endif
