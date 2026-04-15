@@ -24,22 +24,28 @@ struct OnboardingView: View {
             Color.black.ignoresSafeArea()
 
             #if os(iOS)
-            // iOS: native paged swipe.
-            TabView(selection: $currentPage) {
-                ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
-                    OnboardingPage(
-                        systemImage: page.systemImage,
-                        title: page.title,
-                        description: page.description,
-                        showButton: index == pages.count - 1
-                    ) {
-                        hasSeenOnboarding = true
+            VStack(spacing: 0) {
+                TabView(selection: $currentPage) {
+                    ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
+                        OnboardingPage(
+                            systemImage: page.systemImage,
+                            title: page.title,
+                            description: page.description,
+                            showButton: index == pages.count - 1
+                        ) {
+                            hasSeenOnboarding = true
+                        }
+                        .tag(index)
                     }
-                    .tag(index)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
+
+                Text("Sparkly Edition · Teddy Poppe · CIMS")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 24)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
             #else
             // macOS: no page-style TabView exists in plain SwiftUI, so
             // render one page at a time with a dot indicator and a
@@ -57,6 +63,11 @@ struct OnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .id(currentPage)
                 .transition(.opacity)
+
+                Text("Sparkly Edition · Teddy Poppe · CIMS")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 8)
 
                 HStack(spacing: 16) {
                     Button {

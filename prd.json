@@ -26,7 +26,7 @@
     {
       "id": "ACIM-001",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "title": "3.8b — Settings: notifications + reminder + phrases editor + replay onboarding",
       "why": "Settings tab is currently a 27-line ContentUnavailableView stub. First-install users need notification opt-in, phrase watchlist editing, and a replay-onboarding escape hatch. This is the largest chunk — touches 5 files plus pbxproj.",
       "type": "code",

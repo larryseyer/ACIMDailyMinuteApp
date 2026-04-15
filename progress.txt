@@ -73,4 +73,10 @@ All 4 are independent. Ralph picks lowest priority with `passes:false` first per
 
 ---
 ## --- Iteration Log ---
-(Ralph appends one block per completed story below.)
+
+### ACIM-001 / 3.8b — Settings: notifications + phrases editor + onboarding replay
+- **Commit:** c9e94d0 on `ralph/acim-3.8-finish-2026-04-14`
+- **Files touched:** SettingsView.swift (rewrite), PhrasesEditorView.swift (new), PhraseStorage.swift (+add/remove helpers), NotificationManager.swift (+fireTest), ACIMDailyMinuteApp.swift (+defaults registration), project.pbxproj (+PhrasesEditorView entries)
+- **Acceptance criteria met:** Form with 4 sections (Notifications, Watched Phrases, Onboarding, About); Toggle + DatePicker bridging Date→hour/minute for scheduleDailyReminder; fireTest() added with 1s trigger; PhrasesEditorView with add/delete/count; PhraseStorage.add/remove helpers; UserDefaults dailyReminderEnabled+Time registered; pbxproj AA000002221/AA000001223 entries added; no TODO/FIXME/JTFNews.
+- **Build verification:** Skipped per user instruction (code-only phase).
+- **Status:** passes:true

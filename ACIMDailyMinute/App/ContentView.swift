@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var connectivity = ConnectivityManager()
     @State private var selectedTab = 0
     @State private var showSettings = false
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     #if os(macOS)
     @State private var showAbout = false
     #endif
@@ -34,6 +35,15 @@ struct ContentView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
+            #if os(iOS)
+            .fullScreenCover(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
+                OnboardingView()
+            }
+            #else
+            .sheet(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
+                OnboardingView()
+            }
+            #endif
             #if os(macOS)
             .onReceive(NotificationCenter.default.publisher(for: .openAboutRequested)) { _ in
                 showAbout = true
