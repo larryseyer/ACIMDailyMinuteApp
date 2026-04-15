@@ -105,7 +105,7 @@
     {
       "id": "ACIM-104",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bug 2 — Listen Minute sub-tab renders full historical Daily Minute list in descending order",
       "why": "Screenshot 'Daily Minute list should list other minutes below decending.png' shows the Listen tab Minute sub-tab containing only one row: 'Daily Minute — April 14, 2026'. There should be additional rows below for prior daily minutes, sorted newest-first. The CachedPodcastEpisode SwiftData @Query in ListenView is correctly filtered to channel == \"minute\" and sorted by publishedAt descending, so the data-binding side is right; the bug is that PodcastService.fetchMinuteEpisodes() either is not being called on view appearance or the parser is dropping items. The XML feed at https://www.acimdailyminute.org/podcast-minute.xml is the source of truth — every <item> must be parsed and persisted.",
