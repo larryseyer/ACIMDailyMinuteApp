@@ -6,24 +6,15 @@ import SwiftData
 /// Two independently-fetched podcast feeds (Daily Minute + Daily Lesson)
 /// surface as a segmented picker above a newest-first episode list. Tapping
 /// a row hands the URL to the root `AudioManager`, which drives the
-/// reserved MiniPlayer overlay in `ContentView`. When today's Daily Minute
-/// carries a `youtubeURL`, the feed is topped by an inline 16:9 embed so
-/// the video and audio surfaces live side by side instead of behind
-/// separate tabs.
-///
-/// The view deliberately holds episodes in `@State` rather than SwiftData:
-/// podcast feeds are a discovery surface, not persisted content, and
-/// `URLSession` already caches the XML against the publisher's
-/// `Cache-Control: max-age=600`. Pull-to-refresh bypasses that cache via
-/// `PodcastService.fetch(force: true)`.
+/// reserved MiniPlayer overlay in `ContentView`. A 16:9 YouTube playlist
+/// embed at the top switches between the Daily Minute and Daily Lesson
+/// playlists based on the selected feed. The Lessons playlist remembers
+/// the last-watched lesson index across launches via `@AppStorage`.
 struct ListenView: View {
     @Environment(AudioManager.self) private var audio
     @Environment(ConnectivityManager.self) private var connectivity
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var modelContext
-
-    @Query(sort: \DailyMinute.publishedAt, order: .reverse)
-    private var minutes: [DailyMinute]
 
     @Query(
         filter: #Predicate<CachedPodcastEpisode> { $0.channel == "minute" },
@@ -43,6 +34,11 @@ struct ListenView: View {
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
 
+    @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
+
+    private let dailyMinutePlaylistID = "PLP1KDMu51tB7o5hMs2ck69gZZidrg-ltD"
+    private let dailyLessonPlaylistID = "PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS"
+
     private let service = PodcastService()
 
     private var currentEpisodes: [PodcastEpisode] {
@@ -50,19 +46,22 @@ struct ListenView: View {
         return source.map { $0.asEpisode() }
     }
 
-    private var todaysYouTubeURL: String? {
-        guard let first = minutes.first,
-              let url = first.youtubeURL,
-              !url.isEmpty else { return nil }
-        return url
+    private var embedURL: URL? {
+        switch selectedFeed {
+        case .minute:
+            return URL(string: "https://www.youtube.com/embed/videoseries?list=\(dailyMinutePlaylistID)")
+        case .lesson:
+            return URL(string: "https://www.youtube.com/embed/videoseries?list=\(dailyLessonPlaylistID)&index=\(lessonsLastWatchedIndex)")
+        }
     }
 
     var body: some View {
         NavigationStack {
             List {
-                if let youtube = todaysYouTubeURL {
+                if let url = embedURL {
                     Section {
-                        youtubeCard(url: youtube)
+                        youtubeCard(url: url.absoluteString)
+                            .id(url)
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
@@ -98,7 +97,7 @@ struct ListenView: View {
 
     private func youtubeCard(url: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Today's Minute — Video")
+            Text(selectedFeed == .minute ? "Daily Minute Playlist" : "Daily Lessons Playlist")
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
                 .foregroundStyle(.secondary)
@@ -162,11 +161,16 @@ struct ListenView: View {
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             } else {
-                ForEach(list) { episode in
+                ForEach(Array(list.enumerated()), id: \.element.id) { offset, episode in
                     PodcastEpisodeRow(
                         episode: episode,
                         isPlaying: isCurrentlyPlaying(episode),
-                        onTap: { play(episode) }
+                        onTap: {
+                            if selectedFeed == .lesson {
+                                lessonsLastWatchedIndex = list.count - offset
+                            }
+                            play(episode)
+                        }
                     )
                     .listRowSeparator(.visible)
                 }

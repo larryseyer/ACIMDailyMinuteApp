@@ -52,7 +52,7 @@
     {
       "id": "ACIM-102",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bug 3 — Replace Georgia with system serif font + fix AudioManager session activation and error surfacing",
       "why": "Screenshot 'Formatting is wrong for Lessons - also font looks weird - wrong font? Listen button does not play audio.png' shows two distinct defects on the Today screen. (1) Lesson body text uses .font(.custom(\"Georgia\", size: 18)) which renders inconsistently because Georgia is not registered in Info.plist UIAppFonts and the .custom() lookup is fragile. (2) Tapping the Listen button produces no audio because AudioManager.play() never activates AVAudioSession with .playback category — iOS 18 silently no-ops AVPlayer.play() in that state — and there is no KVO observation on AVPlayerItem.status, so URL load failures are invisible. Both defects ship together because they live on the same screen and the user reported them as one bug.",

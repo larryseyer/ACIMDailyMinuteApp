@@ -11,3 +11,10 @@ Started: Tue Apr 14 23:46:29 CDT 2026
 - **Files edited:** LessonRow.swift (3-tier fallback: meta?.title → WorkbookCatalog → "Not yet read"; Georgia font → system serif), LessonsView.swift (release-cadence header card at top of list showing lesson N of 365 + relative published date + "After Lesson 365, the Text begins."), project.pbxproj (added both new files to targets), build.sh (macOS Debug signing bypass for compile-only verification)
 - **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
 - **Verification:** All 6 PRD spot-check anchors pass (lessons 1, 2, 3, 7, 10, 365). No TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-102 — System serif font + AudioManager session activation and error surfacing
+- **Status:** PASS
+- **Commit:** 382e765
+- **Files edited:** DailyMinuteCard.swift (Georgia → system serif), DailyLessonCard.swift (Georgia → system serif for title + body, added lastError display), LessonDetailView.swift (Georgia → system serif for title + body in Full + MetadataOnly states), AudioManager.swift (added lastError property, KVO statusObservation, AVAudioSession .playback/.spokenAudio activation with error surfacing, removed old configureAudioSession), PodcastEpisodeRow.swift (Georgia → system serif), ArchivedReadingCard.swift (Georgia → system serif for minute body + lesson title, updated doc comment)
+- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
+- **Verification:** grep Georgia returns 0 matches across ACIMDailyMinute/. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
