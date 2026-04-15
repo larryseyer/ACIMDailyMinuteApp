@@ -113,3 +113,12 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — description text updated
 - **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched.
 - **Old schema names:** zero StoryEntry/FactItem/NewsItem/JTFStory/JTFNews references in Widget target (WidgetStoryEntry name retained per AC — grep false positive only).
+
+### ACIM-002 — 3.9b — Small widget family (today's minute + date)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWidget/SmallWidgetView.swift` — full layout: VStack with relative date string (Today/Yesterday/formatted), minute text (callout, 4-line limit), lesson number badge; .widgetURL deep link to acimdailyminute://today; .containerBackground(.fill.tertiary)
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — removed outer .containerBackground(Color(white: 0.1)) from WidgetEntryView so per-view backgrounds take effect; .systemSmall routing and supportedFamilies already present from 3.9a
+- **Build verification:** Widget errorFilter = 0. Watch errors still allowed (pre-3.10a).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.

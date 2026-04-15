@@ -53,7 +53,7 @@
     {
       "id": "ACIM-002",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-001"],
       "title": "3.9b — Small widget family (today's minute excerpt + date)",
       "why": "Smallest widget face. Single-line excerpt from today's DailyMinute + relative date (e.g., 'Today'). Tap deep-links to acimdailyminute://today which Phase 3.8d already routes to the Today tab.",
