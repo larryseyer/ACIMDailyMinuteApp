@@ -10,7 +10,7 @@ struct ACIMDailyMinuteWidget: Widget {
                 .containerBackground(Color(white: 0.1), for: .widget)
         }
         .configurationDisplayName("ACIM Daily Minute")
-        .description("Today's verified facts at a glance.")
+        .description("Today's daily minute at a glance.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

@@ -11,60 +11,40 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
             completion(.placeholder)
             return
         }
-        completion(fetchEntry(limit: storyLimit(for: context.family)))
+        completion(fetchEntry())
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<WidgetStoryEntry>) -> Void) {
-        let entry = fetchEntry(limit: storyLimit(for: context.family))
-        let refreshDate = Calendar.current.date(byAdding: .minute, value: 15, to: .now)!
-        let timeline = Timeline(entries: [entry], policy: .after(refreshDate))
+        let entry = fetchEntry()
+        let timeline = Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(3600)))
         completion(timeline)
     }
 
-    private func storyLimit(for family: WidgetFamily) -> Int {
-        switch family {
-        case .systemSmall: return 1
-        case .systemMedium: return 3
-        case .systemLarge: return 5
-        default: return 3
-        }
-    }
-
-    private func fetchEntry(limit: Int) -> WidgetStoryEntry {
+    private func fetchEntry() -> WidgetStoryEntry {
         do {
-            let container = try SharedModelContainer.createReadOnly()
+            let container = SharedModelContainer.shared
             let context = ModelContext(container)
 
-            var storyDescriptor = FetchDescriptor<Story>(
+            var minuteDescriptor = FetchDescriptor<DailyMinute>(
                 sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
             )
-            storyDescriptor.fetchLimit = limit
-            let stories = try context.fetch(storyDescriptor)
+            minuteDescriptor.fetchLimit = 1
+            let minutes = try context.fetch(minuteDescriptor)
 
-            guard !stories.isEmpty else { return .empty }
+            guard let minute = minutes.first else { return .empty }
 
-            let sourceDescriptor = FetchDescriptor<Source>()
-            let allSources = try context.fetch(sourceDescriptor)
-            let sourceMap = Dictionary(uniqueKeysWithValues: allSources.map { ($0.name, $0.accuracy) })
+            var lessonDescriptor = FetchDescriptor<DailyLesson>(
+                sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+            )
+            lessonDescriptor.fetchLimit = 1
+            let lessons = try context.fetch(lessonDescriptor)
 
-            let widgetStories = stories.map { story in
-                let sourceNames = story.sourceDisplay
-                    .split(separator: ",")
-                    .map { $0.trimmingCharacters(in: .whitespaces) }
-
-                let ratings = sourceNames.compactMap { name in
-                    sourceMap[name].map { (name: name, accuracy: $0) }
-                }
-
-                return WidgetStory(
-                    id: story.id,
-                    fact: story.fact,
-                    sourceDisplay: story.sourceDisplay,
-                    sourceRatings: ratings
-                )
-            }
-
-            return WidgetStoryEntry(date: .now, stories: widgetStories)
+            return WidgetStoryEntry(
+                date: .now,
+                minuteText: minute.text,
+                lessonNumber: lessons.first?.lessonNumber,
+                publishedAt: minute.publishedAt
+            )
         } catch {
             return .empty
         }

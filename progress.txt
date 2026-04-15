@@ -99,4 +99,17 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
 ---
 ## --- Iteration Log ---
 
-(empty — no iterations have run on this PRD pair yet)
+### ACIM-001 — 3.9a — Widget schema parity
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWidget/WidgetStoryEntry.swift` — replaced WidgetStory/stories array with flat entry: minuteText, lessonNumber, publishedAt
+  - `ACIMDailyMinuteWidget/SharedModelContainer.swift` — replaced createReadOnly() with static shared ModelContainer singleton
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteTimelineProvider.swift` — rewrote to fetch DailyMinute + DailyLesson via SwiftData instead of dead Story/Source types
+  - `ACIMDailyMinuteWidget/SmallWidgetView.swift` — placeholder (3.9b builds real UI)
+  - `ACIMDailyMinuteWidget/MediumWidgetView.swift` — placeholder (3.9c builds real UI)
+  - `ACIMDailyMinuteWidget/LargeWidgetView.swift` — placeholder (3.9d builds real UI)
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteLiveActivity.swift` — fixed to compile against real ACIMActivityAttributes.ContentState (3.9e builds real UI)
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — description text updated
+- **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched.
+- **Old schema names:** zero StoryEntry/FactItem/NewsItem/JTFStory/JTFNews references in Widget target (WidgetStoryEntry name retained per AC — grep false positive only).
