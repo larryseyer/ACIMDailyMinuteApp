@@ -1,3 +1,13 @@
 # Ralph Progress Log
 Started: Tue Apr 14 23:46:29 CDT 2026
 ---
+
+## --- Iteration Log ---
+
+### ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header
+- **Status:** PASS
+- **Commit:** ac090c5
+- **Files created:** Workbook365.json (365 canonical ACIM lesson titles), WorkbookCatalog.swift (lazy-load enum with title(for:) lookup)
+- **Files edited:** LessonRow.swift (3-tier fallback: meta?.title → WorkbookCatalog → "Not yet read"; Georgia font → system serif), LessonsView.swift (release-cadence header card at top of list showing lesson N of 365 + relative published date + "After Lesson 365, the Text begins."), project.pbxproj (added both new files to targets), build.sh (macOS Debug signing bypass for compile-only verification)
+- **Build:** ./build.sh exit 0, 0 errors across iOS + macOS + watchOS
+- **Verification:** All 6 PRD spot-check anchors pass (lessons 1, 2, 3, 7, 10, 365). No TODO/FIXME/XXX/HACK/JTFNews in touched files.

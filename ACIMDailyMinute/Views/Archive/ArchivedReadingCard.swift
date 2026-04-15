@@ -4,7 +4,7 @@ import SwiftData
 /// Renders a single `ArchivedReading` row inside the Archive tab's per-date detail.
 ///
 /// Dispatches on `reading.channel`:
-///   * `"daily-minute"` — renders the passage body in Georgia 18, italic source
+///   * `"daily-minute"` — renders the passage body in system serif, italic source
 ///     reference, word count chip.
 ///   * `"daily-lesson"` — renders "Lesson N" + the title (stored in
 ///     `reading.text` per `ArchiveService.persistInlineLessons`). Archive lesson
@@ -59,13 +59,13 @@ struct ArchivedReadingCard: View {
             header
             if isMinute {
                 Text(reading.text)
-                    .font(.custom("Georgia", size: 18))
+                    .font(.system(.body, design: .serif))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
                 footerMinute
             } else {
                 Text(reading.text.isEmpty ? headerLabel : reading.text)
-                    .font(.custom("Georgia", size: 20).weight(.semibold))
+                    .font(.system(.title3, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
             }

@@ -27,7 +27,7 @@
     {
       "id": "ACIM-101",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bug 4 — Workbook365 catalog + lesson title fallback + release-cadence header",
       "why": "Screenshot 'Lesson 1 and 2 are missing.png' shows the Lessons tab with rows 1 and 2 displaying 'Not yet read' while rows 3–10 show titles. Verified root cause: backend's daily-lesson.json only retains the last 7 entries in its embedded archive[] field; the user installed the app after lessons 1 and 2 had aged out of that rolling window, so they were never persisted to DailyLesson. There is no per-lesson endpoint and no full-archive endpoint on the backend, so the app cannot fetch the missing bodies/audio without backend changes (out of scope here). The iOS-side fix is to bundle the canonical 365 ACIM Workbook lesson titles so every row always shows its title, and to add a release-cadence header so users understand lessons publish one per day over ~1.5 years and the Text begins after Lesson 365.",

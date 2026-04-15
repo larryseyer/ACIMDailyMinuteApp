@@ -74,11 +74,11 @@ private struct FullLessonView: View {
             VStack(alignment: .leading, spacing: 16) {
                 header
                 Text(lesson.lessonTitle)
-                    .font(.custom("Georgia", size: 24).weight(.semibold))
+                    .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
                 Text(lesson.text)
-                    .font(.custom("Georgia", size: 19))
+                    .font(.system(.body, design: .serif))
                     .foregroundStyle(.primary)
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
@@ -196,7 +196,7 @@ private struct MetadataOnlyLessonView: View {
                 }
 
                 Text(title)
-                    .font(.custom("Georgia", size: 24).weight(.semibold))
+                    .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
 

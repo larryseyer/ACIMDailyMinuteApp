@@ -24,11 +24,16 @@ struct DailyMinuteCard: View {
         VStack(alignment: .leading, spacing: 12) {
             header
             Text(minute.text)
-                .font(.custom("Georgia", size: 18))
+                .font(.system(.body, design: .serif))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
             footer
             actionRow
+            if let error = audio.lastError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
         }
         .padding(16)
         .background(Color(white: 0.11).opacity(0.5))
