@@ -97,7 +97,7 @@
     {
       "id": "ACIM-004",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-001"],
       "title": "3.9d — Large widget family (full minute text + lesson + bookmark indicator)",
       "why": "Largest widget face shows the full minute text (truncated only if necessary) and a small bookmark-status indicator if the user has bookmarked today's minute (lookup via the same Bookmark @Query the Saved tab uses — single-key check by 'minute:{segmentHash}').",

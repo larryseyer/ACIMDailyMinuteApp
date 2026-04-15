@@ -5,18 +5,24 @@ import WidgetKit
 
 struct ACIMDailyMinuteLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: ACIMActivityAttributes.self) { context in
-            HStack(spacing: 12) {
-                Image(systemName: "sun.max")
-                    .font(.title3)
-                VStack(alignment: .leading, spacing: 4) {
+        ActivityConfiguration(for: ACIMDailyMinuteAttributes.self) { context in
+            let state = context.state
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Image(systemName: "sun.max")
                     Text("ACIM Daily Minute")
                         .font(.caption)
                         .fontWeight(.semibold)
-                    Text(context.state.latestText)
-                        .font(.subheadline)
-                        .lineLimit(2)
+                    Spacer()
+                    if let n = state.lessonNumber {
+                        Text("Lesson \(n)")
+                            .font(.caption)
+                            .foregroundStyle(.tint)
+                    }
                 }
+                Text(state.minuteText)
+                    .font(.subheadline)
+                    .lineLimit(4)
             }
             .padding()
             .activityBackgroundTint(Color.clear)
@@ -24,7 +30,11 @@ struct ACIMDailyMinuteLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Image(systemName: "sun.max")
+                    HStack(spacing: 4) {
+                        Image(systemName: "sun.max")
+                        Text("ACIM")
+                            .font(.caption2)
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                     if let n = context.state.lessonNumber {
@@ -36,7 +46,7 @@ struct ACIMDailyMinuteLiveActivity: Widget {
                     EmptyView()
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text(context.state.latestText)
+                    Text(context.state.minuteText)
                         .font(.callout)
                         .lineLimit(3)
                 }
@@ -46,6 +56,8 @@ struct ACIMDailyMinuteLiveActivity: Widget {
                 if let n = context.state.lessonNumber {
                     Text("L\(n)")
                         .font(.caption)
+                } else {
+                    EmptyView()
                 }
             } minimal: {
                 Image(systemName: "sun.max")

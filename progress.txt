@@ -130,3 +130,14 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWidget/MediumWidgetView.swift` — full HStack layout: left VStack with relative date + minute text (subheadline, 5-line limit); Divider; right VStack (width 100) with lesson label + number (title2, semibold) + "Open today's minute" CTA tint text; extracted relativeDateString as private free function; .widgetURL deep link to acimdailyminute://today; .containerBackground(.fill.tertiary)
 - **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Watch errors still allowed (pre-3.10a).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-004 — 3.9d — Large widget family (full text + bookmark indicator)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWidget/WidgetStoryEntry.swift` — added `isBookmarked: Bool` field (default false) to TimelineEntry; updated placeholder and empty statics
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteTimelineProvider.swift` — added Bookmark fetch in fetchEntry(): FetchDescriptor<Bookmark> with #Predicate matching "minute:{segmentHash}" key, populates isBookmarked field
+  - `ACIMDailyMinuteWidget/LargeWidgetView.swift` — full layout: VStack with HStack header (relative date + bookmark.fill icon), body text (12-line limit), lesson number footer with book.closed icon; relativeDateString helper; .widgetURL deep link to acimdailyminute://today; .containerBackground(.fill.tertiary)
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — no changes needed (.systemLarge routing and supportedFamilies already present from 3.9a)
+- **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched. Watch errors still allowed (pre-3.10a).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
