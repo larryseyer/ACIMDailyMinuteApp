@@ -107,7 +107,7 @@ to exit the loop.
 - **Status:** Still BLOCKED — upstream feeds unchanged after 6 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds. No implementable stories remain in this sprint.
 
 ### ACIM-206 — Listen Minute list renders all cached episodes descending
-- **Commit:** (pending)
+- **Commit:** e1ede85
 - **Date:** 2026-04-15
 - **Diagnosis:**
   - Step 1: `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **25** — server-side fix confirmed, feed now includes historical episodes
