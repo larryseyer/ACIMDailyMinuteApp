@@ -215,7 +215,7 @@
     {
       "id": "ACIM-009",
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-005", "ACIM-008"],
       "title": "4.0 — Feature parity verification + PARITY.md artifact",
       "why": "Single sweep against the end-state checklist. Produces a pass/fail table at repo root. Forces an honest accounting before branding work. If any gap surfaces, this story BLOCKS with a `blocked: \"<gap description>\"` annotation and Larry decides whether to add a follow-up story or accept the gap.",
