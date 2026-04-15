@@ -121,7 +121,7 @@
     {
       "id": "ACIM-005",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-001"],
       "title": "3.9e — Live Activity UI (ActivityAttributes + Dynamic Island layouts)",
       "why": "Lock Screen Live Activity for the Daily Minute. UI definitions only — no start/stop logic in this story. Start/stop wiring is deferred (NotificationManager already has a stub field 'notifyLiveActivities' UserDefaults key that would gate start; actual ActivityKit start is a Phase 5 polish item out of scope here).",

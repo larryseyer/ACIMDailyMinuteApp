@@ -141,3 +141,13 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — no changes needed (.systemLarge routing and supportedFamilies already present from 3.9a)
 - **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched. Watch errors still allowed (pre-3.10a).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-005 — 3.9e — Live Activity UI (ActivityAttributes + Dynamic Island)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinute/Models/ACIMActivityAttributes.swift` — renamed struct ACIMActivityAttributes → ACIMDailyMinuteAttributes; updated ContentState fields: removed channel, renamed latestText→minuteText, publishedDate→publishedAt; added static let name = "Daily Minute"
+  - `ACIMDailyMinute/Services/LiveActivityManager.swift` — updated all references from ACIMActivityAttributes to ACIMDailyMinuteAttributes; removed channel from ContentState construction; updated field names in startOrUpdate, endAllActivities, scheduleDismissal
+  - `ACIMDailyMinuteWidget/ACIMDailyMinuteLiveActivity.swift` — full rewrite: Lock Screen UI with VStack header (sun.max icon + title + lesson number) + minute text (4-line limit); Dynamic Island expanded with leading (sun.max + ACIM label), trailing (lesson number), empty center, bottom (minute text 3-line limit); compact leading (sun.max), compact trailing (lesson number), minimal (sun.max)
+- **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Pre-existing SettingsView.swift iOS 18 availability error in main target — not widget-related, not touched. Watch errors still allowed (pre-3.10a).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.

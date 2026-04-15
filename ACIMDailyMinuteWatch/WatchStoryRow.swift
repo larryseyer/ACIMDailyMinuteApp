@@ -1,17 +1,19 @@
 import SwiftUI
 
 struct WatchStoryRow: View {
-    let story: Story
+    let minute: DailyMinute
+    var lessonNumber: Int? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(story.fact)
-                .font(.caption)
-                .lineLimit(3)
-            Text(story.sourceDisplay)
-                .font(.caption2)
-                .foregroundStyle(Color(red: 0.831, green: 0.686, blue: 0.216))
+            if let n = lessonNumber {
+                Text("Lesson \(n)")
+                    .font(.caption2)
+                    .foregroundStyle(.tint)
+            }
+            Text(minute.text)
+                .font(.footnote)
+                .lineLimit(6)
         }
-        .padding(.vertical, 2)
     }
 }
