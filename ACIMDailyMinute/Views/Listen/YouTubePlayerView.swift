@@ -53,8 +53,18 @@ struct YouTubePlayerView: NSViewRepresentable {
 
 extension YouTubePlayerView {
     func loadVideoIfNeeded(_ webView: WKWebView, coordinator: Coordinator) {
-        guard coordinator.loadedVideoID != videoURL,
-              let videoID = extractVideoID(from: videoURL) else { return }
+        guard coordinator.loadedVideoID != videoURL else { return }
+
+        let embedSrc: String
+        if videoURL.contains("youtube.com/embed/") {
+            let separator = videoURL.contains("?") ? "&" : "?"
+            embedSrc = "\(videoURL)\(separator)playsinline=1&rel=0&modestbranding=1&origin=https://www.acimdailyminute.org"
+        } else if let videoID = extractVideoID(from: videoURL) {
+            embedSrc = "https://www.youtube.com/embed/\(videoID)?playsinline=1&rel=0&modestbranding=1&origin=https://www.acimdailyminute.org"
+        } else {
+            return
+        }
+
         coordinator.loadedVideoID = videoURL
 
         let html = """
@@ -70,7 +80,7 @@ extension YouTubePlayerView {
         </head>
         <body>
         <iframe
-            src="https://www.youtube.com/embed/\(videoID)?playsinline=1&rel=0&modestbranding=1&origin=https://www.acimdailyminute.org"
+            src="\(embedSrc)"
             frameborder="0"
             allowfullscreen
             allow="autoplay; encrypted-media">
