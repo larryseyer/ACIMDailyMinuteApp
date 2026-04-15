@@ -177,7 +177,7 @@
     {
       "id": "ACIM-207",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-206"],
       "title": "Bug 2 — Listen Lessons sub-tab lists every cached lesson episode descending from today",
       "why": "Screenshot 'Daily Lessons only show 1 lesson at bottom - should show all available starting from today lesson not just lesson 10.png' shows Listen → Lessons sub-tab with the YouTube embed showing Lesson 11 ('My meaningless thoughts are showing me a meaningless world.') but the list below contains only ONE row: 'Lesson 10: My thoughts do not mean anything.' Expected: every cached Daily Lesson episode, starting from today's lesson (Lesson 11 as of 2026-04-15) and descending back through Lesson 10, 9, 8, etc. Same class of bug as ACIM-206 but on the Lessons channel. Most likely the same root cause; once ACIM-206 fixes the parse/persist pipeline, this story verifies the Lessons channel now works too and adds any channel-specific polish needed.",

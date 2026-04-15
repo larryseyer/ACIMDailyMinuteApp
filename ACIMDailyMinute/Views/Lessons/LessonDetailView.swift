@@ -11,8 +11,8 @@ import SwiftData
 ///    `channel == "daily-lesson"` does. The lesson *title* is stored in
 ///    `archive.text` (archive entries ship `{lesson_id, title, date, audio_url}`
 ///    — no body), per `ArchiveService.persistInlineLessons`.
-/// 3. **Absent** — neither row exists. Offer a Refresh button that fetches
-///    today's lesson; only populates this entry when `lessonNumber` *is* today.
+/// 3. **Absent** — neither row exists. Shows a YouTube playlist embed for
+///    the lesson so the user can watch it directly.
 struct LessonDetailView: View {
     let lessonNumber: Int
 
@@ -234,68 +234,67 @@ private struct MetadataOnlyLessonView: View {
     }
 }
 
-// MARK: - Absent state
+// MARK: - Absent state (YouTube playlist fallback)
 
 private struct AbsentLessonView: View {
     let lessonNumber: Int
 
-    @Environment(\.modelContext) private var modelContext
-    @State private var isRefreshing = false
-    @State private var refreshError: String?
+    @Query(filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" })
+    private var cachedLessons: [CachedPodcastEpisode]
 
-    var body: some View {
-        VStack(spacing: 16) {
-            ContentUnavailableView(
-                "Lesson \(lessonNumber) not yet cached",
-                systemImage: "book.closed",
-                description: Text("Open this lesson when it's the Daily Lesson, or tap Refresh to pull the latest entry.")
-            )
+    @Environment(AudioManager.self) private var audio
 
-            Button {
-                refresh()
-            } label: {
-                if isRefreshing {
-                    ProgressView()
-                } else {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                }
-            }
-            .buttonStyle(.bordered)
-            .disabled(isRefreshing)
-
-            if let refreshError {
-                Text(refreshError)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-            }
-        }
-        .padding(20)
+    private var introAudioURL: String? {
+        cachedLessons.first(where: {
+            $0.title.trimmingCharacters(in: .whitespaces) == "Introduction"
+        })?.audioURL
     }
 
-    private func refresh() {
-        guard !isRefreshing else { return }
-        isRefreshing = true
-        refreshError = nil
-        let container = modelContext.container
-        let lessonNumber = self.lessonNumber
+    private var title: String {
+        WorkbookCatalog.title(for: lessonNumber) ?? "Lesson \(lessonNumber)"
+    }
 
-        Task { @MainActor in
-            defer { isRefreshing = false }
-            do {
-                let service = DataService(modelContainer: container)
-                guard let dto = try await service.fetchDailyLesson() else {
-                    refreshError = "Refresh is cooling down. Try again in a moment."
-                    return
+    private var embedURL: String {
+        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(title)
+                    .font(.system(.title2, design: .serif).weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if lessonNumber > 0 {
+                    YouTubePlayerView(videoURL: embedURL)
+                        .aspectRatio(16/9, contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                } else if let audioURL = introAudioURL, !audioURL.isEmpty {
+                    HStack {
+                        Spacer()
+                        Button {
+                            audio.play(url: audioURL, title: "Introduction")
+                        } label: {
+                            Label("Listen", systemImage: "play.fill")
+                                .font(.callout.weight(.medium))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.white.opacity(0.08))
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("Listen to Introduction")
+                    }
+                    .padding(.top, 4)
                 }
-                try DataService.persistLesson(dto, in: modelContext)
-                if dto.lesson_id != lessonNumber {
-                    refreshError = "Today's lesson is \(dto.lesson_id). Lesson \(lessonNumber) isn't available yet."
-                }
-            } catch {
-                refreshError = "Could not refresh: \(error.localizedDescription)"
             }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
     }
 }
