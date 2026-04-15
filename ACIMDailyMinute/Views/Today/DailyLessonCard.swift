@@ -30,6 +30,7 @@ struct DailyLessonCard: View {
             Text(lesson.text)
                 .font(.system(.body, design: .serif))
                 .foregroundStyle(.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             footer
             actionRow

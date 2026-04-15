@@ -41,3 +41,4 @@
 [2026-04-15 09:04:40]     Last story: ACIM-201: Bug 7b — Settings tagline gets 'ACIM' prefix; strip 'Sparkly Edition' refs from Onboarding and About
 [2026-04-15 09:04:40]     Claude running: yes
 [2026-04-15 09:04:40]     Ralph running: yes
+[2026-04-15 09:14:40] Progress: 4/8 complete | Next: ACIM-205: Bug 3 — Today view + LessonDetailView: full-width text flow on iPad + bottom safe-area inset under mini-player | Commit: 44641a4

@@ -99,7 +99,7 @@
     {
       "id": "ACIM-204",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-203"],
       "title": "Bug 5 — LessonsView list gains bottom safe-area inset so mini-player never covers titles",
       "why": "Screenshot 'Player at bottom covers up lesson titles.png' shows the Lessons tab (1 of 365 spine) with row 17 ('I am not alone in experiencing the effects of my seeing.') partially covered by the 'Daily Minute' mini-player docked at the bottom of the screen. The mini-player is ~56pt tall and overlays the list content because LessonsView doesn't reserve bottom space while audio is active. Fix: add a bottom safeAreaInset to the scrollable list whose height equals the mini-player height when AudioManager.hasActiveAudio is true, zero otherwise. Standard SwiftUI pattern — no GeometryReader hacks, no explicit .padding(.bottom, 56) hardcodes.",
