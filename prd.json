@@ -103,7 +103,7 @@
     {
       "id": "ACIM-004",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "title": "3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()",
       "why": "GetTodaysFactsIntent.swift is misnamed (legacy placeholder term) and returns 'coming soon'. Siri Shortcuts must speak today's actual reading. Also locks Hard Rule: zero 'JTFNews' / 'facts' / 'news' refs anywhere in this app — the file rename closes the last residual.",
       "type": "code",

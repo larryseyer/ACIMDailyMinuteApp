@@ -81,6 +81,13 @@ All 4 are independent. Ralph picks lowest priority with `passes:false` first per
 - **Build verification:** Skipped per user instruction (code-only phase).
 - **Status:** passes:true
 
+### ACIM-004 / 3.8e — Shortcut: rename to GetTodaysReadingIntent + real perform()
+- **Commit:** 45254d7 on `ralph/acim-3.8-finish-2026-04-14`
+- **Files touched:** GetTodaysFactsIntent.swift → GetTodaysReadingIntent.swift (git mv + rewrite), ACIMDailyMinuteShortcuts.swift (intent ref + phrases + shortTitle + systemImageName), project.pbxproj (path attr + comments updated), CONTINUE.md (old name references updated), progress.txt (old name references updated)
+- **Acceptance criteria met:** git mv rename tracked; struct renamed to GetTodaysReadingIntent; real perform() with SwiftData FetchDescriptor<DailyMinute> sortBy publishedAt descending fetchLimit 1; phrases updated to reading/lesson language; shortTitle "Today's Reading"; systemImageName "sun.max"; pbxproj path updated on AA000002057; zero residual GetTodaysFactsIntent in source; zero facts/JTFNews in Shortcuts; no TODO/FIXME.
+- **Build verification:** Skipped per user instruction (code-only phase).
+- **Status:** passes:true
+
 ### ACIM-003 / 3.8d — Deep links: scheme registration + DeepLinkRoute + tab + path dispatch
 - **Commit:** dbebb81 on `ralph/acim-3.8-finish-2026-04-14`
 - **Files touched:** Info.plist (+CFBundleURLTypes), DeepLinkRoute.swift (new), ContentView.swift (.onOpenURL dispatch), LessonsView.swift (+.onReceive deepLinkLesson), ArchiveView.swift (+.onReceive deepLinkArchive), project.pbxproj (+DeepLinkRoute entries)
