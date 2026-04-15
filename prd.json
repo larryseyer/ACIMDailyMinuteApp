@@ -302,7 +302,7 @@
     {
       "id": "ACIM-013",
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-010", "ACIM-011", "ACIM-012"],
       "title": "5d — App Store metadata dry-run (APP_STORE_LISTING.md artifact)",
       "why": "Final story. Produces a markdown artifact with the exact title / subtitle / description / keywords / screenshot spec Larry will paste into App Store Connect. No submission, no asset upload — just the text artifact so Larry has everything in one place.",

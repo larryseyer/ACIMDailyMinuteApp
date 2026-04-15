@@ -226,3 +226,19 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - Zero `.sound = .default` calls remaining anywhere in codebase
 - **Build verification:** iOS build exit=0. watchOS build exit=0. Zero non-signing code errors. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008/009/010/011).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-013 — 5d — App Store metadata dry-run (APP_STORE_LISTING.md)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `APP_STORE_LISTING.md` — NEW: complete App Store listing artifact with all required sections: App name (17 chars), Subtitle (27 chars), Promotional text (170 chars), Description (~1,900 chars covering all features + Sparkly Edition/Teddy Poppe/CIMS lineage + privacy posture), Keywords (83 chars), Support URL, Marketing URL, Screenshots required table (4 device sizes × 5 scene suggestions with caption ideas), Age rating questionnaire (4+, no objectionable content), Privacy nutrition label (Data Not Collected — verified against Info.plist and source code)
+- **Content verification:**
+  - Zero JTFNews/FIP/Foundation for Inner Peace references (grep -i confirmed)
+  - Sparkly Edition + Teddy Poppe + CIMS lineage present in Description and framing
+  - Privacy claims verified against PrivacyPolicyView.swift + Info.plist: zero analytics SDKs, zero third-party frameworks, zero tracking, no user accounts
+  - All feature claims cross-checked against PARITY.md (21 surfaces)
+- **Build verification:** iOS build exit=0. watchOS build exit=0. Zero non-signing code errors. macOS build has pre-existing provisioning profile signing error (not code-related, same as ACIM-008/009/010/011/012).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK in APP_STORE_LISTING.md.
+
+---
+ALL 13 STORIES COMPLETE. App is feature-complete and ready for App Store submission.
