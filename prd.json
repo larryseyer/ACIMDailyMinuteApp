@@ -75,7 +75,7 @@
     {
       "id": "ACIM-003",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-001"],
       "title": "3.9c — Medium widget family (minute + lesson number + CTA)",
       "why": "Medium face has room for a one-line CTA below the minute excerpt. Layout uses HStack with vertical divider — minute on the left, lesson + CTA on the right.",

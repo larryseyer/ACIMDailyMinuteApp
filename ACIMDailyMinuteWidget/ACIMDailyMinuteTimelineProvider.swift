@@ -39,11 +39,19 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
             lessonDescriptor.fetchLimit = 1
             let lessons = try context.fetch(lessonDescriptor)
 
+            let bookmarkKey = "minute:\(minute.segmentHash)"
+            var bookmarkDescriptor = FetchDescriptor<Bookmark>(
+                predicate: #Predicate { $0.itemKey == bookmarkKey }
+            )
+            bookmarkDescriptor.fetchLimit = 1
+            let bookmarks = try context.fetch(bookmarkDescriptor)
+
             return WidgetStoryEntry(
                 date: .now,
                 minuteText: minute.text,
                 lessonNumber: lessons.first?.lessonNumber,
-                publishedAt: minute.publishedAt
+                publishedAt: minute.publishedAt,
+                isBookmarked: !bookmarks.isEmpty
             )
         } catch {
             return .empty

@@ -5,13 +5,15 @@ struct WidgetStoryEntry: TimelineEntry {
     let minuteText: String
     let lessonNumber: Int?
     let publishedAt: Date?
+    let isBookmarked: Bool
 
     static var placeholder: WidgetStoryEntry {
         WidgetStoryEntry(
             date: .now,
             minuteText: "Each day a passage from A Course in Miracles offers a moment of reflection and stillness.",
             lessonNumber: 1,
-            publishedAt: .now
+            publishedAt: .now,
+            isBookmarked: false
         )
     }
 
@@ -20,7 +22,8 @@ struct WidgetStoryEntry: TimelineEntry {
             date: .now,
             minuteText: "No daily minute available",
             lessonNumber: nil,
-            publishedAt: nil
+            publishedAt: nil,
+            isBookmarked: false
         )
     }
 }

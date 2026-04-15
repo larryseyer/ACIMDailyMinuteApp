@@ -122,3 +122,11 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWidget/ACIMDailyMinuteWidget.swift` — removed outer .containerBackground(Color(white: 0.1)) from WidgetEntryView so per-view backgrounds take effect; .systemSmall routing and supportedFamilies already present from 3.9a
 - **Build verification:** Widget errorFilter = 0. Watch errors still allowed (pre-3.10a).
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-003 — 3.9c — Medium widget family (minute + lesson + CTA)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWidget/MediumWidgetView.swift` — full HStack layout: left VStack with relative date + minute text (subheadline, 5-line limit); Divider; right VStack (width 100) with lesson label + number (title2, semibold) + "Open today's minute" CTA tint text; extracted relativeDateString as private free function; .widgetURL deep link to acimdailyminute://today; .containerBackground(.fill.tertiary)
+- **Build verification:** Widget errorFilter = 0 (grep 'error:' | grep Widget/WidgetExtension | wc -l = 0). Watch errors still allowed (pre-3.10a).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
