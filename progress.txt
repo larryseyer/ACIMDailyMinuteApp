@@ -163,3 +163,11 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWatch/ACIMDailyMinuteWatchWidget.swift` — cleaned old schema refs (WatchStoryEntry→WatchTimelineEntry, storyCount/latestFact→lessonNumber/minuteSnippet, Story→DailyMinute, SharedModelContainer.createReadOnly()→SharedModelContainer.shared); minimal update for grep compliance, full rewrite deferred to ACIM-007
 - **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0 (grep 'error:' | grep ACIMDailyMinuteWatch | wc -l = 0). watchOS standalone build exit=0. Pre-existing SettingsView.swift iOS 18 availability error in main target — not watch-related, not touched.
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in Watch target. Zero StoryEntry/FactItem/NewsItem/JTFStory in Watch target.
+
+### ACIM-007 — 3.10b — Watch complications (circular, rectangular, inline)
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinuteWatch/ACIMDailyMinuteWatchWidget.swift` — full rewrite: WatchTimelineEntry renamed firstPhraseSnippet (optional String?); WatchTimelineProvider fetches from WatchDataService.shared.container; ComplicationView switches on @Environment(\.widgetFamily) for .accessoryCircular (L + lesson number in ZStack), .accessoryRectangular (ACIM tint label + lesson headline + snippet), .accessoryInline (ACIM Lesson N); kind changed to "com.larryseyer.acimdailyminute.watch.complication"; supportedFamilies unchanged
+- **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0. Pre-existing SettingsView.swift iOS 18 availability error in main target — not watch-related, not touched.
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.

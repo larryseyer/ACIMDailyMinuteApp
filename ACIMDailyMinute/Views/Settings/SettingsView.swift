@@ -3,8 +3,20 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("dailyReminderEnabled") private var reminderEnabled = false
-    @AppStorage("dailyReminderTime") private var reminderTime = Date()
+    @AppStorage("dailyReminderTimeInterval") private var reminderTimeInterval: Double = Date().timeIntervalSinceReferenceDate
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = true
+
+    private var reminderTime: Date {
+        get { Date(timeIntervalSinceReferenceDate: reminderTimeInterval) }
+        set { reminderTimeInterval = newValue.timeIntervalSinceReferenceDate }
+    }
+
+    private var reminderTimeBinding: Binding<Date> {
+        Binding(
+            get: { Date(timeIntervalSinceReferenceDate: reminderTimeInterval) },
+            set: { reminderTimeInterval = $0.timeIntervalSinceReferenceDate }
+        )
+    }
 
     var body: some View {
         NavigationStack {
@@ -14,8 +26,9 @@ struct SettingsView: View {
                         .onChange(of: reminderEnabled) { _, enabled in
                             handleReminderToggle(enabled: enabled)
                         }
-                    DatePicker("Reminder time", selection: $reminderTime, displayedComponents: .hourAndMinute)
-                        .onChange(of: reminderTime) { _, newTime in
+                    DatePicker("Reminder time", selection: reminderTimeBinding, displayedComponents: .hourAndMinute)
+                        .onChange(of: reminderTimeInterval) { _, _ in
+                            let newTime = reminderTime
                             guard reminderEnabled else { return }
                             scheduleReminder(at: newTime)
                         }

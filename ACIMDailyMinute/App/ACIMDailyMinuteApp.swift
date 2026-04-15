@@ -38,10 +38,11 @@ struct ACIMDailyMinuteApp: App {
             "notifyPhraseMatches": true,
             "notifyLiveActivities": false,
             "dailyReminderEnabled": false,
-            "dailyReminderTime": defaultReminderTime
+            "dailyReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()
+        _ = PhoneWatchSyncService.shared
         #endif
         Task { await NotificationManager.shared.setupDelegate() }
     }
