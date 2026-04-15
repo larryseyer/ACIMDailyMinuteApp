@@ -36,8 +36,8 @@ struct ListenView: View {
 
     @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
 
-    private let dailyMinutePlaylistID = "PLP1KDMu51tB7o5hMs2ck69gZZidrg-ltD"
-    private let dailyLessonPlaylistID = "PLP1KDMu51tB5VibI7QEWe28Q1-Oi0ixhS"
+    private let dailyMinutePlaylistID = YouTubePlaylists.dailyMinute
+    private let dailyLessonPlaylistID = YouTubePlaylists.dailyLesson
 
     private let service = PodcastService()
 

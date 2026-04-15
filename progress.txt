@@ -117,3 +117,16 @@ to exit the loop.
 - **Changes:** No code changes required. App code was already correct — parser, persist pipeline, and @Query all handle multiple items. Only prd.json updated (removed `blocked` field, set passes:true).
 - **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements.
 
+### ACIM-207 — Listen Lessons list renders all cached lessons descending with canonical titles
+- **Commit:** fcea780
+- **Date:** 2026-04-15
+- **Diagnosis:**
+  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-lessons.xml | grep -c '<item>'` returns **12** — server-side fix confirmed, feed includes Introduction + Lessons 1–11
+  - Step 2 (code review): PodcastService.fetchLessonEpisodes() fetches from `/podcast-lessons.xml`, PodcastXMLParser correctly parses all 12 items, persist() upserts without cap, @Query sorts by publishedAt descending. No parse/persist bug — feed data flows correctly.
+  - Root cause confirmed: server-side feed was the sole bottleneck (0 items previously). Now that it serves 12 items, existing app code handles them correctly.
+- **Changes:**
+  - ListenView.swift: added `lessonNumber(from:)` static helper that parses lesson number from RSS title via `^Lesson (\d+)` prefix matching and recognizes literal "Introduction" as lesson 0
+  - ListenView.swift: modified `currentEpisodes` computed property to apply canonical WorkbookCatalog titles for lesson episodes — chain: `WorkbookCatalog.title(for: n) ?? episode.title`. Introduction (lesson 0) naturally falls through to raw RSS title since WorkbookCatalog starts at lesson 1.
+  - RSS feed titles are truncated (e.g., `Lesson 1: "Nothing I see in this room [on this street,"`); canonical titles from Workbook365.json provide the full, consistent text matching the Lessons tab spine.
+- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements. Feed returns 12 items; @Query has no fetchLimit and sorts by publishedAt descending.
+
