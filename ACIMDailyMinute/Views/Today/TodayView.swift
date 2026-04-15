@@ -4,6 +4,7 @@ import SwiftData
 struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(ConnectivityManager.self) private var connectivity
+    @Environment(AudioManager.self) private var audio
     @Environment(\.scenePhase) private var scenePhase
 
     @Query(sort: \DailyMinute.publishedAt, order: .reverse) private var minutes: [DailyMinute]
@@ -47,6 +48,9 @@ struct TodayView: View {
                     }
                     .accessibilityLabel("Settings")
                 }
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
             .refreshable {
                 if connectivity.isConnected {

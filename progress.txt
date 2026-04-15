@@ -52,3 +52,11 @@ to exit the loop.
   - MacCalendarView.swift: no changes needed — already has `.onChange(of: selection)` at line 31 that syncs `visibleMonth` when the bound date changes to a different month, so the Today button's binding update automatically scrolls the macOS calendar.
 - **Verification:** ./build.sh exit 0, 0 errors. grep confirms no TODO/FIXME/XXX/HACK/JTFNews in touched files.
 
+### ACIM-204 — Lessons list bottom safe-area inset prevents mini-player overlap
+- **Commit:** 44641a4
+- **Date:** 2026-04-15
+- **Changes:**
+  - MiniPlayerView.swift: added `public static let height: CGFloat = 56` constant for reuse by any view needing to reserve space for the mini-player overlay
+  - LessonsView.swift: added `@Environment(AudioManager.self) private var audio` and `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the FilteredLessonsList, so the 365-row List reserves 56pt at the bottom when audio is active and zero otherwise
+- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
+

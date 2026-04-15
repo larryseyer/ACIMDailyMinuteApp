@@ -81,12 +81,16 @@ private struct FullLessonView: View {
                     .font(.system(.body, design: .serif))
                     .foregroundStyle(.primary)
                     .lineSpacing(3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
                 wordCountChip
                 actionRow
             }
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
     }
 
