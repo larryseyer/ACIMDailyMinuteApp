@@ -239,21 +239,23 @@
       "priority": 10,
       "passes": false,
       "depends_on": ["ACIM-009"],
-      "title": "5a — App icon set (1024×1024 master + all required iOS/watchOS sizes)",
-      "why": "AppIcon.appiconset directory exists per 2026-04-14 inspection but contains placeholder tiles. Need real Sparkly Edition branding artwork. This story BLOCKS if the 1024×1024 master is not on disk — it does not generate placeholder art.",
+      "title": "5a — App icon set (install pre-staged Apple iconset + watchOS icon)",
+      "why": "Larry pre-staged a complete Apple iconset on 2026-04-14 at /Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/ (10 PNGs sized 16/32/64/128/256/512/1024 including @2x retina) plus assets/ACIM.iconset/ (macOS iconutil format, identical sizes) plus assets/ACIM.icns (compiled macOS .icns). The 1024×1024 master is the file named icon_512x512@2x.png inside either iconset folder. Story copies the staged set into the live asset catalogs (main app + Watch target). NO source-asset blocking — assets verified present.",
       "type": "code",
       "files": [
         "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/Contents.json",
-        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/"
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/Contents.json",
+        "/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/"
       ],
       "acceptanceCriteria": [
-        "Pre-flight check: ls /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png OR equivalent 1024×1024 source. If missing, this story BLOCKS — set passes:false with `blocked: \"Phase 5a — no 1024×1024 icon master found at AppIcon.appiconset/. Larry must drop a master png before this story runs.\"`. Per rules.noPlaceholderAssets — do NOT generate placeholder art.",
-        "If master exists: use sips (built-in macOS tool) to derive the standard sizes. Required iOS sizes (per Xcode 16 single-tile-per-idiom): 1024×1024 (App Store marketing). For watchOS (Watch target): 1024×1024 marketing icon under the Watch target's Assets.xcassets if present.",
-        "Update AppIcon.appiconset/Contents.json to reference the 1024×1024 file under the 'idiom: universal, platform: ios, size: 1024x1024' slot (Xcode 14+ single-size convention). Verify the JSON is valid: python3 -c \"import json; json.load(open('AppIcon.appiconset/Contents.json'))\".",
-        "If watchOS icon is also being shipped this story (combined): same JSON shape under ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/. Otherwise defer to a 5a-watch follow-up.",
-        "Run ./build.sh — full exit 0.",
+        "Verify staged source: `ls /Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/icon_512x512@2x.png` must exist (1024×1024 master). If absent, BLOCK with `blocked: \"Phase 5a — assets/AppIcon.appiconset/icon_512x512@2x.png missing\"`. Per rules.noPlaceholderAssets.",
+        "Replace the main app's iconset entirely: rm -f ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/*.png ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/Contents.json — then cp /Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/* ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/. Verify the destination Contents.json is valid: python3 -c \"import json; json.load(open('ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/Contents.json'))\".",
+        "If the staged Contents.json uses macOS-only idioms (mac/16x16, mac/32x32 ... mac/512x512) and the iOS app needs an iOS-universal 1024 tile, additionally write a Contents.json that includes both: the existing macOS entries AND an `{\"idiom\": \"universal\", \"platform\": \"ios\", \"size\": \"1024x1024\", \"filename\": \"icon_512x512@2x.png\"}` entry. Same file (icon_512x512@2x.png is already 1024×1024) serves both. This produces a single-source iconset that satisfies iOS, macOS, and Mac Catalyst.",
+        "Watch target: cp /Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/icon_512x512@2x.png ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png — then update ACIMDailyMinuteWatch/Assets.xcassets/AppIcon.appiconset/Contents.json to reference it under `{\"idiom\": \"universal\", \"platform\": \"watchos\", \"size\": \"1024x1024\", \"filename\": \"AppIcon-1024.png\"}`. The Watch's existing AppIcon.png stub (verified present at 2026-04-14) can be deleted in this story.",
+        "Run ./build.sh — full exit 0. Watch out for asset compiler errors (`actool` complaints about missing sizes); if `actool` rejects the merged macOS+iOS Contents.json, fall back to keeping macOS entries only in the main app catalog and using the standalone 1024 universal entry only — let actool drive the final shape.",
         "grep -rIn 'TODO\\|FIXME\\|XXX\\|HACK\\|JTFNews' on touched files must be empty.",
-        "Commit: ./bu.sh \"5a — App icon set (1024×1024 master)\". Mark passes:true."
+        "Commit: ./bu.sh \"5a — App icon set (pre-staged Apple iconset installed)\". Mark passes:true."
       ]
     },
     {

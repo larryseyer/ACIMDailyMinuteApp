@@ -38,7 +38,7 @@ After ACIM-013 passes AND ./build.sh exits 0: emit `<promise>COMPLETE</promise>`
   - (b) Have Ralph run raw `git commit` + `git push origin HEAD` instead of `./bu.sh` (loses the Dropbox zip backup), OR
   - (c) Modify `bu.sh` to detect current branch and push to it (preferred long-term — one-line change: `git push origin "$(git symbolic-ref --short HEAD)"`).
 - [ ] Confirm Apple Developer team / signing config still works for Widget + Watch + Live Activity entitlements (these targets haven't built since Phase 3.2; signing may need re-up).
-- [ ] If Phase 5a will run: drop the 1024×1024 Sparkly Edition icon master at `ACIMDailyMinute/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png` (or equivalent name) before iteration. Otherwise 5a blocks per `rules.noPlaceholderAssets`.
+- [x] Phase 5a master icon: RESOLVED — complete Apple iconset pre-staged at `/Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/` including 1024×1024 master (`icon_512x512@2x.png`). Story 5a installs from here.
 
 ## Execution model (hard rules for every iteration)
 
@@ -59,6 +59,7 @@ After ACIM-013 passes AND ./build.sh exits 0: emit `<promise>COMPLETE</promise>`
 
 - **`ACIMChime.caf` exists** at `/Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/ACIMChime.caf` and at `/Users/larryseyer/ACIMDailyMinuteApp/assets/ACIMChime.caf`. Story 5c does NOT create the file — only verifies pbxproj membership on the Resources/ copy and wires `NotificationManager.preferredSound()`.
 - **`AppIcon.appiconset` and `AccentColor.colorset` directories exist** under `ACIMDailyMinute/Assets.xcassets/`. Stories 5a/5b populate them; do NOT create them.
+- **Pre-staged Apple iconset exists** at `/Users/larryseyer/ACIMDailyMinuteApp/assets/AppIcon.appiconset/` (10 PNGs: 16/32/64/128/256/512/1024 incl. @2x retina) and at `assets/ACIM.iconset/` (iconutil format) plus `assets/ACIM.icns` (compiled macOS). 1024×1024 master is `icon_512x512@2x.png`. Story 5a installs from here — does NOT regenerate with sips. Icon-master blocker from the pre-flight is RESOLVED.
 - **All Widget + Watch source files exist** — they're schema-stale, not absent. SmallWidgetView.swift / MediumWidgetView.swift / LargeWidgetView.swift / ACIMDailyMinuteLiveActivity.swift / ACIMDailyMinuteTimelineProvider.swift / WidgetStoryEntry.swift / SharedModelContainer.swift / ACIMDailyMinuteWidget.swift on the Widget side; ACIMDailyMinuteWatchApp.swift / WatchContentView.swift / WatchDataService.swift / WatchStoryRow.swift / ACIMDailyMinuteWatchWidget.swift on the Watch side.
 - **Highest pbxproj fileRef in current use: AA000002222** (DeepLinkRoute, from Phase 3.8d). Next free range for this PRD: `AA000001225+ / AA000002225+`. Three new files anticipated need IDs: PhoneWatchSyncService.swift (3.10c → AA000001226 / AA000002226), ACIMChime.caf if not yet a member (5c → AA000001227 / AA000002227). ACIMDailyMinuteWatchWidget.swift if not yet a member (3.10b → AA000001225 / AA000002225). Asset catalog edits don't need new IDs.
 - **`bu.sh` pushes to `origin main` hard-coded** — see Pre-flight item above. Story 1 must not run until this is resolved or the push will fail / land on the wrong branch.
