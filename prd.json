@@ -191,7 +191,7 @@
     {
       "id": "ACIM-008",
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-006"],
       "title": "3.10c — Watch/phone WCSession one-way connectivity (phone → watch latest minute)",
       "why": "Watch can read the App Group SwiftData store directly (3.10a established that), but App Group sync between phone and watch is not automatic across devices. Use WCSession to push the latest DailyMinute payload from phone to watch when the phone fetches a new one. One-way only in this story; two-way bookmark sync is out of scope.",

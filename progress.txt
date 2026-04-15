@@ -171,3 +171,16 @@ Ralph picks the lowest-priority `passes:false` story whose `depends_on` are all 
   - `ACIMDailyMinuteWatch/ACIMDailyMinuteWatchWidget.swift` — full rewrite: WatchTimelineEntry renamed firstPhraseSnippet (optional String?); WatchTimelineProvider fetches from WatchDataService.shared.container; ComplicationView switches on @Environment(\.widgetFamily) for .accessoryCircular (L + lesson number in ZStack), .accessoryRectangular (ACIM tint label + lesson headline + snippet), .accessoryInline (ACIM Lesson N); kind changed to "com.larryseyer.acimdailyminute.watch.complication"; supportedFamilies unchanged
 - **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0. Pre-existing SettingsView.swift iOS 18 availability error in main target — not watch-related, not touched.
 - **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-008 — 3.10c — Watch/phone WCSession one-way sync
+- **Status:** PASS
+- **Date:** 2026-04-14
+- **Files changed:**
+  - `ACIMDailyMinute/Services/PhoneWatchSyncService.swift` — NEW: final class PhoneWatchSyncService: NSObject, WCSessionDelegate; singleton .shared; sendLatestMinute sends text/publishedAt/date/segmentHash via sendMessage (reachable) or updateApplicationContext (deferred); #if os(iOS) gated
+  - `ACIMDailyMinute/App/ACIMDailyMinuteApp.swift` — added `_ = PhoneWatchSyncService.shared` in init() under #if os(iOS) to activate WCSession at launch; changed dailyReminderTime default registration key to dailyReminderTimeInterval (Double)
+  - `ACIMDailyMinute/Services/DataService.swift` — added PhoneWatchSyncService.shared.sendLatestMinute(minute) after persistMinute save under #if os(iOS)
+  - `ACIMDailyMinuteWatch/WatchDataService.swift` — class now extends NSObject + WCSessionDelegate; init activates WCSession; added session(_:didReceiveMessage:) and session(_:didReceiveApplicationContext:) handlers that upsert DailyMinute by segmentHash
+  - `ACIMDailyMinute.xcodeproj/project.pbxproj` — added buildFile AA000001226 / fileRef AA000002226 for PhoneWatchSyncService.swift in main app target Sources phase + Services group
+  - `ACIMDailyMinute/Views/Settings/SettingsView.swift` — fixed pre-existing iOS 18 @AppStorage(Date) error: changed to Double-backed @AppStorage("dailyReminderTimeInterval") with computed property + Binding wrapper
+- **Build verification:** Widget errorFilter = 0, Watch errorFilter = 0. iOS build exit=0. watchOS standalone build exit=0. macOS build has pre-existing provisioning profile signing error (not code-related).
+- **Grep checks:** zero TODO/FIXME/XXX/HACK/JTFNews in touched files.
