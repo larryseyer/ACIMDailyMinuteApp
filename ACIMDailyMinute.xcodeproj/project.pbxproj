@@ -25,6 +25,9 @@
 		AA000001216 /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
 		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
 		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
+		AA000001219 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001220 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001221 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
 		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
 		AA000001027 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
@@ -131,6 +134,7 @@
 		AA000002216 /* PodcastEpisodeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeRow.swift; sourceTree = "<group>"; };
 		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
 		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
+		AA000002219 /* CachedPodcastEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPodcastEpisode.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
@@ -256,6 +260,7 @@
 				AA000002009 /* Channel.swift */,
 				AA000002035 /* Bookmark.swift */,
 				AA000002054 /* ACIMActivityAttributes.swift */,
+				AA000002219 /* CachedPodcastEpisode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -571,6 +576,7 @@
 				AA000001103 /* DailyLesson.swift in Sources */,
 				AA000001106 /* ArchivedReading.swift in Sources */,
 				AA000001009 /* Channel.swift in Sources */,
+				AA000001219 /* CachedPodcastEpisode.swift in Sources */,
 				AA000001012 /* DataService.swift in Sources */,
 				AA000001013 /* FeedService.swift in Sources */,
 				AA000001015 /* PodcastService.swift in Sources */,
@@ -632,6 +638,7 @@
 				AA000001107 /* ArchivedReading.swift in Sources */,
 				AA000001054 /* Channel.swift in Sources */,
 				AA000001056 /* Bookmark.swift in Sources */,
+				AA000001220 /* CachedPodcastEpisode.swift in Sources */,
 				AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */,
 				AA000001062 /* ACIMActivityAttributes.swift in Sources */,
 			);
@@ -650,6 +657,7 @@
 				AA000001108 /* ArchivedReading.swift in Sources */,
 				AA000001072 /* Channel.swift in Sources */,
 				AA000001074 /* Bookmark.swift in Sources */,
+				AA000001221 /* CachedPodcastEpisode.swift in Sources */,
 				AA000001075 /* SharedModelContainer.swift in Sources */,
 				AA000001078 /* WatchDataService.swift in Sources */,
 			);

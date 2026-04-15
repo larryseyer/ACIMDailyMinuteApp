@@ -20,16 +20,35 @@ struct ListenView: View {
     @Environment(AudioManager.self) private var audio
     @Environment(ConnectivityManager.self) private var connectivity
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var modelContext
 
     @Query(sort: \DailyMinute.publishedAt, order: .reverse)
     private var minutes: [DailyMinute]
 
+    @Query(
+        filter: #Predicate<CachedPodcastEpisode> { $0.channel == "minute" },
+        sort: \CachedPodcastEpisode.publishedAt,
+        order: .reverse
+    )
+    private var cachedMinutes: [CachedPodcastEpisode]
+
+    @Query(
+        filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" },
+        sort: \CachedPodcastEpisode.publishedAt,
+        order: .reverse
+    )
+    private var cachedLessons: [CachedPodcastEpisode]
+
     @State private var selectedFeed: PodcastFeed = .minute
-    @State private var episodesByFeed: [PodcastFeed: [PodcastEpisode]] = [:]
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
 
     private let service = PodcastService()
+
+    private var currentEpisodes: [PodcastEpisode] {
+        let source = (selectedFeed == .minute) ? cachedMinutes : cachedLessons
+        return source.map { $0.asEpisode() }
+    }
 
     private var todaysYouTubeURL: String? {
         guard let first = minutes.first,
@@ -133,7 +152,7 @@ struct ListenView: View {
             .listRowBackground(Color.clear)
 
         case .loaded:
-            let list = episodesByFeed[selectedFeed] ?? []
+            let list = currentEpisodes
             if list.isEmpty {
                 ContentUnavailableView {
                     Label("No episodes yet", systemImage: "waveform.slash")
@@ -166,13 +185,16 @@ struct ListenView: View {
     }
 
     private func reload(force: Bool) async {
-        if episodesByFeed[selectedFeed] != nil && !force {
+        let feed = selectedFeed
+        let hasCache = !currentEpisodes.isEmpty
+
+        if hasCache && !force {
             loadState = .loaded
+            hasLoadedOnce = true
             return
         }
 
-        loadState = .loading
-        let feed = selectedFeed
+        if !hasCache { loadState = .loading }
         do {
             let fetched: [PodcastEpisode]
             switch feed {
@@ -181,11 +203,15 @@ struct ListenView: View {
             case .lesson:
                 fetched = try await service.fetchLessonEpisodes(force: force)
             }
-            episodesByFeed[feed] = fetched
+            try PodcastService.persist(fetched, channel: feed.rawValue, in: modelContext)
             loadState = .loaded
             hasLoadedOnce = true
         } catch {
-            loadState = .failed
+            if hasCache {
+                loadState = .loaded
+            } else {
+                loadState = .failed
+            }
         }
     }
 }
