@@ -206,12 +206,16 @@ struct ListenView: View {
             try PodcastService.persist(fetched, channel: feed.rawValue, in: modelContext)
             loadState = .loaded
             hasLoadedOnce = true
-        } catch {
-            if hasCache {
-                loadState = .loaded
-            } else {
-                loadState = .failed
+        } catch let PodcastError.unparseableFeed(partial) {
+            // Persist whatever survived — better to keep a partial cache
+            // than discard real episodes. If the partial is empty and we
+            // have no prior cache, surface the failure UI.
+            if !partial.isEmpty {
+                try? PodcastService.persist(partial, channel: feed.rawValue, in: modelContext)
             }
+            loadState = (hasCache || !partial.isEmpty) ? .loaded : .failed
+        } catch {
+            loadState = hasCache ? .loaded : .failed
         }
     }
 }

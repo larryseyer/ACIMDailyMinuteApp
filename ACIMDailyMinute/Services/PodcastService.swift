@@ -1,6 +1,16 @@
 import Foundation
 import SwiftData
 
+/// Typed errors the podcast pipeline surfaces to the view. Partial payloads
+/// come back with the error so the view can decide to show stale-but-real
+/// episodes alongside a "something's off with the feed" hint rather than
+/// silently discarding a recoverable fetch.
+enum PodcastError: Error {
+    /// XML parser emitted an error *and* parsed fewer than the one-week
+    /// min-trust threshold (7 episodes). View should show a retry state.
+    case unparseableFeed(partial: [PodcastEpisode])
+}
+
 /// One episode parsed from a podcast RSS feed. The audio URL is also used as
 /// the stable `id` since RSS doesn't ship a guaranteed-unique GUID and the
 /// enclosure URL is the natural primary key (it's what the audio player
@@ -73,7 +83,17 @@ actor PodcastService {
         )
         let (data, _) = try await URLSession.shared.data(for: request)
         let parser = PodcastXMLParser(data: data)
-        return parser.parse().sorted { $0.date > $1.date }
+        let episodes = parser.parse().sorted { $0.date > $1.date }
+
+        // Min-trust threshold: if the parser tripped an error *and* we got
+        // fewer than a week of episodes, treat the feed as unreadable so
+        // the view can prompt a retry. If we got at least 7 items the feed
+        // is probably healthy and the error was a trailing-garbage blip —
+        // return what we have rather than hiding recoverable data.
+        if parser.didError && episodes.count < 7 {
+            throw PodcastError.unparseableFeed(partial: episodes)
+        }
+        return episodes
     }
 
     /// Upserts fetched episodes into the SwiftData `CachedPodcastEpisode`
@@ -144,6 +164,10 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
     private var currentAudioURL = ""
     private var currentDuration = ""
     private var inItem = false
+    /// Set by `parserErrorOccurred` / `validationErrorOccurred`. Read by
+    /// `PodcastService.fetch` to decide whether the min-trust threshold
+    /// gate should fire.
+    private(set) var didError = false
 
     init(data: Data) {
         self.data = data
@@ -194,11 +218,19 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
     ) {
         if elementName == "item" {
             inItem = false
-            let date = parseRFC2822Date(currentDate.trimmingCharacters(in: .whitespacesAndNewlines))
+            // Drop-don't-fabricate: an unparseable pubDate used to fall
+            // back to `Date()`, which silently surfaced the item as if
+            // it were fresh today. Skip the item instead so the feed
+            // stays honest; the min-trust threshold in `fetch` still
+            // catches the "whole feed broke" case.
+            guard let date = parseRFC2822Date(currentDate.trimmingCharacters(in: .whitespacesAndNewlines)) else {
+                currentElement = ""
+                return
+            }
             let episode = PodcastEpisode(
                 id: currentAudioURL,
                 title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
-                date: date ?? Date(),
+                date: date,
                 audioURL: currentAudioURL.trimmingCharacters(in: .whitespacesAndNewlines),
                 duration: currentDuration.trimmingCharacters(in: .whitespacesAndNewlines)
             )
@@ -207,6 +239,14 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
             }
         }
         currentElement = ""
+    }
+
+    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+        didError = true
+    }
+
+    func parser(_ parser: XMLParser, validationErrorOccurred validationError: Error) {
+        didError = true
     }
 
     private func parseRFC2822Date(_ string: String) -> Date? {
