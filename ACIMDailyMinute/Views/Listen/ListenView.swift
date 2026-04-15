@@ -43,7 +43,29 @@ struct ListenView: View {
 
     private var currentEpisodes: [PodcastEpisode] {
         let source = (selectedFeed == .minute) ? cachedMinutes : cachedLessons
-        return source.map { $0.asEpisode() }
+        return source.map { cached in
+            let episode = cached.asEpisode()
+            guard selectedFeed == .lesson,
+                  let n = Self.lessonNumber(from: episode.title),
+                  let canonical = WorkbookCatalog.title(for: n) else {
+                return episode
+            }
+            return PodcastEpisode(
+                id: episode.id,
+                title: canonical,
+                date: episode.date,
+                audioURL: episode.audioURL,
+                duration: episode.duration
+            )
+        }
+    }
+
+    private static func lessonNumber(from title: String) -> Int? {
+        let trimmed = title.trimmingCharacters(in: .whitespaces)
+        if trimmed == "Introduction" { return 0 }
+        guard trimmed.hasPrefix("Lesson ") else { return nil }
+        let digits = trimmed.dropFirst("Lesson ".count).prefix(while: \.isNumber)
+        return Int(digits)
     }
 
     private var embedURL: URL? {
