@@ -106,3 +106,14 @@ to exit the loop.
 - **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
 - **Status:** Still BLOCKED — upstream feeds unchanged after 6 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds. No implementable stories remain in this sprint.
 
+### ACIM-206 — Listen Minute list renders all cached episodes descending
+- **Commit:** (pending)
+- **Date:** 2026-04-15
+- **Diagnosis:**
+  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **25** — server-side fix confirmed, feed now includes historical episodes
+  - Step 2 (code review): PodcastXMLParser correctly resets per-item accumulators on `<item>` start (line 192), iterates all items, and returns sorted array. No parser bug.
+  - Step 3 (code review): PodcastService.persist() upserts all episodes without early-return or cap. ListenView @Query has no fetchLimit and sorts by publishedAt descending (.reverse). No app-side limit.
+  - Root cause confirmed: server-side feed was the sole bottleneck (1 item). Now that it serves 25 items, existing app code handles them correctly.
+- **Changes:** No code changes required. App code was already correct — parser, persist pipeline, and @Query all handle multiple items. Only prd.json updated (removed `blocked` field, set passes:true).
+- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements.
+
