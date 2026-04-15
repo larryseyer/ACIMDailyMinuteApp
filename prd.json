@@ -123,7 +123,7 @@
     {
       "id": "ACIM-205",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-204"],
       "title": "Bug 3 — Today view + LessonDetailView: full-width text flow on iPad + bottom safe-area inset under mini-player",
       "why": "Screenshot 'Lesson text does not flow - why right side blank - player at bottom covers up text.png' shows the Today tab on iPad. The Daily Minute body and Lesson 11 body both render in what looks like phone-width (~375pt), leaving a large blank margin on the right half of the iPad screen. Additionally, the mini-player at the bottom covers the last couple of lines of the lesson body. Larry confirmed (chat, 2026-04-15) the desired flow treatment is 'full width minus standard 20pt horizontal padding' — no max-width cap, no centered reading column. Fix applies to DailyMinuteCard, DailyLessonCard (on Today view), and LessonDetailView (for consistency when viewing an individual lesson's full body). Bottom inset reuses the MiniPlayerView.height constant introduced in ACIM-204.",
@@ -152,6 +152,7 @@
       "id": "ACIM-206",
       "priority": 6,
       "passes": false,
+      "blocked": "Upstream feed returns only 1 item — backend issue. curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>' returns 1. The server publishes only today's episode; app code has no limits. Server-side fix required.",
       "depends_on": ["ACIM-205"],
       "title": "Bug 1 — Listen Minute sub-tab lists every cached historical daily minute in descending order",
       "why": "Screenshot 'Bottom list of daily minute links should contain all previous - sort decending from today or latest daily minute.png' shows the Listen tab with Minute sub-tab selected, but the list below the YouTube embed contains only ONE row: 'Daily Minute — April 14, 2026'. Expected: every cached Daily Minute episode, newest-first, descending by publishedAt. ACIM-104 claimed to ship this behavior, but the screenshot dated 2026-04-15 proves the list is still sparse. Likely root causes to diagnose in order: (1) PodcastXMLParser is only extracting the <item> inside the feed's <channel> and stopping after the first item because SAX state isn't resetting correctly between items, (2) the RSS feed URL itself only returns 1 item (verify with curl), (3) persist() is hitting a constraint failure silently for older items, (4) the @Query has a stale fetchDescriptor limit. Engineer must instrument briefly (print parse counts, persist counts), identify which, fix, remove the instrumentation, and ship a list that actually renders all episodes.",

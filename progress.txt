@@ -60,3 +60,49 @@ to exit the loop.
   - LessonsView.swift: added `@Environment(AudioManager.self) private var audio` and `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the FilteredLessonsList, so the 365-row List reserves 56pt at the bottom when audio is active and zero otherwise
 - **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
 
+### ACIM-205 — Today and LessonDetail full-width body flow + mini-player bottom inset
+- **Commit:** e38f916
+- **Date:** 2026-04-15
+- **Changes:**
+  - DailyMinuteCard.swift: added `.frame(maxWidth: .infinity, alignment: .leading)` on the body Text so it expands to full card width on iPad instead of staying at intrinsic phone-width
+  - DailyLessonCard.swift: same `.frame(maxWidth: .infinity, alignment: .leading)` treatment on the lesson body Text
+  - LessonDetailView.swift (FullLessonView): added `.frame(maxWidth: .infinity, alignment: .leading)` on the lesson body Text; added `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the ScrollView so the mini-player doesn't cover the last lines of text
+  - TodayView.swift: added `@Environment(AudioManager.self) private var audio` and `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the ScrollView
+- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
+### ACIM-206 — BLOCKED — Listen Minute list renders all cached episodes descending
+- **Date:** 2026-04-15
+- **Status:** BLOCKED — upstream feed returns only 1 item
+- **Diagnosis:**
+  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
+  - The RSS feed at podcast-minute.xml contains exactly one `<item>`: "Daily Minute — April 15, 2026"
+  - The feed has no historical episodes — the server publishes only today's entry
+  - App code review confirms no artificial limits: PodcastService parses all `<item>` elements, persist() upserts without cap, @Query has no fetchLimit, sort is by publishedAt descending
+  - Root cause is server-side: the backend only emits a single item in the RSS channel
+- **Action required:** Server-side fix to include historical episodes in podcast-minute.xml. Once the feed returns >1 item, re-run this story.
+- **Downstream impact:** ACIM-207 and ACIM-208 depend on ACIM-206 and are also blocked.
+
+### ACIM-206 — Re-check #1 (2026-04-15)
+- **Re-checked:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` still returns **1**
+- **Status:** Still BLOCKED — upstream feed unchanged. No implementable stories remain (ACIM-207 and ACIM-208 both depend on ACIM-206).
+
+### ACIM-206 — Re-check #2 (2026-04-15)
+- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
+- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
+- **Status:** Still BLOCKED — both upstream feeds remain sparse. ACIM-206 (minute), ACIM-207 (lessons), and ACIM-208 (YouTube fallback) all remain unimplementable until the server publishes historical episodes.
+
+### ACIM-206 — Re-check #3 (2026-04-15)
+- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
+- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
+- **Status:** Still BLOCKED — upstream feeds unchanged after 4 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds.
+
+### ACIM-206 — Re-check #4 (2026-04-15)
+- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
+- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
+- **Status:** Still BLOCKED — upstream feeds unchanged after 5 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds.
+
+### ACIM-206 — Re-check #5 (2026-04-15)
+- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
+- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
+- **Status:** Still BLOCKED — upstream feeds unchanged after 6 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds. No implementable stories remain in this sprint.
+
