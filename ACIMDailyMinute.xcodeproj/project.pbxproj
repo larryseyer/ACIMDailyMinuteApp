@@ -55,6 +55,7 @@
 		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
 		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
+		AA000001222 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
 		AA000001059 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
 		AA000001060 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002055 /* LiveActivityManager.swift */; };
 		AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002056 /* ACIMDailyMinuteLiveActivity.swift */; };
@@ -158,6 +159,7 @@
 		AA000002051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
 		AA000002053 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		AA000002220 /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
 		AA000002054 /* ACIMActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMActivityAttributes.swift; sourceTree = "<group>"; };
 		AA000002055 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		AA000002056 /* ACIMDailyMinuteLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteLiveActivity.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000002053 /* SavedView.swift */,
+				AA000002220 /* BookmarkRow.swift */,
 			);
 			path = Saved;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 				AA000001218 /* ArchivedReadingCard.swift in Sources */,
 				AA000001083 /* AboutView.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
+				AA000001222 /* BookmarkRow.swift in Sources */,
 				AA000001051 /* SharedModelContainer.swift in Sources */,
 				AA000001059 /* ACIMActivityAttributes.swift in Sources */,
 				AA000001060 /* LiveActivityManager.swift in Sources */,
