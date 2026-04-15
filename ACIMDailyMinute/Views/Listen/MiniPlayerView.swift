@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MiniPlayerView: View {
+    public static let height: CGFloat = 56
+
     @Environment(AudioManager.self) private var audioManager
 
     var body: some View {

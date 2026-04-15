@@ -76,7 +76,7 @@
     {
       "id": "ACIM-203",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-202"],
       "title": "Bug 4 — Archive tab gains a 'Today' button that jumps calendar to today's date",
       "why": "Screenshot 'Missing the TODAY button.png' shows the Archive tab with April 2026 displayed and April 1 selected (Wednesday). Today is April 15 but the user is stuck looking at April 1 with no one-tap affordance to jump back to today. The month nav chevrons work but are slow. ArchiveView.swift already has `Self.today()` as a static helper (line 33) and the DatePicker is bounded by `earliestDate...Self.today()` (line 103), so 'today' is a well-defined anchor. Task: add a SwiftUI Button titled 'Today' in the Archive toolbar (iOS) or next to the month header that sets `selectedDate = Self.today()`. The calendar must visually scroll to today's month (April 2026 → whatever month 'today' falls in). MacCalendarView (used on macOS) needs the same treatment so both platforms have the affordance.",

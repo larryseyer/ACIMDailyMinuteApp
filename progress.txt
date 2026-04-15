@@ -44,3 +44,11 @@ to exit the loop.
   - NotificationManager.swift: simplified preferredSound() to two-branch guard — checks Bundle.main.url(forResource:withExtension:) only; returns UNNotificationSound(named:) if present, .default with assertionFailure if not. Removed UserDefaults "useCustomNotificationSound" gate.
 - **Verification:** ACIMChime.caf found in build/Debug-iphonesimulator/ACIMDailyMinute.app/, build/Debug-iphoneos/ACIMDailyMinute.app/, and build/Debug/ACIMDailyMinute.app/Contents/Resources/. ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
 
+### ACIM-203 — Archive Today button jumps calendar to current date
+- **Commit:** b2eaa71
+- **Date:** 2026-04-15
+- **Changes:**
+  - ArchiveView.swift: added `.toolbar` with a "Today" `ToolbarItem` in `.topBarTrailing` (iOS) / `.automatic` (macOS) that sets `selectedDate = Self.today()` with animation. No existing toolbar to conflict with.
+  - MacCalendarView.swift: no changes needed — already has `.onChange(of: selection)` at line 31 that syncs `visibleMonth` when the bound date changes to a different month, so the Today button's binding update automatically scrolls the macOS calendar.
+- **Verification:** ./build.sh exit 0, 0 errors. grep confirms no TODO/FIXME/XXX/HACK/JTFNews in touched files.
+
