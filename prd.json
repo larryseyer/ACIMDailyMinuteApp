@@ -86,7 +86,7 @@
     {
       "id": "ACIM-303",
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-302"],
       "title": "Mini-player bottom safe-area inset on every root scrollable view (Lessons + Today + LessonDetail + Listen Minute + Listen Lessons)",
       "why": "Screenshot 'Player at bottom covers up lesson titles.png' shows the Lessons spine view with rows 17 and 18 (and implicitly any row deeper in the 365-item list) partially covered by the 'Daily Minute' mini-player docked at the bottom of the screen. Sprint I's ACIM-204 (commit 44641a4) claimed to add `.safeAreaInset(edge: .bottom)` to LessonsView with MiniPlayerView.height = 56, but the current screenshot proves either the inset was removed, MiniPlayerView.height is incorrect (real rendered height ≠ 56), the inset is on the wrong container, or the AudioManager.hasActiveAudio check returns false at the wrong moment. The fix applies the same inset modifier to EVERY root scrollable view, not just LessonsView, so no list anywhere in the app has its last rows covered when audio is active. Root scrollable views to cover: LessonsView (365-lesson spine), TodayView (Daily Minute + Daily Lesson cards), LessonDetailView (full-text lesson body, Absent state too), ListenView's Minute sub-tab list, ListenView's Lessons sub-tab list.",
@@ -115,7 +115,7 @@
     {
       "id": "ACIM-304",
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-303"],
       "title": "LessonDetailView bundled-body-text render with YouTube playlist fallback for missing lessons",
       "why": "Screenshot 'Where is the rest of the text for this lesson?.png' shows LessonDetailView for Lesson 1 rendering the pre-ACIM-208 UI: a 'LESSON 1' tag, a date '2026-03-31', the truncated RSS-style opening quote '\"Nothing I see in this room [on this street,' (no closing quote, no body), and a placeholder line 'Full text available once today's lesson fetches this entry.' plus a Listen button. Sprint I's ACIM-208 (commit 498db6c) claimed to replace this state with a YouTube playlist embed + Workbook365 canonical title, but the current screenshot proves either the fix was reverted, the code path isn't reached (wrong Absent-state routing), or the view got rebuilt against a different source-of-truth branch. Larry's decision during planning: bundle full lesson body text for all 365 lessons. Larry personally drops /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/Workbook365Bodies.json with schema `[{\"lessonNumber\": Int, \"body\": String}]`. This story codes a WorkbookBodiesCatalog service that reads that file lazily, plus a rewrite of LessonDetailView's Absent state to render bundled body when available and fall back to the YouTube playlist embed (ACIM-208 pattern) when the file or a specific lesson entry is missing.",

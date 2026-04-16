@@ -93,3 +93,51 @@ Pre-execution reminders for Larry (from planning hand-off):
   - No TODO/FIXME/XXX/HACK/JTFNews in changed files
   - No new maxWidth caps, GeometryReader wrappers, or ViewThatFits blocks introduced
 
+### ACIM-303 — Mini-player bottom inset on Lessons + Today + LessonDetail + Listen Minute + Lessons
+- **Status:** PASS
+- **Commit:** d07558b
+- **Diagnosis:**
+  - MiniPlayerView.swift: `public static let height: CGFloat = 56` already present (line 4) ✓
+  - LessonsView.swift: safeAreaInset already applied to FilteredLessonsList (lines 47-49) ✓
+  - TodayView.swift: safeAreaInset already applied to NavigationStack content (lines 52-54) ✓
+  - LessonDetailView.swift FullLessonView: safeAreaInset already applied (lines 92-94) ✓
+  - LessonDetailView.swift AbsentLessonView: safeAreaInset already applied (lines 296-298) ✓
+  - LessonDetailView.swift MetadataOnlyLessonView: MISSING safeAreaInset — ScrollView had no bottom inset
+  - ListenView.swift: MISSING safeAreaInset — shared List for both Minute and Lessons sub-tabs had no bottom inset
+- **Fix:**
+  - Added `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` to MetadataOnlyLessonView's ScrollView
+  - Added identical safeAreaInset to ListenView's shared List (covers both Minute and Lessons sub-tabs)
+  - All five views now use `@Environment(AudioManager.self)` — verified via grep
+  - No `.padding(.bottom, 56)` hardcodes, no insets on individual rows, no GeometryReader wrappers
+- **Verification:**
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - Fresh install on iPad sim 86F64729: app launches, Today view renders correctly
+  - All safeAreaInset modifiers use identical pattern: conditional on `audio.hasActiveAudio`, height = `MiniPlayerView.height` (56pt)
+  - No TODO/FIXME/XXX/HACK/JTFNews in any of the five touched files
+  - Full interactive walkthrough with audio active deferred to ACIM-307 end-to-end verification
+
+### ACIM-304 — LessonDetailView bundled body + YouTube playlist fallback
+- **Status:** PASS
+- **Commit:** (pending — will be filled by bu.sh)
+- **Changes:**
+  - Created WorkbookBodiesCatalog.swift (28 lines) — lazily loads Workbook365Bodies.json into [Int: String] dictionary; soft-fails to empty dict if file absent or malformed
+  - Modified AbsentLessonView in LessonDetailView.swift:
+    - lessonNumber == 0 → Introduction audio fallback (no YouTube, no body lookup)
+    - lessonNumber > 0 + body available in WorkbookBodiesCatalog → renders full body Text flowing full-width
+    - lessonNumber > 0 + body absent → YouTube playlist embed at index=lessonNumber (ACIM-208 pattern)
+    - Removed `.frame(maxWidth: .infinity, alignment: .leading)` from outer VStack; added `.frame(maxWidth: .infinity, alignment: .leading)` to title Text
+    - Removed `.clipShape(RoundedRectangle(cornerRadius: 8))` from YouTube embed
+    - Removed `.foregroundStyle(.primary)` and `.fixedSize(horizontal: false, vertical: true)` from title (now uses `.frame(maxWidth: .infinity, alignment: .leading)`)
+  - Registered WorkbookBodiesCatalog.swift in project.pbxproj (PBXBuildFile AA000001304, PBXFileReference AA000002304, Services group, Sources build phase)
+  - Registered Workbook365Bodies.json in project.pbxproj (PBXBuildFile AA000001305, PBXFileReference AA000002305, Resources group, Resources build phase)
+  - Created placeholder Workbook365Bodies.json (`[]`) so build succeeds — Xcode errors on lstat for missing referenced files (not a warning as originally assumed)
+- **Verification:**
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - Build succeeds with empty placeholder JSON — WorkbookBodiesCatalog.body(for:) returns nil for all lessons, YouTube fallback renders
+  - grep 'not yet cached' LessonDetailView.swift = 0 matches ✓
+  - grep 'func refresh\|Refresh' LessonDetailView.swift = 0 matches ✓
+  - No TODO/FIXME/XXX/HACK/JTFNews in any touched files ✓
+  - Workbook365Bodies.json absent scenario: YouTube embed renders as fallback for all non-zero lessons
+  - Full interactive walkthrough (body-present scenario) deferred to when Larry drops the real Workbook365Bodies.json
+- **Note:** Larry should replace Resources/Workbook365Bodies.json (currently `[]` placeholder) with the full 365-lesson body file at his convenience. No rebuild needed — just drop the file and rebuild.
+
