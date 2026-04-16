@@ -180,34 +180,29 @@ private struct MetadataOnlyLessonView: View {
     @Environment(AudioManager.self) private var audio
 
     private var title: String {
-        archive.text.isEmpty ? "Lesson \(lessonNumber)" : archive.text
+        WorkbookCatalog.title(for: lessonNumber) ?? (archive.text.isEmpty ? "Lesson \(lessonNumber)" : archive.text)
+    }
+
+    private var embedURL: String {
+        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Lesson \(lessonNumber)")
-                        .font(.caption.weight(.semibold))
-                        .textCase(.uppercase)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    if !archive.dateString.isEmpty {
-                        Text(archive.dateString)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-
                 Text(title)
                     .font(.system(.title2, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                Text("Full text available once today's lesson fetches this entry.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 8)
+                if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
+                    Text(body)
+                        .font(.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else if lessonNumber > 0 {
+                    YouTubePlayerView(videoURL: embedURL)
+                        .aspectRatio(16.0/9.0, contentMode: .fit)
+                }
 
                 if let audioURL = archive.audioURL, !audioURL.isEmpty {
                     HStack {
@@ -228,8 +223,8 @@ private struct MetadataOnlyLessonView: View {
                     .padding(.top, 4)
                 }
             }
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
