@@ -32,6 +32,7 @@ struct PhrasesEditorView: View {
                 Text("\(phrases.count) of \(PhraseStorage.maxPhrases)")
             }
         }
+        .readableContentWidth()
         .navigationTitle("Watched Phrases")
     }
 

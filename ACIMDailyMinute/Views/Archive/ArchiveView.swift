@@ -110,6 +110,7 @@ struct ArchiveView: View {
                 selectedDateRow
             }
             .padding(16)
+            .readableContentWidth()
         }
     }
 
@@ -262,6 +263,7 @@ private struct ArchiveSearchResultsList: View {
                     }
                 }
                 .listStyle(.plain)
+                .readableContentWidth()
             }
         }
     }

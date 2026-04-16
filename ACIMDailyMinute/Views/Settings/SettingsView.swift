@@ -65,6 +65,7 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .readableContentWidth()
             .navigationTitle("Settings")
             .toolbar {
                 #if os(iOS)
