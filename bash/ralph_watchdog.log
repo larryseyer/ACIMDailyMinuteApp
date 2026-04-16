@@ -68,3 +68,5 @@
 [2026-04-15 20:20:23] Progress: 3/7 complete | Next: ACIM-304: LessonDetailView bundled-body-text render with YouTube playlist fallback for missing lessons | Commit: d07558b
 [2026-04-15 20:30:23] Progress: 4/7 complete | Next: ACIM-305: Listen Minute sub-tab list renders all 25 cached Daily Minute episodes descending by publishedAt | Commit: d75f6d2
 [2026-04-15 20:40:23] Progress: 5/7 complete | Next: ACIM-306: Listen Lessons sub-tab list renders all 12 cached lesson episodes descending; top row matches YouTube player | Commit: fb0b464
+[2026-04-15 20:50:23] Progress: 6/7 complete | Next: ACIM-307: End-to-end verification pass on fresh iPad-sim install + emit COMPLETE sentinel | Commit: dd249b2
+[2026-04-15 21:00:23] Waiting: 6/7 | Working on: ACIM-307: End-to-end verification pass on fresh iPad-sim install + emit COMPLETE sentinel | 784s since last commit

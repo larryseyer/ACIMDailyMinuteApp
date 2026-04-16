@@ -201,7 +201,7 @@
     {
       "id": "ACIM-307",
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-306"],
       "title": "End-to-end verification pass on fresh iPad-sim install + emit COMPLETE sentinel",
       "why": "Sprint I's failure mode was setting passes:true on stories whose acceptance criteria were never actually walked through on the simulator. ACIM-307 is the explicit countermeasure: no code changes, only a disciplined re-walk of every ACIM-301 through ACIM-306 acceptance check on a FRESH simulator install, with the output appended to progress.txt as a single coherent walkthrough log. Only after all six checks re-pass does Ralph emit <promise>COMPLETE</promise> and exit the loop. If ANY re-check fails, append the failure details to progress.txt, set this story's passes:false, and escalate to Larry — do NOT reset prior stories' passes values.",
