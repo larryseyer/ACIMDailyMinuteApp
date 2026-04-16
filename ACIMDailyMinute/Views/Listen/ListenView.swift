@@ -216,9 +216,11 @@ struct ListenView: View {
     private func reload(force: Bool) async {
         let hasCache = !currentEpisodes.isEmpty
 
-        if hasCache && !force {
+        if hasCache {
             loadState = .loaded
-            hasLoadedOnce = true
+        }
+
+        if hasCache && hasLoadedOnce && !force {
             return
         }
 

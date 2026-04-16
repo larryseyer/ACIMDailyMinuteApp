@@ -146,7 +146,7 @@
     {
       "id": "ACIM-305",
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-304"],
       "title": "Listen Minute sub-tab list renders all 25 cached Daily Minute episodes descending by publishedAt",
       "why": "Two screenshots — 'Bottom list of daily minute links should contain all previous - sort decending from today or latest daily minute.png' (7:47 AM) and 'We should see April 14, 13, 12 11, 10 etc below as links.png' (6:52 PM) — show the Listen tab's Minute sub-tab with only ONE row below the YouTube embed: 'Daily Minute — April 14, 2026'. `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns 25, so the server is emitting 25 episodes. Sprint I's ACIM-206 (commit e1ede85) concluded 'No code changes required. App code was already correct' — that conclusion is falsified by the current screenshots. Something in the app — fetch, parse, persist, or query — is only delivering 1 row to the view. Fix requires diagnosing which of those four pipeline stages is broken and applying a scoped fix.",

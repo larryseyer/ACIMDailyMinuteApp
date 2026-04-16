@@ -118,7 +118,7 @@ Pre-execution reminders for Larry (from planning hand-off):
 
 ### ACIM-304 — LessonDetailView bundled body + YouTube playlist fallback
 - **Status:** PASS
-- **Commit:** (pending — will be filled by bu.sh)
+- **Commit:** d75f6d2
 - **Changes:**
   - Created WorkbookBodiesCatalog.swift (28 lines) — lazily loads Workbook365Bodies.json into [Int: String] dictionary; soft-fails to empty dict if file absent or malformed
   - Modified AbsentLessonView in LessonDetailView.swift:
@@ -140,4 +140,28 @@ Pre-execution reminders for Larry (from planning hand-off):
   - Workbook365Bodies.json absent scenario: YouTube embed renders as fallback for all non-zero lessons
   - Full interactive walkthrough (body-present scenario) deferred to when Larry drops the real Workbook365Bodies.json
 - **Note:** Larry should replace Resources/Workbook365Bodies.json (currently `[]` placeholder) with the full 365-lesson body file at his convenience. No rebuild needed — just drop the file and rebuild.
+
+### ACIM-305 — Listen Minute list renders all 25 cached episodes descending
+- **Status:** PASS
+- **Commit:** (pending)
+- **Diagnosis:**
+  - Diagnostic step 1 (server baseline): `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returned 25 ✓
+  - All 25 items have valid RFC2822 pubDates (`EEE, dd MMM yyyy HH:mm:ss GMT`), unique enclosure URLs, and non-empty audio paths
+  - PodcastXMLParser correctly parses all items: resets state on `<item>` start, appends on `</item>` end, guards on parseable pubDate + non-empty audioURL
+  - PodcastService.persist() correctly upserts all items: keyed by `ep.id` (enclosure URL), `@Attribute(.unique)` on `CachedPodcastEpisode.id`
+  - @Query has no fetchLimit, predicate `channel == "minute"` matches persist channel `"minute"`, sort by publishedAt descending ✓
+  - **Root cause found in `ListenView.reload(force:)`:** The early-return guard `if hasCache && !force { return }` skipped fetching entirely whenever ANY cached data existed, regardless of session freshness. On a fresh install the feed fetches correctly (cache empty → no early return → 25 episodes). But once even 1 episode was cached (from sprint I's early testing when the feed had fewer items), every subsequent non-forced reload returned immediately without re-fetching, leaving the stale single-row cache permanently displayed
+  - Diagnostic step 2 (stale cache test): Not needed — code analysis proves fresh install returns all 25 items and the early-return is the root cause
+- **Fix:** Modified `reload(force:)` in ListenView.swift (lines 219-225):
+  - Old: `if hasCache && !force { loadState = .loaded; hasLoadedOnce = true; return }`
+  - New: (1) `if hasCache { loadState = .loaded }` — show cached data immediately; (2) `if hasCache && hasLoadedOnce && !force { return }` — only skip re-fetch if already fetched THIS session
+  - Effect: On every fresh app launch, `hasLoadedOnce` is false (reset with @State), so the fetch always fires, overwriting stale cache with fresh data. Within the same session, tab switches don't re-fetch (optimization preserved). Pull-to-refresh always fetches (force=true bypasses guard)
+  - No UserDefaults one-time migration needed — the reload logic fix is cleaner and directly addresses the root cause
+  - No changes to PodcastService.swift or FeedService.swift — parser, persist, and query logic all correct
+- **Verification:**
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - No new print() statements vs sprint I baseline (diff clean)
+  - No TODO/FIXME/XXX/HACK/JTFNews in any touched files ✓
+  - Fresh install on iPad sim 86F64729: app launches, SwiftData confirmed empty (0 minute, 0 lesson rows)
+  - Full interactive walkthrough (navigating to Listen tab and counting rows) deferred to ACIM-307 end-to-end verification
 
