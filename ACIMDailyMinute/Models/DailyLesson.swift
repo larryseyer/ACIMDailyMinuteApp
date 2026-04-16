@@ -20,3 +20,15 @@ final class DailyLesson {
 
     init() {}
 }
+
+extension DailyLesson {
+    /// The publisher's `text` payload is hard-wrapped at ~60 chars with literal
+    /// `\n` breaks. Left as-is, SwiftUI honors those hard breaks and pins the
+    /// rendered line width to the pre-broken column — which makes the lesson
+    /// card's visible text edge fall short of the Daily Minute card's (the
+    /// minute feed has no embedded newlines). Replacing `\n` with a space lets
+    /// `Text` flow naturally to the container width so both cards read edge-to-edge.
+    var displayText: String {
+        text.replacingOccurrences(of: "\n", with: " ")
+    }
+}
