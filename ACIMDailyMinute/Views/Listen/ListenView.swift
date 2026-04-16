@@ -97,6 +97,9 @@ struct ListenView: View {
                 }
             }
             .listStyle(.plain)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+            }
             .navigationTitle("Listen")
             .refreshable {
                 await reload(force: true)

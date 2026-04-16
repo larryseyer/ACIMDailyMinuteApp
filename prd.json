@@ -60,7 +60,7 @@
     {
       "id": "ACIM-302",
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-301"],
       "title": "Today view body text flows full iPad width minus 20pt horizontal padding",
       "why": "Screenshot 'Lesson text does not flow - why right side blank.png' shows the Today tab on iPad with the lesson body text (both the Daily Minute body AND the Lesson 11 body inside the Workbook section) rendering in what appears to be phone-width (~375pt), leaving a large blank region on the right half of the iPad screen. Sprint I's ACIM-205 (commit e38f916) claimed to apply `.frame(maxWidth: .infinity, alignment: .leading)` on both DailyMinuteCard and DailyLessonCard body Text views, but the current screenshot proves either the modifier was removed, or a parent container is capping width above the Text views, or the modifier was never reached at the render tree level. Investigation must find the actual cap (likely a nested VStack/ViewThatFits/GeometryReader/.frame(maxWidth: 720)) and remove or widen it. Outer card padding stays at 20pt horizontal — the iPad wants 'full width minus standard 20pt side padding,' not a centered reading column.",
