@@ -34,7 +34,7 @@ struct TodayView: View {
                         DailyLessonCard(lesson: lesson)
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

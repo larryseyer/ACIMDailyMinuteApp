@@ -39,7 +39,7 @@
     {
       "id": "ACIM-301",
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "depends_on": [],
       "title": "Bundled ACIMChime.caf replaced with /assets/ 714KB version so test notification plays correct chime",
       "why": "Screenshot 'Wrong notification sound plays - (use :Users:larryseyer:ACIMDailyMinuteApp:assets).png' shows Settings → Send test notification producing a banner ('ACIM Daily Minute — Test notification — your daily reminder is configured.') but Larry reports the audible chime is wrong. Investigation: /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/ACIMChime.caf is 507148 bytes (Apr 13 timestamp) while /Users/larryseyer/ACIMDailyMinuteApp/assets/ACIMChime.caf is 714842 bytes (Apr 14 timestamp). The filename hint '(use :Users:larryseyer:ACIMDailyMinuteApp:assets)' confirms Larry wants the newer /assets/ copy shipped in the bundle. NotificationManager.preferredSound() already correctly references `UNNotificationSound(named: UNNotificationSoundName(\"ACIMChime.caf\"))` per sprint I's ACIM-202 diagnosis (commit b7a523c) — the bug is the bundled bytes, not the Swift code or the pbxproj membership. Fix is a pure binary replace.",

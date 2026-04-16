@@ -60,3 +60,17 @@ Pre-execution reminders for Larry (from planning hand-off):
 
 ## --- Iteration Log ---
 
+### ACIM-301 — Bundled ACIMChime.caf replaced with /assets/ 714KB version
+- **Status:** PASS
+- **Commit:** 97620e9
+- **Verification:**
+  - Binary-replaced Resources/ACIMChime.caf with /assets/ACIMChime.caf
+  - File size confirmed: 714842 bytes (exact match)
+  - MD5 match: a5972feb8f817fd699e8c87acb1e08f8 (both files identical)
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - Post-build bundle verification: iphonesimulator + macOS bundles both 714842 bytes
+  - Stale iphoneos build artifact (507148) removed (not rebuilt by ./build.sh which targets sim only)
+  - No TODO/FIXME/XXX/HACK/JTFNews in changed files
+  - No Swift code or pbxproj changes — diff is exactly one binary file content change
+- **Note:** Simulator audio verification deferred to ACIM-307 end-to-end walkthrough (requires host Mac audio unmuted)
+
