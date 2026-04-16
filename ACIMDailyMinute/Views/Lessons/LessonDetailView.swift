@@ -77,7 +77,7 @@ private struct FullLessonView: View {
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(lesson.text)
+                Text(lesson.displayText)
                     .font(.system(.body, design: .serif))
                     .foregroundStyle(.primary)
                     .lineSpacing(3)

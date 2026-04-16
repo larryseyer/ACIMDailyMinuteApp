@@ -27,7 +27,7 @@ struct DailyLessonCard: View {
                 .font(.system(.title3, design: .serif).weight(.semibold))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(lesson.text)
+            Text(lesson.displayText)
                 .font(.system(.body, design: .serif))
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -41,6 +41,7 @@ struct DailyLessonCard: View {
             }
         }
         .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(white: 0.11).opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
