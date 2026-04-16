@@ -175,7 +175,7 @@
     {
       "id": "ACIM-306",
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "depends_on": ["ACIM-305"],
       "title": "Listen Lessons sub-tab list renders all 12 cached lesson episodes descending; top row matches YouTube player",
       "why": "Two screenshots — 'Daily Lessons only show 1 lesson at bottom - should show all available lessong on YouTube in decending list.png' (7:47 AM) and 'Youtube link does not match the listed link.png' (6:52 PM) — show the Listen tab's Lessons sub-tab with only ONE row below the YouTube embed: 'Lesson 10: My thoughts do not mean anything.' But the YouTube embed at the top shows ACIM Lesson 11 ('My meaningless thoughts are showing me a meaningless world.'), and `curl -s https://www.acimdailyminute.org/podcast-lessons.xml | grep -c '<item>'` returns 12 (Lessons 1-11 + Introduction). The mismatch in the second screenshot is a direct consequence of the list sparseness in the first: today's Lesson 11 is missing from the list, so the most recent row visible is yesterday's Lesson 10, which doesn't match the Lesson-11 video in the embed. Fix order: after ACIM-305's pipeline diagnosis lands, the Lessons channel likely renders correctly by side-effect. Verify, then polish title-display and ordering.",

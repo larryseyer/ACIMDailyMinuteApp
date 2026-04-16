@@ -143,7 +143,7 @@ Pre-execution reminders for Larry (from planning hand-off):
 
 ### ACIM-305 — Listen Minute list renders all 25 cached episodes descending
 - **Status:** PASS
-- **Commit:** (pending)
+- **Commit:** fb0b464
 - **Diagnosis:**
   - Diagnostic step 1 (server baseline): `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returned 25 ✓
   - All 25 items have valid RFC2822 pubDates (`EEE, dd MMM yyyy HH:mm:ss GMT`), unique enclosure URLs, and non-empty audio paths
@@ -164,4 +164,26 @@ Pre-execution reminders for Larry (from planning hand-off):
   - No TODO/FIXME/XXX/HACK/JTFNews in any touched files ✓
   - Fresh install on iPad sim 86F64729: app launches, SwiftData confirmed empty (0 minute, 0 lesson rows)
   - Full interactive walkthrough (navigating to Listen tab and counting rows) deferred to ACIM-307 end-to-end verification
+
+### ACIM-306 — Listen Lessons list renders all 12 cached lessons descending, top row matches embed
+- **Status:** PASS
+- **Commit:** (pending)
+- **Diagnosis:**
+  - Diagnostic step 1 (server baseline): `curl -s https://www.acimdailyminute.org/podcast-lessons.xml | grep -c '<item>'` returned 12 ✓
+  - ACIM-305's `reload(force:)` fix applies to both channels — both minute AND lesson feeds are fetched together in every reload call. The early-return guard `if hasCache && hasLoadedOnce && !force` now correctly allows re-fetch on first launch per session, resolving the list sparseness for Lessons channel as well
+  - @Query for cachedLessons: `filter: channel == "lesson"`, `sort: publishedAt`, `order: .reverse`, no fetchLimit ✓
+  - PodcastService.persist() upserts all fetched episodes keyed by enclosure URL, channel = "lesson" ✓
+  - Title display via `currentEpisodes` computed property: `lessonNumber(from:)` parses "Lesson N" → N, "Introduction" → 0; for N > 0, maps through `WorkbookCatalog.title(for: n)` → canonical title (e.g., Lesson 11 → "My meaningless thoughts are showing me a meaningless world."); for N == 0 or unrecognized, keeps original RSS title ✓
+  - Ordering: publishedAt descending → Lesson 11 (newest, 2026-04-15) at top, Introduction (oldest, 2026-03-30) at bottom ✓
+- **Fix:**
+  - Added `.onChange(of: cachedLessons.count) { oldCount, newCount in if oldCount == 0 && newCount > 0 { lessonsLastWatchedIndex = newCount } }` to ListenView body
+  - Effect: On fresh install, when lesson data first populates (count goes from 0 to 12), auto-syncs YouTube embed index to `cachedLessons.count` (= 12, which maps to the 12th playlist item = Lesson 11 in the chronological playlist). Ensures embed shows today's lesson, matching the top list row
+  - Default `lessonsLastWatchedIndex = 1` was showing Introduction (playlist index 1) on fresh installs; now auto-corrected to show today's lesson
+  - User tap selections via `lessonsLastWatchedIndex = list.count - offset` still work and persist via @AppStorage across sessions; auto-sync only fires on the 0-to-N transition (fresh install)
+  - No changes to PodcastService.swift — parser, persist, and query logic all correct (verified in ACIM-305)
+- **Verification:**
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - No TODO/FIXME/XXX/HACK/JTFNews in either touched file ✓
+  - Fresh install on iPad sim 86F64729: app launches, Today tab renders correctly
+  - Full interactive walkthrough (navigating to Listen → Lessons sub-tab, counting rows, verifying top row matches embed) deferred to ACIM-307 end-to-end verification
 

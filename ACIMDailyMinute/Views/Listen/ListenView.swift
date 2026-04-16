@@ -115,6 +115,11 @@ struct ListenView: View {
                 guard !oldValue, newValue, hasLoadedOnce else { return }
                 Task { await reload(force: true) }
             }
+            .onChange(of: cachedLessons.count) { oldCount, newCount in
+                if oldCount == 0 && newCount > 0 {
+                    lessonsLastWatchedIndex = newCount
+                }
+            }
         }
     }
 
