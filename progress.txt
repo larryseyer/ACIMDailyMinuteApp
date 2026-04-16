@@ -1,145 +1,62 @@
-# Ralph Progress Log — ACIM Post-Ship Bug Sprint (2026-04-15)
-Started: Wed Apr 15 2026
-Prior sprint (ACIM-101 → ACIM-104) already merged to main (commits ac090c5, 382e765, 3dbd2bd, c00a3c7).
+# Ralph Progress Log — ACIM Post-Ship Bug Sprint II (2026-04-15 evening)
+Started: Wed Apr 15 2026 (evening session, after sprint I commits 409cd6d…498db6c)
 
-This sprint covers 7 bugs identified from screenshots in /Users/larryseyer/ACIMDailyMinuteApp/untracked/,
-decomposed into 8 stories (ACIM-201 → ACIM-208). The screenshot filename "Wrong notification sound plays -
-Add ACIM to Sparkly edition - Teddy Poppe - CIMS lineage" is two defects (missing ACIM prefix on tagline
-+ wrong notification sound) and ships as two stories: ACIM-201 (tagline) + ACIM-202 (sound).
+This sprint covers 7 bugs identified from 8 screenshots Larry dropped into
+/Users/larryseyer/ACIMDailyMinuteApp/untracked/ after testing the iPad-sim
+build that came out of sprint I. Five of sprint I's eight stories were
+marked passes:true but the current screenshots prove the UI is still
+broken on ACIM-202, ACIM-204, ACIM-205, ACIM-206, ACIM-207, and ACIM-208.
+Sprint II re-ships those six surfaces correctly and adds the user decision
+to bundle full body text for all 365 workbook lessons.
 
-Story order and bug mapping:
-  ACIM-201 → Bug 7b: Settings tagline "ACIM Sparkly Edition · Teddy Poppe · CIMS lineage"; strip from Onboarding + About
-  ACIM-202 → Bug 7a: Test notification + daily reminder audibly play ACIMChime.caf
-  ACIM-203 → Bug 4:  Archive tab gains a "Today" button
-  ACIM-204 → Bug 5:  Lessons list bottom safe-area inset under mini-player
-  ACIM-205 → Bug 3:  Today view + LessonDetail full-width text flow + bottom inset
-  ACIM-206 → Bug 1:  Listen Minute list shows all historical minutes descending
-  ACIM-207 → Bug 2:  Listen Lessons list shows all lessons descending from today
-  ACIM-208 → Bug 6:  LessonDetailView YouTube playlist embed for not-yet-cached lessons
+Evidence from planning (2026-04-15 evening):
+  - curl https://www.acimdailyminute.org/podcast-minute.xml  → HTTP 200, 81 KB, 25 <item> entries
+  - curl https://www.acimdailyminute.org/podcast-lessons.xml → HTTP 200, 27 KB, 12 <item> entries
+  - /ACIMDailyMinute/Resources/ACIMChime.caf = 507148 bytes, Apr 13 timestamp (stale)
+  - /assets/ACIMChime.caf                     = 714842 bytes, Apr 14 timestamp (intended)
+  - Workbook365.json contains titles only, no bodies. Larry will personally
+    drop Workbook365Bodies.json into Resources/ with schema
+    [{"lessonNumber": Int, "body": String}] covering all 365 lessons.
 
-Execution rules: one commit per story directly on main via ./bu.sh. Each story depends on the previous
-so Ralph executes them strictly in order. After ACIM-208 passes, Ralph emits <promise>COMPLETE</promise>
-to exit the loop.
+Story order and screenshot mapping:
+  ACIM-301 → 'Wrong notification sound plays - (use :Users:larryseyer:ACIMDailyMinuteApp:assets).png'
+               binary replace Resources/ACIMChime.caf with /assets/ 714KB copy
+  ACIM-302 → 'Lesson text does not flow - why right side blank.png'
+               Today view body text flows full iPad width minus 20pt
+  ACIM-303 → 'Player at bottom covers up lesson titles.png'
+               mini-player bottom safeAreaInset on every root scrollable view
+  ACIM-304 → 'Where is the rest of the text for this lesson?.png'
+               LessonDetailView bundled-body render with YouTube fallback
+  ACIM-305 → 'Bottom list of daily minute links should contain all previous…'
+             + 'We should see April 14, 13, 12 11, 10 etc below as links.png'
+               Listen Minute list renders all 25 episodes descending
+  ACIM-306 → 'Daily Lessons only show 1 lesson at bottom…'
+             + 'Youtube link does not match the listed link.png'
+               Listen Lessons list renders all 12 descending, top matches embed
+  ACIM-307 → (no standalone screenshot — end-to-end verification discipline)
+               fresh-install re-walk of 301-306 + regression check +
+               emit <promise>COMPLETE</promise>
+
+Execution rules (summary — see prd.json for full rules object):
+  - One commit per story directly on main via ./bu.sh "<id> — <title>"
+  - ./build.sh MUST exit 0 every story; grep 'error:' /tmp/full-build.log MUST equal 0
+  - No TODO/FIXME/XXX/HACK in any changed file
+  - No JTFNews/jtfnews/JTF News anywhere in the repo
+  - No dead code, no commented-out code, no backwards-compat shims
+  - /untracked/ is read-only — Ralph MUST NOT delete, move, rename, or edit files there
+  - ACIM-307 is the mandatory end-to-end gate; <promise>COMPLETE</promise>
+    may only be emitted after 307 passes on a fresh simulator install
+
+Pre-execution reminders for Larry (from planning hand-off):
+  1. Before ACIM-304 runs, drop Workbook365Bodies.json into
+     /Users/larryseyer/ACIMDailyMinuteApp/ACIMDailyMinute/Resources/.
+     If absent, ACIM-304's YouTube-embed fallback still ships cleanly;
+     the bundled-body render activates once the file is present.
+  2. Unmute the iPad-sim audio on the host Mac before the ACIM-301 and
+     ACIM-307 notification-sound verifications so the chime actually
+     plays audibly.
 
 ---
 
 ## --- Iteration Log ---
-
-### ACIM-201 — Settings ACIM Sparkly tagline + strip Sparkly refs from Onboarding and About
-- **Commit:** 409cd6d
-- **Date:** 2026-04-15
-- **Changes:**
-  - SettingsView.swift: tagline changed from "Sparkly Edition · Teddy Poppe · CIMS lineage" to "ACIM Sparkly Edition · Teddy Poppe · CIMS lineage"
-  - OnboardingView.swift: removed both "Sparkly Edition · Teddy Poppe · CIMS" Text views (iOS line 44 and macOS line 67) and their modifier chains
-  - AboutView.swift: rewrote mission card text removing "Drawn from the Sparkly Edition, " clause
-- **Verification:** grep confirms exactly 1 "Sparkly Edition" match (SettingsView only). ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
-
-### ACIM-202 — Test notification plays ACIMChime.caf via bundled asset
-- **Commit:** b7a523c
-- **Date:** 2026-04-15
-- **Diagnosis:**
-  - pbxproj: ACIMChime.caf already has PBXFileReference (audio.caf), PBXBuildFile (AA000001079), and is listed in PBXResourcesBuildPhase (AA000007002) of iOS target (AA000006001). No pbxproj edit needed.
-  - Root cause: preferredSound() gated on UserDefaults "useCustomNotificationSound" before checking bundle URL. AC specifies clean two-branch guard.
-- **Changes:**
-  - NotificationManager.swift: simplified preferredSound() to two-branch guard — checks Bundle.main.url(forResource:withExtension:) only; returns UNNotificationSound(named:) if present, .default with assertionFailure if not. Removed UserDefaults "useCustomNotificationSound" gate.
-- **Verification:** ACIMChime.caf found in build/Debug-iphonesimulator/ACIMDailyMinute.app/, build/Debug-iphoneos/ACIMDailyMinute.app/, and build/Debug/ACIMDailyMinute.app/Contents/Resources/. ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews.
-
-### ACIM-203 — Archive Today button jumps calendar to current date
-- **Commit:** b2eaa71
-- **Date:** 2026-04-15
-- **Changes:**
-  - ArchiveView.swift: added `.toolbar` with a "Today" `ToolbarItem` in `.topBarTrailing` (iOS) / `.automatic` (macOS) that sets `selectedDate = Self.today()` with animation. No existing toolbar to conflict with.
-  - MacCalendarView.swift: no changes needed — already has `.onChange(of: selection)` at line 31 that syncs `visibleMonth` when the bound date changes to a different month, so the Today button's binding update automatically scrolls the macOS calendar.
-- **Verification:** ./build.sh exit 0, 0 errors. grep confirms no TODO/FIXME/XXX/HACK/JTFNews in touched files.
-
-### ACIM-204 — Lessons list bottom safe-area inset prevents mini-player overlap
-- **Commit:** 44641a4
-- **Date:** 2026-04-15
-- **Changes:**
-  - MiniPlayerView.swift: added `public static let height: CGFloat = 56` constant for reuse by any view needing to reserve space for the mini-player overlay
-  - LessonsView.swift: added `@Environment(AudioManager.self) private var audio` and `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the FilteredLessonsList, so the 365-row List reserves 56pt at the bottom when audio is active and zero otherwise
-- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
-
-### ACIM-205 — Today and LessonDetail full-width body flow + mini-player bottom inset
-- **Commit:** e38f916
-- **Date:** 2026-04-15
-- **Changes:**
-  - DailyMinuteCard.swift: added `.frame(maxWidth: .infinity, alignment: .leading)` on the body Text so it expands to full card width on iPad instead of staying at intrinsic phone-width
-  - DailyLessonCard.swift: same `.frame(maxWidth: .infinity, alignment: .leading)` treatment on the lesson body Text
-  - LessonDetailView.swift (FullLessonView): added `.frame(maxWidth: .infinity, alignment: .leading)` on the lesson body Text; added `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the ScrollView so the mini-player doesn't cover the last lines of text
-  - TodayView.swift: added `@Environment(AudioManager.self) private var audio` and `.safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0) }` on the ScrollView
-- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files.
-
-### ACIM-206 — BLOCKED — Listen Minute list renders all cached episodes descending
-- **Date:** 2026-04-15
-- **Status:** BLOCKED — upstream feed returns only 1 item
-- **Diagnosis:**
-  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
-  - The RSS feed at podcast-minute.xml contains exactly one `<item>`: "Daily Minute — April 15, 2026"
-  - The feed has no historical episodes — the server publishes only today's entry
-  - App code review confirms no artificial limits: PodcastService parses all `<item>` elements, persist() upserts without cap, @Query has no fetchLimit, sort is by publishedAt descending
-  - Root cause is server-side: the backend only emits a single item in the RSS channel
-- **Action required:** Server-side fix to include historical episodes in podcast-minute.xml. Once the feed returns >1 item, re-run this story.
-- **Downstream impact:** ACIM-207 and ACIM-208 depend on ACIM-206 and are also blocked.
-
-### ACIM-206 — Re-check #1 (2026-04-15)
-- **Re-checked:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` still returns **1**
-- **Status:** Still BLOCKED — upstream feed unchanged. No implementable stories remain (ACIM-207 and ACIM-208 both depend on ACIM-206).
-
-### ACIM-206 — Re-check #2 (2026-04-15)
-- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
-- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
-- **Status:** Still BLOCKED — both upstream feeds remain sparse. ACIM-206 (minute), ACIM-207 (lessons), and ACIM-208 (YouTube fallback) all remain unimplementable until the server publishes historical episodes.
-
-### ACIM-206 — Re-check #3 (2026-04-15)
-- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
-- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
-- **Status:** Still BLOCKED — upstream feeds unchanged after 4 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds.
-
-### ACIM-206 — Re-check #4 (2026-04-15)
-- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
-- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
-- **Status:** Still BLOCKED — upstream feeds unchanged after 5 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds.
-
-### ACIM-206 — Re-check #5 (2026-04-15)
-- **Minute feed:** `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **1**
-- **Lesson feed:** `curl -s https://www.acimdailyminute.org/podcast-lesson.xml | grep -c '<item>'` returns **0**
-- **Status:** Still BLOCKED — upstream feeds unchanged after 6 checks today. All three remaining stories (ACIM-206, ACIM-207, ACIM-208) remain blocked on server-side fix to publish historical episodes in the RSS feeds. No implementable stories remain in this sprint.
-
-### ACIM-206 — Listen Minute list renders all cached episodes descending
-- **Commit:** e1ede85
-- **Date:** 2026-04-15
-- **Diagnosis:**
-  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-minute.xml | grep -c '<item>'` returns **25** — server-side fix confirmed, feed now includes historical episodes
-  - Step 2 (code review): PodcastXMLParser correctly resets per-item accumulators on `<item>` start (line 192), iterates all items, and returns sorted array. No parser bug.
-  - Step 3 (code review): PodcastService.persist() upserts all episodes without early-return or cap. ListenView @Query has no fetchLimit and sorts by publishedAt descending (.reverse). No app-side limit.
-  - Root cause confirmed: server-side feed was the sole bottleneck (1 item). Now that it serves 25 items, existing app code handles them correctly.
-- **Changes:** No code changes required. App code was already correct — parser, persist pipeline, and @Query all handle multiple items. Only prd.json updated (removed `blocked` field, set passes:true).
-- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements.
-
-### ACIM-207 — Listen Lessons list renders all cached lessons descending with canonical titles
-- **Commit:** fcea780
-- **Date:** 2026-04-15
-- **Diagnosis:**
-  - Step 1: `curl -s https://www.acimdailyminute.org/podcast-lessons.xml | grep -c '<item>'` returns **12** — server-side fix confirmed, feed includes Introduction + Lessons 1–11
-  - Step 2 (code review): PodcastService.fetchLessonEpisodes() fetches from `/podcast-lessons.xml`, PodcastXMLParser correctly parses all 12 items, persist() upserts without cap, @Query sorts by publishedAt descending. No parse/persist bug — feed data flows correctly.
-  - Root cause confirmed: server-side feed was the sole bottleneck (0 items previously). Now that it serves 12 items, existing app code handles them correctly.
-- **Changes:**
-  - ListenView.swift: added `lessonNumber(from:)` static helper that parses lesson number from RSS title via `^Lesson (\d+)` prefix matching and recognizes literal "Introduction" as lesson 0
-  - ListenView.swift: modified `currentEpisodes` computed property to apply canonical WorkbookCatalog titles for lesson episodes — chain: `WorkbookCatalog.title(for: n) ?? episode.title`. Introduction (lesson 0) naturally falls through to raw RSS title since WorkbookCatalog starts at lesson 1.
-  - RSS feed titles are truncated (e.g., `Lesson 1: "Nothing I see in this room [on this street,"`); canonical titles from Workbook365.json provide the full, consistent text matching the Lessons tab spine.
-- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. No new print() statements. Feed returns 12 items; @Query has no fetchLimit and sorts by publishedAt descending.
-
-### ACIM-208 — LessonDetailView YouTube playlist fallback for not-yet-cached lessons
-- **Commit:** 498db6c
-- **Date:** 2026-04-15
-- **Changes:**
-  - Created `Services/YouTubePlaylists.swift` with shared `dailyMinute` and `dailyLesson` playlist ID constants
-  - Updated `ListenView.swift` to reference `YouTubePlaylists.dailyMinute` / `.dailyLesson` instead of file-private string literals
-  - Replaced `AbsentLessonView` in `LessonDetailView.swift`: deleted the old "not yet cached" ContentUnavailableView + Refresh button + refresh() logic entirely; replaced with YouTube playlist embed showing `videoseries?list=<dailyLesson>&index=<lessonNumber>` at 16:9 aspect ratio, full-width minus 20pt horizontal padding, with heading from `WorkbookCatalog.title(for:)` in serif title2 semibold
-  - Lesson 0 (Introduction) guard: AbsentLessonView queries `CachedPodcastEpisode` channel "lesson" and falls through to podcast audio URL for the Introduction — no YouTube embed rendered for `lessonNumber == 0` since the playlist is 1-indexed
-  - Added bottom `safeAreaInset` on AbsentLessonView's ScrollView for mini-player clearance
-  - Added `YouTubePlaylists.swift` to pbxproj with PBXFileReference, PBXBuildFile, Services group membership, and iOS Sources build phase
-  - Updated doc comment on LessonDetailView to reflect new Absent state behavior
-- **Verification:** ./build.sh exit 0, 0 errors. No TODO/FIXME/XXX/HACK/JTFNews in touched files. grep 'not yet cached' and grep 'Refresh' on LessonDetailView.swift both return 0 matches.
 

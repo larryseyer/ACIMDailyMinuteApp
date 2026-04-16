@@ -55,3 +55,13 @@
 [2026-04-15 16:46:58]     Ralph running: yes
 [2026-04-15 16:56:58] Progress: 7/8 complete | Next: ACIM-208: Bug 6 — LessonDetailView shows ACIM YouTube playlist embed for any not-yet-cached lesson | Commit: fcea780
 [2026-04-15 17:06:58] Watchdog stopped by user
+[2026-04-15 20:10:22] ==========================================
+[2026-04-15 20:10:22] Ralph Watchdog Started - ACIM Daily Minute
+[2026-04-15 20:10:22] Check interval: 600s (10 min)
+[2026-04-15 20:10:22] Stall threshold: 1800s (30 min)
+[2026-04-15 20:10:22] ==========================================
+[2026-04-15 20:10:22] Starting state: 0/7 stories complete
+[2026-04-15 20:10:22] STALL DETECTED: No commits for 84 minutes
+[2026-04-15 20:10:22]     Last story: ACIM-301: Bundled ACIMChime.caf replaced with /assets/ 714KB version so test notification plays correct chime
+[2026-04-15 20:10:22]     Claude running: yes
+[2026-04-15 20:10:22]     Ralph running: yes
