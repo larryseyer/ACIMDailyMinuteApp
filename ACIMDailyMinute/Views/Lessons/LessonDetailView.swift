@@ -237,7 +237,7 @@ private struct MetadataOnlyLessonView: View {
     }
 }
 
-// MARK: - Absent state (YouTube playlist fallback)
+// MARK: - Absent state (bundled body text with YouTube playlist fallback)
 
 private struct AbsentLessonView: View {
     let lessonNumber: Int
@@ -266,35 +266,39 @@ private struct AbsentLessonView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(title)
                     .font(.system(.title2, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                if lessonNumber > 0 {
-                    YouTubePlayerView(videoURL: embedURL)
-                        .aspectRatio(16/9, contentMode: .fit)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                } else if let audioURL = introAudioURL, !audioURL.isEmpty {
-                    HStack {
-                        Spacer()
-                        Button {
-                            audio.play(url: audioURL, title: "Introduction")
-                        } label: {
-                            Label("Listen", systemImage: "play.fill")
-                                .font(.callout.weight(.medium))
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(Capsule())
+                if lessonNumber == 0 {
+                    if let audioURL = introAudioURL, !audioURL.isEmpty {
+                        HStack {
+                            Spacer()
+                            Button {
+                                audio.play(url: audioURL, title: "Introduction")
+                            } label: {
+                                Label("Listen", systemImage: "play.fill")
+                                    .font(.callout.weight(.medium))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Color.white.opacity(0.08))
+                                    .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Listen to Introduction")
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Listen to Introduction")
+                        .padding(.top, 4)
                     }
-                    .padding(.top, 4)
+                } else if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
+                    Text(body)
+                        .font(.body)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    YouTubePlayerView(videoURL: embedURL)
+                        .aspectRatio(16.0/9.0, contentMode: .fit)
                 }
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
