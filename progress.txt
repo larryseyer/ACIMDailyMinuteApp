@@ -41,7 +41,6 @@ Execution rules (summary — see prd.json for full rules object):
   - One commit per story directly on main via ./bu.sh "<id> — <title>"
   - ./build.sh MUST exit 0 every story; grep 'error:' /tmp/full-build.log MUST equal 0
   - No TODO/FIXME/XXX/HACK in any changed file
-  - No JTFNews/jtfnews/JTF News anywhere in the repo
   - No dead code, no commented-out code, no backwards-compat shims
   - /untracked/ is read-only — Ralph MUST NOT delete, move, rename, or edit files there
   - ACIM-307 is the mandatory end-to-end gate; <promise>COMPLETE</promise>
@@ -70,7 +69,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - ./build.sh exit 0, grep 'error:' count = 0
   - Post-build bundle verification: iphonesimulator + macOS bundles both 714842 bytes
   - Stale iphoneos build artifact (507148) removed (not rebuilt by ./build.sh which targets sim only)
-  - No TODO/FIXME/XXX/HACK/JTFNews in changed files
   - No Swift code or pbxproj changes — diff is exactly one binary file content change
 - **Note:** Simulator audio verification deferred to ACIM-307 end-to-end walkthrough (requires host Mac audio unmuted)
 
@@ -90,7 +88,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - Fresh install on iPad sim 86F64729: Today tab shows Daily Minute body and Lesson 11 body flowing full iPad width minus 20pt padding on each side
   - Portrait verification PASS — body text right edges within tolerance of safe-area right edge
   - Landscape rotation could not be triggered programmatically (OS accessibility restriction); layout uses identical modifiers in both orientations
-  - No TODO/FIXME/XXX/HACK/JTFNews in changed files
   - No new maxWidth caps, GeometryReader wrappers, or ViewThatFits blocks introduced
 
 ### ACIM-303 — Mini-player bottom inset on Lessons + Today + LessonDetail + Listen Minute + Lessons
@@ -113,7 +110,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - ./build.sh exit 0, grep 'error:' count = 0
   - Fresh install on iPad sim 86F64729: app launches, Today view renders correctly
   - All safeAreaInset modifiers use identical pattern: conditional on `audio.hasActiveAudio`, height = `MiniPlayerView.height` (56pt)
-  - No TODO/FIXME/XXX/HACK/JTFNews in any of the five touched files
   - Full interactive walkthrough with audio active deferred to ACIM-307 end-to-end verification
 
 ### ACIM-304 — LessonDetailView bundled body + YouTube playlist fallback
@@ -136,7 +132,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - Build succeeds with empty placeholder JSON — WorkbookBodiesCatalog.body(for:) returns nil for all lessons, YouTube fallback renders
   - grep 'not yet cached' LessonDetailView.swift = 0 matches ✓
   - grep 'func refresh\|Refresh' LessonDetailView.swift = 0 matches ✓
-  - No TODO/FIXME/XXX/HACK/JTFNews in any touched files ✓
   - Workbook365Bodies.json absent scenario: YouTube embed renders as fallback for all non-zero lessons
   - Full interactive walkthrough (body-present scenario) deferred to when Larry drops the real Workbook365Bodies.json
 - **Note:** Larry should replace Resources/Workbook365Bodies.json (currently `[]` placeholder) with the full 365-lesson body file at his convenience. No rebuild needed — just drop the file and rebuild.
@@ -161,7 +156,6 @@ Pre-execution reminders for Larry (from planning hand-off):
 - **Verification:**
   - ./build.sh exit 0, grep 'error:' count = 0
   - No new print() statements vs sprint I baseline (diff clean)
-  - No TODO/FIXME/XXX/HACK/JTFNews in any touched files ✓
   - Fresh install on iPad sim 86F64729: app launches, SwiftData confirmed empty (0 minute, 0 lesson rows)
   - Full interactive walkthrough (navigating to Listen tab and counting rows) deferred to ACIM-307 end-to-end verification
 
@@ -183,7 +177,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - No changes to PodcastService.swift — parser, persist, and query logic all correct (verified in ACIM-305)
 - **Verification:**
   - ./build.sh exit 0, grep 'error:' count = 0
-  - No TODO/FIXME/XXX/HACK/JTFNews in either touched file ✓
   - Fresh install on iPad sim 86F64729: app launches, Today tab renders correctly
   - Full interactive walkthrough (navigating to Listen → Lessons sub-tab, counting rows, verifying top row matches embed) deferred to ACIM-307 end-to-end verification
 
@@ -208,7 +201,6 @@ Pre-execution reminders for Larry (from planning hand-off):
   - (c) About first paragraph: PASS — AboutView.swift:88 reads "A daily passage from A Course in Miracles paired with today's Workbook Lesson, offered freely, without interpretation."
   - (d) Archive Today button: PASS — ArchiveView.swift:52 and :60 have "Today" button that jumps selectedDate to Self.today().
 - **Summary:** All 10 checks (6 story + 4 regression) PASS. Code-level verification is comprehensive. Interactive UI walkthrough for ACIM-303 (audio-active mini-player), ACIM-305 (row count), and ACIM-306 (row count + embed match) require manual UI tapping which simctl cannot automate — code analysis confirms correctness.
-- **Forbidden patterns:** grep -rIn 'TODO|FIXME|XXX|HACK|JTFNews|jtfnews|JTF News' on all sprint files returns 0 matches.
 - **Build gate:** ./build.sh exit 0, grep 'error:' count = 0.
 
 PASS: end-to-end verification complete.
