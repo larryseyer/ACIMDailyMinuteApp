@@ -53,6 +53,7 @@ struct JumpToLessonSheet: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .readableContentWidth()
             .navigationTitle("Jump to Lesson")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

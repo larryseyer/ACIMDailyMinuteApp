@@ -88,6 +88,7 @@ private struct FullLessonView: View {
             }
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .readableContentWidth()
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
@@ -225,6 +226,7 @@ private struct MetadataOnlyLessonView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
+            .readableContentWidth()
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
@@ -294,6 +296,7 @@ private struct AbsentLessonView: View {
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
+            .readableContentWidth()
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)

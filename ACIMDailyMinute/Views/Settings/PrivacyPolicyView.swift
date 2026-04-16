@@ -44,6 +44,7 @@ struct PrivacyPolicyView: View {
                     .padding(.top, 8)
             }
             .padding(20)
+            .readableContentWidth()
         }
         .navigationTitle("Privacy Policy")
         #if os(iOS)

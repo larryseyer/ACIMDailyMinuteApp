@@ -36,6 +36,7 @@ struct ArchiveDateDetailView: View {
                         }
                     }
                     .padding(16)
+                    .readableContentWidth()
                 }
             }
         }

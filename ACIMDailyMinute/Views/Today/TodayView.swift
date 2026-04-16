@@ -37,6 +37,7 @@ struct TodayView: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .readableContentWidth()
             }
             .navigationTitle("Today")
             .toolbar {

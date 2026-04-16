@@ -97,6 +97,7 @@ struct ListenView: View {
                 }
             }
             .listStyle(.plain)
+            .readableContentWidth()
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }

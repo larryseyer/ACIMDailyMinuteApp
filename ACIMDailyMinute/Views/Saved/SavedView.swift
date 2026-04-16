@@ -22,6 +22,7 @@ struct SavedView: View {
                         .onDelete(perform: delete)
                     }
                     .listStyle(.plain)
+                    .readableContentWidth()
                 }
             }
             .navigationTitle("Saved")
