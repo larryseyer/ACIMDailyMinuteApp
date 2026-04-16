@@ -35,7 +35,7 @@ After ACIM-104 passes AND `./build.sh` exits 0: emit `<promise>COMPLETE</promise
 - **Verification command (every story):** `./build.sh > /tmp/full-build.log 2>&1; echo exit=$?` — must report `exit=0`. Then `grep "error:" /tmp/full-build.log | wc -l` — must report `0`. Both gates required.
 - **Commit format:** `./bu.sh "<chunk-id> — <chunk title>"` — exact format. One commit per story, straight to `origin/main` (bu.sh handles this). Examples: `./bu.sh "ACIM-101 — Workbook365 catalog + lesson title fallback + release-cadence header"`.
 - **After commit succeeds:** set the story's `passes:true` in `prd.json` AND append a completion block to this file under `## --- Iteration Log ---` (template at the bottom of this file).
-- **No TODOs, no dead code, no backwards-compat shims, no JTFNews refs, no placeholder assets.** See `prd.json` rules block for the exact grep gates per story.
+- **No TODOs, no dead code, no backwards-compat shims, no placeholder assets.** See `prd.json` rules block for the exact grep gates per story.
 
 ## Story dependencies
 
