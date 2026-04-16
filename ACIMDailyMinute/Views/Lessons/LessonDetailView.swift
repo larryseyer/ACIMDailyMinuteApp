@@ -231,6 +231,9 @@ private struct MetadataOnlyLessonView: View {
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+        }
     }
 }
 

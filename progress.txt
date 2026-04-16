@@ -74,3 +74,22 @@ Pre-execution reminders for Larry (from planning hand-off):
   - No Swift code or pbxproj changes — diff is exactly one binary file content change
 - **Note:** Simulator audio verification deferred to ACIM-307 end-to-end walkthrough (requires host Mac audio unmuted)
 
+### ACIM-302 — Today view body text flows full iPad width minus 20pt padding
+- **Status:** PASS
+- **Commit:** 865e272
+- **Diagnosis:**
+  - Read TodayView.swift, DailyMinuteCard.swift, DailyLessonCard.swift top-to-bottom
+  - No finite maxWidth caps found (no `.frame(maxWidth: <finite>)`, no GeometryReader fraction, no ViewThatFits)
+  - No NavigationSplitView or columnVisibility constraints in the render tree
+  - DailyMinuteCard body Text already had `.frame(maxWidth: .infinity, alignment: .leading)` + `.fixedSize(horizontal: false, vertical: true)` — correct
+  - DailyLessonCard body Text already had `.frame(maxWidth: .infinity, alignment: .leading)` + `.fixedSize(horizontal: false, vertical: true)` — correct
+  - Only deviation: TodayView outer VStack had `.padding(.horizontal, 16)` instead of required 20pt
+- **Fix:** Changed `.padding(.horizontal, 16)` → `.padding(.horizontal, 20)` in TodayView.swift line 37
+- **Verification:**
+  - ./build.sh exit 0, grep 'error:' count = 0
+  - Fresh install on iPad sim 86F64729: Today tab shows Daily Minute body and Lesson 11 body flowing full iPad width minus 20pt padding on each side
+  - Portrait verification PASS — body text right edges within tolerance of safe-area right edge
+  - Landscape rotation could not be triggered programmatically (OS accessibility restriction); layout uses identical modifiers in both orientations
+  - No TODO/FIXME/XXX/HACK/JTFNews in changed files
+  - No new maxWidth caps, GeometryReader wrappers, or ViewThatFits blocks introduced
+
