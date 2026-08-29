@@ -39,7 +39,12 @@ final class AudioManager {
                 guard let self else { return }
                 switch playerItem.status {
                 case .failed:
-                    self.lastError = playerItem.error?.localizedDescription ?? "Audio failed to load"
+                    // Tear the session down before surfacing the error: without
+                    // this the mini player stays on screen showing a pause
+                    // button for audio that never started.
+                    let message = Self.loadFailureMessage(for: playerItem)
+                    self.stop()
+                    self.lastError = message
                 case .readyToPlay:
                     self.lastError = nil
                 default:
@@ -91,6 +96,21 @@ final class AudioManager {
         duration = 0
         currentTitle = ""
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
+    // MARK: - Failure Reporting
+
+    /// AVFoundation hands back the origin server's response body as the
+    /// error's `localizedDescription` — a reader tapping Listen was being
+    /// shown "The requested URL was not found on this server." Read the HTTP
+    /// status off the item's error log instead and say what it means for them.
+    private static func loadFailureMessage(for item: AVPlayerItem) -> String {
+        switch item.errorLog()?.events.last?.errorStatusCode {
+        case 403, 404, 410:
+            return "Audio for this reading hasn't been published yet."
+        default:
+            return "Audio couldn't be loaded. Check your connection and try again."
+        }
     }
 
     // MARK: - URL Resolution
