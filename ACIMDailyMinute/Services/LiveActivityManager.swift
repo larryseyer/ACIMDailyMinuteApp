@@ -21,9 +21,14 @@ enum LiveActivityManager {
             publishedAt: publishedDate
         )
 
-        if let current = Activity<ACIMDailyMinuteAttributes>.activities.first {
-            let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(dismissInterval))
+        // The Activity handle and its content are looked up inside the main-actor
+        // task: handing a handle captured out here to ActivityKit's nonisolated
+        // `update` would send a main-actor-isolated value across the boundary,
+        // which Swift 6 rejects.
+        if !Activity<ACIMDailyMinuteAttributes>.activities.isEmpty {
             Task { @MainActor in
+                guard let current = Activity<ACIMDailyMinuteAttributes>.activities.first else { return }
+                let content = ActivityContent(state: state, staleDate: Date().addingTimeInterval(dismissInterval))
                 await current.update(content)
             }
             return
@@ -45,9 +50,8 @@ enum LiveActivityManager {
     }
 
     static func endAllActivities() {
-        let activities = Activity<ACIMDailyMinuteAttributes>.activities
         Task { @MainActor in
-            for activity in activities {
+            for activity in Activity<ACIMDailyMinuteAttributes>.activities {
                 let finalState = ACIMDailyMinuteAttributes.ContentState(
                     minuteText: "Today's reading complete",
                     lessonNumber: activity.content.state.lessonNumber,
