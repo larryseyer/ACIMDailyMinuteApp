@@ -12,19 +12,11 @@
       232 episodes ready (150 minutes + 82 lessons); 9 older minutes have no
       local MP3 left on MacLive and are skipped with a warning.
 
-## Awaiting Larry's decision
-- [ ] **Push regenerated feeds?** The rebuilt `github_push.py` emits
-      `audio_url: ""` and omits `<enclosure>` where no audio is published.
-      Pushing now removes the 404-ing enclosures from the public podcast feeds
-      and makes the app stop showing a failing Listen button. Real enclosures
-      return automatically after the backfill.
-
-## Uncommitted
-- [ ] **Pipeline repo** (`/Volumes/MacLive/Users/larryseyer/acim-daily-minute`):
-      `archive_upload.py`, `migrate_db_audio_url.py`,
-      `backfill_archive_audio.py` (new) and `github_push.py` (modified) are
-      written, tested, and unstaged. `lessons.py` also shows as modified — not
-      my change, left alone. Migration has already been applied to the DB.
+## Follow-ups
+- [ ] **Lesson text still has no paragraph breaks.** The repair covers
+      `segments` (Daily Minute). Lesson bodies come from the `lessons` table,
+      which has no equivalent source-with-indentation to recover from, so
+      lessons still render as one block.
 
 ## Known defects, not yet fixed
 - [ ] **`build.sh` watchOS step is broken on this machine.** It pins

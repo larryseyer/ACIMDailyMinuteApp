@@ -31,6 +31,17 @@ struct LessonDetailView: View {
         )
     }
 
+    /// Choosing a lesson *is* the request to watch it, so the video opens
+    /// full screen and playing rather than making the reader find and tap a
+    /// play button and then a fullscreen button. Dismissing it lands on the
+    /// lesson text, which is still here underneath.
+    @State private var hasAutoPresentedVideo = false
+    @State private var isShowingVideo = false
+
+    private var lessonVideoURL: String {
+        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
+    }
+
     var body: some View {
         Group {
             if let lesson = lessonMatches.first {
@@ -44,9 +55,56 @@ struct LessonDetailView: View {
         .navigationTitle("Lesson \(lessonNumber)")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $isShowingVideo) {
+            LessonVideoCover(videoURL: lessonVideoURL)
+        }
+        .onAppear {
+            guard !hasAutoPresentedVideo else { return }
+            hasAutoPresentedVideo = true
+            isShowingVideo = true
+        }
         #endif
     }
 }
+
+#if os(iOS)
+
+// MARK: - Full-screen landscape video
+
+/// Full-bleed autoplaying player. Locks to landscape on iPhone for the time it
+/// is on screen; iPad keeps its own orientation (see `OrientationController`).
+private struct LessonVideoCover: View {
+    let videoURL: String
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Color.black
+                .ignoresSafeArea()
+
+            YouTubePlayerView(videoURL: videoURL, autoplay: true)
+                .ignoresSafeArea()
+
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title)
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.white)
+                    .padding(20)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Close video")
+        }
+        .statusBarHidden()
+        .onAppear { OrientationController.lockLandscape() }
+        .onDisappear { OrientationController.unlock() }
+    }
+}
+
+#endif
 
 // MARK: - Full state
 
@@ -77,7 +135,7 @@ private struct FullLessonView: View {
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
-                Text(lesson.displayText)
+                ReadingTextView(raw: lesson.text)
                     .font(.system(.body, design: .serif))
                     .foregroundStyle(.primary)
                     .lineSpacing(3)

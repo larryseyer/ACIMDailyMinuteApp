@@ -88,6 +88,7 @@
 		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
 		AA000001082 /* MacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* MacCalendarView.swift */; };
 		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+		AA000001250 /* ReadingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002250 /* ReadingTextView.swift */; };
 		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
 		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
 		AA000001202 /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
@@ -195,6 +196,7 @@
 		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
 		AA000002069 /* MacCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalendarView.swift; sourceTree = "<group>"; };
 		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA000002250 /* ReadingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextView.swift; sourceTree = "<group>"; };
 		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
 		AA000002202 /* DailyLessonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLessonCard.swift; sourceTree = "<group>"; };
@@ -318,6 +320,7 @@
 				AA000005016 /* Saved */,
 				AA000005014 /* Onboarding */,
 				AA000002070 /* AboutView.swift */,
+				AA000002250 /* ReadingTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 				AA000001217 /* ArchiveDateDetailView.swift in Sources */,
 				AA000001218 /* ArchivedReadingCard.swift in Sources */,
 				AA000001083 /* AboutView.swift in Sources */,
+				AA000001250 /* ReadingTextView.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,
 				AA000001223 /* PhrasesEditorView.swift in Sources */,

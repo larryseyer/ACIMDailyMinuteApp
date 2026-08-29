@@ -1,9 +1,63 @@
 import SwiftUI
 import SwiftData
+#if os(iOS)
+import UIKit
+
+/// Owns the app's allowed interface orientations.
+///
+/// A `requestGeometryUpdate` on its own is reverted by the system almost
+/// immediately; the window's delegate has to agree by reporting a matching
+/// supported-orientation mask. This holds that mask so the lesson video can
+/// force landscape while it is on screen and hand control back afterwards.
+final class OrientationController: NSObject, UIApplicationDelegate {
+    static var mask: UIInterfaceOrientationMask = .all
+
+    func application(
+        _ application: UIApplication,
+        supportedInterfaceOrientationsFor window: UIWindow?
+    ) -> UIInterfaceOrientationMask {
+        Self.mask
+    }
+
+    /// Forcing rotation is an iPhone-only behavior. iPad keeps its freedom to
+    /// rotate — the screen is large enough that a forced turn is an
+    /// interruption rather than a help, and it breaks Split View.
+    static var forcesRotation: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone
+    }
+
+    static func lockLandscape() {
+        guard forcesRotation else { return }
+        apply(.landscape, rotatingTo: .landscapeRight)
+    }
+
+    static func unlock() {
+        guard forcesRotation else { return }
+        apply(.all, rotatingTo: .portrait)
+    }
+
+    private static func apply(
+        _ newMask: UIInterfaceOrientationMask,
+        rotatingTo orientation: UIInterfaceOrientationMask
+    ) {
+        mask = newMask
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first
+        else { return }
+        scene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
+        scene.keyWindow?.rootViewController?
+            .setNeedsUpdateOfSupportedInterfaceOrientations()
+    }
+}
+#endif
 
 @main
 struct ACIMDailyMinuteApp: App {
     @Environment(\.scenePhase) private var scenePhase
+#if os(iOS)
+    @UIApplicationDelegateAdaptor(OrientationController.self) private var orientationController
+#endif
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
