@@ -4,6 +4,7 @@ import WebKit
 #if os(iOS)
 struct YouTubePlayerView: UIViewRepresentable {
     let videoURL: String
+    var autoplay: Bool = false
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -13,6 +14,7 @@ struct YouTubePlayerView: UIViewRepresentable {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = []
+        config.preferences.isElementFullscreenEnabled = true
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.isOpaque = false
@@ -29,6 +31,7 @@ struct YouTubePlayerView: UIViewRepresentable {
 #elseif os(macOS)
 struct YouTubePlayerView: NSViewRepresentable {
     let videoURL: String
+    var autoplay: Bool = false
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -37,6 +40,7 @@ struct YouTubePlayerView: NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
         config.mediaTypesRequiringUserActionForPlayback = []
+        config.preferences.isElementFullscreenEnabled = true
 
         let webView = WKWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = context.coordinator
@@ -55,12 +59,16 @@ extension YouTubePlayerView {
     func loadVideoIfNeeded(_ webView: WKWebView, coordinator: Coordinator) {
         guard coordinator.loadedVideoID != videoURL else { return }
 
+        let params = "playsinline=1&fs=1&rel=0&modestbranding=1"
+            + (autoplay ? "&autoplay=1" : "")
+            + "&origin=https://www.acimdailyminute.org"
+
         let embedSrc: String
         if videoURL.contains("youtube.com/embed/") {
             let separator = videoURL.contains("?") ? "&" : "?"
-            embedSrc = "\(videoURL)\(separator)playsinline=1&rel=0&modestbranding=1&origin=https://www.acimdailyminute.org"
+            embedSrc = "\(videoURL)\(separator)\(params)"
         } else if let videoID = extractVideoID(from: videoURL) {
-            embedSrc = "https://www.youtube.com/embed/\(videoID)?playsinline=1&rel=0&modestbranding=1&origin=https://www.acimdailyminute.org"
+            embedSrc = "https://www.youtube.com/embed/\(videoID)?\(params)"
         } else {
             return
         }
@@ -83,7 +91,7 @@ extension YouTubePlayerView {
             src="\(embedSrc)"
             frameborder="0"
             allowfullscreen
-            allow="autoplay; encrypted-media">
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture">
         </iframe>
         </body>
         </html>

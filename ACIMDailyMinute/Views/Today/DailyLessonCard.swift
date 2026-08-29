@@ -27,7 +27,7 @@ struct DailyLessonCard: View {
                 .font(.system(.title3, design: .serif).weight(.semibold))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(lesson.displayText)
+            ReadingTextView(raw: lesson.text)
                 .font(.system(.body, design: .serif))
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
