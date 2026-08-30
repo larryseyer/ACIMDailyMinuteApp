@@ -50,7 +50,7 @@ if __name__ == "__main__":
         Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
     )
     expected = {
-        "ACIMTextSections.json": 268,
+        "ACIMTextSections.json": 272,
         "Workbook365Bodies.json": 365,
         "ACIMSegments.json": 1983,
         "ACIMManual.json": 105,

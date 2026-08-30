@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from chapter_openings import recovered_sections, splice
 from citations import addressable_paragraphs, locate
 from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
@@ -19,7 +20,9 @@ OUT = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
 
 EXPECTED = {
     "Workbook365Bodies.json": 365,
-    "ACIMTextSections.json": 268,
+    # 268 extracted, plus the four chapter openings that were dropped whole and
+    # have to come back as sections of their own. See `chapter_openings.py`.
+    "ACIMTextSections.json": 272,
     "ACIMManual.json": 105,
     "ACIMSegments.json": 1983,
     "WorkbookIntroductions.json": 2,
@@ -40,6 +43,47 @@ def write(name, rows):
     if len(rows) != expected:
         sys.exit(f"FAIL {name}: exported {len(rows)}, expected {expected}")
     print(f"  {name}: {len(rows)} records, {path.stat().st_size / 1048576:.2f} MB")
+
+
+def apply_recovered_openings(sections, segments):
+    """Put back the chapter openings the extractor dropped.
+
+    Two shapes. Where a chapter's Introduction survived and lost only its first
+    paragraphs, the recovered text is spliced onto the front of it. Where the
+    whole opening went -- chapters 13, 16 and 20 have no Introduction at all,
+    and the Preface lost the publisher's front matter -- it comes back as a
+    section of its own, and every later section in that chapter moves up one.
+
+    ⛔ Renumbering moves addresses: today's `T-16.1 True Empathy` becomes
+    `T-16.2`. That is deliberate, and it is why `ACIMSegments.json` is exported
+    in the same run -- the citations baked into it have to move with it.
+    """
+    by_address = {(r["chapterNumber"], r["sectionNumber"]): r for r in sections}
+    additions = []
+
+    for item in recovered_sections(sections, segments):
+        target = by_address[(item["chapter"], item["section"])]
+        if item["mode"] == "prepend":
+            target["body"] = splice(item["text"], target["body"])
+        else:
+            additions.append((item, target["chapterTitle"]))
+
+    for item, chapter_title in additions:
+        for row in sections:
+            if (row["chapterNumber"] == item["chapter"]
+                    and row["sectionNumber"] >= item["section"]):
+                row["sectionNumber"] += 1
+        sections.append({
+            "chapterNumber": item["chapter"],
+            "chapterTitle": chapter_title,
+            "sectionNumber": item["section"],
+            "sectionTitle": item["title"],
+            "body": item["text"],
+        })
+
+    # CorpusService reads this file in order and does not sort it.
+    sections.sort(key=lambda r: (r["chapterNumber"], r["sectionNumber"]))
+    return len(additions)
 
 
 def main():
@@ -74,6 +118,20 @@ def main():
     heads = running_head_keys(raw_sections)
     for row in raw_sections:
         row["body"] = display_body(row["body"], heads)
+
+    # `text_paragraphs` is the published reading; `text` feeds narration. Never
+    # cross them. Read before the sections are written, because the openings the
+    # extractor dropped are recovered out of these rows.
+    segment_rows = [
+        {"segmentId": r[0], "sourcePDF": r[1], "body": r[2]}
+        for r in conn.execute(
+            "SELECT id, source_pdf, COALESCE(NULLIF(text_paragraphs, ''), text) "
+            "FROM segments ORDER BY id"
+        )
+    ]
+    added = apply_recovered_openings(raw_sections, segment_rows)
+    print(f"  chapter openings recovered: {added} new sections, "
+          f"{len(raw_sections)} sections total")
     write("ACIMTextSections.json", raw_sections)
 
     # Lesson ids 0 and 500 are the two Part Introductions. They sit outside the
@@ -94,15 +152,6 @@ def main():
             "WHERE source_pdf = 'Manual' ORDER BY id"
         )
     ])
-
-    # text_paragraphs is the published reading; text feeds narration. Never cross them.
-    segment_rows = [
-        {"segmentId": r[0], "sourcePDF": r[1], "body": r[2]}
-        for r in conn.execute(
-            "SELECT id, source_pdf, COALESCE(NULLIF(text_paragraphs, ''), text) "
-            "FROM segments ORDER BY id"
-        )
-    ]
 
     # A segment is a word-count cut: `segments` carries no section and no
     # paragraph column, so its address has to be FOUND rather than read. That

@@ -129,12 +129,21 @@ def display_string(raw):
     return "\n\n".join(p for p in paragraphs_out if p)
 
 
+# A run of single letters is a heading the page set letter-spaced -- the
+# Preface's `p u b l i s h e r ’s n o t e`. It is furniture, and it is furniture
+# no indent rule can see, because it sits glued to the front of real prose. The
+# possessive belongs inside the run: matching single characters alone stops at
+# the `’s` and leaves `’s n o t e` in the body.
+LETTER_SPACED = re.compile(r"(?:(?:['\u2019]s|[^\W\d_]) ){3,}", re.UNICODE)
+
+
 def verify(rows):
-    """Assert the three properties the app depends on. Returns a report."""
+    """Assert the properties the app depends on. Returns a report."""
     keys = running_head_keys(rows)
     furniture = []
     broken = []
     reshaped = []
+    letter_spaced = []
     total = 0
 
     for row in rows:
@@ -148,13 +157,26 @@ def verify(rows):
         total += len(blocks)
         for block in blocks[:-1]:
             # A colon or semicolon ends a paragraph that introduces a list or a
-            # quotation, which is the one legitimate way to break mid-thought.
-            if block and block[-1] not in SENTENCE_END and block[-1] not in ":;":
-                broken.append((where, block[-60:]))
+            # quotation, which is one legitimate way to break mid-thought. The
+            # other is a line of set verse inside a quotation the next line
+            # closes -- the Preface's couplet, "Do not attempt to break God's
+            # copyright, / because His Authorship alone can copy right." The
+            # page sets those as two centred lines, so joining them would
+            # flatten structure the book has.
+            if not block:
+                continue
+            open_quote = block.count("\u201c") > block.count("\u201d")
+            if block[-1] in SENTENCE_END or block[-1] in ":;":
+                continue
+            if open_quote and block[-1] == ",":
+                continue
+            broken.append((where, block[-60:]))
         for block in blocks:
             if "\n" in block:
                 reshaped.append(where)
             stripped = block.strip()
+            for match in LETTER_SPACED.finditer(block):
+                letter_spaced.append((where, match.group()[:60]))
             if re.fullmatch(r"\d{1,3}|[ivxlcdm]{1,7}", stripped):
                 furniture.append((where, stripped))
             elif is_shouted_heading(stripped, keys):
@@ -166,6 +188,7 @@ def verify(rows):
         "not_display_form": sorted(set(reshaped)),
         "page_furniture": furniture,
         "mid_sentence_breaks": broken,
+        "letter_spaced_headings": letter_spaced,
     }
 
 
@@ -181,7 +204,8 @@ if __name__ == "__main__":
     report = verify(json.loads(path.read_text(encoding="utf-8")))
     print(f"sections: {report['sections']}  paragraphs: {report['paragraphs']}")
     failed = False
-    for name in ("not_display_form", "page_furniture", "mid_sentence_breaks"):
+    for name in ("not_display_form", "page_furniture", "mid_sentence_breaks",
+                 "letter_spaced_headings"):
         entries = report[name]
         print(f"{name}: {len(entries)}")
         for entry in entries[:10]:
