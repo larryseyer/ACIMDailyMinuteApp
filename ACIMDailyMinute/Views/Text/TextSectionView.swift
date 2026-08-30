@@ -50,10 +50,21 @@ struct TextSectionView: View {
     private func content(_ reading: CorpusTextSection) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(reading.chapterTitle)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                HStack(spacing: 8) {
+                    Text(reading.chapterTitle)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                    Spacer(minLength: 8)
+                    if let stem = CitationResolver.stem(
+                        for: .textSection(chapter: chapter, section: section)
+                    ) {
+                        Text(stem)
+                            .font(.caption.monospaced())
+                            .foregroundStyle(.tertiary)
+                            .accessibilityLabel("Citation \(stem)")
+                    }
+                }
 
                 Text(reading.sectionTitle)
                     .font(.system(.title2, design: .serif).weight(.semibold))

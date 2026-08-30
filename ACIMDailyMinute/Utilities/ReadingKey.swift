@@ -48,27 +48,48 @@ enum ReadingKey: Hashable, Sendable {
 
     /// How this reading is named in an export a stranger has to be able to read.
     ///
+    /// The stem in parentheses is the address — the one part of this line that
+    /// still means something to someone holding the printed book, or reading the
+    /// export years after this app is gone. Readings with no addressable form
+    /// (the Manual, an archived minute whose segment is unknown) carry no stem
+    /// rather than a plausible-looking one.
+    ///
     /// The `.minuteDate` name carries no date: publication dates are the app's
     /// own bookkeeping and never appear on a reader-facing surface.
     func displayName(corpus: CorpusService = .shared) -> String {
+        let base: String
         switch self {
+        case .lesson(0), .lesson(500):
+            // The two Part Introductions are keyed as lessons because that is
+            // where their annotations already store, but they are not lessons and
+            // naming them "Lesson 0" and "Lesson 500" — which this line did — is
+            // wrong on the Saved row and wrong forever in an export. The title
+            // comes from the corpus rather than a literal, so the row and the
+            // screen cannot disagree.
+            let number = if case .lesson(let n) = self { n } else { 0 }
+            base = WorkbookBodiesCatalog.introduction(for: number)?.title
+                ?? "Workbook Introduction"
         case .lesson(let n):
-            if let title = WorkbookCatalog.title(for: n) { return "Lesson \(n) — \(title)" }
-            return "Lesson \(n)"
-        case .segment(let id):
-            if let s = corpus.segment(id: id) { return "Daily Minute — \(s.sourcePDF)" }
-            return "Daily Minute"
-        case .manual:
-            return "Manual for Teachers"
-        case .textSection(let c, let s):
-            if let section = corpus.textSections.first(
-                where: { $0.chapterNumber == c && $0.sectionNumber == s }
-            ) {
-                return "Text, Chapter \(c) — \(section.sectionTitle)"
+            if let title = WorkbookCatalog.title(for: n) {
+                base = "Lesson \(n) — \(title)"
+            } else {
+                base = "Lesson \(n)"
             }
-            return "Text, Chapter \(c)"
+        case .segment(let id):
+            base = "Daily Minute — \(corpus.segment(id: id)?.bookName ?? "A Course in Miracles")"
+        case .manual:
+            base = "Manual for Teachers"
+        case .textSection(let c, let s):
+            let chapter = c == 0 ? "Preface" : "Chapter \(c)"
+            if let section = corpus.textSection(chapter: c, section: s) {
+                base = "Text, \(chapter) — \(section.sectionTitle)"
+            } else {
+                base = "Text, \(chapter)"
+            }
         case .minuteDate:
-            return "Daily Minute"
+            base = "Daily Minute"
         }
+        guard let stem = CitationResolver.stem(for: self, corpus: corpus) else { return base }
+        return "\(base) (\(stem))"
     }
 }
