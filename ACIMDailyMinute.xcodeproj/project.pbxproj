@@ -86,6 +86,7 @@
 		AA000001304 /* WorkbookBodiesCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002304 /* WorkbookBodiesCatalog.swift */; };
 		AA000001306 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
 		AA000001312 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
+		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
 		AA000001308 /* ACIMTextSections.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002308 /* ACIMTextSections.json */; };
@@ -206,6 +207,7 @@
 		AA000002304 /* WorkbookBodiesCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookBodiesCatalog.swift; sourceTree = "<group>"; };
 		AA000002306 /* CorpusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusService.swift; sourceTree = "<group>"; };
 		AA000002310 /* CorpusFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusFallback.swift; sourceTree = "<group>"; };
+		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
 		AA000002308 /* ACIMTextSections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMTextSections.json; sourceTree = "<group>"; };
@@ -334,6 +336,7 @@
 				AA000002304 /* WorkbookBodiesCatalog.swift */,
 				AA000002306 /* CorpusService.swift */,
 				AA000002310 /* CorpusFallback.swift */,
+				AA000002312 /* AudioDownloadStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -713,6 +716,7 @@
 				AA000001304 /* WorkbookBodiesCatalog.swift in Sources */,
 				AA000001306 /* CorpusService.swift in Sources */,
 				AA000001312 /* CorpusFallback.swift in Sources */,
+				AA000001314 /* AudioDownloadStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
