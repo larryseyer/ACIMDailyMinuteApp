@@ -91,6 +91,19 @@ if Citation.paragraphNumber(atCharacterOffset: 0, in: "") != 1 {
     fail("empty string must be paragraph 1")
 }
 
+struct ParagraphCase: Decodable { let display: String; let offset: Int; let expected: Int }
+
+let paragraphCases = try JSONDecoder().decode(
+    [ParagraphCase].self, from: Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[2]))
+)
+for c in paragraphCases {
+    let got = Citation.paragraphNumber(atCharacterOffset: c.offset, in: c.display)
+    if got != c.expected {
+        fail("real body offset \(c.offset): Swift \(got), Python \(c.expected)")
+    }
+}
+print("\(paragraphCases.count) real-bundle paragraph offsets checked")
+
 if failures == 0 {
     print("\(cases.render.count + cases.refuse.count + expectations.count) cases, Swift and Python agree")
 } else {
@@ -99,7 +112,48 @@ if failures == 0 {
 exit(failures == 0 ? 0 : 1)
 SWIFT
 
+/usr/bin/python3 - "$REPO" "$WORK/paragraphs.json" <<'PY'
+import json, sys
+from pathlib import Path
+
+repo, out = Path(sys.argv[1]), Path(sys.argv[2])
+sys.path.insert(0, str(repo / "tools"))
+from citations import display_paragraphs, paragraph_number
+
+resources = repo / "ACIMDailyMinute" / "Resources"
+
+def load(name):
+    return json.loads((resources / name).read_text(encoding="utf-8"))
+
+cases = []
+bodies = []
+for row in load("ACIMTextSections.json"):
+    bodies.append(row["body"])
+for row in load("Workbook365Bodies.json"):
+    bodies.append(row["body"])
+for row in load("WorkbookIntroductions.json"):
+    bodies.append(row["body"])
+
+# Probe the offsets where the rule can be wrong: the first character of every
+# paragraph, the character before it, and the two newlines between them. An
+# off-by-one here misfiles a highlight into its neighbour.
+for body in bodies:
+    display = "\n\n".join(display_paragraphs(body))
+    offset = 0
+    probes = {0, len(display)}
+    for index, paragraph in enumerate(display_paragraphs(body)):
+        if index:
+            probes.update({offset - 2, offset - 1, offset})
+        offset += len(paragraph) + 2
+    for probe in sorted(p for p in probes if 0 <= p <= len(display)):
+        cases.append({"display": display, "offset": probe,
+                      "expected": paragraph_number(probe, display)})
+
+out.write_text(json.dumps(cases, ensure_ascii=False), encoding="utf-8")
+print(f"{len(cases)} paragraph cases from Python over {len(bodies)} real bodies")
+PY
+
 swiftc -O "$WORK/main.swift" \
     "$REPO/ACIMDailyMinute/Utilities/Citation.swift" \
     -o "$WORK/verify"
-"$WORK/verify" "$WORK/cases.json"
+"$WORK/verify" "$WORK/cases.json" "$WORK/paragraphs.json"
