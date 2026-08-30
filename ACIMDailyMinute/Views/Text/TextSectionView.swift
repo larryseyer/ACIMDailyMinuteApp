@@ -18,7 +18,13 @@ struct TextSectionView: View {
 
     private let corpus = CorpusService.shared
 
-    private var itemKey: String { "text:\(chapter).\(section)" }
+    /// Built through `ReadingKey` rather than written out here, so one place
+    /// decides what a Text address looks like. A bookmark and an annotation on
+    /// the same section have to agree on their key, and two literals of the
+    /// same shape agree only until one of them is edited.
+    private var itemKey: String {
+        ReadingKey.textSection(chapter: chapter, section: section).rawValue
+    }
 
     private var isBookmarked: Bool {
         bookmarks.contains { $0.itemKey == itemKey }
