@@ -188,41 +188,9 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
       `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
-## ▶ NEXT — corpus-wide search
+## ▶ NEXT — carrying a reader's own work between devices
 
-The book's index. Search that reaches the whole bundled corpus, not just the rolling
-archive window. Spec first, then plan, then execute.
-
-**What exists today, verified rather than assumed:**
-
-- **Search exists in three places and none of them searches a body.** `ArchiveView` filters
-  `ArchivedReading.searchableText` through a SwiftData `#Predicate` with
-  `localizedStandardContains` — the rolling archive window only. `LessonsView` matches a
-  lesson number or title. `TextChaptersView` matches chapter and section titles.
-- **The corpus a real search must cover is 5,137,927 characters over 2,727 records**:
-  272 Text sections (1.64M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
-  segments (137K), 2 Part Introductions (7K). All already in memory through `CorpusService`.
-- **Every hit now has an address to show.** `CitationResolver.citation(for:characterOffset:)`
-  turns a match position into `T-5.3.7`, so a result can name where it is.
-
-**The questions the spec has to answer:**
-
-1. **Segments overlap the Text and the Workbook.** The same passage is bundled twice — once
-   as a Text section and once as a word-count cut. Searching both returns it twice. Does
-   search cover the readable corpus (Text, lessons, Manual) and leave segments out, or
-   deduplicate by citation?
-2. **Raw body or display string?** Only `ReadingText.displayString` matches what the reader
-   sees and what a highlight offset counts. Searching raw bodies would return offsets that
-   point at nothing drawable.
-3. **What is a result?** A citation plus a snippet, presumably — but a snippet has to be cut
-   without breaking a grapheme, and the offset has to survive the jump into the reading.
-4. **Where does it live?** A fourth `.searchable` surface, or one search that replaces the
-   three narrow ones. The three disagree about what a query means today.
-
-⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
-and whatever is added must survive the app.
-
-## ▶ OPEN — carrying a reader's own work between devices
+⭐ **He asked for this to start in a fresh chat.**
 
 ⛔ **He raised this directly: backup and restore for a reader's settings, highlights, notes and
 bookmarks, shared between devices and machines. iCloud for Apple devices ideally, but not at the
@@ -267,6 +235,40 @@ without anyone running a service.
 - [ ] Spec CloudKit private-database sync for Apple devices on top of that identity model,
       including what it means for the "Data Not Collected" label.
 - [ ] Decide the conflict rule before writing either.
+
+## ▶ THEN — corpus-wide search
+
+The book's index. Search that reaches the whole bundled corpus, not just the rolling
+archive window. Spec first, then plan, then execute.
+
+**What exists today, verified rather than assumed:**
+
+- **Search exists in three places and none of them searches a body.** `ArchiveView` filters
+  `ArchivedReading.searchableText` through a SwiftData `#Predicate` with
+  `localizedStandardContains` — the rolling archive window only. `LessonsView` matches a
+  lesson number or title. `TextChaptersView` matches chapter and section titles.
+- **The corpus a real search must cover is 5,137,927 characters over 2,727 records**:
+  272 Text sections (1.64M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
+  segments (137K), 2 Part Introductions (7K). All already in memory through `CorpusService`.
+- **Every hit now has an address to show.** `CitationResolver.citation(for:characterOffset:)`
+  turns a match position into `T-5.3.7`, so a result can name where it is.
+
+**The questions the spec has to answer:**
+
+1. **Segments overlap the Text and the Workbook.** The same passage is bundled twice — once
+   as a Text section and once as a word-count cut. Searching both returns it twice. Does
+   search cover the readable corpus (Text, lessons, Manual) and leave segments out, or
+   deduplicate by citation?
+2. **Raw body or display string?** Only `ReadingText.displayString` matches what the reader
+   sees and what a highlight offset counts. Searching raw bodies would return offsets that
+   point at nothing drawable.
+3. **What is a result?** A citation plus a snippet, presumably — but a snippet has to be cut
+   without breaking a grapheme, and the offset has to survive the jump into the reading.
+4. **Where does it live?** A fourth `.searchable` surface, or one search that replaces the
+   three narrow ones. The three disagree about what a query means today.
+
+⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
+and whatever is added must survive the app.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -316,7 +318,7 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ NEXT` block above.
+- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ THEN` block above.
 - [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be
       tappable. Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
       already navigates, so this is a view change and not a format change.
