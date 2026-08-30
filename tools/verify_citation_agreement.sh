@@ -1,0 +1,105 @@
+#!/bin/bash
+# Proves Swift's Citation and Python's tools/citations.py are one format and one
+# paragraph rule.
+#
+# The citation is printed into a plain-text export that outlives this app, and
+# it is derived on two sides: Python writes segment citations at export, Swift
+# derives section, lesson and highlight citations at render. If they ever drift,
+# the same passage cites differently depending on which tier it came from, and
+# nothing about that failure looks like a bug.
+#
+#   ./tools/verify_citation_agreement.sh
+set -e
+set -o pipefail
+
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+WORK="$(mktemp -d)"
+trap 'rm -rf "$WORK"' EXIT
+
+/usr/bin/python3 - "$REPO" "$WORK/cases.json" <<'PY'
+import json, sys
+from pathlib import Path
+
+repo, out = Path(sys.argv[1]), Path(sys.argv[2])
+
+# Every shape of the format, including the ones that must be REFUSED. A parser
+# that accepts "T-5.3" as a citation would silently drop the paragraph.
+render = []
+for c in range(0, 32):
+    for s in (1, 2, 9):
+        render.append({"raw": f"T-{c}.{s}.1", "stem": f"T-{c}.{s}", "paragraph": 1})
+for p in (1, 14, 42):
+    render.append({"raw": f"Pref.{p}", "stem": "Pref", "paragraph": p})
+for n in (1, 45, 180, 365):
+    render.append({"raw": f"W-{n}.3", "stem": f"W-{n}", "paragraph": 3})
+render.append({"raw": "W-pI.in.2", "stem": "W-pI.in", "paragraph": 2})
+render.append({"raw": "W-pII.in.1", "stem": "W-pII.in", "paragraph": 1})
+
+refuse = ["", " ", "T-5.3", "T-5.3.7.1", "T-.3.7", "T-5.3.", "T-a.b.c", "Pref",
+          "Pref.", "Pref.0", "W-", "W-45", "W-45.", "W-0.1", "W-366.1",
+          "W-45.0", "W-pI.in", "W-pIII.in.1", "M-1.1", "5.3.7", "t-5.3.7",
+          "T-5.0.1", "T--1.1.1", "W-pI.in.0"]
+
+out.write_text(json.dumps({"render": render, "refuse": refuse}, ensure_ascii=False),
+               encoding="utf-8")
+print(f"{len(render)} render cases, {len(refuse)} refusal cases from Python")
+PY
+
+cat > "$WORK/main.swift" <<'SWIFT'
+import Foundation
+
+setvbuf(stdout, nil, _IONBF, 0)
+
+struct RenderCase: Decodable { let raw: String; let stem: String; let paragraph: Int }
+struct Cases: Decodable { let render: [RenderCase]; let refuse: [String] }
+
+let cases = try JSONDecoder().decode(
+    Cases.self, from: Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
+)
+
+var failures = 0
+func fail(_ message: String) {
+    failures += 1
+    if failures <= 10 { print("  \(message)") }
+}
+
+for c in cases.render {
+    guard let parsed = Citation(rawValue: c.raw) else {
+        fail("did not parse: \(c.raw)"); continue
+    }
+    if parsed.rawValue != c.raw { fail("round trip: \(c.raw) -> \(parsed.rawValue)") }
+    if parsed.stem != c.stem { fail("stem: \(c.raw) -> \(parsed.stem), want \(c.stem)") }
+    if parsed.paragraph != c.paragraph { fail("paragraph: \(c.raw) -> \(parsed.paragraph)") }
+}
+
+for bad in cases.refuse where Citation(rawValue: bad) != nil {
+    fail("accepted what it must refuse: \(bad.debugDescription)")
+}
+
+// Paragraph arithmetic over a display string, which joins paragraphs with
+// exactly "\n\n". Offsets are Character counts, so the accented and emoji cases
+// are the ones that would expose a UTF-16 slip.
+let display = "one\n\ntwo\n\ncafé é\n\n🕊 four"
+let expectations: [(Int, Int)] = [
+    (0, 1), (1, 1), (3, 1), (4, 1), (5, 2), (7, 2), (10, 3), (16, 3), (18, 4), (99, 4),
+]
+for (offset, want) in expectations {
+    let got = Citation.paragraphNumber(atCharacterOffset: offset, in: display)
+    if got != want { fail("paragraphNumber(\(offset)) = \(got), want \(want)") }
+}
+if Citation.paragraphNumber(atCharacterOffset: 0, in: "") != 1 {
+    fail("empty string must be paragraph 1")
+}
+
+if failures == 0 {
+    print("\(cases.render.count + cases.refuse.count + expectations.count) cases, Swift and Python agree")
+} else {
+    print("\(failures) FAILURE(S)")
+}
+exit(failures == 0 ? 0 : 1)
+SWIFT
+
+swiftc -O "$WORK/main.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/Citation.swift" \
+    -o "$WORK/verify"
+"$WORK/verify" "$WORK/cases.json"
