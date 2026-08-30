@@ -8,20 +8,22 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `f0a26e5`. Nothing of mine
-is running.
+Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `675d3fa`, pushed. Nothing
+of mine is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/MacLive`), so `pgrep` from
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — both live targets are current at `f0a26e5`:**
+**Build state — all three live targets are current at `675d3fa`:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched, app and
-  widget extension both alive. ⭐ **This is where he tests.**
-- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed *Apple Development: Larry
-  Seyer*, running with its widget extension up. Widget registered as
-  `com.larryseyer.acimdailyminute.widget`; he adds it from **Edit Widgets**.
+  widget extension both alive. ⭐ **This is where he tests.** ⛔ The first `devicectl install` returned
+  `CoreDeviceError 4000, "the device disconnected immediately after connecting"`; the identical second
+  attempt succeeded. That is the phone, not the build — retry once before believing it.
+- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed team `RR5DY39W4Q`, running
+  with its widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it from
+  **Edit Widgets**.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
@@ -46,16 +48,30 @@ machine**, never through the mount.
   data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
   `sqlite3` to see the migration actually happened and the rows survived.
 
+⛔ **Three committed checks now guard the corpus. Run all three after any change to a bundled file:**
+- `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
+  paragraph break. 268 sections, 2,911 paragraphs.
+- `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
+  bundled files, and the record counts are 268 / 365 / 1,983 / 105 / 2.
+- `./tools/verify_spacing_agreement.sh` — compiles `PunctuationSpacing.swift` with `swiftc` and proves
+  Swift's rule and Python's are the same rule over 3,042 cases: every left/right character pair the
+  rule can distinguish, every shape of the possessive, and every body in the shipped bundle.
+
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
 - `docs/superpowers/specs/2026-08-30-timeless-corpus-design.md` + its plan — implemented.
 - `docs/superpowers/specs/2026-08-30-reader-annotations-design.md` + its plan — implemented.
-- `docs/superpowers/specs/2026-08-30-text-reading-ui-design.md` + its plan — **all six tasks
-  executed.** Three places where the code is ahead of the plan's text, all deliberate: the recovery
-  drops a *shallow* all-caps running head as well as a centred one (six had lost their indentation,
-  one of them mid-sentence); a semicolon joins the colon as a legitimate paragraph terminator; and the
-  two Part Introduction rows take their titles from the corpus rather than from literals, so a row and
-  its screen cannot disagree about a name.
+- `docs/superpowers/specs/2026-08-30-text-reading-ui-design.md` + its plan — implemented. Three places
+  where the code is ahead of the plan's text, all deliberate: the recovery drops a *shallow* all-caps
+  running head as well as a centred one; a semicolon joins the colon as a legitimate paragraph
+  terminator; and the two Part Introduction rows take their titles from the corpus rather than from
+  literals.
+- `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
+  where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
+  `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
+  widget and Live Activity are repaired where their `minuteText` is *produced*
+  (`ACIMDailyMinuteTimelineProvider.swift`, `LiveActivityManager.swift`) rather than at the five
+  places it is displayed.
 
 ---
 
@@ -64,14 +80,14 @@ this Mac:
 ⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the entire confirmation list until every
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
-handed over once, whole, at the end. It grew by six with the Text. Verify everything verifiable
-without him: `swiftc` harnesses against real bundled data, `./build.sh`, the arm64 device build,
+handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
+against real bundled data, the three committed checks above, `./build.sh`, the arm64 device build,
 install + launch, process-alive checks, the macOS store migration, real feed payloads.
 
-**Next is the run-together sentence repair.** He asked for it to be pulled ahead of canonical
-citations and to be started in a fresh session. The whole finding — counts, why re-extraction is
-banned, and the one real design question — is written out in the `▶ NEXT` block of
-[`todo.md`](todo.md). Read that block before anything else. Spec first, then plan, then execute.
+**Next is canonical citations.** The whole brief — what `sourceReference` actually is today, what the
+Text can already address, and the four questions the spec has to answer — is written out in the
+`▶ NEXT` block of [`todo.md`](todo.md). Read that block before anything else. Spec first, then plan,
+then execute.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
@@ -79,6 +95,11 @@ narrations, the YouTube renders, and every reader annotation keyed `segment:<id>
 renumbers those rows and severs the link between a published episode and its passage. **That is
 months of his work and it is not recoverable.** Every corpus defect is repaired in place, over the
 rows that already exist. This is not a preference; he raised it directly.
+
+⛔ **The pipeline database is read-only from here, and that is not the same rule.** `tools/` reads
+`/Volumes/MacLive/…/data/acim.db` and never writes it. The ElevenLabs narrations were produced from
+`segments.text`; moving that column would put 239 recordings and their words out of step. **Corpus
+defects are repaired at export and at render, never in the database.**
 
 ⛔ **The source PDFs are read-only reference, and they live outside the repo** at
 `/Users/larryseyer/Dropbox/ACIM PDF/` — `1_ACIM_Text_A.pdf` (376pp), `2_ACIM_Text_B.pdf` (382pp),
@@ -89,12 +110,10 @@ text, which would reintroduce page furniture and change words the publisher has 
 
 ⛔ **The Text's bodies in `ACIMTextSections.json` are display form, and that is load-bearing.**
 `ReadingText.displayString(from: body) == body` holds for all 268 sections, so what is in the JSON,
-what is drawn, and what a highlight offset counts are one string. It is true because
-`tools/export_corpus.py` recovers the paragraphs at export — the Text is the only corpus without a
-curated `text_paragraphs` column, and its raw bodies mark paragraphs by indentation, use blank lines
-as page breaks, and carry 351 running heads and page numbers inside sentences. **Any repair or future
-export must preserve that equality.** `python3 tools/text_paragraphs.py` checks it in one command and
-exits non-zero when it breaks — run it after any change to a bundled corpus.
+what is drawn, and what a highlight offset counts are one string. It survives the spacing repair
+**because the repair is idempotent and runs on both sides** — `tools/export_corpus.py` applies it to
+the bundle, `ReadingText.paragraphs` applies it at render, and applying it twice changes nothing.
+**Any future repair owes the same property**, or the bundle and the screen start disagreeing.
 
 ⛔ **The reading surfaces already carry annotation.** Any new reading view should render through
 `AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
@@ -103,8 +122,16 @@ export with it for free. The Manual is the one bundled corpus still without a re
 
 ⛔ **The idea that breaks silently, and it now has a name:** what the reader sees is not what is in
 the model. `ReadingText.displayString(from:)` is the one string both the renderer and every highlight
-offset are measured against. Anything that draws a reading must go through it. Harnesses hold this
-down against all 365 lesson bodies, 1,983 corpus segments and 268 Text sections; keep them passing.
+offset are measured against. Anything that draws a reading must go through it. **The widget, the Live
+Activity and the watch do not** — they draw feed text directly, so anything that changes what a
+reading looks like has to be applied to them by hand as well.
+
+⛔ **A change to displayed text moves stored highlight offsets, and that is handled, not avoided.**
+`AnchorResolver.resolve` repairs the incoming quote by the same rule before matching, so a mark made
+before a repair still finds its words; `AnnotationStore.reanchor` writes the repaired quote back on a
+successful resolution, which is why the Saved tab, the note editor and the plain-text export needed no
+change of their own. **An orphan's quote is never rewritten** — it is the only record of what the
+reader marked.
 
 ⛔ **Offsets are `Character`-based, never UTF-16.** The conversion lives in exactly one place —
 `SelectableReadingText.utf16Range(of:in:)` and `.characterRange(of:in:)`. A single emoji or accented
@@ -120,20 +147,21 @@ character shifts every stored offset after it if that boundary is crossed anywhe
   ⛔ **Do not re-open the hosting decision unprompted.** Two finished features wait on it and neither
   needs an app change to come alive: the Today card's **Listen** button, and MP3 download in the Listen
   tab. Both are invisible only because `audio_url` is empty on every episode and all 158 archive entries.
-- **Anything needing eyes on a device**, which is now everything in the parked block. Two entries
+- **Anything needing eyes on a device**, which is now everything in the parked block. Three entries
   there are the ones no harness can reach: whether the Text's recovered paragraphing reads correctly
-  to someone who knows the book, and whether Chapter 1.2 — 37,222 characters in one non-scrolling
-  text view — scrolls without stutter on the phone.
+  to someone who knows the book, whether the 6,221 restored spaces read as the book does, and whether
+  Chapter 1.2 — 37,222 characters in one non-scrolling text view — scrolls without stutter on the
+  phone.
 
 ---
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **the run-together sentence repair**, then canonical citations,
-then corpus-wide search, then the pre-submission sweep and the smaller open items. The 186
-one-paragraph lesson bodies are the sentence repair's natural companion and the one job that genuinely
-needs the PDFs. The Manual is the last bundled corpus with no reading UI, and structuring it is its
-own item.
+From [`todo.md`](todo.md), in order: **canonical citations**, then corpus-wide search, then the
+pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
+running heads still sitting inside Chapter 11's prose are the two remaining corpus defects; the lesson
+bodies are the one job that genuinely needs the PDFs. The Manual is the last bundled corpus with no
+reading UI, and structuring it is its own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.

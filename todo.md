@@ -131,53 +131,55 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       A saved Text section shows as "Chapter N" with its section title. A Manual row still will not
       navigate, by design.
 
+- [ ] **The spacing repair.** 6,221 missing spaces are back across all five bundled files —
+      `their Source,Which is` now reads `their Source, Which is`. Confirm a repaired passage reads as
+      the book does, and that nothing was joined that should not have been. Chapter 1's "Principles
+      of Miracles" and any lesson body are the quickest look. The rule inserts a space and never
+      removes or changes a character, so no word the publisher narrated has moved; what his eyes
+      settle is whether the result reads right. Feed text and the widget are repaired at render, so
+      today's minute on the phone and on the lock screen should both be clean.
+
 - [ ] **The two Part Introductions.** "Part 1 Introduction" appears above Lesson 1 and "Part 2
       Introduction" between Lesson 180 and Lesson 181. Both read, annotate and save. Their titles
       come from the corpus rather than from literals, so the row and the screen cannot disagree.
 
-## ▶ NEXT — repair the run-together sentences
+## ▶ NEXT — canonical citations
 
-The most visible defect on every reading surface, and the one thing a reader notices before anything
-else: `"Source,Which"`, `"planned.We"`, `"thus far.There"`. Spec first, then plan, then execute.
+`T-1.I.1:1` — Text, chapter, section, paragraph, sentence. Promoted from a study-group
+convenience to a **durability requirement**: a citation is the interoperability layer that lets a
+reader move between this app, a paper book, and whatever comes after both. Spec first, then plan,
+then execute.
 
-⛔⛔ **DO NOT RE-EXTRACT THE CORPUS.** This is a repair applied in place to the rows that already
-exist. The reasons are settled and are not to be re-litigated:
+**What is actually there today, verified rather than assumed:**
 
-- **The missing spaces are in the PDFs' own text layer.** Verified against
-  `/Users/larryseyer/Dropbox/ACIM PDF/1_ACIM_Text_A.pdf` with `pdftotext`, which reproduces
-  `"William Thetford.The edit"` and `"their Source,Which is"` exactly — 1,639 occurrences in Text A
-  in every extraction mode. A fresh extraction returns the identical defect. There is nothing to
-  gain.
-- **`segments.id` is the identity for every recorded thing.** `used_date` and `youtube_id` on all
-  158 published entries, the 239 MP3s, the ElevenLabs narrations, the YouTube renders, and every
-  reader annotation keyed `segment:<id>`. Re-extraction renumbers those rows and severs the link
-  between a published episode and its passage. Months of work, destroyed for no benefit.
+- **`sourceReference` is not a citation and never was.** The pipeline sets it to the source PDF's
+  own name — `github_push.py:402` writes `"source_reference": r["source_pdf"]`, so a reader sees
+  `Text_A`. Three surfaces display it: `DailyMinuteCard.swift:80`, `ArchivedReadingCard.swift:120`,
+  and both share-text builders in `ShareTextBuilder.swift`.
+- **The Text is addressable now.** 268 sections, 2,911 recovered paragraphs, stable and in reading
+  order, keyed `(chapterNumber, sectionNumber)` through `CorpusService.textSection(chapter:section:)`.
+  Chapter 0 is the Preface. `segments` carries only `source_pdf` and `page_start` — no section or
+  paragraph column — so a segment's citation has to be *derived* by locating its text in the Text,
+  not read out of a column.
+- **The text under the citation stopped moving.** The spacing repair has landed, so paragraph
+  boundaries and offsets are now stable. That was the reason to do the repair first.
 
-**What is actually wrong, measured against the shipping bundle:**
+**The questions the spec has to answer, none of which are settled:**
 
-| Corpus | after a period | after a comma |
-|---|---|---|
-| `ACIMTextSections.json` | 3,355 | 51 |
-| `Workbook365Bodies.json` | 1,692 | 52 |
-| `ACIMSegments.json` | 0 | 104 |
-| `ACIMManual.json` | 0 | 0 |
+1. **Where does a citation live?** Derived on demand from corpus position, or exported as a column
+   beside each body? A derived citation cannot go stale; an exported one costs nothing to read and
+   can be searched.
+2. **The Workbook and the Manual have different citation forms** (`W-pI.1.1:1`, `M-1.1:1`) and the
+   Manual is still 105 unstructured segments, so it may have no addressable form yet at all.
+3. **Sentence numbering is the hard half.** A paragraph is a stable address; a *sentence* needs a
+   splitter that agrees with the published edition, and the corpus is full of abbreviated capitals
+   and quoted scripture. Measure the disagreement before promising `:1`.
+4. **What does a citation do when tapped?** Cross-reference links are a separate open item below,
+   but the citation format decides whether they are possible at all.
 
-- **The published minutes are already clean of the period case.** `text_paragraphs` has had this
-  repair applied once already, which is precedent that the fix is wanted and safe.
-- **The comma cases are one shape**: `,Who` (91), `,Your` (46), `,Whose` (30), `,Which` (26),
-  `,You` (14) — reverential capitals, 207 in all, with no legitimate English reading.
-- **The words before the period defect are ordinary sentence-enders** — `it.` 224, `you.` 206,
-  `God.` 88, `them.` 80 — with no abbreviations and no initials for a repair rule to damage. The
-  spec should still prove that exhaustively rather than trusting this sample.
-
-⛔ **The one real design question: a repair moves stored highlight offsets.** `AnchorResolver`
-re-anchors by quote when an offset drifts, so annotations survive that — but a highlight whose
-*quote* straddles a repaired boundary no longer matches its text and will show as orphaned. Only his
-own marks exist today, so the cost is near zero right now, which is exactly why this is the moment to
-do it. Decide in the spec whether stored quotes are repaired alongside the bodies.
-
-⛔ Apply it in one place, over all four corpora. Fixing it in one export branch leaves the same defect
-in the others and makes the real fix harder to verify.
+⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database, and
+whatever is added must survive the app — a citation printed in an export is worth more than one that
+only exists on screen.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -227,12 +229,7 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] ⛔ **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). Promoted
-      from a study-group convenience to a **durability requirement**: citations are the interoperability
-      layer that lets a reader move between this app, a paper book, and whatever comes after both.
-      `sourceReference` today is loose prose, not a citation. Unblocked and tractable now: the Text's
-      2,911 paragraphs are addressable and stable. **Do this after the sentence repair**, not before —
-      a repair that shifts text should land before paragraphs become citable addresses.
+- [ ] ⛔ **Canonical citations** — promoted to the `▶ NEXT` block above.
 - [ ] **Search across the whole corpus**, not just the rolling archive window — the book's index.
 - [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be tappable.
 - [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
@@ -245,16 +242,25 @@ a book.
 
 ## ▶ OPEN — content and pipeline
 
-- [ ] **Sentences are run together where a period meets the next word.** This is the `▶ NEXT` block
-      above. 5,047 period cases and 207 comma cases across the bundle, and the defect originates in
-      the PDFs themselves.
+- [ ] **Eleven running heads survive inside Chapter 11's prose.** `and you will not perceive God’s
+      answer 11 GOD’S PLAN FOR SALVATION to YOU.` — in sections 11.2 through 11.10. The recovery in
+      `tools/text_paragraphs.py` drops page furniture line by line, and these eleven landed *mid-line*
+      where the line test cannot see them. Found while measuring the spacing repair; left alone
+      deliberately, because a mid-line rule cuts into the delicate paragraph recovery and deserves
+      its own measurement. Reproduce with
+      `(?<=[a-z] )\d{1,3} [A-Z][A-Z’ ]{8,}(?= [a-z])` over `ACIMTextSections.json`.
+- [ ] **A stray space before a closing quote.** `and He will abide with you. ”The Holy Spirit` — the
+      mirror of the spacing defect, far rarer. A rule that *removes* a character is more dangerous
+      than one that inserts one, so it was left out of the repair rather than guessed at. Measure it
+      before writing a rule.
 - [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — those 186 carry no blank
-      line in `lessons.text` at all, so there is nothing in the row to split on. Unlike the sentence
+      line in `lessons.text` at all, so there is nothing in the row to split on. Unlike the spacing
       repair, this one **does** need the PDFs: the paragraph breaks exist only in the page layout of
       `/Users/larryseyer/Dropbox/ACIM PDF/3_ACIM_Workbook.pdf`, exactly as the Text's did. Read the
       PDF to find where paragraphs break and apply the breaks to the existing row — never replace the
       row's text with PDF text, which would reintroduce the page furniture and change words the
-      publisher has already narrated. Natural companion to the sentence repair; its own scope call.
+      publisher has already narrated. The spacing repair fixed the words *within* a paragraph; this
+      is the paragraph boundaries themselves, and it is its own scope call.
 
 ## ▶ OPEN — how each Apple platform actually gets exercised
 
