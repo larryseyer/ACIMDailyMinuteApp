@@ -31,51 +31,91 @@ struct LessonsView: View {
     ) private var archivedLessons: [ArchivedReading]
     @Query private var bookmarks: [Bookmark]
 
+    /// The Workbook and the Text are two of the three books in one volume, so
+    /// they share a tab. A sixth tab would collapse into the iOS "More" list,
+    /// which is the same reason the Saved tab carries three segments. The
+    /// Manual joins as a third shelf when it has a structure to browse.
+    private enum Shelf: String, CaseIterable, Identifiable {
+        case workbook = "Workbook"
+        case text = "Text"
+
+        var id: String { rawValue }
+    }
+
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
     @State private var isJumpSheetPresented: Bool = false
+    @State private var shelf: Shelf = .workbook
 
     var body: some View {
         NavigationStack(path: $path) {
-            let meta = buildMetaIndex()
-            let bookmarkedNumbers = bookmarkedLessonNumbers()
-
-            let anchor = recordedAnchor()
-
-            FilteredLessonsList(
-                searchText: searchText,
-                meta: meta,
-                bookmarkedNumbers: bookmarkedNumbers,
-                latestLessonNumber: anchor.number,
-                latestPublishedAt: anchor.date
-            )
-            .listStyle(.plain)
-            .readableContentWidth()
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-            }
-            .navigationTitle("Lessons")
-            .searchable(text: $searchText, prompt: "Search lessons")
-            .toolbar {
-                ToolbarItem(placement: jumpPlacement) {
-                    Button {
-                        isJumpSheetPresented = true
-                    } label: {
-                        Label("Jump", systemImage: "arrow.right.to.line")
-                    }
-                    .accessibilityLabel("Jump to lesson number")
+            VStack(spacing: 0) {
+                Picker("Shelf", selection: $shelf) {
+                    ForEach(Shelf.allCases) { Text($0.rawValue).tag($0) }
                 }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 8)
+
+                Group {
+                    switch shelf {
+                    case .workbook: workbookShelf
+                    case .text: TextChaptersView()
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .sheet(isPresented: $isJumpSheetPresented) {
-                JumpToLessonSheet(path: $path)
-            }
+            .navigationTitle("Read")
             .navigationDestination(for: Int.self) { lessonNumber in
                 LessonDetailView(lessonNumber: lessonNumber)
             }
+            .navigationDestination(for: TextChapterRef.self) { ref in
+                TextChapterView(chapter: ref.chapter)
+            }
+            .navigationDestination(for: TextSectionRef.self) { ref in
+                TextSectionView(chapter: ref.chapter, section: ref.section)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
+                // A widget or notification tap on a lesson must never land on a
+                // chapter list.
+                shelf = .workbook
                 path.append(n)
             }
+        }
+    }
+
+    private var workbookShelf: some View {
+        let meta = buildMetaIndex()
+        let bookmarkedNumbers = bookmarkedLessonNumbers()
+        let anchor = recordedAnchor()
+
+        return FilteredLessonsList(
+            searchText: searchText,
+            meta: meta,
+            bookmarkedNumbers: bookmarkedNumbers,
+            latestLessonNumber: anchor.number,
+            latestPublishedAt: anchor.date,
+            onOpenText: { shelf = .text }
+        )
+        .listStyle(.plain)
+        .readableContentWidth()
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+        }
+        .searchable(text: $searchText, prompt: "Search lessons")
+        .toolbar {
+            ToolbarItem(placement: jumpPlacement) {
+                Button {
+                    isJumpSheetPresented = true
+                } label: {
+                    Label("Jump", systemImage: "arrow.right.to.line")
+                }
+                .accessibilityLabel("Jump to lesson number")
+            }
+        }
+        .sheet(isPresented: $isJumpSheetPresented) {
+            JumpToLessonSheet(path: $path)
         }
     }
 
@@ -156,6 +196,7 @@ private struct FilteredLessonsList: View {
     let bookmarkedNumbers: Set<Int>
     let latestLessonNumber: Int
     let latestPublishedAt: Date?
+    let onOpenText: () -> Void
 
     /// Opening the tab should land on the lesson in play, not on Lesson 1. Only
     /// fires once per appearance — re-running it after every filter change would
@@ -224,7 +265,14 @@ private struct FilteredLessonsList: View {
     private var cadenceHeader: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Lesson \(latestLessonNumber) of 365")
-            Text("After Lesson 365, the Text begins.")
+            Button(action: onOpenText) {
+                HStack(spacing: 4) {
+                    Text("After Lesson 365, the Text begins.")
+                    Image(systemName: "chevron.right")
+                        .font(.acimCaption2)
+                }
+            }
+            .buttonStyle(.plain)
         }
         .font(.footnote)
         .foregroundStyle(.secondary)
