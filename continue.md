@@ -53,8 +53,11 @@ handed over once, whole, at the end. Verify everything verifiable without him: `
 against real data, `./build.sh`, the arm64 device build, install + launch, process-alive checks, real
 feed payloads.
 
-**1. The reader-annotations spec.** Every design decision is made and recorded in
-[`todo.md`](todo.md); it needs writing up, not deciding. Then plan it, then build it.
+**1. Execute the reader-annotations plan.** Spec and plan are both written, reviewed against each
+other, and need no further design — see [`todo.md`](todo.md) for the eight tasks. Both documents are
+local only (`docs/` is gitignored). Task 1 is pure foundation with a harness and no UI change.
+`ReadingKey` and `AnchorResolver` in the plan are already typechecked against the real sources and
+smoke-tested across nine cases, so Task 1 and Task 3 carry working code rather than sketches.
 
 **Spec 2 — the Text reading UI — is the biggest single parity gap and is now unblocked.** All 268 Text
 sections are bundled with chapter and section numbers and titles, and `CorpusService.textSections`
