@@ -68,8 +68,12 @@ struct ArchivedReadingCard: View {
                     .font(.system(.title3, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
+                if !reading.dateString.isEmpty {
+                    Text(reading.dateString)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-            actionRow
         }
         .padding(16)
         .background(Color(white: 0.11).opacity(0.5))
@@ -77,18 +81,36 @@ struct ArchivedReadingCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 4) {
             Text(headerLabel)
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
                 .foregroundStyle(.secondary)
             Spacer()
-            if !reading.dateString.isEmpty {
-                Text(reading.dateString)
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            ShareLink(item: shareText) {
+                Image(systemName: "square.and.arrow.up")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            .accessibilityLabel("Share")
+            if let audioURL = reading.audioURL, !audioURL.isEmpty {
+                Button {
+                    audio.play(url: audioURL, title: listenTitle)
+                } label: {
+                    Label("Listen", systemImage: "play.fill")
+                        .font(.caption.weight(.medium))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white.opacity(0.08), in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .accessibilityLabel("Listen")
+            }
         }
     }
 
@@ -99,37 +121,13 @@ struct ArchivedReadingCard: View {
                     .font(.footnote.italic())
                     .foregroundStyle(.secondary)
             }
+            if !reading.dateString.isEmpty {
+                Text(reading.dateString)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Spacer()
         }
-    }
-
-    private var actionRow: some View {
-        HStack(spacing: 16) {
-            ShareLink(item: shareText) {
-                Image(systemName: "square.and.arrow.up")
-            }
-            .accessibilityLabel("Share")
-
-            Spacer()
-
-            if let audioURL = reading.audioURL, !audioURL.isEmpty {
-                Button {
-                    audio.play(url: audioURL, title: listenTitle)
-                } label: {
-                    Label("Listen", systemImage: "play.fill")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.white.opacity(0.08))
-                        .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Listen")
-            }
-        }
-        .font(.title3)
-        .foregroundStyle(.primary)
-        .buttonStyle(.plain)
     }
 
     private func toggleBookmark() {

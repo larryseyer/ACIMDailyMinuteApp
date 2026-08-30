@@ -13,19 +13,36 @@ import SwiftData
 /// so re-persisting the same archive is a no-op.
 @MainActor
 final class ArchiveService {
-    /// Upserts inline Daily Minute archive entries. Pre-fetches the full set of
-    /// existing `lineHash` values once before the loop so the method runs in
-    /// O(n) rather than O(n²) on the typical 30-entry rolling window.
+    /// The identity of an archived minute: one reading per date, per channel.
+    ///
+    /// Deliberately excludes the body. It used to hash `text` too, which meant
+    /// a corrected passage produced a new identity, missed the existing row,
+    /// and was inserted alongside it — leaving two cards for one day and no way
+    /// for a fix to ever reach the row already on disk.
+    static func minuteLineHash(date: String, channel: String = "daily-minute") -> String {
+        HashUtility.sha256Truncated("\(channel)|\(date)")
+    }
+
+    /// Upserts inline Daily Minute archive entries. Pre-fetches existing rows
+    /// once before the loop so the method runs in O(n) rather than O(n²) on the
+    /// typical 30-entry rolling window.
     static func persistInlineMinutes(_ items: [InlineArchiveMinuteDTO], in context: ModelContext) throws {
         guard !items.isEmpty else { return }
         let channel = "daily-minute"
-        let existingHashes = try fetchExistingHashes(in: context)
+        let descriptor = FetchDescriptor<ArchivedReading>()
+        let existingByHash = Dictionary(
+            try context.fetch(descriptor).map { ($0.lineHash, $0) },
+            uniquingKeysWith: { first, _ in first }
+        )
 
         for item in items {
-            let lineHash = HashUtility.sha256Truncated("\(channel)|\(item.date)|\(item.text)")
-            guard !existingHashes.contains(lineHash) else { continue }
+            let lineHash = minuteLineHash(date: item.date, channel: channel)
 
-            let row = ArchivedReading()
+            // A real upsert: an existing row is refreshed rather than skipped,
+            // so a correction the publisher makes actually lands.
+            let row = existingByHash[lineHash] ?? ArchivedReading()
+            let isNew = existingByHash[lineHash] == nil
+
             row.lineHash = lineHash
             row.channel = channel
             row.dateString = item.date
@@ -35,7 +52,7 @@ final class ArchiveService {
             row.lessonNumber = nil
             row.audioURL = item.audio_url.isEmpty ? nil : item.audio_url
             row.searchableText = "\(item.text) \(item.source_reference)"
-            context.insert(row)
+            if isNew { context.insert(row) }
         }
     }
 
@@ -90,11 +107,5 @@ final class ArchiveService {
             row.youtubeID = (item.youtube_id?.isEmpty == false) ? item.youtube_id : nil
             row.searchableText = item.title
         }
-    }
-
-    private static func fetchExistingHashes(in context: ModelContext) throws -> Set<String> {
-        let descriptor = FetchDescriptor<ArchivedReading>()
-        let rows = try context.fetch(descriptor)
-        return Set(rows.map(\.lineHash))
     }
 }

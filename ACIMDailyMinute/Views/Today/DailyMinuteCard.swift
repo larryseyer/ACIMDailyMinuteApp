@@ -29,7 +29,6 @@ struct DailyMinuteCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             footer
-            actionRow
             if let error = audio.lastError {
                 Text(error)
                     .font(.caption)
@@ -43,16 +42,36 @@ struct DailyMinuteCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 4) {
             Text("Daily Minute")
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text(relativeDate)
-                .font(.caption)
-                .foregroundStyle(.secondary)
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
+                Image(systemName: "square.and.arrow.up")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Share")
+            if let audioURL = minute.audioURL, !audioURL.isEmpty {
+                Button {
+                    audio.play(url: audioURL, title: "Daily Minute")
+                } label: {
+                    Label("Listen", systemImage: "play.fill")
+                        .font(.caption.weight(.medium))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color.white.opacity(0.08), in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .accessibilityLabel("Listen to Daily Minute")
+            }
         }
     }
 
@@ -63,6 +82,9 @@ struct DailyMinuteCard: View {
                     .font(.footnote.italic())
                     .foregroundStyle(.secondary)
             }
+            Text(relativeDate)
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Spacer()
             Text("\(minute.wordCount) words")
                 .font(.caption2)
@@ -72,35 +94,6 @@ struct DailyMinuteCard: View {
                 .clipShape(Capsule())
                 .foregroundStyle(.secondary)
         }
-    }
-
-    private var actionRow: some View {
-        HStack(spacing: 16) {
-            ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
-                Image(systemName: "square.and.arrow.up")
-            }
-            .accessibilityLabel("Share")
-
-            Spacer()
-
-            if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                Button {
-                    audio.play(url: audioURL, title: "Daily Minute")
-                } label: {
-                    Label("Listen", systemImage: "play.fill")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.white.opacity(0.08))
-                        .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Listen to Daily Minute")
-            }
-        }
-        .font(.title3)
-        .foregroundStyle(.primary)
-        .buttonStyle(.plain)
     }
 
     private func toggleBookmark() {
