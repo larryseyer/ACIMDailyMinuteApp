@@ -140,6 +140,7 @@
 		AA000001350 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
 		AA000001351 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
 		AA000001352 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		AA000001360 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -280,6 +281,7 @@
 		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
 		AA000002350 /* PunctuationSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunctuationSpacing.swift; sourceTree = "<group>"; };
+		AA000002360 /* Citation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Citation.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -448,6 +450,7 @@
 				AA000002222 /* DeepLinkRoute.swift */,
 				AA000002500 /* ReadableContentWidth.swift */,
 				AA000002350 /* PunctuationSpacing.swift */,
+				AA000002360 /* Citation.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				AA000001601 /* LessonSchedule.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,
 				AA000001350 /* PunctuationSpacing.swift in Sources */,
+				AA000001360 /* Citation.swift in Sources */,
 				AA000001226 /* PhoneWatchSyncService.swift in Sources */,
 				AA000001301 /* WorkbookCatalog.swift in Sources */,
 				AA000001302 /* YouTubePlaylists.swift in Sources */,
