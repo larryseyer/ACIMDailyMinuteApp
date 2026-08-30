@@ -21,9 +21,7 @@ struct DailyLessonCard: View {
                 .font(.system(.title3, design: .serif).weight(.semibold))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
-            ReadingTextView(raw: lesson.text)
-                .font(.system(.body, design: .serif))
-                .foregroundStyle(.primary)
+            SelectableReadingText(raw: lesson.text, design: .serif)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             footer

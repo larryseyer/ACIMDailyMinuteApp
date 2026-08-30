@@ -71,6 +71,17 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] **The privacy policy is reachable now.** `PrivacyPolicyView` existed but nothing linked to it,
       so the one screen stating the app collects nothing could not be opened from inside the app. It
       sits under Settings > About beside the companion note. Confirm it reads correctly there.
+- [ ] **Every reading surface now draws through a text view, not `Text`.** This is the one thing
+      no harness can settle. Six surfaces changed renderer: the **Today Daily Minute card**, the
+      **Today lesson card**, the **Today corpus card** (the offline floor), the **lesson detail
+      body**, the **archived-lesson body**, and the **Introduction / lesson body in the archive
+      reader**. Confirm on each: the serif body looks unchanged, line spacing is unchanged, the card
+      still grows to fit the whole passage with no clipping and no inner scroll, and long-press
+      selects text rather than starting a drag. On macOS the body is 13pt by design — that matches
+      what `Text` did there before, so it is not a regression.
+      A harness already proves the *string* is character-for-character what it was, for all 365
+      lesson bodies, 1,983 corpus segments and 268 Text sections. Only the drawing is unverified.
+
 - [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
