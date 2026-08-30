@@ -36,10 +36,34 @@ struct SelectableReadingText: View {
     var lineSpacing: CGFloat = 0
     /// Already re-anchored by `AnnotationStore.highlights(for:displayString:in:)`.
     var highlights: [Highlight] = []
-    /// Nil means no "Highlight" item is offered at all, and the view is inert.
-    /// The range handed back is in `Character` offsets, converted here so no
-    /// call site ever sees a UTF-16 index.
-    var onHighlight: ((Range<Int>, String) -> Void)?
+    /// What the selection menu offers. Empty means nothing is added to the
+    /// system menu at all, and the view is inert.
+    var menuActions: [MenuAction] = []
+
+    /// One item offered on a selection.
+    ///
+    /// The range it receives is in `Character` offsets. Converting from the text
+    /// system's UTF-16 indices happens once, here, so no call site ever handles
+    /// a UTF-16 index — a single accented character would otherwise shift every
+    /// offset stored after it.
+    struct MenuAction: Identifiable {
+        let id: String
+        let title: String
+        let systemImage: String
+        let handler: (Range<Int>, String) -> Void
+
+        init(
+            id: String,
+            title: String,
+            systemImage: String,
+            handler: @escaping (Range<Int>, String) -> Void
+        ) {
+            self.id = id
+            self.title = title
+            self.systemImage = systemImage
+            self.handler = handler
+        }
+    }
 
     var body: some View {
         TextViewRepresentable(
@@ -50,7 +74,7 @@ struct SelectableReadingText: View {
                 highlightedRanges: paintedRanges
             ),
             display: ReadingText.displayString(from: raw),
-            onHighlight: onHighlight
+            menuActions: menuActions
         )
     }
 
@@ -150,7 +174,7 @@ struct SelectableReadingText: View {
 private struct TextViewRepresentable: UIViewRepresentable {
     let attributed: NSAttributedString
     let display: String
-    let onHighlight: ((Range<Int>, String) -> Void)?
+    let menuActions: [SelectableReadingText.MenuAction]
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -175,14 +199,14 @@ private struct TextViewRepresentable: UIViewRepresentable {
 
     func updateUIView(_ view: UITextView, context: Context) {
         context.coordinator.display = display
-        context.coordinator.onHighlight = onHighlight
+        context.coordinator.menuActions = menuActions
         if view.attributedText != attributed { view.attributedText = attributed }
     }
 
     @MainActor
     final class Coordinator: NSObject, UITextViewDelegate {
         var display: String = ""
-        var onHighlight: ((Range<Int>, String) -> Void)?
+        var menuActions: [SelectableReadingText.MenuAction] = []
 
         func textView(
             _ textView: UITextView,
@@ -191,14 +215,16 @@ private struct TextViewRepresentable: UIViewRepresentable {
         ) -> UIMenu? {
             // Nil leaves the system menu exactly as it was, which is what keeps
             // a reading surface that offers no annotation completely unchanged.
-            guard let onHighlight, range.length > 0,
+            guard !menuActions.isEmpty, range.length > 0,
                   let characters = SelectableReadingText.characterRange(of: range, in: display)
             else { return nil }
             let quote = (display as NSString).substring(with: range)
-            let highlight = UIAction(title: "Highlight", image: UIImage(systemName: "highlighter")) { _ in
-                onHighlight(characters, quote)
+            let added = menuActions.map { action in
+                UIAction(title: action.title, image: UIImage(systemName: action.systemImage)) { _ in
+                    action.handler(characters, quote)
+                }
             }
-            return UIMenu(children: suggestedActions + [highlight])
+            return UIMenu(children: suggestedActions + added)
         }
     }
 
@@ -212,7 +238,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
 private struct TextViewRepresentable: NSViewRepresentable {
     let attributed: NSAttributedString
     let display: String
-    let onHighlight: ((Range<Int>, String) -> Void)?
+    let menuActions: [SelectableReadingText.MenuAction]
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -233,7 +259,7 @@ private struct TextViewRepresentable: NSViewRepresentable {
 
     func updateNSView(_ view: NSTextView, context: Context) {
         context.coordinator.display = display
-        context.coordinator.onHighlight = onHighlight
+        context.coordinator.menuActions = menuActions
         guard let storage = view.textStorage else { return }
         if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
     }
@@ -241,7 +267,8 @@ private struct TextViewRepresentable: NSViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, NSTextViewDelegate {
         var display: String = ""
-        var onHighlight: ((Range<Int>, String) -> Void)?
+        var menuActions: [SelectableReadingText.MenuAction] = []
+        private weak var textView: NSTextView?
 
         func textView(
             _ view: NSTextView,
@@ -249,26 +276,31 @@ private struct TextViewRepresentable: NSViewRepresentable {
             for event: NSEvent,
             at charIndex: Int
         ) -> NSMenu? {
-            guard onHighlight != nil, view.selectedRange().length > 0 else { return menu }
-            let item = NSMenuItem(
-                title: "Highlight",
-                action: #selector(highlightSelection(_:)),
-                keyEquivalent: ""
-            )
-            item.target = self
-            item.representedObject = view
-            menu.insertItem(item, at: 0)
-            menu.insertItem(.separator(), at: 1)
+            guard !menuActions.isEmpty, view.selectedRange().length > 0 else { return menu }
+            textView = view
+            for (index, action) in menuActions.enumerated() {
+                let item = NSMenuItem(
+                    title: action.title,
+                    action: #selector(performMenuAction(_:)),
+                    keyEquivalent: ""
+                )
+                item.target = self
+                item.tag = index
+                menu.insertItem(item, at: index)
+            }
+            menu.insertItem(.separator(), at: menuActions.count)
             return menu
         }
 
-        @objc private func highlightSelection(_ sender: NSMenuItem) {
-            guard let view = sender.representedObject as? NSTextView, let onHighlight else { return }
-            let range = view.selectedRange()
+        @objc private func performMenuAction(_ sender: NSMenuItem) {
+            guard let textView, menuActions.indices.contains(sender.tag) else { return }
+            let range = textView.selectedRange()
             guard range.length > 0,
                   let characters = SelectableReadingText.characterRange(of: range, in: display)
             else { return }
-            onHighlight(characters, (display as NSString).substring(with: range))
+            menuActions[sender.tag].handler(
+                characters, (display as NSString).substring(with: range)
+            )
         }
     }
 

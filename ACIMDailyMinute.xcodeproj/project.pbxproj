@@ -62,6 +62,7 @@
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
 		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
 		AA000001222 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
+		AA000001343 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
 		AA000001223 /* PhrasesEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002221 /* PhrasesEditorView.swift */; };
 		AA000001224 /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
 		AA000001226 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
@@ -200,6 +201,7 @@
 		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
 		AA000002053 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
 		AA000002220 /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
+		AA000002343 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
 		AA000002221 /* PhrasesEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhrasesEditorView.swift; sourceTree = "<group>"; };
 		AA000002222 /* DeepLinkRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRoute.swift; sourceTree = "<group>"; };
 		AA000002226 /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 			children = (
 				AA000002053 /* SavedView.swift */,
 				AA000002220 /* BookmarkRow.swift */,
+				AA000002343 /* NoteEditorView.swift */,
 			);
 			path = Saved;
 			sourceTree = "<group>";
@@ -720,6 +723,7 @@
 				AA000001999 /* SaveButton.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,
+				AA000001343 /* NoteEditorView.swift in Sources */,
 				AA000001223 /* PhrasesEditorView.swift in Sources */,
 				AA000001224 /* DeepLinkRoute.swift in Sources */,
 				AA000001051 /* SharedModelContainer.swift in Sources */,
