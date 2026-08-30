@@ -19,6 +19,10 @@ enum AnnotationExport {
         let startOffset: Int
         let createdAt: Date
         let isOrphaned: Bool
+        /// Where the marked passage sits in the book, or nil where the reading
+        /// has no addressable form. Resolved in `entries(_:_:)` so `plainText`
+        /// stays a pure function whose exact output a harness can assert.
+        let citation: String?
         let attachedNotes: [NoteEntry]
     }
 
@@ -28,6 +32,20 @@ enum AnnotationExport {
     }
 
     static let header = "A Course in Miracles — my highlights and notes"
+
+    /// Which book the citations below point into.
+    ///
+    /// ⛔ Load-bearing, and the reason it is stated rather than assumed. This
+    /// edition is not the one the familiar `T-1.I.1:1` notation addresses — its
+    /// Chapter 1 is "Introduction to Miracles" and it carries 53 miracle
+    /// principles rather than 50. A stranger reading this file years from now
+    /// needs to know which book to open, and this line is the only place that
+    /// can tell them.
+    static let editionNote =
+        "References like T-5.3.7 are chapter, section and paragraph of the "
+        + "edition this app carries — the one whose Text opens with "
+        + "\"Introduction to Miracles\" and lists 53 miracle principles. "
+        + "W-45.3 is Workbook lesson and paragraph."
 
     /// The formatter the export reads dates through.
     ///
@@ -73,7 +91,7 @@ enum AnnotationExport {
             groups[at].notes.append(contentsOf: reading.notes)
         }
 
-        var lines: [String] = [header]
+        var lines: [String] = [header, "", editionNote]
         for group in groups.sorted(by: { $0.earliest < $1.earliest }) {
             lines.append("")
             lines.append(group.key.displayName(corpus: corpus))
@@ -81,8 +99,9 @@ enum AnnotationExport {
                 ($0.startOffset, $0.createdAt) < ($1.startOffset, $1.createdAt)
             }) {
                 lines.append("  \"\(entry.quote)\"")
+                let cited = entry.citation.map { " · \($0)" } ?? ""
                 let marked = entry.isOrphaned ? " (passage not found in the current text)" : ""
-                lines.append("    — highlighted \(dateFormatter.string(from: entry.createdAt))\(marked)")
+                lines.append("    — highlighted \(dateFormatter.string(from: entry.createdAt))\(cited)\(marked)")
                 for note in entry.attachedNotes.sorted(by: { $0.createdAt < $1.createdAt }) {
                     lines.append("    Note: \(note.body)")
                     lines.append("      — written \(dateFormatter.string(from: note.createdAt))")
@@ -102,7 +121,8 @@ enum AnnotationExport {
     /// format itself stays testable without one.
     static func entries(
         highlights: [Highlight],
-        notes: [Note]
+        notes: [Note],
+        corpus: CorpusService = .shared
     ) -> (highlights: [Entry], standalone: [(key: ReadingKey, notes: [NoteEntry])]) {
         var notesByHighlight: [UUID: [NoteEntry]] = [:]
         var standaloneByKey: [String: (key: ReadingKey, notes: [NoteEntry])] = [:]
@@ -124,6 +144,14 @@ enum AnnotationExport {
                 startOffset: highlight.startOffset,
                 createdAt: highlight.createdAt,
                 isOrphaned: highlight.isOrphaned,
+                // An orphan's offset no longer points at its words, so citing it
+                // would name a paragraph the reader never marked. The quote is
+                // the only record left, and it is already printed above.
+                citation: highlight.isOrphaned ? nil : CitationResolver.citation(
+                    for: key,
+                    characterOffset: highlight.startOffset,
+                    corpus: corpus
+                )?.rawValue,
                 attachedNotes: notesByHighlight[highlight.id] ?? []
             )
         }
