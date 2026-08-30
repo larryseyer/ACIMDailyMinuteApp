@@ -75,6 +75,9 @@ struct LessonsView: View {
             .navigationDestination(for: TextSectionRef.self) { ref in
                 TextSectionView(chapter: ref.chapter, section: ref.section)
             }
+            .navigationDestination(for: IntroductionRef.self) { ref in
+                WorkbookIntroductionView(lessonNumber: ref.lessonNumber)
+            }
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
                 // A widget or notification tap on a lesson must never land on a
@@ -218,6 +221,12 @@ private struct FilteredLessonsList: View {
                         .listRowBackground(Color.clear)
                 } else {
                     ForEach(visible, id: \.self) { n in
+                        if n == 1 {
+                            introductionRow(0)
+                        }
+                        if n == 181 {
+                            introductionRow(500)
+                        }
                         LessonRow(
                             lessonNumber: n,
                             meta: meta[n],
@@ -237,6 +246,29 @@ private struct FilteredLessonsList: View {
                 // after the list has already drawn, and until it does there is
                 // no current lesson to scroll to.
                 scrollToCurrentLesson(proxy: proxy, visible: visible)
+            }
+        }
+    }
+
+    /// The Workbook opens with an introduction, and Part II opens with its own.
+    /// They ride alongside the lesson they precede rather than being inserted
+    /// into the 1...365 spine, so filtering and searching keep working on plain
+    /// integers. The title comes from the corpus rather than from a literal
+    /// here, so the row and the reading can never disagree about its name.
+    @ViewBuilder
+    private func introductionRow(_ lessonNumber: Int) -> some View {
+        if let intro = WorkbookBodiesCatalog.introduction(for: lessonNumber) {
+            NavigationLink(value: IntroductionRef(lessonNumber: lessonNumber)) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(intro.title)
+                        .font(.system(.subheadline, design: .serif).weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Workbook for Students")
+                        .font(.acimCaption2)
+                        .foregroundStyle(.tertiary)
+                }
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
             }
         }
     }

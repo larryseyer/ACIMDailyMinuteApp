@@ -59,6 +59,8 @@ struct SavedView: View {
                     ArchiveDateDetailView(dateString: dateString)
                 case .textSection(let chapter, let section):
                     TextSectionView(chapter: chapter, section: section)
+                case .introduction(let lessonNumber):
+                    WorkbookIntroductionView(lessonNumber: lessonNumber)
                 }
             }
             // TextSectionView's Previous and Next push refs of their own, so
@@ -172,6 +174,7 @@ enum SavedDestination: Hashable {
     case lesson(Int)
     case archiveDate(String)
     case textSection(chapter: Int, section: Int)
+    case introduction(Int)
 }
 
 extension ReadingKey {
@@ -186,6 +189,9 @@ extension ReadingKey {
     func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
         switch self {
         case .lesson(let n):
+            // 0 and 500 are the two Part Introductions, which have their own
+            // screen because they have no lesson number to be titled with.
+            if n == 0 || n == 500 { return .introduction(n) }
             guard (1...365).contains(n) else { return nil }
             return .lesson(n)
         case .textSection(let chapter, let section):
