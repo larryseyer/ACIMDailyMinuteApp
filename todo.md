@@ -6,6 +6,11 @@
 > ⛔⛔ **FORWARD-ONLY, AND THAT IS AN OPERATOR RULE, NOT A STYLE.** Nothing here records what was done,
 > when, or by whom — and no history lessons. An item is here because it is OPEN, BLOCKED or NEXT, and it
 > **LEAVES the file the moment it is resolved.** History lives in `git log`.
+>
+> ⛔ **Dates the app shows follow the same rule.** Forward-looking dates are fine ("Available
+> 2026-08-31"), and so is when the *reader* read or listened to something. When a reading was published
+> is the app's own bookkeeping: it must not appear on any surface. The Archive tab is the one exemption —
+> its dates are the index, not a stamp.
 
 ---
 
@@ -32,7 +37,10 @@ the Listen tab has no deep link.
       title bar, on both Minute and Lessons. Tapping it plays.
 - [ ] **B4/B5** — no `01:00` chips anywhere; tapping an episode leaves a check mark and
       `Listened <date>`; swipe gives "Mark unplayed" and it clears. Lesson rows carry their length under
-      the title.
+      the title. An *unlistened* row shows no date at all.
+- [ ] **B8 — no publication dates anywhere.** Confirm none survives on Today, Lessons, lesson detail,
+      Listen or the widget. The Archive tab is exempt by decision: dates there are the index you browse
+      by, not a stamp on a reading.
 - [ ] **B6** — a saved lesson opens that lesson; a saved minute opens its archive day. Swiping either
       direction deletes.
 - [ ] **B7** — the counter reads `1 of 10` right after adding a phrase. Then set a phrase to a word in

@@ -120,12 +120,6 @@ private struct FullLessonView: View {
 
     @Environment(AudioManager.self) private var audio
 
-    private var relativeDate: String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: lesson.publishedAt, relativeTo: Date())
-    }
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -159,9 +153,6 @@ private struct FullLessonView: View {
                 .textCase(.uppercase)
                 .foregroundStyle(.secondary)
             Spacer()
-            Text(relativeDate)
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
     }
 

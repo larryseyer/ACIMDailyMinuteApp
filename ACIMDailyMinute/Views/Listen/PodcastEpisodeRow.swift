@@ -12,9 +12,11 @@ import SwiftUI
 /// The trailing column is a listened marker rather than a duration. Every Daily
 /// Minute runs the same minute, so printing `01:00` on all of them said nothing;
 /// for lessons the running time moved under the title, where it varies and is
-/// worth reading. The second line answers "have I done this one, and when" —
-/// an absolute date, because a relative "3 days ago" is useless on an archive
-/// that is meant to be years deep.
+/// worth reading.
+///
+/// The only date a row ever shows is when the *reader* listened. When an episode
+/// was published is the app's own bookkeeping — it tells the reader nothing, and
+/// stamping a year beside every reading ages the list badly.
 struct PodcastEpisodeRow: View {
     let episode: PodcastEpisode
     let feed: PodcastFeed
@@ -83,9 +85,11 @@ struct PodcastEpisodeRow: View {
                 if feed == .lesson, !episode.duration.isEmpty {
                     Text(episode.duration)
                         .monospacedDigit()
-                    Text("·")
+                    if subtitle != nil { Text("·") }
                 }
-                Text(subtitle)
+                if let subtitle {
+                    Text(subtitle)
+                }
             }
             .font(.caption2)
             .foregroundStyle(.secondary)
@@ -108,28 +112,17 @@ struct PodcastEpisodeRow: View {
         return f
     }()
 
-    private static let publishedFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateStyle = .medium
-        f.timeStyle = .none
-        return f
-    }()
-
-    /// Once listened, the line reports when — that is the fact the reader wants
-    /// back. Until then it reports when the episode was published, absolute so
-    /// it still reads correctly a decade from now.
-    private var subtitle: String {
-        if let playedAt {
-            return "Listened \(Self.listenedFormatter.string(from: playedAt))"
-        }
-        return Self.publishedFormatter.string(from: episode.date)
+    /// Only ever "when you listened". An unplayed row shows no date at all
+    /// rather than falling back to the publication date.
+    private var subtitle: String? {
+        guard let playedAt else { return nil }
+        return "Listened \(Self.listenedFormatter.string(from: playedAt))"
     }
 
     private var accessibilityLabel: String {
         var parts = [episode.title]
         if feed == .lesson, !episode.duration.isEmpty { parts.append(episode.duration) }
-        parts.append(subtitle)
-        parts.append(isListened ? "Listened" : "Not listened")
+        if let subtitle { parts.append(subtitle) } else { parts.append("Not listened") }
         return parts.joined(separator: ", ")
     }
 }
