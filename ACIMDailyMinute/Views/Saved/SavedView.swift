@@ -57,7 +57,15 @@ struct SavedView: View {
                     LessonDetailView(lessonNumber: number)
                 case .archiveDate(let dateString):
                     ArchiveDateDetailView(dateString: dateString)
+                case .textSection(let chapter, let section):
+                    TextSectionView(chapter: chapter, section: section)
                 }
+            }
+            // TextSectionView's Previous and Next push refs of their own, so
+            // this stack has to know them too, or reading onward from a saved
+            // passage dead-ends.
+            .navigationDestination(for: TextSectionRef.self) { ref in
+                TextSectionView(chapter: ref.chapter, section: ref.section)
             }
         }
     }
@@ -163,22 +171,27 @@ struct SavedView: View {
 enum SavedDestination: Hashable {
     case lesson(Int)
     case archiveDate(String)
+    case textSection(chapter: Int, section: Int)
 }
 
 extension ReadingKey {
     /// Where a row for this reading leads in the Saved tab.
     ///
-    /// A lesson opens that lesson. A minute opens the archive day it ran on,
-    /// which is the only reading surface an archived minute has — found by
-    /// segment where the mapping is recorded, and by the stored date otherwise.
-    /// `nil` for the Text and the Manual, which have no reading UI yet: the row
-    /// still renders and still exports, it simply has nowhere to go, which is
-    /// honest about what it can offer.
+    /// A lesson opens that lesson, a Text section opens that section, and a
+    /// minute opens the archive day it ran on — found by segment where the
+    /// mapping is recorded, and by the stored date otherwise. `nil` for the
+    /// Manual, which has no reading UI yet: the row still renders and still
+    /// exports, it simply has nowhere to go, which is honest about what it can
+    /// offer.
     func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
         switch self {
         case .lesson(let n):
             guard (1...365).contains(n) else { return nil }
             return .lesson(n)
+        case .textSection(let chapter, let section):
+            guard CorpusService.shared.textSection(chapter: chapter, section: section) != nil
+            else { return nil }
+            return .textSection(chapter: chapter, section: section)
         case .segment(let id):
             guard let row = media.first(where: { $0.segmentId == id }),
                   !row.publishedDate.isEmpty
@@ -186,7 +199,7 @@ extension ReadingKey {
             return .archiveDate(row.publishedDate)
         case .minuteDate(let date):
             return date.isEmpty ? nil : .archiveDate(date)
-        case .manual, .textSection:
+        case .manual:
             return nil
         }
     }
