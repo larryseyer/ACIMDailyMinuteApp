@@ -76,9 +76,13 @@ struct DailyMinuteCard: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            if let reference = CitationResolver.stem(for: .segment(minute.segmentId))
-                ?? CorpusService.shared.segment(id: minute.segmentId)?.bookName {
-                Text(reference)
+            // The full address, not the stem: this footer names a passage, and
+            // the share text and the plain-text export name the same passage
+            // the same way. Its offline twin, `CorpusReadingCard`, is the same
+            // card in the same place, so the two cannot disagree about how
+            // precisely a Daily Minute is addressed.
+            if let segment = CorpusService.shared.segment(id: minute.segmentId) {
+                Text(segment.citation ?? segment.bookName)
                     .font(.footnote.italic())
                     .foregroundStyle(.secondary)
             }
