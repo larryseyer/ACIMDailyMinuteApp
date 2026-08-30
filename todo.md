@@ -14,6 +14,14 @@
 > permanent either — bundled data stays human-readable JSON, and reader-created content must export as
 > plain text.
 >
+> ⛔ **The server owns Daily Minute selection, and the app can never compute it.** The pipeline picks a
+> **random** unused segment each day — all 158 observed transitions in `segments.used_date` jump — and it
+> must be the server anyway, because the run then builds the ElevenLabs narration and the YouTube render.
+> `daily-minute.json` is the sole authority for the whole remaining publishing run. A bundled corpus is a
+> *floor* for when the feed is stale or unreachable, never a replacement, and a corpus reading is never
+> persisted as a `DailyMinute` row. Lessons are the exception: their selection **is** sequential, so
+> day-of-year → Lesson N is valid for lessons once publishing completes.
+>
 > ⛔ **Dates the app shows follow the same rule.** Forward-looking dates are fine ("Available
 > 2026-08-31"), and so is when the *reader* read or listened to something. When a reading was published
 > is the app's own bookkeeping and must not appear on any surface. The Archive tab is the one exemption —
