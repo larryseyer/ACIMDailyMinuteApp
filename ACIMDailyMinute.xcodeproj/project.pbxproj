@@ -35,6 +35,7 @@
 		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
+		AA000001315 /* CompanionNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002313 /* CompanionNoteView.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
@@ -168,6 +169,7 @@
 		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		AA000002313 /* CompanionNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionNoteView.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 				AA000002025 /* SettingsView.swift */,
 				AA000002221 /* PhrasesEditorView.swift */,
 				AA000002030 /* PrivacyPolicyView.swift */,
+				AA000002313 /* CompanionNoteView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -671,6 +674,7 @@
 				AA000001028 /* NotificationManager.swift in Sources */,
 				AA000001029 /* ConnectivityManager.swift in Sources */,
 				AA000001030 /* PrivacyPolicyView.swift in Sources */,
+				AA000001315 /* CompanionNoteView.swift in Sources */,
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
 				AA000001036 /* TermExtractor.swift in Sources */,
