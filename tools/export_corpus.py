@@ -20,6 +20,7 @@ EXPECTED = {
     "ACIMTextSections.json": 268,
     "ACIMManual.json": 105,
     "ACIMSegments.json": 1983,
+    "WorkbookIntroductions.json": 2,
 }
 
 
@@ -64,6 +65,16 @@ def main():
     for row in raw_sections:
         row["body"] = display_body(row["body"], heads)
     write("ACIMTextSections.json", raw_sections)
+
+    # Lesson ids 0 and 500 are the two Part Introductions. They sit outside the
+    # 1-365 spine, which is why Workbook365Bodies.json cannot hold them and why
+    # they had nowhere to appear until the Read tab gave them one.
+    write("WorkbookIntroductions.json", [
+        {"lessonNumber": r[0], "title": r[1], "body": r[2]}
+        for r in conn.execute(
+            "SELECT id, title, text FROM lessons WHERE id IN (0, 500) ORDER BY id"
+        )
+    ])
 
     write("ACIMManual.json", [
         {"segmentId": r[0], "body": r[1]}

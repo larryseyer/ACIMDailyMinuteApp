@@ -86,7 +86,9 @@ struct BookmarkRow: View {
             // No store check: `LessonDetailView` renders from `WorkbookCatalog`
             // for any valid number, so a lesson bookmark always has somewhere
             // to go even when its text has not been fetched on this device.
-            guard let n = Int(parsedToken), (1...365).contains(n) else { return nil }
+            guard let n = Int(parsedToken) else { return nil }
+            if n == 0 || n == 500 { return .introduction(n) }
+            guard (1...365).contains(n) else { return nil }
             return .lesson(n)
         }
 
@@ -155,8 +157,9 @@ struct BookmarkRow: View {
 
     private var headerLabel: String {
         if parsedChannel == "lesson" {
-            if let n = Int(parsedToken) { return "Lesson \(n)" }
-            return "Lesson"
+            guard let n = Int(parsedToken) else { return "Lesson" }
+            if n == 0 || n == 500 { return "Introduction" }
+            return "Lesson \(n)"
         }
         if parsedChannel == "text" {
             guard let address = textAddress else { return "Text" }
@@ -179,6 +182,9 @@ struct BookmarkRow: View {
         }
 
         if parsedChannel == "lesson" {
+            if let n = Int(parsedToken), let intro = WorkbookBodiesCatalog.introduction(for: n) {
+                return intro.title
+            }
             if let l = lessons.first {
                 return l.lessonTitle.isEmpty ? "Lesson \(l.lessonNumber)" : l.lessonTitle
             }

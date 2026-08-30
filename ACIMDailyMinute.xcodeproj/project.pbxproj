@@ -117,6 +117,8 @@
 		AA000001402 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
 		AA000001403 /* TextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002403 /* TextChapterView.swift */; };
 		AA000001404 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
+		AA000001405 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
+		AA000001406 /* WorkbookIntroductions.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002406 /* WorkbookIntroductions.json */; };
 		AA000001999 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
 		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
 		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
@@ -254,6 +256,8 @@
 		AA000002402 /* TextChaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChaptersView.swift; sourceTree = "<group>"; };
 		AA000002403 /* TextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChapterView.swift; sourceTree = "<group>"; };
 		AA000002404 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
+		AA000002405 /* WorkbookIntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookIntroductionView.swift; sourceTree = "<group>"; };
+		AA000002406 /* WorkbookIntroductions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookIntroductions.json; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
@@ -535,6 +539,7 @@
 				AA000002307 /* ACIMSegments.json */,
 				AA000002308 /* ACIMTextSections.json */,
 				AA000002230 /* ACIMManual.json */,
+				AA000002406 /* WorkbookIntroductions.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -569,6 +574,7 @@
 				AA000002212 /* LessonsView.swift */,
 				AA000002213 /* LessonDetailView.swift */,
 				AA000002214 /* JumpToLessonSheet.swift */,
+				AA000002405 /* WorkbookIntroductionView.swift */,
 			);
 			path = Lessons;
 			sourceTree = "<group>";
@@ -681,6 +687,7 @@
 				AA000001305 /* Workbook365Bodies.json in Resources */,
 				AA000001307 /* ACIMSegments.json in Resources */,
 				AA000001308 /* ACIMTextSections.json in Resources */,
+				AA000001406 /* WorkbookIntroductions.json in Resources */,
 				AA000001230 /* ACIMManual.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -753,6 +760,7 @@
 				AA000001402 /* TextChaptersView.swift in Sources */,
 				AA000001403 /* TextChapterView.swift in Sources */,
 				AA000001404 /* TextSectionView.swift in Sources */,
+				AA000001405 /* WorkbookIntroductionView.swift in Sources */,
 				AA000001999 /* SaveButton.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,
