@@ -29,31 +29,6 @@
 
 ---
 
-## ▶ NEXT — execute the Timeless Corpus plan
-
-⛔ The spec and plan are **not in git** — `.gitignore:54` keeps `docs/` local on purpose. They exist only
-on this Mac at `docs/superpowers/specs/2026-08-30-timeless-corpus-design.md` and
-`docs/superpowers/plans/2026-08-30-timeless-corpus.md`. Approved; five tasks; not started.
-
-- [ ] **Task 1 — export the corpus.** `tools/export_corpus.py` reads `data/acim.db` on MacLive and writes
-      four JSON resources. ⭐ **Do this one first even if nothing else follows**: it fills
-      `Workbook365Bodies.json` (a 3-byte `[]` today) and every lesson body then renders with no code
-      change, because `WorkbookBodiesCatalog.body(for:)` is already consumed at `LessonDetailView:227`
-      and `:313`. All 365 bodies are in the database and always were — this was never a content-supply
-      problem.
-- [ ] **Task 2 — `CorpusService`** over the bundled files, with a `swiftc` integrity harness asserting
-      1,983 segments / 268 Text sections / 105 Manual segments / 365 lesson bodies, none empty.
-- [ ] **Task 3 — retain `segmentId → youtubeID / audioURL`** in a `SegmentMedia` model that does not age
-      out, so the rolling archive stops discarding the only link between the permanent corpus and the
-      recordings made for it. Must be added to the `Schema` in **both** `ACIMDailyMinuteApp.swift` and
-      `ACIMDailyMinuteWidget/SharedModelContainer.swift` — a mismatch crashes the shared container at
-      launch.
-- [ ] **Task 4 — a corpus floor under Today** when the feed is stale or unreachable. Never persisted as a
-      `DailyMinute` row (it would collide on the date key). Verified in airplane mode after a fresh install.
-- [ ] **Task 5 — MP3 download.** Inert until archive.org hosting exists, then works with no further app
-      change. ⛔ **Video download is ruled out, not deferred** — it breaches YouTube's terms regardless of
-      who owns the upload, fails App Store review, and at 42.8 MB against audio's 2.00 MB is impractical.
-
 ## ▶ NEXT — his confirmation on four fixes already on his phone
 
 Built and installed at `8cb09f9`. B1, B2 and B3 are confirmed and retired.
@@ -69,6 +44,16 @@ Built and installed at `8cb09f9`. B1, B2 and B3 are confirmed and retired.
       the notification arrives. Notification permission is now requested at launch; it used to be reached
       only by switching the daily reminder on, so anyone who left that off was never asked and every
       alert was discarded unasked-for.
+- [ ] **Lesson bodies.** Open a lesson the feed has not published yet — anything in 1-80. Expected:
+      the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
+      All 365 bodies are bundled now. Note that choosing a lesson that *has* a video still opens that
+      video full screen first by design; dismissing it lands on the text.
+- [ ] **The corpus floor.** Airplane mode, delete and reinstall, cold launch. Expected: Today shows a
+      complete reading from the bundle with no network, no spinner and no empty state. It is a plain
+      card with no save, share or Listen control, because that passage was never published.
+- [ ] **Downloads stay invisible.** Swipe a Listen row. Expected: no Download action, because
+      `audio_url` is empty on every episode and all 158 archive entries. It appears by itself once
+      archive.org hosting exists — no app change.
 - [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
@@ -116,15 +101,35 @@ Decisions are made and need writing into a spec; no further questions are outsta
       (`CATCH_UP_MAX_PER_RUN = 1`); ~five nights to clear. Confirm with `./catchup.sh list`.
 - [ ] Next reach is **2026-04-08** at the 02:00 run. Fails soft; retries the next night.
 
+## ▶ OPEN — platform expansion
+
+Ranked by his instruction, and the ranking is a resource decision, not a design one: get it right on
+the common Apple environment first, then expand. Do not let a non-Apple consideration shape an
+Apple-platform design.
+
+- [ ] **Apple TV (tvOS)** — a target he wants; no tvOS target exists in the Xcode project yet. It is
+      the only unbuilt Apple platform. The bundled corpus makes it far more tractable than it was:
+      a tvOS build needs content that does not depend on a phone being nearby.
+- [ ] **Windows**, then **Linux** — explicitly LAST. Nothing is to start here while any Apple
+      platform is unfinished.
+- ⛔ **`./build.sh` builds macOS with `CODE_SIGNING_ALLOWED=NO`**, so that binary carries no
+      entitlements, cannot open the App Group, and its widget is invisible to the system. Testing
+      the macOS widget needs a signed build:
+      `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination "platform=macOS" -allowProvisioningUpdates DEVELOPMENT_TEAM=RR5DY39W4Q build`,
+      then copy the app to `/Applications` and launch it once. Confirm with
+      `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
+
 ## ▶ OPEN — physical-book parity gaps
 
 What a physical *A Course in Miracles* gives a reader that this app does not. Ranked by how much each
-blocks "this replaces my book". The corpus plan above puts the content in place; these are what turn it
-into a book.
+blocks "this replaces my book". The content is now bundled and reachable through `CorpusService` —
+1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
+a book.
 
 - [ ] **The Text is not readable in the app** — 31 chapters, ~669 pages, the largest part of the volume
-      and the whole theoretical basis. The corpus plan bundles it; **Spec 2** is the reading UI: chapters,
-      sections, navigation.
+      and the whole theoretical basis. All 268 sections are bundled in `ACIMTextSections.json` and
+      exposed as `CorpusService.textSections`, with chapter and section numbers and titles. Nothing
+      reads them yet: **Spec 2** is the reading UI — chapters, sections, navigation.
 - [ ] ⛔ **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). Promoted
       from a study-group convenience to a **durability requirement**: citations are the interoperability
       layer that lets a reader move between this app, a paper book, and whatever comes after both.
@@ -138,21 +143,27 @@ into a book.
 - [ ] **Structure the Manual for Teachers** into its question-and-answer form. It is bundled as 105
       unstructured segments by decision; a searchable unstructured Manual beats no Manual.
 - [ ] **The two Part Introductions** (lesson ids 0 and 500 in the database) are outside the 1–365 spine
-      and are not exported by the corpus plan. Spec 2 should place them.
+      and are not exported by `tools/export_corpus.py`. Spec 2 should place them, and the export
+      needs a matching change.
 
 ## ▶ OPEN — content and pipeline
 
-- [ ] **`"YOURS.You"` is missing a space** in the published minute text, on every device. Source data, not
-      the app. Look at the extractor's sentence-boundary handling.
-- [ ] **Lesson bodies render as one block.** The `lessons` table has no indented source to recover
-      paragraph structure from. Distinct from the bodies being absent, which Task 1 fixes.
+- [ ] **Sentences are run together where a period meets the next word** — `"YOURS.You"` in the
+      published minute text, and the same defect throughout `lessons.text`: `"thus far.There"`,
+      `"planned.We"`, `"thinking.The"` in lesson 20 alone. It is now bundled into the app, so a fix
+      means re-running `tools/export_corpus.py` after the extractor's sentence-boundary handling is
+      corrected. Source data, not the app.
+- [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — `ReadingTextView` now
+      draws these, and it recovers real paragraph structure for the other 179. Those 186 carry no
+      blank line in `lessons.text` at all, so there is nothing in the source to split on. Fixing it
+      means recovering structure in the extractor, on the pipeline side.
 
 ## ▶ OPEN — small, unscheduled
 
 - [ ] **The Listen tab has no defined behaviour when YouTube fails.** `LiteYouTubeCard` needs a
       `WKNavigationDelegate` failure path so a dead video source degrades to what it has rather than a
-      dead frame. Called out in the corpus plan's self-review as the one spec requirement no task covers;
-      it belongs with Listen work, not corpus work.
+      dead frame. It belongs with Listen work rather than corpus work, which is why the corpus
+      tasks left it standing.
 - [ ] **No deep-link route for the Listen tab.** `DeepLinkRoute` covers today / lesson / archive / saved.
       Not a defect, but it makes that tab unverifiable without hand-tapping.
 - [ ] **Today-tab and Archive-tab minute bookmarks do not alias.** Today keys on `DailyMinute.segmentHash`,
