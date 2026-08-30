@@ -43,7 +43,7 @@ struct DailyMinuteCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(alignment: .center) {
             Text("Daily Minute")
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
@@ -52,6 +52,7 @@ struct DailyMinuteCard: View {
             Text(relativeDate)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 
@@ -75,13 +76,6 @@ struct DailyMinuteCard: View {
 
     private var actionRow: some View {
         HStack(spacing: 16) {
-            Button {
-                toggleBookmark()
-            } label: {
-                Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-            }
-            .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Bookmark")
-
             ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
                 Image(systemName: "square.and.arrow.up")
             }

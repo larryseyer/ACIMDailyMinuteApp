@@ -16,8 +16,22 @@ import SwiftData
 struct LessonDetailView: View {
     let lessonNumber: Int
 
+    @Environment(\.modelContext) private var modelContext
     @Query private var lessonMatches: [DailyLesson]
     @Query private var archiveMatches: [ArchivedReading]
+    @Query private var bookmarks: [Bookmark]
+
+    /// A lesson bookmark is keyed by number alone, so saving does not depend on
+    /// which of the three states rendered. It used to live inside
+    /// `FullLessonView`, which meant a lesson with no published body — most of
+    /// them, while `Workbook365Bodies.json` is still a placeholder — had no way
+    /// to be saved at all, even though the Lessons list would happily show a
+    /// bookmark indicator for one.
+    private var itemKey: String { "lesson:\(lessonNumber)" }
+
+    private var isBookmarked: Bool {
+        bookmarks.contains(where: { $0.itemKey == itemKey })
+    }
 
     init(lessonNumber: Int) {
         self.lessonNumber = lessonNumber
@@ -63,6 +77,11 @@ struct LessonDetailView: View {
             }
         }
         .navigationTitle("Lesson \(lessonNumber)")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $isShowingVideo) {
@@ -77,7 +96,20 @@ struct LessonDetailView: View {
         }
         #endif
     }
+    private func toggleBookmark() {
+        if let existing = bookmarks.first(where: { $0.itemKey == itemKey }) {
+            modelContext.delete(existing)
+        } else {
+            let bookmark = Bookmark()
+            bookmark.itemKey = itemKey
+            bookmark.channel = "daily-lesson"
+            bookmark.createdAt = Date()
+            modelContext.insert(bookmark)
+        }
+        try? modelContext.save()
+    }
 }
+
 
 
 
@@ -86,15 +118,7 @@ struct LessonDetailView: View {
 private struct FullLessonView: View {
     let lesson: DailyLesson
 
-    @Environment(\.modelContext) private var modelContext
     @Environment(AudioManager.self) private var audio
-    @Query private var bookmarks: [Bookmark]
-
-    private var itemKey: String { "lesson:\(lesson.lessonNumber)" }
-
-    private var isBookmarked: Bool {
-        bookmarks.contains(where: { $0.itemKey == itemKey })
-    }
 
     private var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
@@ -156,13 +180,6 @@ private struct FullLessonView: View {
 
     private var actionRow: some View {
         HStack(spacing: 16) {
-            Button {
-                toggleBookmark()
-            } label: {
-                Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-            }
-            .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Bookmark")
-
             ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
                 Image(systemName: "square.and.arrow.up")
             }
@@ -189,19 +206,6 @@ private struct FullLessonView: View {
         .foregroundStyle(.primary)
         .buttonStyle(.plain)
         .padding(.top, 4)
-    }
-
-    private func toggleBookmark() {
-        if let existing = bookmarks.first(where: { $0.itemKey == itemKey }) {
-            modelContext.delete(existing)
-        } else {
-            let bookmark = Bookmark()
-            bookmark.itemKey = itemKey
-            bookmark.channel = "daily-lesson"
-            bookmark.createdAt = Date()
-            modelContext.insert(bookmark)
-        }
-        try? modelContext.save()
     }
 }
 

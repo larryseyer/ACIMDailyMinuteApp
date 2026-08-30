@@ -47,7 +47,7 @@ struct DailyLessonCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(alignment: .center) {
             Text("Lesson \(lesson.lessonNumber)")
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
@@ -56,6 +56,7 @@ struct DailyLessonCard: View {
             Text(relativeDate)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 
@@ -74,13 +75,6 @@ struct DailyLessonCard: View {
 
     private var actionRow: some View {
         HStack(spacing: 16) {
-            Button {
-                toggleBookmark()
-            } label: {
-                Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-            }
-            .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Bookmark")
-
             ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
                 Image(systemName: "square.and.arrow.up")
             }

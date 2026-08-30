@@ -77,7 +77,7 @@ struct ArchivedReadingCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(alignment: .center) {
             Text(headerLabel)
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
@@ -88,6 +88,7 @@ struct ArchivedReadingCard: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 
@@ -104,13 +105,6 @@ struct ArchivedReadingCard: View {
 
     private var actionRow: some View {
         HStack(spacing: 16) {
-            Button {
-                toggleBookmark()
-            } label: {
-                Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
-            }
-            .accessibilityLabel(isBookmarked ? "Remove bookmark" : "Bookmark")
-
             ShareLink(item: shareText) {
                 Image(systemName: "square.and.arrow.up")
             }
