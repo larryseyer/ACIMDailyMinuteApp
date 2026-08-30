@@ -218,12 +218,12 @@ private struct FilteredLessonsList: View {
         }
     }
 
+    /// `latestPublishedAt` deliberately does not appear here. It anchors the
+    /// availability schedule, but when a lesson was published is the app's own
+    /// bookkeeping and means nothing to the reader.
     private var cadenceHeader: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Lesson \(latestLessonNumber) of 365")
-            if let date = latestPublishedAt {
-                Text("Published \(date, format: .relative(presentation: .named))")
-            }
             Text("After Lesson 365, the Text begins.")
         }
         .font(.footnote)

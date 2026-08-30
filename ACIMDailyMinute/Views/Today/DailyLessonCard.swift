@@ -14,12 +14,6 @@ struct DailyLessonCard: View {
         bookmarks.contains(where: { $0.itemKey == itemKey })
     }
 
-    private var relativeDate: String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: lesson.publishedAt, relativeTo: Date())
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
@@ -81,9 +75,6 @@ struct DailyLessonCard: View {
 
     private var footer: some View {
         HStack {
-            Text(relativeDate)
-                .font(.caption)
-                .foregroundStyle(.secondary)
             Spacer()
             Text("\(lesson.wordCount) words")
                 .font(.caption2)
