@@ -118,12 +118,11 @@ struct ArchiveCalendarView: View {
         } label: {
             ZStack {
                 if isSelected {
-                    // Filled disc plus a contrasting outer ring: on the dark
-                    // ground a tinted fill alone reads as barely-there.
+                    // The accent is a light cream, so the filled disc already
+                    // separates itself from the dark ground. No outline: a
+                    // white ring on a light fill just muddies the edge.
                     Circle()
                         .fill(Color.accentColor)
-                    Circle()
-                        .strokeBorder(Color.white.opacity(0.9), lineWidth: 2)
                 } else if isToday {
                     Circle()
                         .stroke(Color.accentColor, lineWidth: 1.5)
@@ -147,7 +146,7 @@ struct ArchiveCalendarView: View {
                     // channel, so it survives colour-blindness and the tinted
                     // disc being hidden under the selection.
                     Circle()
-                        .fill(isSelected ? Color.white : Color.accentColor)
+                        .fill(isSelected ? Self.onAccent : Color.accentColor)
                         .frame(width: 4, height: 4)
                         .opacity(hasReadings ? 1 : 0)
                 }
@@ -162,7 +161,9 @@ struct ArchiveCalendarView: View {
     }
 
     private func foregroundColor(selected: Bool, today: Bool, hasReadings: Bool) -> Color {
-        if selected { return .white }
+        // Dark on the accent fill. The accent is light, so white-on-accent is
+        // the one combination in this view that cannot be read.
+        if selected { return Self.onAccent }
         if today { return .accentColor }
         // Days with nothing to read are dimmed rather than days with readings
         // being brightened, so the month reads as "these are the live ones".
@@ -175,6 +176,9 @@ struct ArchiveCalendarView: View {
         let base = formatter.string(from: date)
         return hasReadings ? "\(base), has readings" : base
     }
+
+    /// Foreground for anything drawn on top of the accent fill.
+    private static let onAccent = Color(white: 0.07)
 
     static func dateString(from date: Date) -> String {
         let formatter = DateFormatter()
