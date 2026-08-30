@@ -34,11 +34,23 @@ extension CorpusSegment {
     /// The Archive tab needs it: its rows carry the feed's `source_reference`,
     /// which is this identical string, but no segment id to resolve a citation
     /// with. One mapping rather than two that drift.
+    ///
+    /// ⛔ An unknown value is not quietly called "Text". The pipeline writes
+    /// four values today — `Text_A`, `Text_B`, `Workbook`, `Manual` — and a
+    /// fifth book arriving would otherwise be labelled as the Text on the Today
+    /// and Archive footers, permanently and invisibly. It names the volume
+    /// instead, and says so loudly where a developer can hear it.
     static func bookName(forSourcePDF sourcePDF: String) -> String {
         switch sourcePDF {
-        case "Manual": "Manual for Teachers"
-        case "Workbook": "Workbook for Students"
-        default: "Text"
+        case "Manual": return "Manual for Teachers"
+        case "Workbook": return "Workbook for Students"
+        case "Text_A", "Text_B", "Text": return "Text"
+        default:
+            // Deliberately not an assertion: the Archive passes the feed's own
+            // string through here, so a server-side change would crash every
+            // Debug build. The volume's name is true of any book in it, which
+            // is the most that can be said without knowing which one.
+            return "A Course in Miracles"
         }
     }
 }
