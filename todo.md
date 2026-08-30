@@ -1,10 +1,9 @@
 # ACIM Daily Minute — open items
 
 ## Blocked on Archive.org (external)
-- [ ] **Email `info@archive.org`** to clear the false spam flag on account
-      `larryseyer@gmail.com`. Item *creation* is refused (S3 and web UI alike);
-      adding files to existing items returns 200. Draft + full error text are in
-      the 2026-08-29 session.
+- [x] **Email `info@archive.org`** — SENT 2026-08-29 by Larry. Awaiting reply.
+      The flag refuses item *creation* (S3 and web UI alike); adding files to
+      existing items returns 200.
 - [ ] **Create items** `acim-daily-minute` and `acim-daily-lessons`
       (mediatype audio) — blocked by the flag above.
 - [ ] **Run the backfill** once the items exist:
