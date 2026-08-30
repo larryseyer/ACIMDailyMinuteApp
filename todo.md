@@ -173,66 +173,22 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       `.lesson(0)` and `.lesson(500)`, which made every Saved row and export heading call them
       "Lesson 0" and "Lesson 500". Confirm both read correctly in Saved and in an export.
 
-## ▶ NEXT — the Text is missing its chapter openings
+- [ ] **The Text's missing chapter openings are back.** About 12,000 characters that were
+      never in the bundle: nine chapter openings and the publisher's front matter. The
+      extractor cut each chapter at its first *section* heading and dropped the opening prose
+      glued to the wrapped chapter title. Recovered at export from the segments, which are a
+      continuous cut of the same PDFs — nothing re-extracted, nothing read from a PDF, nothing
+      written to the database. **272 sections now, not 268.**
+      ⛔ **Addresses moved in three chapters, permanently.** Chapters 13, 16 and 20 had no
+      Introduction at all, so the recovered opening became section 1 and everything after it
+      shifted: **today's `T-16.1 True Empathy` is `T-16.2`.** That matches the 28 chapters
+      where the Introduction already was section 1. It was safe to do only because nothing has
+      shipped and the annotation store was empty — 0 highlights, 0 notes, 0 bookmarks, verified
+      before the change and again after. The same move made later would strand real marks.
+      Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
+      `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
-⛔ **Found by measurement, not reported: about 12,000 characters of the Text are not in the
-bundle at all.** Nine chapter openings and the front matter are missing from
-`ACIMTextSections.json`, and nothing in the app or in the five committed checks could see it —
-the checks all ask whether what IS there is well formed, and none asks whether anything is
-absent. A reader searching "How simple is salvation!" — the opening line of Chapter 31 — finds
-nothing today and concludes the phrase is not in the book.
-
-**How it was found, and how to re-find it:** every 40-character window of the 1,878 Text and
-Workbook segments was looked for in the readable corpus. 1.87% of windows are absent, and the
-absences cluster into 16 spans of 60+ characters totalling 9,728 normalized characters.
-
-**Where the words went.** The segment stream reads
-`…This is our will. Amen.` / `sixteen` / `The Forgiveness` / `of Illusions To empathize does
-not mean to join in SUFFERING…` — the chapter's opening prose is glued to the last line of the
-wrapped chapter title. The extractor that filled the pipeline's `text_sections` table cut at the
-first *section* heading and discarded everything between the chapter title and it.
-
-**The inventory, by chapter:**
-
-| Chapter | Missing | What is gone |
-|---|---|---|
-| 7 | ~1,060 | opening of the Introduction; what remains is 519 characters |
-| 13 | ~1,020 | the whole opening — no Introduction section exists |
-| 16 | ~1,650 | the whole opening — no Introduction section exists |
-| 18 | ~1,060 | opening of the Introduction; what remains is 522 characters |
-| 20 | ~360 | the whole opening — no Introduction section exists |
-| 22 | ~1,070 | opening of the Introduction |
-| 30-31 | ~1,020 | opening of Chapter 31's Introduction — `How simple is salvation!` |
-| Preface | ~470 | part of the Preface |
-| front matter | ~2,020 | the publisher's acknowledgement and dedication |
-
-**The words are not lost.** Every missing span is present in `ACIMSegments.json`, already
-spacing-repaired, and in the pipeline's `segments.text`. The repair is a recovery at export from
-data the bundle already carries — no re-extraction, no PDF text replacing a row, no write to the
-database.
-
-**What the spec has to answer:**
-
-1. **Does a recovered opening become a new Introduction section, or get prepended to the
-   existing one?** Chapters 7, 18, 22 and 31 have an Introduction that is merely truncated —
-   prepend. Chapters 13, 16 and 20 have none, so one must be created, and creating it as
-   section 1 renumbers every later section in those three chapters and changes their citations.
-   ⛔ The PDFs at `~/Dropbox/ACIM PDF/` are the authority for whether the opening is a chapter
-   introduction or the head of the first named section. Use them for structure only.
-2. **Where does the recovered text stop?** The boundary is where the existing first section
-   begins, and it must be found by matching, not by counting characters.
-3. **What guards it afterwards?** The coverage measurement above is the missing sixth check:
-   every span of the segment stream must appear in the readable corpus, or be named as
-   deliberately excluded. It is what would have caught this on the day it appeared.
-4. **What moves when a body grows at the front?** Highlight offsets in those sections shift.
-   `AnchorResolver` re-anchors by quote and `AnnotationStore.reanchor` writes the repair back, so
-   this is handled rather than avoided — but the two Part Introduction bodies and every stored
-   segment citation in chapters 13, 16 and 20 are re-derived at export and must be re-verified.
-
-⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database, and
-the bundle stays display form so `ReadingText.displayString(from: body) == body` still holds.
-
-## ▶ THEN — corpus-wide search
+## ▶ NEXT — corpus-wide search
 
 The book's index. Search that reaches the whole bundled corpus, not just the rolling
 archive window. Spec first, then plan, then execute.
@@ -243,8 +199,8 @@ archive window. Spec first, then plan, then execute.
   `ArchivedReading.searchableText` through a SwiftData `#Predicate` with
   `localizedStandardContains` — the rolling archive window only. `LessonsView` matches a
   lesson number or title. `TextChaptersView` matches chapter and section titles.
-- **The corpus a real search must cover is 5,125,994 characters over 2,723 records**:
-  268 Text sections (1.63M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
+- **The corpus a real search must cover is 5,137,927 characters over 2,727 records**:
+  272 Text sections (1.64M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
   segments (137K), 2 Part Introductions (7K). All already in memory through `CorpusService`.
 - **Every hit now has an address to show.** `CitationResolver.citation(for:characterOffset:)`
   turns a match position into `T-5.3.7`, so a result can name where it is.
@@ -265,6 +221,52 @@ archive window. Spec first, then plan, then execute.
 
 ⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
 and whatever is added must survive the app.
+
+## ▶ OPEN — carrying a reader's own work between devices
+
+⛔ **He raised this directly: backup and restore for a reader's settings, highlights, notes and
+bookmarks, shared between devices and machines. iCloud for Apple devices ideally, but not at the
+price of shutting out Windows, Linux and Android.** Not urgent — "no rush, when convenient" — but
+it is his, not inferred, so it does not get quietly dropped.
+
+**What has to travel:** highlights, notes, bookmarks, the watched-phrase list, reminder settings,
+listened/playback history, and eventually the reading position. Everything a reader made, and
+nothing the app can recompute.
+
+**What already exists, and is the floor rather than the answer.** `AnnotationExport.plainText`
+writes highlights and notes as plain text a stranger can read, with the edition named and a
+citation on every mark. That is the durability promise kept, and it is already a manual backup —
+but it is one-way. Nothing imports it, and it does not carry settings or bookmarks.
+
+**The constraints that decide this, none of them negotiable:**
+
+- ⛔ **Zero data collection is load-bearing** — no accounts, no analytics, no SDKs, and a "Data
+  Not Collected" App Store label. A sync service *we* run would end that, and end the
+  no-backend architecture with it. Apple's CloudKit **private** database does not: the data
+  stays in the reader's own iCloud, and it is not collected by the developer.
+- ⛔ **The app is not permanent, so nothing may be trapped in it.** Whatever format sync uses has
+  to be readable without this app, on a machine that never ran it.
+- ⛔ **Never key a row by a hash of its content.** A merge across two devices is exactly where
+  that bug bites hardest: an edited note would arrive as a second note. Identity is the
+  annotation's own id and its `ReadingKey`, never its text.
+- **A merge needs a rule for the same note edited in two places**, and "last write wins" silently
+  discards a reader's words. Decide it deliberately.
+
+**The shape that probably satisfies all of it, to be spec'd rather than assumed:** two tiers, the
+lower one carrying the upper. A **portable file** — one self-describing document holding every
+annotation and setting, exported and imported anywhere, no account and no server — is what makes
+Windows, Linux and Android first-class rather than an afterthought, and it is the same artifact
+that satisfies durability. **CloudKit private database plus SwiftData** then makes that automatic
+and invisible between a reader's Apple devices, syncing the same records the file format
+describes. The open question is whether a third tier is wanted: a folder the reader supplies
+themselves — their own Dropbox, Drive or file share — which would sync across every platform
+without anyone running a service.
+
+- [ ] Spec the portable backup document: what it holds, how it identifies a record, and how an
+      import merges rather than duplicates.
+- [ ] Spec CloudKit private-database sync for Apple devices on top of that identity model,
+      including what it means for the "Data Not Collected" label.
+- [ ] Decide the conflict rule before writing either.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -327,6 +329,18 @@ a book.
       unstructured segments by decision; a searchable unstructured Manual beats no Manual.
 
 ## ▶ OPEN — content and pipeline
+
+- [ ] ⛔ **Letter-spaced headings are still sitting inside reader-facing text.** Found while
+      recovering the Text's chapter openings, and deliberately **not fixed** there — it is a
+      different defect, in different files, with different decisions to make.
+      The page sets some headings letter-spaced (`w h o a r e g o d ’s t e a c h e r s ?`), and
+      they survive inline, glued to the front of the prose that follows them:
+      **20 runs in 13 lesson bodies, 62 runs in 24 Manual records, 152 runs in 92 segments.**
+      The Text is clean and now has a committed guard (`letter_spaced_headings` in
+      `text_paragraphs.py`) that keeps it that way; the other three files have no such guard
+      because they would fail it today.
+      The open question is what a heading should BECOME — its own paragraph, a section title, or
+      nothing — and for the Manual that is entangled with giving it a structure to browse at all.
 
 - [ ] **Eleven running heads survive inside Chapter 11's prose.** `and you will not perceive God’s
       answer 11 GOD’S PLAN FOR SALVATION to YOU.` — in sections 11.2 through 11.10. The recovery in
