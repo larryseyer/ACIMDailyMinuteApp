@@ -80,7 +80,7 @@ struct ContentView: View {
                     .tag(0)
 
                 LessonsView()
-                    .tabItem { Label("Lessons", systemImage: "book.closed.fill") }
+                    .tabItem { Label("Read", systemImage: "book.closed.fill") }
                     .tag(1)
 
                 ListenView()
@@ -151,7 +151,7 @@ private struct MacBottomTabBar: View {
 
     private let items: [Item] = [
         .init(id: 0, title: "Today", systemImage: "sun.max.fill"),
-        .init(id: 1, title: "Lessons", systemImage: "book.closed.fill"),
+        .init(id: 1, title: "Read", systemImage: "book.closed.fill"),
         .init(id: 2, title: "Listen", systemImage: "play.circle.fill"),
         .init(id: 3, title: "Archive", systemImage: "archivebox.fill"),
         .init(id: 4, title: "Saved", systemImage: "bookmark.fill")

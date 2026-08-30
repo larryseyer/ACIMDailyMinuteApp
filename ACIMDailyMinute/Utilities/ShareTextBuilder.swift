@@ -19,6 +19,18 @@ enum ShareTextBuilder {
         return parts.joined(separator: "\n\n")
     }
 
+    /// Matches `lessonShareText`'s shape so a shared passage looks the same
+    /// whichever part of the book it came from.
+    static func textSectionShareText(_ section: CorpusTextSection) -> String {
+        let chapter = section.chapterNumber == 0
+            ? section.chapterTitle
+            : "Chapter \(section.chapterNumber)"
+        var parts: [String] = ["\(chapter): \(section.sectionTitle)", section.body]
+        parts.append("— A Course in Miracles, Text")
+        parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
+
     /// Matches `minuteShareText`'s format verbatim so the share sheet output
     /// looks identical regardless of whether a user shared from Today or Archive.
     static func archivedMinuteShareText(_ reading: ArchivedReading) -> String {
