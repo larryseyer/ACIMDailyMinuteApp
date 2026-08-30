@@ -72,3 +72,30 @@ enum ReadingKey: Hashable, Sendable {
         }
     }
 }
+
+extension ReadingKey {
+    /// Where a row for this reading leads in the Saved tab.
+    ///
+    /// A lesson opens that lesson. A minute opens the archive day it ran on,
+    /// which is the only reading surface an archived minute has — found by
+    /// segment where the mapping is recorded, and by the stored date otherwise.
+    /// `nil` for the Text and the Manual, which have no reading UI yet: the row
+    /// still renders and still exports, it simply has nowhere to go, which is
+    /// honest about what it can offer.
+    func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
+        switch self {
+        case .lesson(let n):
+            guard (1...365).contains(n) else { return nil }
+            return .lesson(n)
+        case .segment(let id):
+            guard let row = media.first(where: { $0.segmentId == id }),
+                  !row.publishedDate.isEmpty
+            else { return nil }
+            return .archiveDate(row.publishedDate)
+        case .minuteDate(let date):
+            return date.isEmpty ? nil : .archiveDate(date)
+        case .manual, .textSection:
+            return nil
+        }
+    }
+}
