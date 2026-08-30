@@ -54,6 +54,16 @@ Built and installed at `8cb09f9`. B1, B2 and B3 are confirmed and retired.
 - [ ] **Downloads stay invisible.** Swipe a Listen row. Expected: no Download action, because
       `audio_url` is empty on every episode and all 158 archive entries. It appears by itself once
       archive.org hosting exists — no app change.
+- [ ] **The companion note.** Settings > About > "A note about using this app". Three places depart
+      from the wording he supplied, each to keep it in harmony with the Course, and each is his to
+      veto: the prescribed order of study is gone (the Manual says some should read the Manual first,
+      some begin with the Workbook, some start with the Text, and the Text's Introduction says free
+      will "means only that you may elect what you want to take at a given time"); the Workbook's own
+      "do not undertake more than one lesson a day" is stated; and the Workbook Introduction is quoted
+      directly rather than paraphrased. Everything else is his wording verbatim.
+- [ ] **The privacy policy is reachable now.** `PrivacyPolicyView` existed but nothing linked to it,
+      so the one screen stating the app collects nothing could not be opened from inside the app. It
+      sits under Settings > About beside the companion note. Confirm it reads correctly there.
 - [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
