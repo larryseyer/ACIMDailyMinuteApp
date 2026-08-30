@@ -34,11 +34,32 @@ struct SelectableReadingText: View {
     let raw: String
     var design: Design = .serif
     var lineSpacing: CGFloat = 0
+    /// Already re-anchored by `AnnotationStore.highlights(for:displayString:in:)`.
+    var highlights: [Highlight] = []
+    /// Nil means no "Highlight" item is offered at all, and the view is inert.
+    /// The range handed back is in `Character` offsets, converted here so no
+    /// call site ever sees a UTF-16 index.
+    var onHighlight: ((Range<Int>, String) -> Void)?
 
     var body: some View {
         TextViewRepresentable(
-            attributed: Self.attributed(raw: raw, design: design, lineSpacing: lineSpacing)
+            attributed: Self.attributed(
+                raw: raw,
+                design: design,
+                lineSpacing: lineSpacing,
+                highlightedRanges: paintedRanges
+            ),
+            display: ReadingText.displayString(from: raw),
+            onHighlight: onHighlight
         )
+    }
+
+    /// An orphaned highlight paints nothing: its stored offsets no longer point
+    /// at its words, so any colour would land on the wrong sentence.
+    private var paintedRanges: [Range<Int>] {
+        highlights
+            .filter { !$0.isOrphaned && $0.length > 0 }
+            .map { $0.startOffset..<($0.startOffset + $0.length) }
     }
 
     /// The exact `NSAttributedString` the view draws, as a pure function.
@@ -128,9 +149,14 @@ struct SelectableReadingText: View {
 #if os(iOS)
 private struct TextViewRepresentable: UIViewRepresentable {
     let attributed: NSAttributedString
+    let display: String
+    let onHighlight: ((Range<Int>, String) -> Void)?
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
+        view.delegate = context.coordinator
         // The call sites are already inside a SwiftUI ScrollView. A second
         // scroller here breaks both.
         view.isScrollEnabled = false
@@ -148,7 +174,32 @@ private struct TextViewRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ view: UITextView, context: Context) {
+        context.coordinator.display = display
+        context.coordinator.onHighlight = onHighlight
         if view.attributedText != attributed { view.attributedText = attributed }
+    }
+
+    @MainActor
+    final class Coordinator: NSObject, UITextViewDelegate {
+        var display: String = ""
+        var onHighlight: ((Range<Int>, String) -> Void)?
+
+        func textView(
+            _ textView: UITextView,
+            editMenuForTextIn range: NSRange,
+            suggestedActions: [UIMenuElement]
+        ) -> UIMenu? {
+            // Nil leaves the system menu exactly as it was, which is what keeps
+            // a reading surface that offers no annotation completely unchanged.
+            guard let onHighlight, range.length > 0,
+                  let characters = SelectableReadingText.characterRange(of: range, in: display)
+            else { return nil }
+            let quote = (display as NSString).substring(with: range)
+            let highlight = UIAction(title: "Highlight", image: UIImage(systemName: "highlighter")) { _ in
+                onHighlight(characters, quote)
+            }
+            return UIMenu(children: suggestedActions + [highlight])
+        }
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
@@ -160,9 +211,14 @@ private struct TextViewRepresentable: UIViewRepresentable {
 #elseif os(macOS)
 private struct TextViewRepresentable: NSViewRepresentable {
     let attributed: NSAttributedString
+    let display: String
+    let onHighlight: ((Range<Int>, String) -> Void)?
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> NSTextView {
         let view = NSTextView()
+        view.delegate = context.coordinator
         view.isEditable = false
         view.isSelectable = true
         view.drawsBackground = false
@@ -176,8 +232,44 @@ private struct TextViewRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ view: NSTextView, context: Context) {
+        context.coordinator.display = display
+        context.coordinator.onHighlight = onHighlight
         guard let storage = view.textStorage else { return }
-        if storage != attributed { storage.setAttributedString(attributed) }
+        if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
+    }
+
+    @MainActor
+    final class Coordinator: NSObject, NSTextViewDelegate {
+        var display: String = ""
+        var onHighlight: ((Range<Int>, String) -> Void)?
+
+        func textView(
+            _ view: NSTextView,
+            menu: NSMenu,
+            for event: NSEvent,
+            at charIndex: Int
+        ) -> NSMenu? {
+            guard onHighlight != nil, view.selectedRange().length > 0 else { return menu }
+            let item = NSMenuItem(
+                title: "Highlight",
+                action: #selector(highlightSelection(_:)),
+                keyEquivalent: ""
+            )
+            item.target = self
+            item.representedObject = view
+            menu.insertItem(item, at: 0)
+            menu.insertItem(.separator(), at: 1)
+            return menu
+        }
+
+        @objc private func highlightSelection(_ sender: NSMenuItem) {
+            guard let view = sender.representedObject as? NSTextView, let onHighlight else { return }
+            let range = view.selectedRange()
+            guard range.length > 0,
+                  let characters = SelectableReadingText.characterRange(of: range, in: display)
+            else { return }
+            onHighlight(characters, (display as NSString).substring(with: range))
+        }
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, nsView: NSTextView, context: Context) -> CGSize? {

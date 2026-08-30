@@ -10,6 +10,13 @@ struct DailyMinuteCard: View {
 
     private var itemKey: String { "minute:\(minute.segmentHash)" }
 
+    /// Positional, so an annotation outlives the rolling archive window. The
+    /// date is the fallback for a minute whose segment the feed did not name;
+    /// `AnnotationStore.upgradeDateKeys` promotes it once that mapping lands.
+    private var readingKey: ReadingKey {
+        minute.segmentId > 0 ? .segment(minute.segmentId) : .minuteDate(minute.date)
+    }
+
     private var isBookmarked: Bool {
         bookmarks.contains(where: { $0.itemKey == itemKey })
     }
@@ -17,7 +24,7 @@ struct DailyMinuteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
-            SelectableReadingText(raw: minute.text, design: .serif)
+            AnnotatableReadingText(raw: minute.text, key: readingKey, design: .serif)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             footer
