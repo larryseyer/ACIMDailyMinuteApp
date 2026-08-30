@@ -19,14 +19,16 @@ RESOURCES = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resour
 
 # Measured against the shipping bundle. These are assertions, not estimates: a
 # change in any of them means the corpus moved under the citations.
-EXPECTED_CITED = {"Text": 1256, "Workbook": 609}
-EXPECTED_UNRESOLVED = 13
+EXPECTED_CITED = {"Text": 1263, "Workbook": 609}
+# The six that remain are the Workbook's closing lessons, where the same
+# words recur and the locator refuses an ambiguous probe rather than guess.
+EXPECTED_UNRESOLVED = 6
 EXPECTED_MANUAL = 105
 # Two minutes may begin in the same paragraph when one long paragraph is cut
 # into several. Pinned rather than tolerated: a change here means the locator
 # moved, and nothing else in the suite would say so.
-EXPECTED_SHARED_CITATIONS = 166
-EXPECTED_TEXT_PARAGRAPHS = 2911
+EXPECTED_SHARED_CITATIONS = 167
+EXPECTED_TEXT_PARAGRAPHS = 2949
 EXPECTED_LESSON_PARAGRAPHS = 653
 
 
