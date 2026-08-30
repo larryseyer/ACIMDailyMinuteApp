@@ -143,10 +143,19 @@ enum AnnotationExport {
         // argument eagerly on every redraw — so resolving each highlight from
         // scratch re-rendered the same section once per mark on it.
         var displayStrings: [String: String] = [:]
-        func citation(for key: ReadingKey, rawKey: String, offset: Int) -> String? {
+
+        // ⛔ The stored offset is where the mark was MADE, which is not
+        // necessarily where its words are now: recovering the Text's missing
+        // chapter openings added paragraphs to the front of several bodies, and
+        // that shifts every offset after them. `AnchorResolver` finds the quote
+        // again, and the paragraph is counted from where the words actually
+        // are. Counting from the stale offset would print a confident, precise,
+        // wrong address beside a quote that is itself perfectly correct — and
+        // the export is the artifact meant to outlive the app.
+        func citation(for key: ReadingKey, rawKey: String, highlight: Highlight) -> String? {
             if case .segment = key {
                 return CitationResolver.citation(
-                    for: key, characterOffset: offset, corpus: corpus
+                    for: key, characterOffset: highlight.startOffset, corpus: corpus
                 )?.rawValue
             }
             let display: String?
@@ -157,6 +166,21 @@ enum AnnotationExport {
                 if let display { displayStrings[rawKey] = display }
             }
             guard let display else { return nil }
+
+            let offset: Int
+            switch AnchorResolver.resolve(
+                startOffset: highlight.startOffset,
+                length: highlight.length,
+                quote: highlight.quote,
+                in: display
+            ) {
+            case .exact(let range), .moved(let range):
+                offset = range.lowerBound
+            case .orphaned:
+                // The words are gone from this reading. Naming a paragraph now
+                // would name one the reader never marked.
+                return nil
+            }
             return CitationResolver.citation(
                 for: key, characterOffset: offset, displayString: display
             )?.rawValue
@@ -176,7 +200,7 @@ enum AnnotationExport {
                 citation: highlight.isOrphaned ? nil : citation(
                     for: key,
                     rawKey: highlight.readingKey,
-                    offset: highlight.startOffset
+                    highlight: highlight
                 ),
                 attachedNotes: notesByHighlight[highlight.id] ?? []
             )
