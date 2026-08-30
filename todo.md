@@ -75,30 +75,39 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
 
-## ▶ DESIGN — reader annotations (highlights + notes)
+## ▶ NEXT — execute the reader-annotations plan
 
-Decisions are made and need writing into a spec; no further questions are outstanding.
+⛔ The spec and plan are **not in git** — `.gitignore:54` keeps `docs/` local on purpose. They exist
+only on this Mac:
+- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md`
+- `docs/superpowers/plans/2026-08-30-reader-annotations.md` — eight tasks, not started.
 
-- [ ] Dictation is the **system keyboard mic** (Fn Fn on macOS). No permissions, no Speech framework, no
-      change to the `Data Not Collected` label. Info.plist carries **zero** usage descriptions today and
-      should keep carrying zero.
-- [ ] Both live in the **Saved tab as segments** (Saved / Highlights / Notes), keeping five tabs — a sixth
-      collapses into iOS's "More" list and buries Saved with it.
-- [ ] Notes attach to **any reading**, not lessons only, and there may be **many per reading** — review
-      periods send readers back to the same lesson and they should find what they wrote last time.
-- [ ] **Highlights need a `UITextView`/`NSTextView` representable.** SwiftUI `Text` cannot do this:
-      `.textSelection(.enabled)` exposes no selected range and accepts no custom menu item. Use
-      `textView(_:editMenuForTextIn:suggestedActions:)` on iOS and the delegate menu hook on macOS. The
-      same component paints stored highlights back via `NSAttributedString`.
-- [ ] ⛔ **Anchor by reading identity plus offset plus the quoted text — never by a hash of the quote.**
-      Store `channel|date` / `lesson:N`, the character range, and the quote. If the publisher edits the
-      text the range drifts: re-find by quote, and if that fails keep the highlight and mark it orphaned
-      rather than dropping it silently.
-- [ ] ⛔ **Export as plain text from the start.** No accounts and no analytics means no cloud fallback, so
-      a lifetime of annotation would live in one SwiftData file and die with the device. Retrofitting
-      export onto existing data is harder than designing it in. CloudKit private database is the optional
-      second route and does not touch the privacy posture.
-- [ ] watchOS is out of scope for both.
+Every design decision he made is recorded in the spec unchanged. The two questions the spec left open
+are resolved in the plan: annotation is available on **all six** reading surfaces including the Today
+cards, and a `minute-date:` key is **rewritten** to `segment:` on discovery rather than resolved at
+read time.
+
+- [ ] **Task 1 — the canonical display string and `ReadingKey`.** Pure foundation, no UI change.
+      ⛔ `ReadingTextView` already rewrites the text it is handed, so what the reader sees is not what
+      is in the model. One `ReadingText.displayString(from:)` serves both the renderer and the anchor
+      arithmetic; if they ever diverge every stored offset is wrong by a variable amount and nothing
+      looks broken until a reader reopens an old highlight.
+- [ ] **Task 2 — `Highlight`, `Note`, and `SegmentMedia.publishedDate`.** Four schema declarations,
+      three targets. The new field is what lets an annotation on an archived minute grow up into a
+      corpus anchor.
+- [ ] **Task 3 — `AnchorResolver`.** Self-healing: exact hit, else re-find by quote nearest the stored
+      offset, else keep and mark orphaned. Never delete a reader's mark because a comma moved.
+- [ ] **Task 4 — `SelectableReadingText`**, swapped in at all six sites rendering identically. Its own
+      commit so a layout regression is attributable to exactly one change.
+- [ ] **Task 5 — capture and paint.** ⛔ The text view's `NSRange` is UTF-16; stored offsets are
+      `Character`-based. Convert once, in the representable. One accented character in a reading would
+      otherwise shift every offset stored after it.
+- [ ] **Task 6 — notes.** Dictation is the system keyboard mic. No `Speech` framework, no mic button,
+      no `Info.plist` key — it carries zero `UsageDescription` keys today and must still carry zero.
+- [ ] **Task 7 — Saved becomes three segments** (Saved / Highlights / Notes). Five tabs stay five.
+      ⛔ Deleting a highlight must not delete a note attached to it.
+- [ ] **Task 8 — plain-text export**, shipping with the feature rather than after it. There is no
+      server and no account, so nothing can re-send a reader's annotations if this is got wrong.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
