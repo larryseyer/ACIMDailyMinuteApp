@@ -21,28 +21,51 @@ import json, sys
 from pathlib import Path
 
 repo, out = Path(sys.argv[1]), Path(sys.argv[2])
+sys.path.insert(0, str(repo / "tools"))
+
+# ⛔ The cases come from `citations.py`'s OWN renderers, never from strings
+# retyped here. Retyped expectations would agree with a Python renderer that had
+# drifted, the export would write a format Swift cannot parse, every check would
+# still pass, and every Daily Minute would quietly fall back to a book name.
+from citations import introduction_citation, lesson_citation, text_citation
 
 # Every shape of the format, including the ones that must be REFUSED. A parser
 # that accepts "T-5.3" as a citation would silently drop the paragraph.
 render = []
 for c in range(0, 32):
     for s in (1, 2, 9):
-        render.append({"raw": f"T-{c}.{s}.1", "stem": f"T-{c}.{s}", "paragraph": 1})
+        raw = text_citation(c, s, 1)
+        render.append({"raw": raw, "stem": raw.rsplit(".", 1)[0], "paragraph": 1})
 for p in (1, 14, 42):
-    render.append({"raw": f"Pref.{p}", "stem": "Pref", "paragraph": p})
+    render.append({"raw": text_citation(0, 1, p), "stem": "Pref", "paragraph": p})
 for n in (1, 45, 180, 365):
-    render.append({"raw": f"W-{n}.3", "stem": f"W-{n}", "paragraph": 3})
-render.append({"raw": "W-pI.in.2", "stem": "W-pI.in", "paragraph": 2})
-render.append({"raw": "W-pII.in.1", "stem": "W-pII.in", "paragraph": 1})
+    raw = lesson_citation(n, 3)
+    render.append({"raw": raw, "stem": raw.rsplit(".", 1)[0], "paragraph": 3})
+render.append({"raw": introduction_citation(0, 2), "stem": "W-pI.in", "paragraph": 2})
+render.append({"raw": introduction_citation(500, 1), "stem": "W-pII.in", "paragraph": 1})
 
 refuse = ["", " ", "T-5.3", "T-5.3.7.1", "T-.3.7", "T-5.3.", "T-a.b.c", "Pref",
           "Pref.", "Pref.0", "W-", "W-45", "W-45.", "W-0.1", "W-366.1",
           "W-45.0", "W-pI.in", "W-pIII.in.1", "M-1.1", "5.3.7", "t-5.3.7",
           "T-5.0.1", "T--1.1.1", "W-pI.in.0"]
 
-out.write_text(json.dumps({"render": render, "refuse": refuse}, ensure_ascii=False),
-               encoding="utf-8")
-print(f"{len(render)} render cases, {len(refuse)} refusal cases from Python")
+# What actually shipped. The generated cases prove the two renderers agree on
+# the shapes we thought of; this proves Swift can read every citation that is
+# in the bundle right now, which is the string a reader's export will carry.
+stored = sorted({
+    row["citation"]
+    for row in json.loads(
+        (repo / "ACIMDailyMinute" / "Resources" / "ACIMSegments.json").read_text(encoding="utf-8")
+    )
+    if row.get("citation")
+})
+
+out.write_text(
+    json.dumps({"render": render, "refuse": refuse, "stored": stored}, ensure_ascii=False),
+    encoding="utf-8",
+)
+print(f"{len(render)} render cases, {len(refuse)} refusal cases, "
+      f"{len(stored)} shipped citations from Python")
 PY
 
 cat > "$WORK/main.swift" <<'SWIFT'
@@ -51,7 +74,7 @@ import Foundation
 setvbuf(stdout, nil, _IONBF, 0)
 
 struct RenderCase: Decodable { let raw: String; let stem: String; let paragraph: Int }
-struct Cases: Decodable { let render: [RenderCase]; let refuse: [String] }
+struct Cases: Decodable { let render: [RenderCase]; let refuse: [String]; let stored: [String] }
 
 let cases = try JSONDecoder().decode(
     Cases.self, from: Data(contentsOf: URL(fileURLWithPath: CommandLine.arguments[1]))
@@ -75,6 +98,14 @@ for c in cases.render {
 for bad in cases.refuse where Citation(rawValue: bad) != nil {
     fail("accepted what it must refuse: \(bad.debugDescription)")
 }
+
+for raw in cases.stored {
+    guard let parsed = Citation(rawValue: raw) else {
+        fail("shipped citation Swift cannot read: \(raw)"); continue
+    }
+    if parsed.rawValue != raw { fail("shipped round trip: \(raw) -> \(parsed.rawValue)") }
+}
+print("\(cases.stored.count) shipped citations parse and round trip")
 
 // Paragraph arithmetic over a display string, which joins paragraphs with
 // exactly "\n\n". Offsets are Character counts, so the accented and emoji cases
@@ -105,7 +136,7 @@ for c in paragraphCases {
 print("\(paragraphCases.count) real-bundle paragraph offsets checked")
 
 if failures == 0 {
-    print("\(cases.render.count + cases.refuse.count + expectations.count) cases, Swift and Python agree")
+    print("\(cases.render.count + cases.refuse.count + cases.stored.count + expectations.count) cases, Swift and Python agree")
 } else {
     print("\(failures) FAILURE(S)")
 }

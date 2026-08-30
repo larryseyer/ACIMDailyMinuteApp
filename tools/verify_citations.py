@@ -22,6 +22,10 @@ RESOURCES = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resour
 EXPECTED_CITED = {"Text": 1256, "Workbook": 609}
 EXPECTED_UNRESOLVED = 13
 EXPECTED_MANUAL = 105
+# Two minutes may begin in the same paragraph when one long paragraph is cut
+# into several. Pinned rather than tolerated: a change here means the locator
+# moved, and nothing else in the suite would say so.
+EXPECTED_SHARED_CITATIONS = 166
 EXPECTED_TEXT_PARAGRAPHS = 2911
 EXPECTED_LESSON_PARAGRAPHS = 653
 
@@ -106,7 +110,16 @@ def main():
         if stored:
             by_citation.setdefault(stored, []).append(segment["segmentId"])
     shared = {c: ids for c, ids in by_citation.items() if len(ids) > 1}
-    print(f"citations shared by more than one segment: {len(shared)}")
+    # Two segments legitimately share a START paragraph -- a long paragraph is
+    # cut into several minutes -- so the assertion is not "zero". It is that the
+    # collisions stay where they are: a jump means the locator started matching
+    # different passages to the same place, which no other check would show.
+    if len(shared) != EXPECTED_SHARED_CITATIONS:
+        print(f"  FAIL: {len(shared)} citations shared by more than one segment, "
+              f"expected {EXPECTED_SHARED_CITATIONS}")
+        failed = True
+    else:
+        print(f"citations shared by more than one segment: {len(shared)} (expected)")
 
     print("FAIL" if failed else "OK")
     sys.exit(1 if failed else 0)
