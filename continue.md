@@ -8,17 +8,20 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `d90c8c0` plus this
-handoff commit, pushed. Nothing of mine is running.
+Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through the chapter-opening
+recovery, pushed. Nothing of mine is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/MacLive`), so `pgrep` from
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — all three live targets are current at `d90c8c0`, citations included:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched, app and
-  widget extension both alive. ⭐ **This is where he tests.** ⛔ The first `devicectl install` returned
+**Build state — all three live targets are current, the recovered chapter openings included:**
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **installed** with the
+  recovered openings; not launched, because the phone was locked and `process launch` returns
+  `FBSOpenApplicationErrorDomain error 7`. Nothing is waiting on that: this change alters no
+  SwiftData model, and the macOS build below proves the same bundle runs with its widget extension
+  alive. ⭐ **This is where he tests.** ⛔ The first `devicectl install` returned
   `CoreDeviceError 4000, "the device disconnected immediately after connecting"`; the identical second
   attempt succeeded. That is the phone, not the build — retry once before believing it.
 - 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed team `RR5DY39W4Q`, running
@@ -48,22 +51,28 @@ machine**, never through the mount.
   data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
   `sqlite3` to see the migration actually happened and the rows survived.
 
-⛔ **Five committed checks now guard the corpus. Run all five after any change to a bundled file:**
+⛔ **Six committed checks now guard the corpus. Run all six after any change to a bundled file:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
-  paragraph break. 268 sections, 2,911 paragraphs.
+  paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
-  bundled files, and the record counts are 268 / 365 / 1,983 / 105 / 2.
+  bundled files, and the record counts are 272 / 365 / 1,983 / 105 / 2.
 - `./tools/verify_spacing_agreement.sh` — compiles `PunctuationSpacing.swift` with `swiftc` and proves
   Swift's rule and Python's are the same rule over 3,042 cases: every left/right character pair the
   rule can distinguish, every shape of the possessive, and every body in the shipped bundle.
 - `python3 tools/verify_citations.py` — every citation in the bundle is real and resolves to the
-  paragraph it names: 1,983 segments, 1,256 in the Text, 609 in the Workbook, 13 unresolved and
-  105 Manual carrying a book name instead.
+  paragraph it names: 1,983 segments, 1,263 in the Text, 609 in the Workbook, 6 unresolved and
+  105 Manual carrying a book name instead. The six that remain are the Workbook's closing
+  lessons, where the words recur and the locator refuses an ambiguous probe rather than guess.
 - `./tools/verify_citation_agreement.sh` — compiles `Citation.swift` with `swiftc` and proves Swift's
   format and paragraph rule and Python's are one rule over 139 cases. Python writes segment citations
   at export; Swift derives section, lesson and highlight citations at render. Drift would make the
   same passage cite differently depending on which tier it came from, and nothing about that failure
   looks like a bug.
+- `python3 tools/verify_corpus_coverage.py` — ⛔ **the only check that can see an ABSENCE.** The
+  other five ask whether what is in the bundle is well formed; none of them could tell that 12,000
+  characters of the Text had never been there at all. The segments are a continuous cut of the same
+  PDFs, so anything present there and missing from the readable corpus is missing text. Zero gaps of
+  60+ characters in the Text, zero in the Workbook, all 105 Manual rows accounted for.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -94,7 +103,7 @@ against real bundled data, the three committed checks above, `./build.sh`, the a
 install + launch, process-alive checks, the macOS store migration, real feed payloads.
 
 **Next is corpus-wide search — the book's index.** The whole brief — the three narrow searches that
-exist today and what each of them actually matches, the 5,125,994 characters over 2,723 records a real
+exist today and what each of them actually matches, the 5,137,927 characters over 2,727 records a real
 search has to cover, and the four questions the spec has to answer — is written out in the `▶ NEXT`
 block of [`todo.md`](todo.md). Read that block before anything else. Spec first, then plan, then
 execute.
@@ -124,6 +133,29 @@ what is drawn, and what a highlight offset counts are one string. It survives th
 **because the repair is idempotent and runs on both sides** — `tools/export_corpus.py` applies it to
 the bundle, `ReadingText.paragraphs` applies it at render, and applying it twice changes nothing.
 **Any future repair owes the same property**, or the bundle and the screen start disagreeing.
+
+⛔ **The Text is 272 sections, and four of them were recovered rather than extracted.** The
+pipeline's `text_sections` table is still missing them and always will be — it is read-only from
+here, so `tools/chapter_openings.py` puts them back at export, every run, by asking which parts of
+the segment stream no section contains. **Never "fix" this by editing the JSON**: the next export
+would drop the edit. The recovery is deterministic and it fails loud — if a chapter's opening no
+longer starts with its own number and title, `strip_chapter_heading` raises rather than quietly
+shipping `sixteen The Forgiveness of Illusions` into a body a reader is going to read.
+
+⛔ **Three chapters' addresses moved, once, and that can never happen again cheaply.** Chapters 13,
+16 and 20 had no Introduction, so the recovered opening became section 1 and everything after it
+shifted: **`T-16.1 True Empathy` is now `T-16.2`.** It cost nothing only because the annotation
+store was empty — 0 highlights, 0 notes, 0 bookmarks, verified before and after — and nothing had
+shipped. `Highlight`, `Note` and `Bookmark` all persist `text:<chapter>.<section>`, and there is no
+migration anywhere that rewrites those keys. **A renumber after a reader has marked anything needs
+one, and it has to be written before the corpus moves, not after.**
+
+⛔ **Two of the eight recovered seams join mid-sentence**, and that is why `splice` decides between a
+space and a paragraph break instead of always using one. Chapter 7 stops at `...and His Kingdom. BY`
+and the surviving body carries on `ACCEPTING this power as yours`; chapter 22 stops at `in the same`
+and continues `room and yet a world apart.` A paragraph break there would invent structure the book
+does not have — and `text_paragraphs.py`'s mid-sentence-break guard is what proves every seam joined
+cleanly.
 
 ⛔ **The citations this app prints are NOT the ones of the widely-cited edition, and that is
 deliberate and measured.** Ours is a different book: our Chapter 1 is "INTRODUCTION TO MIRACLES" with
