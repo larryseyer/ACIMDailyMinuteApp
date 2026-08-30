@@ -6,8 +6,19 @@ struct YouTubePlayerView: UIViewRepresentable {
     let videoURL: String
     var autoplay: Bool = false
 
+    /// YouTube's own control bar and title/share overlay. Wanted on the small
+    /// inline card in Listen; unwanted full screen, where they sit on top of
+    /// the reading burned into the frame for the first several seconds.
+    var showsControls: Bool = true
+
+    /// Whether a tap that escapes the embed may leave the app. True for the
+    /// inline card, where "Watch on YouTube" is a reasonable thing to offer.
+    /// False full screen, where an accidental tap would eject the reader
+    /// mid-lesson.
+    var opensExternalLinks: Bool = true
+
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(opensExternalLinks: opensExternalLinks)
     }
 
     func makeUIView(context: Context) -> WKWebView {
@@ -32,9 +43,11 @@ struct YouTubePlayerView: UIViewRepresentable {
 struct YouTubePlayerView: NSViewRepresentable {
     let videoURL: String
     var autoplay: Bool = false
+    var showsControls: Bool = true
+    var opensExternalLinks: Bool = true
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(opensExternalLinks: opensExternalLinks)
     }
 
     func makeNSView(context: Context) -> WKWebView {
@@ -64,8 +77,14 @@ extension YouTubePlayerView {
         // reading into the frame, so captions sit on top of the text. The
         // iframe API's `unloadModule` is what actually removes them, and
         // `enablejsapi=1` is what lets us call it.
-        let params = "playsinline=1&fs=1&rel=0&modestbranding=1"
+        //
+        // `controls=0` is the only parameter that actually suppresses the
+        // player chrome. `modestbranding` used to soften it and was deliberately
+        // set here, but YouTube retired it in 2023 — it is omitted rather than
+        // left in place looking load-bearing.
+        let params = "playsinline=1&fs=1&rel=0"
             + "&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3&enablejsapi=1"
+            + (showsControls ? "" : "&controls=0&disablekb=1")
             + (autoplay ? "&autoplay=1" : "")
             + "&origin=https://www.acimdailyminute.org"
 
@@ -148,6 +167,11 @@ extension YouTubePlayerView {
 extension YouTubePlayerView {
     final class Coordinator: NSObject, WKNavigationDelegate {
         var loadedVideoID: String?
+        private let opensExternalLinks: Bool
+
+        init(opensExternalLinks: Bool) {
+            self.opensExternalLinks = opensExternalLinks
+        }
 
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
             guard let url = navigationAction.request.url else { return .allow }
@@ -162,6 +186,11 @@ extension YouTubePlayerView {
             if urlString.contains("youtube.com/embed") {
                 return .allow
             }
+
+            // Full screen, the reader is mid-lesson and every pixel belongs to
+            // the video: a stray tap on a surviving YouTube affordance must go
+            // nowhere rather than hand the session to Safari.
+            guard opensExternalLinks else { return .cancel }
 
             // Open all other URLs (Watch on YouTube, etc.) in default browser
             _ = await MainActor.run {

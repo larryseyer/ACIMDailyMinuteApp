@@ -100,8 +100,36 @@ actor PodcastService {
         return episodes
     }
 
+    /// Bump when the meaning of `CachedPodcastEpisode.id` changes. Rows written
+    /// under an older scheme cannot collide with rows written under the current
+    /// one, so they survive as duplicates instead of being upserted over.
+    ///
+    /// Version 2: identity moved from the enclosure URL to the feed `<guid>`.
+    /// Once audio stopped being published, every item lost its enclosure, and
+    /// the old rows — keyed by computed URLs that 404 — sat alongside the new
+    /// GUID-keyed rows, showing two of every day and failing to play when the
+    /// stale one was tapped.
+    static let cacheSchemaVersion = 2
+    private static let cacheSchemaVersionKey = "podcastCacheSchemaVersion"
+
+    /// Drops the whole cache when it was written under an older identity
+    /// scheme. Wholesale rather than surgical on purpose: the table is derived
+    /// state, rebuilt completely by the next feed fetch, so discarding it costs
+    /// one request and cannot leave a half-migrated mix behind.
+    @MainActor
+    static func migrateCacheIfNeeded(in context: ModelContext) throws {
+        let defaults = UserDefaults.standard
+        guard defaults.integer(forKey: cacheSchemaVersionKey) < cacheSchemaVersion else { return }
+
+        let all = try context.fetch(FetchDescriptor<CachedPodcastEpisode>())
+        for row in all { context.delete(row) }
+        try context.save()
+
+        defaults.set(cacheSchemaVersion, forKey: cacheSchemaVersionKey)
+    }
+
     /// Upserts fetched episodes into the SwiftData `CachedPodcastEpisode`
-    /// table, keyed by `PodcastEpisode.id` (the enclosure URL). Anything
+    /// table, keyed by `PodcastEpisode.id` (the feed `<guid>`). Anything
     /// whose `lastSeenAt` is older than 30 days is purged in the same
     /// pass — feeds that drop or rename episodes would otherwise
     /// accumulate ghosts since unique-key collisions wouldn't fire.
@@ -115,6 +143,8 @@ actor PodcastService {
         channel: String,
         in context: ModelContext
     ) throws {
+        try migrateCacheIfNeeded(in: context)
+
         let now = Date()
         for ep in episodes {
             let id = ep.id
