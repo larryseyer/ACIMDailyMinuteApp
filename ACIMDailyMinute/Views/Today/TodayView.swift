@@ -22,12 +22,14 @@ struct TodayView: View {
                         offlineBanner
                     }
 
-                    if minutes.isEmpty && lessons.isEmpty {
+                    if minutes.isEmpty && lessons.isEmpty && corpusReading == nil {
                         emptyState
                     }
 
-                    if let minute = minutes.first {
+                    if let minute = minutes.first, !isMinuteStale {
                         DailyMinuteCard(minute: minute)
+                    } else if let segment = corpusReading {
+                        CorpusReadingCard(segment: segment)
                     }
 
                     if let lesson = lessons.first {
@@ -82,6 +84,18 @@ struct TodayView: View {
                 Task { await refresh(force: true) }
             }
         }
+    }
+
+    /// The feed is the authority; this is only the floor under it. Never
+    /// persisted as a `DailyMinute` — a corpus reading would collide on the date
+    /// key with the real one the feed eventually supplies for that day.
+    private var isMinuteStale: Bool {
+        CorpusFallback.isStale(newest: minutes.first?.publishedAt)
+    }
+
+    private var corpusReading: CorpusSegment? {
+        guard isMinuteStale else { return nil }
+        return CorpusFallback.segment(for: Date())
     }
 
     private var offlineBanner: some View {
