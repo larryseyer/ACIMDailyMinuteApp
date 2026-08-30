@@ -8,7 +8,7 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `0aa29b8`. Nothing of mine
+Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `f0a26e5`. Nothing of mine
 is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
@@ -16,7 +16,7 @@ one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/Mac
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — both live targets are current at `0aa29b8`:**
+**Build state — both live targets are current at `f0a26e5`:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched, app and
   widget extension both alive. ⭐ **This is where he tests.**
 - 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed *Apple Development: Larry
@@ -49,12 +49,13 @@ machine**, never through the mount.
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
 - `docs/superpowers/specs/2026-08-30-timeless-corpus-design.md` + its plan — implemented.
-- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md` + its plan — **all eight tasks
-  executed.** The plan's own text is now behind the code in three places, all deliberate and all
-  recorded in `git log`: `ReadingTextView` the *view* was deleted once nothing referenced it (the
-  `ReadingText` enum stays and is still the single source of truth); the six call sites go through a
-  new `AnnotatableReadingText` wrapper rather than six copies of the same wiring; and the export
-  format carries a date on an attached note, which the plan's sample omitted.
+- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md` + its plan — implemented.
+- `docs/superpowers/specs/2026-08-30-text-reading-ui-design.md` + its plan — **all six tasks
+  executed.** Three places where the code is ahead of the plan's text, all deliberate: the recovery
+  drops a *shallow* all-caps running head as well as a centred one (six had lost their indentation,
+  one of them mid-sentence); a semicolon joins the colon as a legitimate paragraph terminator; and the
+  two Part Introduction rows take their titles from the corpus rather than from literals, so a row and
+  its screen cannot disagree about a name.
 
 ---
 
@@ -63,27 +64,36 @@ this Mac:
 ⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the entire confirmation list until every
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
-handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, `./build.sh`, the arm64 device build, install + launch, process-alive
-checks, the macOS store migration, real feed payloads.
+handed over once, whole, at the end. It grew by six with the Text. Verify everything verifiable
+without him: `swiftc` harnesses against real bundled data, `./build.sh`, the arm64 device build,
+install + launch, process-alive checks, the macOS store migration, real feed payloads.
 
-**Next is Spec 2 — the Text reading UI**, the largest remaining parity gap and now fully unblocked.
-See the `▶ NEXT` block in [`todo.md`](todo.md). Spec first, then plan, then execute.
+**Next is canonical citations** — `T-1.I.1:1`, Text/chapter/section/paragraph/sentence. See the
+`▶ NEXT` block in [`todo.md`](todo.md). Spec first, then plan, then execute.
 
-⛔ **The reading surfaces already carry annotation.** Any Text reading view should render through
+⛔ **The Text's bodies in `ACIMTextSections.json` are display form, and that is load-bearing.**
+`ReadingText.displayString(from: body) == body` holds for all 268 sections, so what is in the JSON,
+what is drawn, and what a highlight offset counts are one string. It is true because
+`tools/export_corpus.py` recovers the paragraphs at export — the Text is the only corpus without a
+curated `text_paragraphs` column, and its raw bodies mark paragraphs by indentation, use blank lines
+as page breaks, and carry 351 running heads and page numbers inside sentences. **Any future corpus
+export must preserve that equality.** `python3 tools/text_paragraphs.py` checks it in one command and
+exits non-zero when it breaks.
+
+⛔ **The reading surfaces already carry annotation.** Any new reading view should render through
 `AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
-export with it for free. `ReadingKey.textSection(chapter:section:)` already exists and already stores;
-`savedDestination` returns nil for it only because there is nowhere to navigate yet, and that is the
-one line Spec 2 makes true.
+export with it for free. The Manual is the one bundled corpus still without a reading UI, and
+`savedDestination` returns nil for `.manual` alone now.
 
 ⛔ **The idea that breaks silently, and it now has a name:** what the reader sees is not what is in
 the model. `ReadingText.displayString(from:)` is the one string both the renderer and every highlight
-offset are measured against. Anything that draws a reading must go through it. Six harnesses hold this
+offset are measured against. Anything that draws a reading must go through it. Harnesses hold this
 down against all 365 lesson bodies, 1,983 corpus segments and 268 Text sections; keep them passing.
 
 ⛔ **Offsets are `Character`-based, never UTF-16.** The conversion lives in exactly one place —
 `SelectableReadingText.utf16Range(of:in:)` and `.characterRange(of:in:)`. A single emoji or accented
 character shifts every stored offset after it if that boundary is crossed anywhere else.
+
 
 ---
 
@@ -95,15 +105,18 @@ character shifts every stored offset after it if that boundary is crossed anywhe
   ⛔ **Do not re-open the hosting decision unprompted.** Two finished features wait on it and neither
   needs an app change to come alive: the Today card's **Listen** button, and MP3 download in the Listen
   tab. Both are invisible only because `audio_url` is empty on every episode and all 158 archive entries.
-- **Anything needing eyes on a device**, which is now everything in the parked block — and that block
-  has grown, because six reading surfaces changed renderer and no harness can settle how they look.
+- **Anything needing eyes on a device**, which is now everything in the parked block. Two entries
+  there are the ones no harness can reach: whether the Text's recovered paragraphing reads correctly
+  to someone who knows the book, and whether Chapter 1.2 — 37,222 characters in one non-scrolling
+  text view — scrolls without stutter on the phone.
 
 ---
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **Spec 2 — the Text reading UI**, then canonical citations, then
-the pre-submission sweep and the smaller open items.
+From [`todo.md`](todo.md), in order: **canonical citations**, then corpus-wide search, then the
+pre-submission sweep and the smaller open items. The Manual is the last bundled corpus with no
+reading UI, and structuring it is its own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
