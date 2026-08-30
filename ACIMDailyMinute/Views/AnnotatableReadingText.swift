@@ -55,13 +55,23 @@ struct AnnotatableReadingText: View {
                 noteRow(note)
             }
 
-            Button {
-                draft = NoteDraft(existing: nil, highlightID: nil, quote: nil)
-            } label: {
-                Label("Add note", systemImage: "square.and.pencil")
-                    .font(.acimCaption)
+            HStack(spacing: 16) {
+                Button {
+                    draft = NoteDraft(existing: nil, highlightID: nil, quote: nil)
+                } label: {
+                    Label("Add note", systemImage: "square.and.pencil")
+                        .font(.acimCaption)
+                }
+                .buttonStyle(.plain)
+
+                if !storedHighlights.isEmpty || !storedNotes.isEmpty {
+                    ShareLink(item: exportText) {
+                        Label("Export", systemImage: "square.and.arrow.up")
+                            .font(.acimCaption)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .buttonStyle(.plain)
             .foregroundStyle(.secondary)
         }
         // Re-anchored when the reading appears rather than while its body is
@@ -92,6 +102,19 @@ struct AnnotatableReadingText: View {
                 }
             }
         }
+    }
+
+    /// This reading's marks and notes, as text. Nothing can re-send a reader
+    /// what they wrote, so getting it out has to be possible from where they
+    /// wrote it, not only from the Saved tab.
+    private var exportText: String {
+        let converted = AnnotationExport.entries(
+            highlights: Array(storedHighlights), notes: Array(storedNotes)
+        )
+        return AnnotationExport.plainText(
+            highlights: converted.highlights,
+            standaloneNotesByReading: converted.standalone
+        )
     }
 
     private var menuActions: [SelectableReadingText.MenuAction] {

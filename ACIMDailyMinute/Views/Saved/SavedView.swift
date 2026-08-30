@@ -39,6 +39,18 @@ struct SavedView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Saved")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    // There is no server and no account, so this is the only way
+                    // a reader's own words ever leave the app. It is offered on
+                    // every segment because it exports all of them.
+                    if !highlights.isEmpty || !notes.isEmpty {
+                        ShareLink(item: exportText) {
+                            Label("Export", systemImage: "square.and.arrow.up")
+                        }
+                    }
+                }
+            }
             .navigationDestination(for: SavedDestination.self) { destination in
                 switch destination {
                 case .lesson(let number):
@@ -128,6 +140,14 @@ struct SavedView: View {
         }
     }
 
+    private var exportText: String {
+        let converted = AnnotationExport.entries(highlights: highlights, notes: notes)
+        return AnnotationExport.plainText(
+            highlights: converted.highlights,
+            standaloneNotesByReading: converted.standalone
+        )
+    }
+
     private func deleteButton(_ action: @escaping () -> Void) -> some View {
         Button(role: .destructive) {
             action()
@@ -143,6 +163,33 @@ struct SavedView: View {
 enum SavedDestination: Hashable {
     case lesson(Int)
     case archiveDate(String)
+}
+
+extension ReadingKey {
+    /// Where a row for this reading leads in the Saved tab.
+    ///
+    /// A lesson opens that lesson. A minute opens the archive day it ran on,
+    /// which is the only reading surface an archived minute has — found by
+    /// segment where the mapping is recorded, and by the stored date otherwise.
+    /// `nil` for the Text and the Manual, which have no reading UI yet: the row
+    /// still renders and still exports, it simply has nowhere to go, which is
+    /// honest about what it can offer.
+    func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
+        switch self {
+        case .lesson(let n):
+            guard (1...365).contains(n) else { return nil }
+            return .lesson(n)
+        case .segment(let id):
+            guard let row = media.first(where: { $0.segmentId == id }),
+                  !row.publishedDate.isEmpty
+            else { return nil }
+            return .archiveDate(row.publishedDate)
+        case .minuteDate(let date):
+            return date.isEmpty ? nil : .archiveDate(date)
+        case .manual, .textSection:
+            return nil
+        }
+    }
 }
 
 #Preview {
