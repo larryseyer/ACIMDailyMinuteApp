@@ -1,10 +1,18 @@
-#if os(macOS)
 import SwiftUI
 
-/// iOS-style calendar for macOS. Matches the look of SwiftUI's graphical DatePicker on iOS,
-/// which macOS renders via NSDatePicker (a compact native control that doesn't match the iOS UI).
-struct MacCalendarView: View {
+/// The Archive calendar, used on every platform.
+///
+/// Replaces SwiftUI's graphical `DatePicker` on iOS as well as `NSDatePicker`
+/// on macOS. The system pickers can only answer "what date is selected"; this
+/// one also shows *which days actually hold readings*, and draws a selection
+/// that stays legible on the dark ground.
+struct ArchiveCalendarView: View {
     @Binding var selection: Date
+
+    /// `yyyy-MM-dd` strings that have at least one archived reading. Matching
+    /// on the formatted string rather than a `Date` avoids every timezone and
+    /// start-of-day trap in comparing instants across a calendar grid.
+    let availableDateStrings: Set<String>
 
     @State private var visibleMonth: Date
 
@@ -14,8 +22,9 @@ struct MacCalendarView: View {
         return c
     }()
 
-    init(selection: Binding<Date>) {
+    init(selection: Binding<Date>, availableDateStrings: Set<String> = []) {
         self._selection = selection
+        self.availableDateStrings = availableDateStrings
         self._visibleMonth = State(initialValue: selection.wrappedValue)
     }
 
@@ -101,6 +110,7 @@ struct MacCalendarView: View {
         let isInCurrentMonth = calendar.isDate(date, equalTo: visibleMonth, toGranularity: .month)
         let isSelected = calendar.isDate(date, inSameDayAs: selection)
         let isToday = calendar.isDateInToday(date)
+        let hasReadings = availableDateStrings.contains(Self.dateString(from: date))
         let day = calendar.component(.day, from: date)
 
         Button {
@@ -108,27 +118,70 @@ struct MacCalendarView: View {
         } label: {
             ZStack {
                 if isSelected {
+                    // Filled disc plus a contrasting outer ring: on the dark
+                    // ground a tinted fill alone reads as barely-there.
                     Circle()
                         .fill(Color.accentColor)
+                    Circle()
+                        .strokeBorder(Color.white.opacity(0.9), lineWidth: 2)
                 } else if isToday {
                     Circle()
                         .stroke(Color.accentColor, lineWidth: 1.5)
+                } else if hasReadings {
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.18))
                 }
-                Text("\(day)")
-                    .font(.system(size: 17, weight: isSelected || isToday ? .semibold : .regular))
-                    .foregroundStyle(foregroundColor(selected: isSelected, today: isToday, inMonth: isInCurrentMonth))
+
+                VStack(spacing: 2) {
+                    Text("\(day)")
+                        .font(.system(
+                            size: 17,
+                            weight: isSelected || isToday || hasReadings ? .semibold : .regular
+                        ))
+                        .foregroundStyle(foregroundColor(
+                            selected: isSelected,
+                            today: isToday,
+                            hasReadings: hasReadings
+                        ))
+                    // The dot repeats the "has readings" signal in a second
+                    // channel, so it survives colour-blindness and the tinted
+                    // disc being hidden under the selection.
+                    Circle()
+                        .fill(isSelected ? Color.white : Color.accentColor)
+                        .frame(width: 4, height: 4)
+                        .opacity(hasReadings ? 1 : 0)
+                }
             }
             .frame(width: 40, height: 40)
             .contentShape(Circle())
         }
         .buttonStyle(.plain)
         .opacity(isInCurrentMonth ? 1.0 : 0.35)
+        .accessibilityLabel(accessibilityLabel(for: date, hasReadings: hasReadings))
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
     }
 
-    private func foregroundColor(selected: Bool, today: Bool, inMonth: Bool) -> Color {
+    private func foregroundColor(selected: Bool, today: Bool, hasReadings: Bool) -> Color {
         if selected { return .white }
         if today { return .accentColor }
-        return .primary
+        // Days with nothing to read are dimmed rather than days with readings
+        // being brightened, so the month reads as "these are the live ones".
+        return hasReadings ? .primary : .secondary
+    }
+
+    private func accessibilityLabel(for date: Date, hasReadings: Bool) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        let base = formatter.string(from: date)
+        return hasReadings ? "\(base), has readings" : base
+    }
+
+    static func dateString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
     }
 
     // MARK: - Computed
@@ -174,9 +227,16 @@ struct MacCalendarView: View {
 }
 
 #Preview {
-    MacCalendarView(selection: .constant(Date()))
-        .frame(width: 340)
-        .padding()
-        .preferredColorScheme(.dark)
+    ArchiveCalendarView(
+        selection: .constant(Date()),
+        availableDateStrings: Set(
+            (0..<20).compactMap { offset in
+                Calendar.current.date(byAdding: .day, value: -offset * 2, to: Date())
+            }
+            .map(ArchiveCalendarView.dateString(from:))
+        )
+    )
+    .frame(width: 340)
+    .padding()
+    .preferredColorScheme(.dark)
 }
-#endif

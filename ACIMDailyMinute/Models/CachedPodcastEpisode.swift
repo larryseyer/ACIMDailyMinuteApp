@@ -18,6 +18,11 @@ final class CachedPodcastEpisode {
     var channel: String = ""
     var title: String = ""
     var audioURL: String = ""
+
+    /// The episode's YouTube video, from the feed item's `<link>`. Empty when
+    /// unknown. Lets Listen offer the video when no audio has been published.
+    var youtubeURL: String = ""
+
     var publishedAt: Date = Date()
     var duration: String = ""
     var lastSeenAt: Date = Date()
