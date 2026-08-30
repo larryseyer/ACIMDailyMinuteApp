@@ -21,14 +21,17 @@
       which has no equivalent source-with-indentation to recover from, so
       lessons still render as one block.
 
-## Handoff — needs running on MacLive
-- [ ] `launchctl load ~/Library/LaunchAgents/com.acim.dailyminute.plist`
-      The agent file is installed and validated, but launchctl only acts on the
-      session of the machine it runs from, so this cannot be done remotely.
-      Until it is loaded (or the user next logs in) NOTHING is scheduled — the
-      old resident scheduler was deliberately killed on 2026-08-29.
-      Do NOT restart the old `main.py` scheduler: two schedulers competing for
-      02:00 is the overlapping-run condition behind the 2026-05-31 YouTube 409.
+## Scheduling (settled 2026-08-29)
+Runs from `./start.sh` in a terminal, as before — NOT a launch agent. Larry
+declined an automatic background job on that machine, which already hosts two
+other long-running terminals. The launch-agent attempt was reverted and the
+agent file removed from `~/Library/LaunchAgents`; a corrected plist exists in
+git history at commit 008e619 if that decision is ever revisited.
+
+Missed days are covered by the catch-up pass instead: each scheduled run
+publishes today and then fills one older gap, so a night where the terminal
+was not running is repaid by the next run rather than lost. `./catchup.sh`
+lists or fills gaps by hand.
 
 ## Known defects, not yet fixed
 - [ ] **`build.sh` watchOS step is broken on this machine.** It pins
