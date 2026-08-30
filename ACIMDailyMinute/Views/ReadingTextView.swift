@@ -11,11 +11,17 @@ import SwiftUI
 /// roughly 60 characters, Minute text arrives as a single flow. Both use a
 /// blank line to mean "new paragraph", so a lone newline is a wrapping artifact
 /// to be collapsed while a blank line is structure to be preserved.
+///
+/// Both feeds also arrive with sentences run together where the source PDF's
+/// text layer dropped a space, so `PunctuationSpacing` runs here — the one
+/// place that decides what the reader sees. The bundled corpus is repaired at
+/// export by the same rule, and the rule is idempotent, so applying it twice
+/// changes nothing and the bundle stays byte-identical to what is drawn.
 enum ReadingText {
     private static let paragraphSeparator = "\u{1}"
 
     static func paragraphs(from raw: String) -> [String] {
-        raw
+        PunctuationSpacing.repaired(raw)
             .replacingOccurrences(
                 of: "\n[ \t]*\n[ \t\n]*",
                 with: paragraphSeparator,

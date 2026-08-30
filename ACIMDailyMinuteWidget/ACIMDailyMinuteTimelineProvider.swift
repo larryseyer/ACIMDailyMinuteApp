@@ -48,7 +48,10 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
 
             return WidgetStoryEntry(
                 date: .now,
-                minuteText: minute.text,
+                // The widget draws the feed's text directly rather than through
+                // `ReadingText.displayString`, so the spacing repair has to
+                // happen here or `Source,Which` reaches a lock screen.
+                minuteText: PunctuationSpacing.repaired(minute.text),
                 lessonNumber: lessons.first?.lessonNumber,
                 publishedAt: minute.publishedAt,
                 isBookmarked: !bookmarks.isEmpty
