@@ -68,17 +68,33 @@ handed over once, whole, at the end. It grew by six with the Text. Verify everyt
 without him: `swiftc` harnesses against real bundled data, `./build.sh`, the arm64 device build,
 install + launch, process-alive checks, the macOS store migration, real feed payloads.
 
-**Next is canonical citations** — `T-1.I.1:1`, Text/chapter/section/paragraph/sentence. See the
-`▶ NEXT` block in [`todo.md`](todo.md). Spec first, then plan, then execute.
+**Next is the run-together sentence repair.** He asked for it to be pulled ahead of canonical
+citations and to be started in a fresh session. The whole finding — counts, why re-extraction is
+banned, and the one real design question — is written out in the `▶ NEXT` block of
+[`todo.md`](todo.md). Read that block before anything else. Spec first, then plan, then execute.
+
+⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
+project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
+narrations, the YouTube renders, and every reader annotation keyed `segment:<id>`. Re-extraction
+renumbers those rows and severs the link between a published episode and its passage. **That is
+months of his work and it is not recoverable.** Every corpus defect is repaired in place, over the
+rows that already exist. This is not a preference; he raised it directly.
+
+⛔ **The source PDFs are read-only reference, and they live outside the repo** at
+`/Users/larryseyer/Dropbox/ACIM PDF/` — `1_ACIM_Text_A.pdf` (376pp), `2_ACIM_Text_B.pdf` (382pp),
+`3_ACIM_Workbook.pdf` (500pp), `4_ACIM_Manual.pdf` (80pp). They are the edition that is shipping,
+confirmed by wording and by the 53 numbered miracle principles. `pdftotext` is installed at
+`/opt/homebrew/bin/pdftotext`. Use them to learn *where paragraphs break*; never to replace a row's
+text, which would reintroduce page furniture and change words the publisher has already narrated.
 
 ⛔ **The Text's bodies in `ACIMTextSections.json` are display form, and that is load-bearing.**
 `ReadingText.displayString(from: body) == body` holds for all 268 sections, so what is in the JSON,
 what is drawn, and what a highlight offset counts are one string. It is true because
 `tools/export_corpus.py` recovers the paragraphs at export — the Text is the only corpus without a
 curated `text_paragraphs` column, and its raw bodies mark paragraphs by indentation, use blank lines
-as page breaks, and carry 351 running heads and page numbers inside sentences. **Any future corpus
+as page breaks, and carry 351 running heads and page numbers inside sentences. **Any repair or future
 export must preserve that equality.** `python3 tools/text_paragraphs.py` checks it in one command and
-exits non-zero when it breaks.
+exits non-zero when it breaks — run it after any change to a bundled corpus.
 
 ⛔ **The reading surfaces already carry annotation.** Any new reading view should render through
 `AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
@@ -93,7 +109,6 @@ down against all 365 lesson bodies, 1,983 corpus segments and 268 Text sections;
 ⛔ **Offsets are `Character`-based, never UTF-16.** The conversion lives in exactly one place —
 `SelectableReadingText.utf16Range(of:in:)` and `.characterRange(of:in:)`. A single emoji or accented
 character shifts every stored offset after it if that boundary is crossed anywhere else.
-
 
 ---
 
@@ -114,9 +129,11 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **canonical citations**, then corpus-wide search, then the
-pre-submission sweep and the smaller open items. The Manual is the last bundled corpus with no
-reading UI, and structuring it is its own item.
+From [`todo.md`](todo.md), in order: **the run-together sentence repair**, then canonical citations,
+then corpus-wide search, then the pre-submission sweep and the smaller open items. The 186
+one-paragraph lesson bodies are the sentence repair's natural companion and the one job that genuinely
+needs the PDFs. The Manual is the last bundled corpus with no reading UI, and structuring it is its
+own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
