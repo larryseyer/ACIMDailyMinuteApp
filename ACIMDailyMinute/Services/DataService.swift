@@ -200,6 +200,17 @@ struct DataService: Sendable {
         minute.tiktokURL = dto.tiktok_url.isEmpty ? nil : dto.tiktok_url
         if isNew { context.insert(minute) }
 
+        // The only place the segment-to-recording pairing is ever stated. The
+        // inline archive entries carry neither `segment_id` nor `youtube_id`,
+        // and the `ArchivedReading` row that does carry the media ages out of
+        // the rolling window — so recorded here, or lost.
+        SegmentMedia.record(
+            segmentId: dto.segment_id,
+            youtubeID: dto.youtube_id,
+            audioURL: dto.audio_url,
+            in: context
+        )
+
         try ArchiveService.persistInlineMinutes(dto.archive, in: context)
 
         try context.save()

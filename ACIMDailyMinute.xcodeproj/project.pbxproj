@@ -13,6 +13,7 @@
 		AA000001100 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
 		AA000001103 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
 		AA000001106 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001309 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
 		AA000001009 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
@@ -50,6 +51,7 @@
 		AA000001051 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA000001107 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001310 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
 		AA000001054 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
@@ -71,6 +73,7 @@
 		AA000001102 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
 		AA000001105 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
 		AA000001108 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001311 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
 		AA000001072 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001074 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001075 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
@@ -142,6 +145,7 @@
 		AA000002100 /* DailyMinute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinute.swift; sourceTree = "<group>"; };
 		AA000002101 /* DailyLesson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLesson.swift; sourceTree = "<group>"; };
 		AA000002102 /* ArchivedReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReading.swift; sourceTree = "<group>"; };
+		AA000002309 /* SegmentMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentMedia.swift; sourceTree = "<group>"; };
 		AA000002009 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 				AA000002100 /* DailyMinute.swift */,
 				AA000002101 /* DailyLesson.swift */,
 				AA000002102 /* ArchivedReading.swift */,
+				AA000002309 /* SegmentMedia.swift */,
 				AA000002009 /* Channel.swift */,
 				AA000002035 /* Bookmark.swift */,
 				AA000002054 /* ACIMActivityAttributes.swift */,
@@ -640,6 +645,7 @@
 				AA000001100 /* DailyMinute.swift in Sources */,
 				AA000001103 /* DailyLesson.swift in Sources */,
 				AA000001106 /* ArchivedReading.swift in Sources */,
+				AA000001309 /* SegmentMedia.swift in Sources */,
 				AA000001009 /* Channel.swift in Sources */,
 				AA000001219 /* CachedPodcastEpisode.swift in Sources */,
 				AA000001012 /* DataService.swift in Sources */,
@@ -716,6 +722,7 @@
 				AA000001101 /* DailyMinute.swift in Sources */,
 				AA000001104 /* DailyLesson.swift in Sources */,
 				AA000001107 /* ArchivedReading.swift in Sources */,
+				AA000001310 /* SegmentMedia.swift in Sources */,
 				AA000001054 /* Channel.swift in Sources */,
 				AA000001056 /* Bookmark.swift in Sources */,
 				AA000001220 /* CachedPodcastEpisode.swift in Sources */,
@@ -735,6 +742,7 @@
 				AA000001102 /* DailyMinute.swift in Sources */,
 				AA000001105 /* DailyLesson.swift in Sources */,
 				AA000001108 /* ArchivedReading.swift in Sources */,
+				AA000001311 /* SegmentMedia.swift in Sources */,
 				AA000001072 /* Channel.swift in Sources */,
 				AA000001074 /* Bookmark.swift in Sources */,
 				AA000001221 /* CachedPodcastEpisode.swift in Sources */,
