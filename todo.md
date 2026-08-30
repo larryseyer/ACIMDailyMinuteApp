@@ -143,43 +143,69 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Introduction" between Lesson 180 and Lesson 181. Both read, annotate and save. Their titles
       come from the corpus rather than from literals, so the row and the screen cannot disagree.
 
-## ▶ NEXT — canonical citations
+- [ ] **Citations.** Four surfaces now name a place in the book instead of the pipeline's own
+      name for the source PDF (`github_push.py:402` writes `source_pdf` straight through, so a
+      reader saw `Text Part A`). The Today Daily
+      Minute card shows the stem `T-5.3`; the offline corpus card shows the full `T-5.3.7`; a
+      Text section carries its stem beside the chapter title; and share text and the
+      plain-text export carry the full citation, with the export naming the edition in its
+      header. A Saved row and an export heading read `Text, Chapter 5 — The Mind of the
+      Atonement (T-5.3)`.
+      ⛔ **These are NOT the citations of the widely-cited edition, deliberately.** Ours is a
+      different book, and that is measured: our Chapter 1 is "INTRODUCTION TO MIRACLES" with
+      **53** numbered miracle principles rather than 50, and a chapter's Introduction occupies
+      section 1. Arabic section numbers (`T-5.3.7`, never `T-5.III.7`) are the signal. Emitting
+      the familiar form would have pointed a reader holding the other edition at the wrong
+      words, permanently, in an export meant to outlive the app. **This is the one judgement
+      here that is yours to overturn.**
+      There is no sentence number: two defensible splitters disagree on 644 of 3,564
+      paragraphs, so a `:1` would be a number this app invented.
+      ⛔ **The Archive card is the exception — it shows a book name, not an address**, so
+      `Text` rather than `Text Part A`. An archived row carries no segment id, because the
+      feed's inline archive entries have none. Resolving it by matching the passage's text at
+      runtime was rejected: the locator belongs at export, and keying a row by its content is
+      the bug this project keeps rediscovering. Giving the Archive a real citation means
+      adding `segment_id` to the pipeline's archive entries first.
+      118 of 1,983 passages carry no citation and show their book name instead: all 105 Manual
+      segments, plus 13 that did not resolve uniquely. Nothing is guessed.
 
-`T-1.I.1:1` — Text, chapter, section, paragraph, sentence. Promoted from a study-group
-convenience to a **durability requirement**: a citation is the interoperability layer that lets a
-reader move between this app, a paper book, and whatever comes after both. Spec first, then plan,
-then execute.
+- [ ] **The two Workbook Part Introductions name themselves from the corpus.** They are keyed
+      `.lesson(0)` and `.lesson(500)`, which made every Saved row and export heading call them
+      "Lesson 0" and "Lesson 500". Confirm both read correctly in Saved and in an export.
 
-**What is actually there today, verified rather than assumed:**
+## ▶ NEXT — corpus-wide search
 
-- **`sourceReference` is not a citation and never was.** The pipeline sets it to the source PDF's
-  own name — `github_push.py:402` writes `"source_reference": r["source_pdf"]`, so a reader sees
-  `Text_A`. Three surfaces display it: `DailyMinuteCard.swift:80`, `ArchivedReadingCard.swift:120`,
-  and both share-text builders in `ShareTextBuilder.swift`.
-- **The Text is addressable now.** 268 sections, 2,911 recovered paragraphs, stable and in reading
-  order, keyed `(chapterNumber, sectionNumber)` through `CorpusService.textSection(chapter:section:)`.
-  Chapter 0 is the Preface. `segments` carries only `source_pdf` and `page_start` — no section or
-  paragraph column — so a segment's citation has to be *derived* by locating its text in the Text,
-  not read out of a column.
-- **The text under the citation stopped moving.** The spacing repair has landed, so paragraph
-  boundaries and offsets are now stable. That was the reason to do the repair first.
+The book's index. Search that reaches the whole bundled corpus, not just the rolling
+archive window. Spec first, then plan, then execute.
 
-**The questions the spec has to answer, none of which are settled:**
+**What exists today, verified rather than assumed:**
 
-1. **Where does a citation live?** Derived on demand from corpus position, or exported as a column
-   beside each body? A derived citation cannot go stale; an exported one costs nothing to read and
-   can be searched.
-2. **The Workbook and the Manual have different citation forms** (`W-pI.1.1:1`, `M-1.1:1`) and the
-   Manual is still 105 unstructured segments, so it may have no addressable form yet at all.
-3. **Sentence numbering is the hard half.** A paragraph is a stable address; a *sentence* needs a
-   splitter that agrees with the published edition, and the corpus is full of abbreviated capitals
-   and quoted scripture. Measure the disagreement before promising `:1`.
-4. **What does a citation do when tapped?** Cross-reference links are a separate open item below,
-   but the citation format decides whether they are possible at all.
+- **Search exists in three places and none of them searches a body.** `ArchiveView` filters
+  `ArchivedReading.searchableText` through a SwiftData `#Predicate` with
+  `localizedStandardContains` — the rolling archive window only. `LessonsView` matches a
+  lesson number or title. `TextChaptersView` matches chapter and section titles.
+- **The corpus a real search must cover is 5,125,994 characters over 2,723 records**:
+  268 Text sections (1.63M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
+  segments (137K), 2 Part Introductions (7K). All already in memory through `CorpusService`.
+- **Every hit now has an address to show.** `CitationResolver.citation(for:characterOffset:)`
+  turns a match position into `T-5.3.7`, so a result can name where it is.
 
-⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database, and
-whatever is added must survive the app — a citation printed in an export is worth more than one that
-only exists on screen.
+**The questions the spec has to answer:**
+
+1. **Segments overlap the Text and the Workbook.** The same passage is bundled twice — once
+   as a Text section and once as a word-count cut. Searching both returns it twice. Does
+   search cover the readable corpus (Text, lessons, Manual) and leave segments out, or
+   deduplicate by citation?
+2. **Raw body or display string?** Only `ReadingText.displayString` matches what the reader
+   sees and what a highlight offset counts. Searching raw bodies would return offsets that
+   point at nothing drawable.
+3. **What is a result?** A citation plus a snippet, presumably — but a snippet has to be cut
+   without breaking a grapheme, and the offset has to survive the jump into the reading.
+4. **Where does it live?** A fourth `.searchable` surface, or one search that replaces the
+   three narrow ones. The three disagree about what a query means today.
+
+⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
+and whatever is added must survive the app.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -229,9 +255,10 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] ⛔ **Canonical citations** — promoted to the `▶ NEXT` block above.
-- [ ] **Search across the whole corpus**, not just the rolling archive window — the book's index.
-- [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be tappable.
+- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ NEXT` block above.
+- [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be
+      tappable. Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
+      already navigates, so this is a view change and not a format change.
 - [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
       what a 669-page book needs most: `ReadingKey.textSection` already names the place.
 - [ ] **"Let it fall open"** — a random passage. A real practice with the physical book, nearly free once
