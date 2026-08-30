@@ -67,7 +67,9 @@ struct ACIMDailyMinuteApp: App {
             ArchivedReading.self,
             Channel.self,
             CachedPodcastEpisode.self,
-            SegmentMedia.self
+            SegmentMedia.self,
+            Highlight.self,
+            Note.self
         ])
         let containerURL = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!

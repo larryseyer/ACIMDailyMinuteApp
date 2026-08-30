@@ -208,6 +208,7 @@ struct DataService: Sendable {
             segmentId: dto.segment_id,
             youtubeID: dto.youtube_id,
             audioURL: dto.audio_url,
+            publishedDate: dto.date,
             in: context
         )
 
