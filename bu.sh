@@ -14,7 +14,10 @@ git push -u origin "$BRANCH"
 SOURCE="/Users/larryseyer/ACIMDailyMinuteApp"
 DEST_DIR="/Users/larryseyer/Dropbox/Automagic Art/Source Backup/ACIM Daily Minute Backups"
 TIMESTAMP=$(date +"%Y_%m_%d")
-MESSAGE=$(echo "$1" | sed 's/ /_/g')
+# Spaces become underscores for readability; '/' and ':' must go too, or the
+# shell reads them as path separators and zip fails on a directory that was
+# never created.
+MESSAGE=$(echo "$1" | tr ' /:' '___')
 ZIP_FILE="$DEST_DIR/ACIMDailyMinute_${TIMESTAMP}_${MESSAGE}.zip"
 cd "$SOURCE" || exit 1
 zip -r "$ZIP_FILE" . \

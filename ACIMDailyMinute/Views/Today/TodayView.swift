@@ -109,14 +109,10 @@ struct TodayView: View {
         isRefreshing = true
         defer { isRefreshing = false }
 
-        if force {
-            FetchCooldown.reset(FetchCooldownKey.dailyMinute, FetchCooldownKey.dailyLesson)
-        }
-
         let service = DataService(modelContainer: modelContext.container)
         do {
-            async let minuteDTO = service.fetchDailyMinute()
-            async let lessonDTO = service.fetchDailyLesson()
+            async let minuteDTO = service.fetchDailyMinute(force: force)
+            async let lessonDTO = service.fetchDailyLesson(force: force)
             let (m, l) = try await (minuteDTO, lessonDTO)
             if let m { try DataService.persistMinute(m, in: modelContext) }
             if let l { try DataService.persistLesson(l, in: modelContext) }

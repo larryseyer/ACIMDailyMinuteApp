@@ -35,9 +35,41 @@ sys.exit(1)
 "
 }
 
+# Same problem, worse: "Apple Watch Series 10 (46mm)" is installed on some
+# watchOS runtimes but not the newest one, and a bare name= destination
+# resolves against the newest runtime -- so the leg failed with "no such
+# simulator" even though a perfectly good one was sitting on an older runtime.
+# Search every available watchOS runtime and take the newest that actually
+# has the device.
+resolve_watch_sim_uuid() {
+  xcrun simctl list devices available -j | /usr/bin/python3 -c "
+import json, re, sys
+want = sys.argv[1]
+data = json.load(sys.stdin)
+matches = []
+for runtime, devices in data.get('devices', {}).items():
+    if 'watchOS' not in runtime:
+        continue
+    version = tuple(int(n) for n in re.findall(r'\\d+', runtime.rsplit('.', 1)[-1]))
+    for d in devices:
+        if d.get('name') == want and d.get('isAvailable', False):
+            matches.append((version, d['udid']))
+if not matches:
+    sys.exit(1)
+print(max(matches)[1])
+" "$WATCH_SIM"
+}
+
 IPAD_UUID="$(resolve_ipad_sim_uuid || true)"
 if [[ -z "$IPAD_UUID" ]]; then
   echo "✗ No available iPad (10th generation) simulator on iOS ${IPHONE_OS}."
+  echo "  Install one via Xcode → Settings → Platforms, then retry."
+  exit 1
+fi
+
+WATCH_UUID="$(resolve_watch_sim_uuid || true)"
+if [[ -z "$WATCH_UUID" ]]; then
+  echo "✗ No available ${WATCH_SIM} simulator on any installed watchOS runtime."
   echo "  Install one via Xcode → Settings → Platforms, then retry."
   exit 1
 fi
@@ -96,10 +128,10 @@ run_build "macOS (Debug)" \
   build
 
 # ── watchOS Simulator ──
-run_build "watchOS (Debug) ${WATCH_SIM}" \
+run_build "watchOS (Debug) ${WATCH_SIM} [${WATCH_UUID}]" \
   "$LOG_DIR/watchos.log" \
   -scheme "ACIMDailyMinuteWatch Watch App" \
-  -destination "platform=watchOS Simulator,name=${WATCH_SIM}" \
+  -destination "platform=watchOS Simulator,id=${WATCH_UUID}" \
   -configuration Debug \
   -derivedDataPath "$BUILD_DIR" \
   build

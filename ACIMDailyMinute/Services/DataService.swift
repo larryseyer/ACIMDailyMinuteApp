@@ -16,28 +16,73 @@ struct DataService: Sendable {
 
     // MARK: - Fetch (pure I/O — returns DTOs, no persistence)
 
+    /// Two gates stand between a caller and fresh JSON, and `force` opens both.
+    ///
+    /// The first is our own `FetchCooldown`, which keeps passive on-appear
+    /// loads from re-polling every time a view redraws. The second is HTTP:
+    /// GitHub Pages serves these files with a `Cache-Control` max-age, so
+    /// inside that window `URLSession.shared` answers from `URLCache` without
+    /// asking origin anything. Clearing only the cooldown — which is what
+    /// pull-to-refresh used to do — gets past the first gate and hands the
+    /// user the same stale bytes from behind the second.
+    ///
+    /// `force: true` skips the cooldown and switches the request to
+    /// `.reloadRevalidatingCacheData`, which sends `If-None-Match` /
+    /// `If-Modified-Since` and takes the 304 fast path when nothing changed.
+    /// Same contract as `PodcastService.fetchMinuteEpisodes(force:)`.
+    ///
     /// Returns `nil` if the cooldown window blocks the fetch.
-    func fetchDailyMinute(baseURL: String = "https://www.acimdailyminute.org") async throws -> DailyMinuteResponse? {
-        guard FetchCooldown.shouldFetch(
-            key: FetchCooldownKey.dailyMinute,
-            interval: FetchCooldownInterval.live
+    func fetchDailyMinute(
+        baseURL: String = "https://www.acimdailyminute.org",
+        force: Bool = false
+    ) async throws -> DailyMinuteResponse? {
+        guard let data = try await fetchJSON(
+            path: "/daily-minute.json",
+            baseURL: baseURL,
+            cooldownKey: FetchCooldownKey.dailyMinute,
+            force: force
         ) else { return nil }
-
-        let url = URL(string: "\(baseURL)/daily-minute.json")!
-        let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(DailyMinuteResponse.self, from: data)
     }
 
-    /// Returns `nil` if the cooldown window blocks the fetch.
-    func fetchDailyLesson(baseURL: String = "https://www.acimdailyminute.org") async throws -> DailyLessonResponse? {
-        guard FetchCooldown.shouldFetch(
-            key: FetchCooldownKey.dailyLesson,
-            interval: FetchCooldownInterval.live
+    /// Same contract as `fetchDailyMinute(baseURL:force:)`, for the lesson
+    /// endpoint. Returns `nil` if the cooldown window blocks the fetch.
+    func fetchDailyLesson(
+        baseURL: String = "https://www.acimdailyminute.org",
+        force: Bool = false
+    ) async throws -> DailyLessonResponse? {
+        guard let data = try await fetchJSON(
+            path: "/daily-lesson.json",
+            baseURL: baseURL,
+            cooldownKey: FetchCooldownKey.dailyLesson,
+            force: force
         ) else { return nil }
-
-        let url = URL(string: "\(baseURL)/daily-lesson.json")!
-        let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(DailyLessonResponse.self, from: data)
+    }
+
+    /// Returns `nil` when the cooldown blocks the call; otherwise the raw
+    /// response body. Decoding stays with the caller so each endpoint keeps
+    /// its own DTO type.
+    private func fetchJSON(
+        path: String,
+        baseURL: String,
+        cooldownKey: String,
+        force: Bool
+    ) async throws -> Data? {
+        if !force {
+            guard FetchCooldown.shouldFetch(
+                key: cooldownKey,
+                interval: FetchCooldownInterval.live
+            ) else { return nil }
+        }
+
+        let url = URL(string: "\(baseURL)\(path)")!
+        let request = URLRequest(
+            url: url,
+            cachePolicy: force ? .reloadRevalidatingCacheData : .useProtocolCachePolicy
+        )
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return data
     }
 
     // MARK: - Persist (MainActor — writes into caller's ModelContext)
