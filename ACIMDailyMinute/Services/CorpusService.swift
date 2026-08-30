@@ -10,6 +10,37 @@ struct CorpusSegment: Decodable, Sendable {
     let segmentId: Int
     let sourcePDF: String
     let body: String
+    /// Where this passage begins in the book, derived once at export.
+    ///
+    /// Nil for every Manual segment, which is bundled as 105 word-count cuts of
+    /// a continuous stream with nothing to address, and for the 13 passages that
+    /// do not resolve uniquely — front matter and Workbook closing pages that
+    /// are genuinely not in the bundled bodies. An unresolved passage shows its
+    /// book name instead. It is never guessed.
+    let citation: String?
+}
+
+extension CorpusSegment {
+    var parsedCitation: Citation? {
+        citation.flatMap(Citation.init(rawValue:))
+    }
+
+    /// What to show when there is no citation. `sourcePDF` is the pipeline's own
+    /// name for the source — a reader seeing `Text Part A` learns nothing.
+    var bookName: String { Self.bookName(forSourcePDF: sourcePDF) }
+
+    /// The same mapping, reachable without a segment.
+    ///
+    /// The Archive tab needs it: its rows carry the feed's `source_reference`,
+    /// which is this identical string, but no segment id to resolve a citation
+    /// with. One mapping rather than two that drift.
+    static func bookName(forSourcePDF sourcePDF: String) -> String {
+        switch sourcePDF {
+        case "Manual": "Manual for Teachers"
+        case "Workbook": "Workbook for Students"
+        default: "Text"
+        }
+    }
 }
 
 struct CorpusTextSection: Decodable, Sendable {
@@ -115,7 +146,7 @@ final class CorpusService: @unchecked Sendable {
         segmentsByID = Dictionary(uniqueKeysWithValues: segments.map { ($0.segmentId, $0) })
 
         manual = load("ACIMManual.json", as: [ManualEntry].self)
-            .map { CorpusSegment(segmentId: $0.segmentId, sourcePDF: "Manual", body: $0.body) }
+            .map { CorpusSegment(segmentId: $0.segmentId, sourcePDF: "Manual", body: $0.body, citation: nil) }
     }
 
     func segment(id: Int) -> CorpusSegment? { segmentsByID[id] }
