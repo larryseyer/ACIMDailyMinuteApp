@@ -14,6 +14,14 @@ final class SegmentMedia {
     @Attribute(.unique) var segmentId: Int = 0
     var youtubeID: String = ""
     var audioURL: String = ""
+    /// The feed date this segment was published on, as `yyyy-MM-dd`.
+    ///
+    /// Never shown to a reader — publication dates are the app's own
+    /// bookkeeping. It exists so an annotation made on an archived minute,
+    /// which knows only its date, can be rewritten to point at the permanent
+    /// corpus segment once that mapping arrives. See
+    /// `AnnotationStore.upgradeDateKeys`.
+    var publishedDate: String = ""
     var firstSeenAt: Date = Date()
 
     init() {}
@@ -27,6 +35,7 @@ extension SegmentMedia {
         segmentId: Int,
         youtubeID: String?,
         audioURL: String?,
+        publishedDate: String? = nil,
         in context: ModelContext
     ) {
         guard segmentId > 0 else { return }
@@ -45,5 +54,6 @@ extension SegmentMedia {
 
         if let youtubeID, !youtubeID.isEmpty { row.youtubeID = youtubeID }
         if let audioURL, !audioURL.isEmpty { row.audioURL = audioURL }
+        if let publishedDate, !publishedDate.isEmpty { row.publishedDate = publishedDate }
     }
 }
