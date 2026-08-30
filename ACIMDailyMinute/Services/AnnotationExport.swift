@@ -45,7 +45,8 @@ enum AnnotationExport {
         "References like T-5.3.7 are chapter, section and paragraph of the "
         + "edition this app carries — the one whose Text opens with "
         + "\"Introduction to Miracles\" and lists 53 miracle principles. "
-        + "W-45.3 is Workbook lesson and paragraph."
+        + "W-45.3 is Workbook lesson and paragraph, Pref.4 is the Preface, and "
+        + "W-pI.in.2 is the introduction to a part of the Workbook."
 
     /// The formatter the export reads dates through.
     ///
@@ -136,6 +137,31 @@ enum AnnotationExport {
             }
         }
 
+        // One repair per reading, not one per highlight. `displayString` is
+        // three regex passes over a whole body, `SavedView` exports every
+        // highlight in the app at once, and `ShareLink(item:)` evaluates its
+        // argument eagerly on every redraw — so resolving each highlight from
+        // scratch re-rendered the same section once per mark on it.
+        var displayStrings: [String: String] = [:]
+        func citation(for key: ReadingKey, rawKey: String, offset: Int) -> String? {
+            if case .segment = key {
+                return CitationResolver.citation(
+                    for: key, characterOffset: offset, corpus: corpus
+                )?.rawValue
+            }
+            let display: String?
+            if let cached = displayStrings[rawKey] {
+                display = cached
+            } else {
+                display = CitationResolver.displayString(for: key, corpus: corpus)
+                if let display { displayStrings[rawKey] = display }
+            }
+            guard let display else { return nil }
+            return CitationResolver.citation(
+                for: key, characterOffset: offset, displayString: display
+            )?.rawValue
+        }
+
         let converted = highlights.compactMap { highlight -> Entry? in
             guard let key = ReadingKey(rawValue: highlight.readingKey) else { return nil }
             return Entry(
@@ -147,11 +173,11 @@ enum AnnotationExport {
                 // An orphan's offset no longer points at its words, so citing it
                 // would name a paragraph the reader never marked. The quote is
                 // the only record left, and it is already printed above.
-                citation: highlight.isOrphaned ? nil : CitationResolver.citation(
+                citation: highlight.isOrphaned ? nil : citation(
                     for: key,
-                    characterOffset: highlight.startOffset,
-                    corpus: corpus
-                )?.rawValue,
+                    rawKey: highlight.readingKey,
+                    offset: highlight.startOffset
+                ),
                 attachedNotes: notesByHighlight[highlight.id] ?? []
             )
         }
