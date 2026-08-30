@@ -80,6 +80,19 @@ struct SettingsView: View {
                 }
 
                 Section("About") {
+                    NavigationLink {
+                        CompanionNoteView()
+                    } label: {
+                        Text("A note about using this app")
+                    }
+                    // The policy has existed and been unreachable: nothing
+                    // linked to it, so the one screen that states the app
+                    // collects nothing could not be read from inside the app.
+                    NavigationLink {
+                        PrivacyPolicyView()
+                    } label: {
+                        Text("Privacy Policy")
+                    }
                     if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
                        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                         LabeledContent("Version", value: "\(version) (\(build))")
