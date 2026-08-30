@@ -179,11 +179,12 @@ struct ArchiveView: View {
         isRefreshing = true
         defer { isRefreshing = false }
 
-        FetchCooldown.reset(FetchCooldownKey.dailyMinute, FetchCooldownKey.dailyLesson)
+        // Only reachable from `.refreshable`, so the user is explicitly asking
+        // for fresh data: always force past the cooldown and the HTTP cache.
         let service = DataService(modelContainer: modelContext.container)
         do {
-            async let minuteDTO = service.fetchDailyMinute()
-            async let lessonDTO = service.fetchDailyLesson()
+            async let minuteDTO = service.fetchDailyMinute(force: true)
+            async let lessonDTO = service.fetchDailyLesson(force: true)
             let (m, l) = try await (minuteDTO, lessonDTO)
             if let m { try DataService.persistMinute(m, in: modelContext) }
             if let l { try DataService.persistLesson(l, in: modelContext) }

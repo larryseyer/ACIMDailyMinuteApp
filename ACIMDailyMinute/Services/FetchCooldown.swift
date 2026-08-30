@@ -9,9 +9,10 @@ import Foundation
 /// interval would either over-poll static data or under-poll live data. Each
 /// caller passes the interval that matches the data's real rhythm.
 ///
-/// Cold-start behavior: the foreground views are expected to call `reset(_:)`
-/// once per process lifetime so the very first fetch bypasses the cooldown.
-/// The cooldown only gates subsequent in-session fetches.
+/// Cold start and pull-to-refresh bypass this gate entirely by passing
+/// `force: true` to the service (see `DataService.fetchDailyMinute(baseURL:force:)`),
+/// which skips the check rather than clearing the stored timestamp. The
+/// cooldown only gates passive, incidental fetches.
 enum FetchCooldown {
     /// Returns `true` if enough time has elapsed since the last successful
     /// fetch for `key` to warrant another network call.
@@ -29,13 +30,6 @@ enum FetchCooldown {
     /// leave the cooldown untouched so the next attempt is not throttled.
     static func markFetched(key: String) {
         UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: key)
-    }
-
-    /// Clears cooldown timestamps for one or more keys. Used by pull-to-refresh
-    /// and by the cold-start force path so the next `shouldFetch` call returns
-    /// `true` regardless of how recently the resource was last fetched.
-    static func reset(_ keys: String...) {
-        keys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
     }
 }
 
