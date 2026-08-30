@@ -37,7 +37,11 @@ enum ShareTextBuilder {
             ? section.chapterTitle
             : "Chapter \(section.chapterNumber)"
         var parts: [String] = ["\(chapter): \(section.sectionTitle)", section.body]
-        parts.append("— A Course in Miracles, Text")
+        let stem = CitationResolver.stem(
+            for: .textSection(chapter: section.chapterNumber, section: section.sectionNumber)
+        )
+        parts.append(stem.map { "— A Course in Miracles, Text, \($0)" }
+                     ?? "— A Course in Miracles, Text")
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
