@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from citations import addressable_paragraphs, locate
 from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
 
@@ -48,14 +49,15 @@ def main():
 
     # Workbook bodies 1-365. Ids 0 and 500 are the two Part Introductions and
     # belong to Spec 2, which handles Workbook content outside the 1-365 spine.
-    write("Workbook365Bodies.json", [
+    lesson_rows = [
         {"lessonNumber": r[0], "body": r[1]}
         for r in conn.execute(
             "SELECT id, text FROM lessons "
             "WHERE id BETWEEN 1 AND 365 AND text IS NOT NULL AND length(trim(text)) > 0 "
             "ORDER BY id"
         )
-    ])
+    ]
+    write("Workbook365Bodies.json", lesson_rows)
 
     # The Text is the only corpus without a curated `text_paragraphs` column,
     # so its paragraph structure is recovered here rather than in the app.
@@ -77,12 +79,13 @@ def main():
     # Lesson ids 0 and 500 are the two Part Introductions. They sit outside the
     # 1-365 spine, which is why Workbook365Bodies.json cannot hold them and why
     # they had nowhere to appear until the Read tab gave them one.
-    write("WorkbookIntroductions.json", [
+    introduction_rows = [
         {"lessonNumber": r[0], "title": r[1], "body": r[2]}
         for r in conn.execute(
             "SELECT id, title, text FROM lessons WHERE id IN (0, 500) ORDER BY id"
         )
-    ])
+    ]
+    write("WorkbookIntroductions.json", introduction_rows)
 
     write("ACIMManual.json", [
         {"segmentId": r[0], "body": r[1]}
@@ -93,14 +96,29 @@ def main():
     ])
 
     # text_paragraphs is the published reading; text feeds narration. Never cross them.
-    write("ACIMSegments.json", [
-        {"segmentId": r[0], "sourcePDF": r[1],
-         "body": r[2]}
+    segment_rows = [
+        {"segmentId": r[0], "sourcePDF": r[1], "body": r[2]}
         for r in conn.execute(
             "SELECT id, source_pdf, COALESCE(NULLIF(text_paragraphs, ''), text) "
             "FROM segments ORDER BY id"
         )
-    ])
+    ]
+
+    # A segment is a word-count cut: `segments` carries no section and no
+    # paragraph column, so its address has to be FOUND rather than read. That
+    # locator has no business inside the app, so it runs once, here, and its
+    # answer travels in the bundle. The Manual is bundled as 105 cuts of a
+    # continuous stream with nothing to address, so it is not searched at all.
+    index = addressable_paragraphs(raw_sections, lesson_rows, introduction_rows)
+    located = 0
+    for row in segment_rows:
+        family = "Text" if row["sourcePDF"].startswith("Text") else row["sourcePDF"]
+        row["citation"] = locate(row["body"], index[family]) if family in index else None
+        if row["citation"]:
+            located += 1
+    print(f"  citations located: {located} of {len(segment_rows)} segments")
+
+    write("ACIMSegments.json", segment_rows)
 
     conn.close()
     print("Export complete.")
