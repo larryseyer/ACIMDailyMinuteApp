@@ -57,15 +57,17 @@ machine**, never through the mount.
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
   bundled files, and the record counts are 272 / 365 / 1,983 / 105 / 2.
 - `./tools/verify_spacing_agreement.sh` — compiles `PunctuationSpacing.swift` with `swiftc` and proves
-  Swift's rule and Python's are the same rule over 3,042 cases: every left/right character pair the
+  Swift's rule and Python's are the same rule over 3,046 cases: every left/right character pair the
   rule can distinguish, every shape of the possessive, and every body in the shipped bundle.
 - `python3 tools/verify_citations.py` — every citation in the bundle is real and resolves to the
   paragraph it names: 1,983 segments, 1,263 in the Text, 609 in the Workbook, 6 unresolved and
   105 Manual carrying a book name instead. The six that remain are the Workbook's closing
   lessons, where the words recur and the locator refuses an ambiguous probe rather than guess.
 - `./tools/verify_citation_agreement.sh` — compiles `Citation.swift` with `swiftc` and proves Swift's
-  format and paragraph rule and Python's are one rule over 139 cases. Python writes segment citations
-  at export; Swift derives section, lesson and highlight citations at render. Drift would make the
+  format and paragraph rule and Python's are one rule over 1,844 cases — including all 1,705
+  citations actually in the shipped bundle, each of which must parse and round-trip in Swift.
+  Python writes segment citations at export; Swift derives section, lesson and highlight
+  citations at render. Drift would make the
   same passage cite differently depending on which tier it came from, and nothing about that failure
   looks like a bug.
 - `python3 tools/verify_corpus_coverage.py` — ⛔ **the only check that can see an ABSENCE.** The
@@ -84,6 +86,14 @@ this Mac:
   terminator; and the two Part Introduction rows take their titles from the corpus rather than from
   literals.
 - `docs/superpowers/specs/2026-08-30-canonical-citations-design.md` + its plan — implemented.
+- ⛔ **The chapter-opening recovery has NO design document.** It was found by measurement rather
+  than requested, so it went straight from evidence to an approved plan, which is at
+  `~/.claude/plans/iridescent-moseying-engelbart.md` — outside the repo, and the only written
+  record of why it is shaped the way it is besides `tools/chapter_openings.py`'s own docstrings.
+  One judgement in it is his and was taken deliberately: the recovered Preface front matter is a
+  single section titled `Publisher's Note`, even though the source sets a letter-spaced
+  `p u b l i s h e r ’s n o t e` heading part-way through it, which would justify splitting it in
+  two. The heading is stripped; ask before splitting.
 - `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
   where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
   `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
@@ -99,14 +109,31 @@ this Mac:
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, the three committed checks above, `./build.sh`, the arm64 device build,
-install + launch, process-alive checks, the macOS store migration, real feed payloads.
+against real bundled data, the six committed checks above, `./build.sh`, the arm64 device build,
+install + launch, process-alive checks, the macOS store migration, real feed payloads. The six
+committed checks above are the first thing to run in a new session — they take under a minute and
+they are how you find out the tree is what this file says it is.
 
-**Next is corpus-wide search — the book's index.** The whole brief — the three narrow searches that
-exist today and what each of them actually matches, the 5,137,927 characters over 2,727 records a real
-search has to cover, and the four questions the spec has to answer — is written out in the `▶ NEXT`
-block of [`todo.md`](todo.md). Read that block before anything else. Spec first, then plan, then
-execute.
+**⭐ He asked for the next piece to start in a fresh chat, and named it: a way to back up, restore
+and share a reader's own work — settings, highlights, notes, bookmarks — between devices and
+machines.** iCloud for Apple devices ideally, "but we also do not want to leave out our Windows and
+Linux and Android friends." He marked it *no rush, when convenient*, and it is his own words rather
+than anything inferred, so it does not get quietly dropped or quietly narrowed.
+
+The whole brief is the `▶ NEXT — carrying a reader's own work between devices` block in
+[`todo.md`](todo.md), including the four constraints that actually decide the design. **Read that
+block before proposing anything.** The two that kill most obvious answers: a sync service *we* run
+would end both the no-backend architecture and the "Data Not Collected" label, while CloudKit's
+**private** database would not; and a cross-device merge is exactly where "never key a row by a hash
+of its content" bites hardest, because an edited note would arrive as a second note. Spec first,
+then plan, then execute — and the conflict rule gets decided before either, because "last write
+wins" silently discards a reader's words.
+
+**Corpus-wide search — the book's index — is still the other open item** and is unstarted. Its brief
+is the `▶ THEN` block of [`todo.md`](todo.md): the three narrow searches that exist today and what
+each actually matches, the 5,137,927 characters over 2,727 records a real search has to cover, and
+the four questions its spec has to answer. Take it only if he says so; he asked for the sync work
+in the new chat.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
