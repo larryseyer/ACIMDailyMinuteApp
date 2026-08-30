@@ -31,6 +31,9 @@ struct ListenView: View {
     private var cachedLessons: [CachedPodcastEpisode]
 
     @State private var selectedFeed: PodcastFeed = .minute
+    /// Downloads live on disk, not in SwiftData, so nothing observes them.
+    /// Bumping this is what tells the list a row's download state changed.
+    @State private var downloadRevision = 0
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
     #if os(iOS)
@@ -259,7 +262,38 @@ struct ListenView: View {
                             )
                         }
                         .tint(playedAt == nil ? .green : .gray)
+
+                        // Shown only when there is something to fetch. An
+                        // affordance that cannot do anything is worse than no
+                        // affordance, and today every episode is in that state.
+                        if !episode.audioURL.isEmpty {
+                            if AudioDownloadStore.isDownloaded(episode.id) {
+                                Button {
+                                    AudioDownloadStore.delete(episode.id)
+                                    downloadRevision += 1
+                                } label: {
+                                    Label("Remove download", systemImage: "trash")
+                                }
+                                .tint(.orange)
+                            } else {
+                                Button {
+                                    let id = episode.id
+                                    let remote = episode.audioURL
+                                    Task {
+                                        try? await AudioDownloadStore.download(
+                                            episodeID: id,
+                                            remoteURL: remote
+                                        )
+                                        downloadRevision += 1
+                                    }
+                                } label: {
+                                    Label("Download", systemImage: "arrow.down.circle")
+                                }
+                                .tint(.blue)
+                            }
+                        }
                     }
+                    .id("\(episode.id)-\(downloadRevision)")
                 }
             }
         }
@@ -276,6 +310,10 @@ struct ListenView: View {
         // Audio is the intended experience; the video is what exists when no
         // MP3 has been published for this reading yet. Tapping play should do
         // something either way rather than silently failing.
+        if let local = AudioDownloadStore.localURL(for: episode.id) {
+            audio.play(url: local.absoluteString, title: episode.title)
+            return
+        }
         if !episode.audioURL.isEmpty {
             audio.play(url: episode.audioURL, title: episode.title)
             return

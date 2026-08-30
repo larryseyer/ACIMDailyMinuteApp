@@ -121,8 +121,15 @@ final class AudioManager {
     /// when the input lacks a scheme. Already-absolute URLs (podcast
     /// enclosure URLs that point to a CDN, manually-pasted external
     /// links) pass through unchanged.
-    static func resolve(_ url: String) -> String {
+    /// `nonisolated`: pure string work with no player state, and the download
+    /// store resolves URLs off the main actor.
+    nonisolated static func resolve(_ url: String) -> String {
         if url.hasPrefix("http://") || url.hasPrefix("https://") { return url }
+        // A downloaded reading is played from disk. Without this it would be
+        // treated as a site-relative feed path and rewritten into a URL on
+        // acimdailyminute.org, which is exactly the host the download exists
+        // to stop depending on.
+        if url.hasPrefix("file://") { return url }
         let host = "https://www.acimdailyminute.org"
         return url.hasPrefix("/") ? "\(host)\(url)" : "\(host)/\(url)"
     }
