@@ -52,6 +52,20 @@ struct BookmarkRow: View {
         )
     }
 
+    /// `"text:<chapter>.<section>"` split back into its two numbers.
+    private var textAddress: (chapter: Int, section: Int)? {
+        guard parsedChannel == "text" else { return nil }
+        let parts = parsedToken.split(separator: ".").map(String.init)
+        guard parts.count == 2, let chapter = Int(parts[0]), let section = Int(parts[1])
+        else { return nil }
+        return (chapter, section)
+    }
+
+    private var textSection: CorpusTextSection? {
+        guard let address = textAddress else { return nil }
+        return CorpusService.shared.textSection(chapter: address.chapter, section: address.section)
+    }
+
     var body: some View {
         if let destination {
             NavigationLink(value: destination) {
@@ -62,10 +76,11 @@ struct BookmarkRow: View {
         }
     }
 
-    /// Where tapping this row goes. A lesson opens that lesson; a minute opens
-    /// the archive entry for the day it ran. `nil` when the underlying reading
-    /// is no longer in the store — the row still renders, it just has nowhere
-    /// to go, which is honest about what it can offer.
+    /// Where tapping this row goes. A lesson opens that lesson, a Text section
+    /// opens that section, and a minute opens the archive entry for the day it
+    /// ran. `nil` when the underlying reading is no longer in the store — the
+    /// row still renders, it just has nowhere to go, which is honest about what
+    /// it can offer.
     private var destination: SavedDestination? {
         if parsedChannel == "lesson" {
             // No store check: `LessonDetailView` renders from `WorkbookCatalog`
@@ -81,12 +96,17 @@ struct BookmarkRow: View {
             return nil
         }
 
+        if parsedChannel == "text" {
+            guard let address = textAddress, textSection != nil else { return nil }
+            return .textSection(chapter: address.chapter, section: address.section)
+        }
+
         return nil
     }
 
     private var rowContent: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: parsedChannel == "lesson" ? "book.closed.fill" : "sun.max.fill")
+            Image(systemName: rowIcon)
                 .foregroundStyle(Color(red: 0.83, green: 0.69, blue: 0.22))
                 .font(.title3)
                 .frame(width: 28, alignment: .center)
@@ -125,10 +145,22 @@ struct BookmarkRow: View {
         .contentShape(Rectangle())
     }
 
+    private var rowIcon: String {
+        switch parsedChannel {
+        case "lesson": "book.closed.fill"
+        case "text": "text.book.closed"
+        default: "sun.max.fill"
+        }
+    }
+
     private var headerLabel: String {
         if parsedChannel == "lesson" {
             if let n = Int(parsedToken) { return "Lesson \(n)" }
             return "Lesson"
+        }
+        if parsedChannel == "text" {
+            guard let address = textAddress else { return "Text" }
+            return address.chapter == 0 ? "Preface" : "Chapter \(address.chapter)"
         }
         return "Daily Minute"
     }
@@ -140,6 +172,10 @@ struct BookmarkRow: View {
             if let m = minutes.first { return preview(m.text) }
             if let r = archiveMinutes.first { return preview(r.text) }
             return nil
+        }
+
+        if parsedChannel == "text" {
+            return textSection?.sectionTitle
         }
 
         if parsedChannel == "lesson" {
