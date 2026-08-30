@@ -20,24 +20,44 @@ struct FullScreenVideoCover: View {
             Color.black
                 .ignoresSafeArea()
 
-            YouTubePlayerView(videoURL: videoURL, autoplay: true)
-                .ignoresSafeArea()
+            // YouTube's own chrome is suppressed here: it drew over the reading
+            // burned into the frame, and it sat exactly where this button does.
+            YouTubePlayerView(
+                videoURL: videoURL,
+                autoplay: true,
+                showsControls: false,
+                opensExternalLinks: false
+            )
+            .ignoresSafeArea()
 
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title)
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.white)
-                    .padding(20)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Close video")
+            closeButton
+                .zIndex(1)
         }
         .statusBarHidden()
         .onAppear { OrientationController.lockLandscape() }
         .onDisappear { OrientationController.unlock() }
+    }
+
+    /// The only control on this screen, so it has to survive a hurried tap over
+    /// any frame of video: a full 44pt target, an explicit hit shape so near
+    /// misses do not fall through to the web view, and a scrim disc so a white
+    /// glyph still reads against a white frame. `safeAreaPadding` keeps it clear
+    /// of the sensor housing, which lands on the leading edge in landscapeRight.
+    private var closeButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 44, height: 44)
+                .background(Color.black.opacity(0.55), in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .padding(12)
+        .safeAreaPadding()
+        .accessibilityLabel("Close video")
     }
 }
 

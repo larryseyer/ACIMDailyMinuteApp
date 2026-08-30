@@ -36,17 +36,30 @@ struct PodcastEpisodeRow: View {
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(episode.title), \(formattedDate)")
-        .accessibilityHint("Plays episode")
+        .accessibilityHint(opensVideo ? "Opens video" : "Plays episode")
+    }
+
+    /// True when this episode has no published audio and tapping will open its
+    /// video instead — the branch `ListenView.play(_:)` already takes. Until
+    /// audio hosting is unblocked that is every episode, so the row must not
+    /// keep showing a play glyph and promising a listen it cannot deliver.
+    private var opensVideo: Bool {
+        episode.audioURL.isEmpty && !episode.youtubeURL.isEmpty
     }
 
     // MARK: - Subviews
 
     private var icon: some View {
-        Image(systemName: isPlaying ? "waveform" : "play.fill")
+        Image(systemName: glyph)
             .font(.system(size: 22))
             .foregroundStyle(isPlaying ? Self.accent : .primary)
             .frame(width: 30)
             .symbolEffect(.variableColor.iterative, options: .repeating, isActive: isPlaying)
+    }
+
+    private var glyph: String {
+        if isPlaying { return "waveform" }
+        return opensVideo ? "play.rectangle.fill" : "play.fill"
     }
 
     private var textColumn: some View {
