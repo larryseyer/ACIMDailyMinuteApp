@@ -8,15 +8,15 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `675d3fa`, pushed. Nothing
-of mine is running.
+Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `d90c8c0` plus this
+handoff commit, pushed. Nothing of mine is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/MacLive`), so `pgrep` from
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — all three live targets are current at `675d3fa`:**
+**Build state — all three live targets are current at `d90c8c0`, citations included:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched, app and
   widget extension both alive. ⭐ **This is where he tests.** ⛔ The first `devicectl install` returned
   `CoreDeviceError 4000, "the device disconnected immediately after connecting"`; the identical second
@@ -48,7 +48,7 @@ machine**, never through the mount.
   data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
   `sqlite3` to see the migration actually happened and the rows survived.
 
-⛔ **Three committed checks now guard the corpus. Run all three after any change to a bundled file:**
+⛔ **Five committed checks now guard the corpus. Run all five after any change to a bundled file:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break. 268 sections, 2,911 paragraphs.
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -56,6 +56,14 @@ machine**, never through the mount.
 - `./tools/verify_spacing_agreement.sh` — compiles `PunctuationSpacing.swift` with `swiftc` and proves
   Swift's rule and Python's are the same rule over 3,042 cases: every left/right character pair the
   rule can distinguish, every shape of the possessive, and every body in the shipped bundle.
+- `python3 tools/verify_citations.py` — every citation in the bundle is real and resolves to the
+  paragraph it names: 1,983 segments, 1,256 in the Text, 609 in the Workbook, 13 unresolved and
+  105 Manual carrying a book name instead.
+- `./tools/verify_citation_agreement.sh` — compiles `Citation.swift` with `swiftc` and proves Swift's
+  format and paragraph rule and Python's are one rule over 139 cases. Python writes segment citations
+  at export; Swift derives section, lesson and highlight citations at render. Drift would make the
+  same passage cite differently depending on which tier it came from, and nothing about that failure
+  looks like a bug.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -66,6 +74,7 @@ this Mac:
   running head as well as a centred one; a semicolon joins the colon as a legitimate paragraph
   terminator; and the two Part Introduction rows take their titles from the corpus rather than from
   literals.
+- `docs/superpowers/specs/2026-08-30-canonical-citations-design.md` + its plan — implemented.
 - `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
   where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
   `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
@@ -84,10 +93,11 @@ handed over once, whole, at the end. Verify everything verifiable without him: `
 against real bundled data, the three committed checks above, `./build.sh`, the arm64 device build,
 install + launch, process-alive checks, the macOS store migration, real feed payloads.
 
-**Next is canonical citations.** The whole brief — what `sourceReference` actually is today, what the
-Text can already address, and the four questions the spec has to answer — is written out in the
-`▶ NEXT` block of [`todo.md`](todo.md). Read that block before anything else. Spec first, then plan,
-then execute.
+**Next is corpus-wide search — the book's index.** The whole brief — the three narrow searches that
+exist today and what each of them actually matches, the 5,125,994 characters over 2,723 records a real
+search has to cover, and the four questions the spec has to answer — is written out in the `▶ NEXT`
+block of [`todo.md`](todo.md). Read that block before anything else. Spec first, then plan, then
+execute.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
@@ -114,6 +124,22 @@ what is drawn, and what a highlight offset counts are one string. It survives th
 **because the repair is idempotent and runs on both sides** — `tools/export_corpus.py` applies it to
 the bundle, `ReadingText.paragraphs` applies it at render, and applying it twice changes nothing.
 **Any future repair owes the same property**, or the bundle and the screen start disagreeing.
+
+⛔ **The citations this app prints are NOT the ones of the widely-cited edition, and that is
+deliberate and measured.** Ours is a different book: our Chapter 1 is "INTRODUCTION TO MIRACLES" with
+**53** numbered miracle principles rather than 50, and a chapter's Introduction occupies section 1.
+**Arabic section numbers — `T-5.3.7`, never `T-5.III.7` — are the visible signal** that these are not
+those citations. There is no sentence number either: two defensible splitters disagree on 644 of 3,564
+paragraphs, so a `:1` would be a number this app invented and then printed permanently into an export.
+`Citation` is pure by design — no SwiftUI, no `CorpusService`, no `ReadingKey` — so a `swiftc` harness
+can compile it alone.
+
+⛔ **118 passages carry no citation and show their book name instead** — all 105 Manual segments, plus
+13 that did not resolve uniquely. **Nothing is guessed.** The Archive card is the other exception: it
+shows a book name because an archived row carries no segment id, the feed's inline archive entries
+having none. **Resolving one by matching its text at runtime was rejected** — the locator belongs at
+export, and keying a row by its content is the bug this project keeps rediscovering. Giving the
+Archive a real citation means adding `segment_id` to the pipeline's archive entries first.
 
 ⛔ **The reading surfaces already carry annotation.** Any new reading view should render through
 `AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
@@ -157,8 +183,9 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **canonical citations**, then corpus-wide search, then the
-pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
+From [`todo.md`](todo.md), in order: **corpus-wide search**, then cross-reference links — which
+citations unblocked, since `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
+already navigates — then the pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
 running heads still sitting inside Chapter 11's prose are the two remaining corpus defects; the lesson
 bodies are the one job that genuinely needs the PDFs. The Manual is the last bundled corpus with no
 reading UI, and structuring it is its own item.
