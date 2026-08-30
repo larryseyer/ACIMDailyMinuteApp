@@ -20,6 +20,31 @@ struct CorpusTextSection: Decodable, Sendable {
     let body: String
 }
 
+extension CorpusTextSection {
+    /// Roughly what a reader wants to know before opening a section: whether
+    /// this is two pages or twenty.
+    var wordCount: Int {
+        body.split(whereSeparator: { $0 == " " || $0 == "\n" }).count
+    }
+}
+
+/// One chapter of the Text, with its sections in reading order.
+struct CorpusTextChapter: Identifiable, Sendable {
+    let number: Int
+    let title: String
+    let sections: [CorpusTextSection]
+
+    var id: Int { number }
+
+    /// Chapter 0 is the Preface, which has no number a reader would recognise.
+    var displayName: String { number == 0 ? title : "Chapter \(number)" }
+
+    /// The stored title, shown beneath the chapter number. Never re-cased: the
+    /// corpus stores chapter titles in capitals, and title-casing
+    /// "GOD'S PLAN FOR SALVATION" by rule produces mistakes.
+    var subtitle: String? { number == 0 ? nil : title }
+}
+
 private struct ManualEntry: Decodable {
     let segmentId: Int
     let body: String
@@ -29,10 +54,17 @@ final class CorpusService: @unchecked Sendable {
     static let shared = CorpusService(resourceDirectory: nil)
 
     let textSections: [CorpusTextSection]
+    let textChapters: [CorpusTextChapter]
     let manual: [CorpusSegment]
 
     private let segmentsByID: [Int: CorpusSegment]
     private let orderedSegmentIDs: [Int]
+    private let textIndex: [TextAddress: Int]
+
+    private struct TextAddress: Hashable {
+        let chapter: Int
+        let section: Int
+    }
 
     init(resourceDirectory: URL?) {
         func load<T: Decodable>(_ name: String, as type: [T].Type) -> [T] {
@@ -54,6 +86,30 @@ final class CorpusService: @unchecked Sendable {
 
         textSections = load("ACIMTextSections.json", as: [CorpusTextSection].self)
 
+        // The export orders by chapter then section, so first-seen order is
+        // reading order and no sort is needed — or wanted, since a sort would
+        // quietly paper over an export that had stopped being ordered.
+        var chapterOrder: [Int] = []
+        var chapterTitles: [Int: String] = [:]
+        var grouped: [Int: [CorpusTextSection]] = [:]
+        var index: [TextAddress: Int] = [:]
+        for (offset, section) in textSections.enumerated() {
+            index[TextAddress(chapter: section.chapterNumber, section: section.sectionNumber)] = offset
+            if grouped[section.chapterNumber] == nil {
+                chapterOrder.append(section.chapterNumber)
+                chapterTitles[section.chapterNumber] = section.chapterTitle
+            }
+            grouped[section.chapterNumber, default: []].append(section)
+        }
+        textIndex = index
+        textChapters = chapterOrder.map {
+            CorpusTextChapter(
+                number: $0,
+                title: chapterTitles[$0] ?? "",
+                sections: grouped[$0] ?? []
+            )
+        }
+
         let segments = load("ACIMSegments.json", as: [CorpusSegment].self)
         orderedSegmentIDs = segments.map(\.segmentId)
         segmentsByID = Dictionary(uniqueKeysWithValues: segments.map { ($0.segmentId, $0) })
@@ -63,6 +119,33 @@ final class CorpusService: @unchecked Sendable {
     }
 
     func segment(id: Int) -> CorpusSegment? { segmentsByID[id] }
+
+    func textChapter(_ number: Int) -> CorpusTextChapter? {
+        textChapters.first { $0.number == number }
+    }
+
+    func textSection(chapter: Int, section: Int) -> CorpusTextSection? {
+        guard let offset = textIndex[TextAddress(chapter: chapter, section: section)] else { return nil }
+        return textSections[offset]
+    }
+
+    /// The next section in reading order, crossing into the following chapter.
+    /// Nil at the end of the book — which is what lets a reader read the Text
+    /// straight through instead of walking back up two levels between every
+    /// section.
+    func sectionAfter(chapter: Int, section: Int) -> CorpusTextSection? {
+        guard let offset = textIndex[TextAddress(chapter: chapter, section: section)],
+              textSections.indices.contains(offset + 1)
+        else { return nil }
+        return textSections[offset + 1]
+    }
+
+    func sectionBefore(chapter: Int, section: Int) -> CorpusTextSection? {
+        guard let offset = textIndex[TextAddress(chapter: chapter, section: section)],
+              offset > 0
+        else { return nil }
+        return textSections[offset - 1]
+    }
 
     var allSegmentIDs: [Int] { orderedSegmentIDs }
 
