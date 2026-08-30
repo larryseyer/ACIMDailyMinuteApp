@@ -71,6 +71,25 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] **The privacy policy is reachable now.** `PrivacyPolicyView` existed but nothing linked to it,
       so the one screen stating the app collects nothing could not be opened from inside the app. It
       sits under Settings > About beside the companion note. Confirm it reads correctly there.
+- [ ] **Highlights and notes, end to end.** Long-press a passage in any reading; the menu offers
+      **Highlight** and **Note** beside the system items. Highlight paints the passage yellow and it
+      is still painted after leaving the screen and coming back. **Note** marks the passage and opens
+      the editor. **Add note** under a reading writes a note about the whole reading; tapping an
+      existing note reopens it for editing. Dictation is the system keyboard's microphone — there is
+      no mic button and there must never be one, because `Info.plist` still carries zero
+      `UsageDescription` keys and that is load-bearing.
+
+- [ ] **Saved is three segments now** — Saved / Highlights / Notes, still one tab. Confirm each
+      empty state reads correctly, both swipe edges delete, a highlight row opens its reading and a
+      note row opens its reading. A Text or Manual row will not navigate: no reading UI exists for
+      those yet, by design, and the row still shows and still exports.
+
+- [ ] **Export.** The Export item in the Saved toolbar, and the one under each annotated reading,
+      hand over plain text. Confirm the file reads as a document a stranger could follow, that it
+      carries only the reader's own dates, and that a passage the publisher has since changed is
+      marked "passage not found in the current text" rather than dropped. This is the only way a
+      reader's words can ever leave the app — there is no server and no account.
+
 - [ ] **Every reading surface now draws through a text view, not `Text`.** This is the one thing
       no harness can settle. Six surfaces changed renderer: the **Today Daily Minute card**, the
       **Today lesson card**, the **Today corpus card** (the offline floor), the **lesson detail
@@ -86,39 +105,16 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
 
-## ▶ NEXT — execute the reader-annotations plan
+## ▶ NEXT — Spec 2, the Text reading UI
 
-⛔ The spec and plan are **not in git** — `.gitignore:54` keeps `docs/` local on purpose. They exist
-only on this Mac:
-- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md`
-- `docs/superpowers/plans/2026-08-30-reader-annotations.md` — eight tasks, not started.
+The largest remaining parity gap, and now unblocked. All 268 Text sections are bundled in
+`ACIMTextSections.json` with chapter and section numbers and titles, `CorpusService.textSections`
+exposes them, and nothing reads them yet. `ReadingKey.textSection(chapter:section:)` already exists
+and already annotates; `savedDestination` returns nil for it because there is nowhere to go. A Text
+reading UI is what turns that row into a link and the app into a book.
 
-Every design decision he made is recorded in the spec unchanged. The two questions the spec left open
-are resolved in the plan: annotation is available on **all six** reading surfaces including the Today
-cards, and a `minute-date:` key is **rewritten** to `segment:` on discovery rather than resolved at
-read time.
-
-- [ ] **Task 1 — the canonical display string and `ReadingKey`.** Pure foundation, no UI change.
-      ⛔ `ReadingTextView` already rewrites the text it is handed, so what the reader sees is not what
-      is in the model. One `ReadingText.displayString(from:)` serves both the renderer and the anchor
-      arithmetic; if they ever diverge every stored offset is wrong by a variable amount and nothing
-      looks broken until a reader reopens an old highlight.
-- [ ] **Task 2 — `Highlight`, `Note`, and `SegmentMedia.publishedDate`.** Four schema declarations,
-      three targets. The new field is what lets an annotation on an archived minute grow up into a
-      corpus anchor.
-- [ ] **Task 3 — `AnchorResolver`.** Self-healing: exact hit, else re-find by quote nearest the stored
-      offset, else keep and mark orphaned. Never delete a reader's mark because a comma moved.
-- [ ] **Task 4 — `SelectableReadingText`**, swapped in at all six sites rendering identically. Its own
-      commit so a layout regression is attributable to exactly one change.
-- [ ] **Task 5 — capture and paint.** ⛔ The text view's `NSRange` is UTF-16; stored offsets are
-      `Character`-based. Convert once, in the representable. One accented character in a reading would
-      otherwise shift every offset stored after it.
-- [ ] **Task 6 — notes.** Dictation is the system keyboard mic. No `Speech` framework, no mic button,
-      no `Info.plist` key — it carries zero `UsageDescription` keys today and must still carry zero.
-- [ ] **Task 7 — Saved becomes three segments** (Saved / Highlights / Notes). Five tabs stay five.
-      ⛔ Deleting a highlight must not delete a note attached to it.
-- [ ] **Task 8 — plain-text export**, shipping with the feature rather than after it. There is no
-      server and no account, so nothing can re-send a reader's annotations if this is got wrong.
+- [ ] Write the spec, then the plan, then execute. Reading surfaces should use
+      `AnnotatableReadingText`, which carries selection, highlighting, notes and export already.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -168,10 +164,8 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] **The Text is not readable in the app** — 31 chapters, ~669 pages, the largest part of the volume
-      and the whole theoretical basis. All 268 sections are bundled in `ACIMTextSections.json` and
-      exposed as `CorpusService.textSections`, with chapter and section numbers and titles. Nothing
-      reads them yet: **Spec 2** is the reading UI — chapters, sections, navigation.
+- [ ] **The Text is not readable in the app** — 31 chapters, ~669 pages, the largest part of the
+      volume and the whole theoretical basis. This is the NEXT block above.
 - [ ] ⛔ **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). Promoted
       from a study-group convenience to a **durability requirement**: citations are the interoperability
       layer that lets a reader move between this app, a paper book, and whatever comes after both.
@@ -223,6 +217,12 @@ Both simulators he asked about are **already installed on this Mac**; neither is
       `NotificationManager.swift:128` can see. Updating `assets/` alone ships the old sound with a
       fully green build. It has already been missed twice. Two ways to end it, his call: add a copy
       step to `./build.sh`, or delete the `assets/` copy and make `Resources/` the single source.
+
+- [ ] **`prd.json` names the forbidden string inside the rule that forbids it.** Ten lines across
+      `prd.json` and `bash/archive/.../prd.json` contain the literal the absolute-clean rule bans, as
+      part of the rule text itself. Pre-existing, and a self-reference rather than a leak, but it
+      means a plain repo-wide grep can never come back empty. His call: reword the rule to describe
+      the string without spelling it, or accept those lines as the one exemption.
 
 - [ ] **The Listen tab has no defined behaviour when YouTube fails.** `LiteYouTubeCard` needs a
       `WKNavigationDelegate` failure path so a dead video source degrades to what it has rather than a

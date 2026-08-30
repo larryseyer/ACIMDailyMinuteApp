@@ -8,22 +8,22 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `c1f1330`, pushed. Nothing
-of mine is running.
+Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through `0aa29b8`. Nothing of mine
+is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/MacLive`), so `pgrep` from
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — both live targets are current at `c1f1330`:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched.
-  ⭐ **This is where he tests.**
+**Build state — both live targets are current at `0aa29b8`:**
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, installed and launched, app and
+  widget extension both alive. ⭐ **This is where he tests.**
 - 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed *Apple Development: Larry
   Seyer*, running with its widget extension up. Widget registered as
   `com.larryseyer.acimdailyminute.widget`; he adds it from **Edit Widgets**.
-- 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — stale, at `8cb09f9`, and
-  ⛔ **he has asked that it not be driven.** Other apps control this computer. Ask before touching it.
+- 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
+  compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
 ⛔ **A green `./build.sh` proves less than it looks like it does:**
 - `./build.sh` = three targets, **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
@@ -33,18 +33,28 @@ machine**, never through the mount.
 - **Phone only, no sim:** `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination
   "platform=iOS,id=00008030-0004299C1410802E" -derivedDataPath build ONLY_ACTIVE_ARCH=YES build`, then
   `xcrun devicectl device install app --device <UDID> build/Debug-iphoneos/ACIMDailyMinute.app` and
-  `process launch`. Check for a SwiftData schema crash with `xcrun devicectl device info processes` —
-  **the widget extension process being alive is the proof**, since it is what `fatalError`s on mismatch.
+  `process launch`. ⛔ **A locked phone refuses `process launch` with `FBSOpenApplicationErrorDomain
+  error 7` and can drop the install connection entirely** — that is the lock, not the build. Check with
+  `xcrun devicectl device info processes`; **the widget extension process being alive is the proof** of
+  a clean schema, since it is what `fatalError`s on mismatch, and it comes up even while locked.
 - **macOS + widget:** `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination
   "platform=macOS" -allowProvisioningUpdates DEVELOPMENT_TEAM=RR5DY39W4Q build`, copy to
   `/Applications`, launch once. Verify with `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
+  ⛔ Quit the running copy first, or `rm -rf /Applications/ACIMDailyMinute.app` fails mid-flight.
+- **Real SwiftData migrations can be proved here without the phone.** The macOS App Group store at
+  `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/ACIMDailyMinute.sqlite` holds real
+  data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
+  `sqlite3` to see the migration actually happened and the rows survived.
 
-⛔ **Four design documents exist and are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They
-live only on this Mac:
-- `docs/superpowers/specs/2026-08-30-timeless-corpus-design.md` — implemented.
-- `docs/superpowers/plans/2026-08-30-timeless-corpus.md` — all five tasks executed.
-- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md` — his decisions, written up.
-- `docs/superpowers/plans/2026-08-30-reader-annotations.md` — **eight tasks, not started. This is next.**
+⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
+this Mac:
+- `docs/superpowers/specs/2026-08-30-timeless-corpus-design.md` + its plan — implemented.
+- `docs/superpowers/specs/2026-08-30-reader-annotations-design.md` + its plan — **all eight tasks
+  executed.** The plan's own text is now behind the code in three places, all deliberate and all
+  recorded in `git log`: `ReadingTextView` the *view* was deleted once nothing referenced it (the
+  `ReadingText` enum stays and is still the single source of truth); the six call sites go through a
+  new `AnnotatableReadingText` wrapper rather than six copies of the same wiring; and the export
+  format carries a date on an attached note, which the plan's sample omitted.
 
 ---
 
@@ -55,22 +65,25 @@ outstanding item is spec'd, planned and implemented — "otherwise, I will just 
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
 against real bundled data, `./build.sh`, the arm64 device build, install + launch, process-alive
-checks, real feed payloads.
+checks, the macOS store migration, real feed payloads.
 
-**Execute Task 1 of the reader-annotations plan.** He asked to start it in a fresh chat.
+**Next is Spec 2 — the Text reading UI**, the largest remaining parity gap and now fully unblocked.
+See the `▶ NEXT` block in [`todo.md`](todo.md). Spec first, then plan, then execute.
 
-Task 1 is pure foundation — `ReadingText.displayString(from:)` plus a positional `ReadingKey` enum,
-with a harness and **no UI change at all**. The plan carries the full code for both, and that code is
-**already typechecked against the real `CorpusService`, `WorkbookCatalog` and `ReadingTextView`**, so it
-is working code rather than a sketch. `AnchorResolver` in Task 3 is likewise typechecked and
-smoke-tested across nine cases, including the one expectation that is easy to get wrong: a stored
-offset far past the end resolves to the **last** occurrence, not the first.
+⛔ **The reading surfaces already carry annotation.** Any Text reading view should render through
+`AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
+export with it for free. `ReadingKey.textSection(chapter:section:)` already exists and already stores;
+`savedDestination` returns nil for it only because there is nowhere to navigate yet, and that is the
+one line Spec 2 makes true.
 
-⛔ The single most important idea in the feature, and the one that breaks silently: **what the reader
-sees is not what is in the model.** `ReadingTextView` collapses lone newlines and preserves blank lines,
-so highlight offsets must be measured against one shared `displayString` used by both the renderer and
-the anchor arithmetic. If those ever diverge, every stored offset is wrong by a variable amount and
-nothing looks broken until a reader reopens an old highlight.
+⛔ **The idea that breaks silently, and it now has a name:** what the reader sees is not what is in
+the model. `ReadingText.displayString(from:)` is the one string both the renderer and every highlight
+offset are measured against. Anything that draws a reading must go through it. Six harnesses hold this
+down against all 365 lesson bodies, 1,983 corpus segments and 268 Text sections; keep them passing.
+
+⛔ **Offsets are `Character`-based, never UTF-16.** The conversion lives in exactly one place —
+`SelectableReadingText.utf16Range(of:in:)` and `.characterRange(of:in:)`. A single emoji or accented
+character shifts every stored offset after it if that boundary is crossed anywhere else.
 
 ---
 
@@ -82,16 +95,15 @@ nothing looks broken until a reader reopens an old highlight.
   ⛔ **Do not re-open the hosting decision unprompted.** Two finished features wait on it and neither
   needs an app change to come alive: the Today card's **Listen** button, and MP3 download in the Listen
   tab. Both are invisible only because `audio_url` is empty on every episode and all 158 archive entries.
-- **Anything needing eyes on a device**, which is now everything in the parked block.
+- **Anything needing eyes on a device**, which is now everything in the parked block — and that block
+  has grown, because six reading surfaces changed renderer and no harness can settle how they look.
 
 ---
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: the reader-annotations plan (eight tasks), then **Spec 2 — the
-Text reading UI**, the biggest remaining parity gap and now unblocked: all 268 Text sections are bundled
-with chapter and section numbers and titles, `CorpusService.textSections` exposes them, and nothing
-reads them yet. Then the pre-submission sweep and the smaller open items.
+From [`todo.md`](todo.md), in order: **Spec 2 — the Text reading UI**, then canonical citations, then
+the pre-submission sweep and the smaller open items.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
@@ -101,5 +113,5 @@ feed are rented and will end. Bundled content is permanent, the feed lasts decad
 YouTube and archive.org are certain to end. **The app must be wholly usable on bundled content alone,
 and every higher tier must be purely additive.** The app is not permanent either, so nothing may be
 trapped inside it: bundled data stays human-readable JSON, and reader-created content must export as
-plain text. That last clause is the whole reason the annotations plan ships export in Task 8 rather
-than later — there is no server and no account, so nothing could ever re-send a reader's notes.
+plain text. `AnnotationExport.plainText` is that promise kept for highlights and notes; anything that
+lets a reader create something new owes the same.
