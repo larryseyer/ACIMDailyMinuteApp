@@ -17,9 +17,7 @@ struct DailyMinuteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
-            ReadingTextView(raw: minute.text)
-                .font(.system(.body, design: .serif))
-                .foregroundStyle(.primary)
+            SelectableReadingText(raw: minute.text, design: .serif)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             footer

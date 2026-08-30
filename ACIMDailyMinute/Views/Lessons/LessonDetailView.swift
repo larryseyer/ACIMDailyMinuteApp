@@ -127,10 +127,7 @@ private struct FullLessonView: View {
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
-                ReadingTextView(raw: lesson.text)
-                    .font(.system(.body, design: .serif))
-                    .foregroundStyle(.primary)
-                    .lineSpacing(3)
+                SelectableReadingText(raw: lesson.text, design: .serif, lineSpacing: 3)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
                 wordCountChip
@@ -224,8 +221,7 @@ private struct MetadataOnlyLessonView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
-                    ReadingTextView(raw: body)
-                        .font(.body)
+                    SelectableReadingText(raw: body, design: .standard)
                 } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
                         .aspectRatio(16.0/9.0, contentMode: .fit)
@@ -308,8 +304,7 @@ private struct AbsentLessonView: View {
                         .padding(.top, 4)
                     }
                 } else if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
-                    ReadingTextView(raw: body)
-                        .font(.body)
+                    SelectableReadingText(raw: body, design: .standard)
                 }
             }
             .padding(.horizontal, 20)
