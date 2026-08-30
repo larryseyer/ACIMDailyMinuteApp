@@ -63,6 +63,8 @@
 		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
 		AA000001222 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
 		AA000001343 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
+		AA000001344 /* HighlightRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002344 /* HighlightRow.swift */; };
+		AA000001345 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
 		AA000001223 /* PhrasesEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002221 /* PhrasesEditorView.swift */; };
 		AA000001224 /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
 		AA000001226 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
@@ -202,6 +204,8 @@
 		AA000002053 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
 		AA000002220 /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
 		AA000002343 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
+		AA000002344 /* HighlightRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightRow.swift; sourceTree = "<group>"; };
+		AA000002345 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
 		AA000002221 /* PhrasesEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhrasesEditorView.swift; sourceTree = "<group>"; };
 		AA000002222 /* DeepLinkRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRoute.swift; sourceTree = "<group>"; };
 		AA000002226 /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
@@ -481,6 +485,8 @@
 				AA000002053 /* SavedView.swift */,
 				AA000002220 /* BookmarkRow.swift */,
 				AA000002343 /* NoteEditorView.swift */,
+				AA000002344 /* HighlightRow.swift */,
+				AA000002345 /* NoteRow.swift */,
 			);
 			path = Saved;
 			sourceTree = "<group>";
@@ -724,6 +730,8 @@
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,
 				AA000001343 /* NoteEditorView.swift in Sources */,
+				AA000001344 /* HighlightRow.swift in Sources */,
+				AA000001345 /* NoteRow.swift in Sources */,
 				AA000001223 /* PhrasesEditorView.swift in Sources */,
 				AA000001224 /* DeepLinkRoute.swift in Sources */,
 				AA000001051 /* SharedModelContainer.swift in Sources */,
