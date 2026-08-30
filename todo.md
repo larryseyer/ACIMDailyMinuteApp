@@ -198,6 +198,12 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 
 ## ▶ OPEN — small, unscheduled
 
+- [ ] **`ACIMChime.caf` is duplicated and nothing syncs it.** `assets/ACIMChime.caf` is the source;
+      `ACIMDailyMinute/Resources/ACIMChime.caf` is what the app bundles and the only one
+      `NotificationManager.swift:128` can see. Updating `assets/` alone ships the old sound with a
+      fully green build. It has already been missed twice. Two ways to end it, his call: add a copy
+      step to `./build.sh`, or delete the `assets/` copy and make `Resources/` the single source.
+
 - [ ] **The Listen tab has no defined behaviour when YouTube fails.** `LiteYouTubeCard` needs a
       `WKNavigationDelegate` failure path so a dead video source degrades to what it has rather than a
       dead frame. It belongs with Listen work rather than corpus work, which is why the corpus
