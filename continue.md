@@ -46,13 +46,15 @@ widget works either:
 
 ## ⛔ PICK UP HERE
 
-**1. Get his confirmation on what is on the phone** — the list in [`todo.md`](todo.md). It is now seven
-items: B4/B5, B6, B7 and the date sweep were already waiting; lesson bodies, the corpus floor and the
-inert download affordance are new. Three of them are the only checks the corpus work could not make
-itself, because they need eyes on a device or a network turned off.
+⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the whole confirmation list until every
+outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
+that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) keeps growing and is
+handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
+against real data, `./build.sh`, the arm64 device build, install + launch, process-alive checks, real
+feed payloads.
 
-**2. Then the reader-annotations spec.** Every design decision is made and recorded in
-[`todo.md`](todo.md); it needs writing up, not deciding.
+**1. The reader-annotations spec.** Every design decision is made and recorded in
+[`todo.md`](todo.md); it needs writing up, not deciding. Then plan it, then build it.
 
 **Spec 2 — the Text reading UI — is the biggest single parity gap and is now unblocked.** All 268 Text
 sections are bundled with chapter and section numbers and titles, and `CorpusService.textSections`

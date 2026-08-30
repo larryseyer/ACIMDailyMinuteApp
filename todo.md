@@ -29,9 +29,16 @@
 
 ---
 
-## ▶ NEXT — his confirmation on four fixes already on his phone
+## ⏸ PARKED — one consolidated test pass, at the very end
 
-Built and installed at `8cb09f9`. B1, B2 and B3 are confirmed and retired.
+⛔⛔ **DO NOT ASK HIM TO CHECK ANY OF THIS UNTIL EVERYTHING BELOW IS SPEC'D, PLANNED AND
+IMPLEMENTED.** His words: "otherwise, I will just repeat myself on things that simply have not been
+done yet." This block only grows; it is handed over once, whole, when the build is complete. Keep
+adding to it — an unverifiable thing still gets written down — but never surface it as a request.
+
+Everything here is built and on his phone. Verify what can be verified without him first: `swiftc`
+harnesses against real data, `./build.sh`, the arm64 device build, install + launch, process-alive
+checks, real feed payloads. His eyes are the last resort, not the first.
 
 - [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
       `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
@@ -117,9 +124,14 @@ Ranked by his instruction, and the ranking is a resource decision, not a design 
 the common Apple environment first, then expand. Do not let a non-Apple consideration shape an
 Apple-platform design.
 
-- [ ] **Apple TV (tvOS)** — a target he wants; no tvOS target exists in the Xcode project yet. It is
-      the only unbuilt Apple platform. The bundled corpus makes it far more tractable than it was:
-      a tvOS build needs content that does not depend on a phone being nearby.
+- [ ] **Apple TV (tvOS)** — a target he wants; **no tvOS target exists in the Xcode project yet**, so
+      there is nothing to run and the simulator is not the blocker. Four tvOS runtimes are already
+      installed (18.2, 18.4, 26.2, 26.5) with Apple TV 4K (3rd gen) devices ready, e.g.
+      `FE7B1792-F47B-4271-AB54-8081D162EC55` on tvOS 26.2. The bundled corpus makes tvOS far more
+      tractable: a TV has no paired phone to lean on, so it needs content that stands alone.
+      ⛔ Real design work before any code: tvOS is a focus-engine, 10-foot, no-touch UI, and reading
+      long passages on a television is a genuine question, not a port. It also has no `WCSession` and
+      no home-screen widgets — Top Shelf is the nearest equivalent.
 - [ ] **Windows**, then **Linux** — explicitly LAST. Nothing is to start here while any Apple
       platform is unfinished.
 - ⛔ **`./build.sh` builds macOS with `CODE_SIGNING_ALLOWED=NO`**, so that binary carries no
@@ -167,6 +179,22 @@ a book.
       draws these, and it recovers real paragraph structure for the other 179. Those 186 carry no
       blank line in `lessons.text` at all, so there is nothing in the source to split on. Fixing it
       means recovering structure in the extractor, on the pipeline side.
+
+## ▶ OPEN — how each Apple platform actually gets exercised
+
+Both simulators he asked about are **already installed on this Mac**; neither is the obstacle.
+
+- [ ] **watchOS — the sim proves compilation, not the sync.** `./build.sh` builds against
+      "Apple Watch Series 10 (46mm)" (`32AC5279-DC44-4404-9F4B-53D3FEEB7AE8`), and there are two sims
+      by that name across runtimes, so resolve by UUID rather than name. ⛔ **Neither Series 10 sim is
+      paired with any iPhone sim**, and `WCSession` — the one-way phone-to-watch sync this app depends
+      on — cannot activate unpaired. Xcode's auto-created pairs are all watchOS 26.5 (Series 11 46mm
+      `D876968B…` with iPhone 17 Pro Max `CE9761A7…`, and others). Exercising the sync means running
+      the watch app on a *paired* pair, booting **both** halves, and installing the iOS app on the
+      phone half — or using his real Apple Watch, where the watch app installs through the paired
+      iPhone. `xcrun simctl list pairs` shows the current pairs; `simctl pair` makes one.
+- [ ] **tvOS** — nothing to run until a tvOS target exists. See platform expansion above.
+- [ ] **macOS** — needs the signed build, not `./build.sh`. See platform expansion above.
 
 ## ▶ OPEN — small, unscheduled
 
