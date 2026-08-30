@@ -25,7 +25,7 @@ struct CorpusReadingCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(segment.sourcePDF)
+            Text(segment.citation ?? segment.bookName)
                 .font(.footnote.italic())
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
