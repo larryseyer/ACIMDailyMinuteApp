@@ -112,6 +112,12 @@ struct ACIMDailyMinuteApp: App {
                     #if os(iOS)
                     BackgroundRefreshManager.scheduleRefresh()
                     #endif
+                    // Ask once, at launch. This used to be reached only by
+                    // switching on the daily reminder, so anyone who left that
+                    // off was never prompted — and every new-minute, new-lesson
+                    // and watched-phrase notification was silently discarded
+                    // for want of authorisation.
+                    Task { await NotificationManager.shared.requestPermissionIfNeeded() }
                 }
                 #if os(iOS)
                 .onChange(of: scenePhase) { _, newPhase in

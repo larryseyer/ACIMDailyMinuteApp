@@ -21,6 +21,11 @@ struct PhrasesEditorView: View {
                     Button("Add") { addPhrase() }
                         .disabled(!canAdd)
                 }
+            } footer: {
+                // Lives on the entry section, not the list below it: an empty
+                // `ForEach` renders no footer, so the count used to disappear
+                // exactly when it read "0 of 10".
+                Text("\(phrases.count) of \(PhraseStorage.maxPhrases)")
             }
 
             Section {
@@ -28,8 +33,6 @@ struct PhrasesEditorView: View {
                     Text(phrase)
                 }
                 .onDelete(perform: deletePhrase)
-            } footer: {
-                Text("\(phrases.count) of \(PhraseStorage.maxPhrases)")
             }
         }
         .readableContentWidth()

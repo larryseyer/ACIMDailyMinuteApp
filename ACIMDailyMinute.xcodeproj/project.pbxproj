@@ -34,7 +34,6 @@
 		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
-		AA000001031 /* WatchedTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002031 /* WatchedTermsView.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
@@ -101,6 +100,10 @@
 		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
 		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
 		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
+		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
+		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
+		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
+		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
 		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
 /* End PBXBuildFile section */
 
@@ -154,7 +157,6 @@
 		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
-		AA000002031 /* WatchedTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchedTermsView.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
@@ -211,6 +213,10 @@
 		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
 		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
 		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
+		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
+		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
+		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
+		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -333,6 +339,7 @@
 		AA000005008 /* Listen */ = {
 			isa = PBXGroup;
 			children = (
+				AA000002604 /* LiteYouTubeCard.swift */,
 				AA000002215 /* ListenView.swift */,
 				AA000002216 /* PodcastEpisodeRow.swift */,
 				AA000002016 /* YouTubePlayerView.swift */,
@@ -355,6 +362,9 @@
 		AA000005010 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				AA000002603 /* PlaybackHistory.swift */,
+				AA000002602 /* YouTubeID.swift */,
+				AA000002601 /* LessonSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002036 /* TermExtractor.swift */,
@@ -383,7 +393,6 @@
 				AA000002025 /* SettingsView.swift */,
 				AA000002221 /* PhrasesEditorView.swift */,
 				AA000002030 /* PrivacyPolicyView.swift */,
-				AA000002031 /* WatchedTermsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -632,7 +641,6 @@
 				AA000001028 /* NotificationManager.swift in Sources */,
 				AA000001029 /* ConnectivityManager.swift in Sources */,
 				AA000001030 /* PrivacyPolicyView.swift in Sources */,
-				AA000001031 /* WatchedTermsView.swift in Sources */,
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
 				AA000001036 /* TermExtractor.swift in Sources */,
@@ -666,6 +674,10 @@
 				AA000001214 /* JumpToLessonSheet.swift in Sources */,
 				AA000001204 /* PhraseMatcher.swift in Sources */,
 				AA000001205 /* PhraseStorage.swift in Sources */,
+				AA000001604 /* LiteYouTubeCard.swift in Sources */,
+				AA000001603 /* PlaybackHistory.swift in Sources */,
+				AA000001602 /* YouTubeID.swift in Sources */,
+				AA000001601 /* LessonSchedule.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,
 				AA000001226 /* PhoneWatchSyncService.swift in Sources */,
 				AA000001301 /* WorkbookCatalog.swift in Sources */,
