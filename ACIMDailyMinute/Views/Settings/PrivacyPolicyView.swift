@@ -38,7 +38,10 @@ struct PrivacyPolicyView: View {
                     body: "Data Not Collected. ACIM Daily Minute does not collect any data from users."
                 )
 
-                Text("Last updated: April 2026")
+                // No revision date. A policy whose entire content is "nothing is
+                // collected" has nothing to revise, and a stamped year makes a
+                // living app look abandoned to anyone reading it a decade on.
+                Text("This policy applies to every version of the app.")
                     .font(.acimCaption)
                     .foregroundStyle(.tertiary)
                     .padding(.top, 8)
