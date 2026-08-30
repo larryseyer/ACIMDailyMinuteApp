@@ -135,15 +135,49 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Introduction" between Lesson 180 and Lesson 181. Both read, annotate and save. Their titles
       come from the corpus rather than from literals, so the row and the screen cannot disagree.
 
-## ▶ NEXT — canonical citations
+## ▶ NEXT — repair the run-together sentences
 
-`T-1.I.1:1` — Text, chapter, section, paragraph, sentence. A durability requirement rather than a
-study-group convenience: citations are the interoperability layer that lets a reader move between
-this app, a paper book, and whatever comes after both. `sourceReference` today is loose prose.
+The most visible defect on every reading surface, and the one thing a reader notices before anything
+else: `"Source,Which"`, `"planned.We"`, `"thus far.There"`. Spec first, then plan, then execute.
 
-The Text's paragraphs are addressable now — 2,911 of them, recovered at export and stable, with
-`ReadingText.displayString(from: body) == body` holding for all 268 sections — which is what makes
-this tractable at all. Spec first, then plan, then execute.
+⛔⛔ **DO NOT RE-EXTRACT THE CORPUS.** This is a repair applied in place to the rows that already
+exist. The reasons are settled and are not to be re-litigated:
+
+- **The missing spaces are in the PDFs' own text layer.** Verified against
+  `/Users/larryseyer/Dropbox/ACIM PDF/1_ACIM_Text_A.pdf` with `pdftotext`, which reproduces
+  `"William Thetford.The edit"` and `"their Source,Which is"` exactly — 1,639 occurrences in Text A
+  in every extraction mode. A fresh extraction returns the identical defect. There is nothing to
+  gain.
+- **`segments.id` is the identity for every recorded thing.** `used_date` and `youtube_id` on all
+  158 published entries, the 239 MP3s, the ElevenLabs narrations, the YouTube renders, and every
+  reader annotation keyed `segment:<id>`. Re-extraction renumbers those rows and severs the link
+  between a published episode and its passage. Months of work, destroyed for no benefit.
+
+**What is actually wrong, measured against the shipping bundle:**
+
+| Corpus | after a period | after a comma |
+|---|---|---|
+| `ACIMTextSections.json` | 3,355 | 51 |
+| `Workbook365Bodies.json` | 1,692 | 52 |
+| `ACIMSegments.json` | 0 | 104 |
+| `ACIMManual.json` | 0 | 0 |
+
+- **The published minutes are already clean of the period case.** `text_paragraphs` has had this
+  repair applied once already, which is precedent that the fix is wanted and safe.
+- **The comma cases are one shape**: `,Who` (91), `,Your` (46), `,Whose` (30), `,Which` (26),
+  `,You` (14) — reverential capitals, 207 in all, with no legitimate English reading.
+- **The words before the period defect are ordinary sentence-enders** — `it.` 224, `you.` 206,
+  `God.` 88, `them.` 80 — with no abbreviations and no initials for a repair rule to damage. The
+  spec should still prove that exhaustively rather than trusting this sample.
+
+⛔ **The one real design question: a repair moves stored highlight offsets.** `AnchorResolver`
+re-anchors by quote when an offset drifts, so annotations survive that — but a highlight whose
+*quote* straddles a repaired boundary no longer matches its text and will show as orphaned. Only his
+own marks exist today, so the cost is near zero right now, which is exactly why this is the moment to
+do it. Decide in the spec whether stored quotes are repaired alongside the bodies.
+
+⛔ Apply it in one place, over all four corpora. Fixing it in one export branch leaves the same defect
+in the others and makes the real fix harder to verify.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -196,7 +230,9 @@ a book.
 - [ ] ⛔ **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). Promoted
       from a study-group convenience to a **durability requirement**: citations are the interoperability
       layer that lets a reader move between this app, a paper book, and whatever comes after both.
-      `sourceReference` today is loose prose, not a citation.
+      `sourceReference` today is loose prose, not a citation. Unblocked and tractable now: the Text's
+      2,911 paragraphs are addressable and stable. **Do this after the sentence repair**, not before —
+      a repair that shifts text should land before paragraphs become citable addresses.
 - [ ] **Search across the whole corpus**, not just the rolling archive window — the book's index.
 - [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be tappable.
 - [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
@@ -209,17 +245,16 @@ a book.
 
 ## ▶ OPEN — content and pipeline
 
-- [ ] **Sentences are run together where a period meets the next word** — `"YOURS.You"` in the
-      published minute text, and the same defect throughout `lessons.text`: `"thus far.There"`,
-      `"planned.We"`, `"thinking.The"` in lesson 20 alone, and `"Source,Which"` and `"also.This"`
-      throughout the Text, where it is now the most visible defect on any reading surface. It is
-      bundled into the app, so a fix means re-running `tools/export_corpus.py` after the extractor's
-      sentence-boundary handling is corrected. Source data, not the app — and one defect across
-      three corpora, so it is fixed in the extractor, never in one export branch.
-- [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — `ReadingTextView` now
-      draws these, and it recovers real paragraph structure for the other 179. Those 186 carry no
-      blank line in `lessons.text` at all, so there is nothing in the source to split on. Fixing it
-      means recovering structure in the extractor, on the pipeline side.
+- [ ] **Sentences are run together where a period meets the next word.** This is the `▶ NEXT` block
+      above. 5,047 period cases and 207 comma cases across the bundle, and the defect originates in
+      the PDFs themselves.
+- [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — those 186 carry no blank
+      line in `lessons.text` at all, so there is nothing in the row to split on. Unlike the sentence
+      repair, this one **does** need the PDFs: the paragraph breaks exist only in the page layout of
+      `/Users/larryseyer/Dropbox/ACIM PDF/3_ACIM_Workbook.pdf`, exactly as the Text's did. Read the
+      PDF to find where paragraphs break and apply the breaks to the existing row — never replace the
+      row's text with PDF text, which would reintroduce the page furniture and change words the
+      publisher has already narrated. Natural companion to the sentence repair; its own scope call.
 
 ## ▶ OPEN — how each Apple platform actually gets exercised
 
