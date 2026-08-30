@@ -59,7 +59,13 @@ extension YouTubePlayerView {
     func loadVideoIfNeeded(_ webView: WKWebView, coordinator: Coordinator) {
         guard coordinator.loadedVideoID != videoURL else { return }
 
+        // `cc_load_policy=0` only expresses a preference — a viewer whose YouTube
+        // account forces captions on still gets them, and these videos burn the
+        // reading into the frame, so captions sit on top of the text. The
+        // iframe API's `unloadModule` is what actually removes them, and
+        // `enablejsapi=1` is what lets us call it.
         let params = "playsinline=1&fs=1&rel=0&modestbranding=1"
+            + "&cc_load_policy=0&cc_lang_pref=en&iv_load_policy=3&enablejsapi=1"
             + (autoplay ? "&autoplay=1" : "")
             + "&origin=https://www.acimdailyminute.org"
 
@@ -88,11 +94,32 @@ extension YouTubePlayerView {
         </head>
         <body>
         <iframe
+            id="player"
             src="\(embedSrc)"
             frameborder="0"
             allowfullscreen
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture">
         </iframe>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script>
+        // Attach to the iframe already in the page rather than letting the API
+        // build its own, so the playlist/index semantics of the embed URL are
+        // preserved exactly.
+        function hideCaptions(player) {
+            try { player.unloadModule('captions'); } catch (e) {}
+            try { player.unloadModule('cc'); } catch (e) {}
+        }
+        function onYouTubeIframeAPIReady() {
+            new YT.Player('player', {
+                events: {
+                    onReady: function (event) { hideCaptions(event.target); },
+                    // The player re-loads the captions module when playback
+                    // starts, so once on ready is not enough.
+                    onStateChange: function (event) { hideCaptions(event.target); }
+                }
+            });
+        }
+        </script>
         </body>
         </html>
         """
