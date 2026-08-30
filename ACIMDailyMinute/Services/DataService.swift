@@ -85,6 +85,73 @@ struct DataService: Sendable {
         return data
     }
 
+    // MARK: - Store repair
+
+    /// Bump when a content identity changes meaning.
+    ///
+    /// Version 2: `DailyMinute` is keyed by date and `ArchivedReading` minutes
+    /// by `channel|date`, instead of by hashes that folded in the body text.
+    /// Rows written under the old scheme cannot collide with rows written under
+    /// the new one, so without this they linger as duplicates — which is how a
+    /// phone ended up drawing a pre-correction passage while a freshly
+    /// installed iPad drew the fixed one.
+    static let contentSchemaVersion = 2
+    private static let contentSchemaVersionKey = "contentSchemaVersion"
+
+    /// Re-keys and de-duplicates readings written under the old identity scheme.
+    ///
+    /// Deliberately *not* a blanket purge, unlike the podcast cache: bookmarks
+    /// point into these rows by hash, so throwing them away would orphan every
+    /// saved reading. Instead each surviving row is re-keyed and any bookmark
+    /// naming its old hash is rewritten in the same pass, while both values are
+    /// still in hand.
+    @MainActor
+    static func repairContentIdentitiesIfNeeded(in context: ModelContext) throws {
+        let defaults = UserDefaults.standard
+        guard defaults.integer(forKey: contentSchemaVersionKey) < contentSchemaVersion else { return }
+
+        var bookmarksByKey: [String: [Bookmark]] = [:]
+        for bookmark in try context.fetch(FetchDescriptor<Bookmark>()) {
+            bookmarksByKey[bookmark.itemKey, default: []].append(bookmark)
+        }
+
+        // --- Archived minutes: re-key to channel|date, keeping saves attached.
+        let archived = try context.fetch(FetchDescriptor<ArchivedReading>())
+        var seenArchiveKeys: Set<String> = []
+        for row in archived where row.channel == "daily-minute" {
+            let stable = ArchiveService.minuteLineHash(date: row.dateString)
+            if row.lineHash != stable {
+                for bookmark in bookmarksByKey["minute:\(row.lineHash)"] ?? [] {
+                    bookmark.itemKey = "minute:\(stable)"
+                }
+                row.lineHash = stable
+            }
+            // A date already seen is a superseded copy of the same reading.
+            if seenArchiveKeys.contains(stable) {
+                context.delete(row)
+            } else {
+                seenArchiveKeys.insert(stable)
+            }
+        }
+
+        // --- Daily Minutes: one row per date. Keep whichever a bookmark
+        //     references so the save survives; the current fetch overwrites the
+        //     survivor's text moments later.
+        var minutesByDate: [String: [DailyMinute]] = [:]
+        for minute in try context.fetch(FetchDescriptor<DailyMinute>()) {
+            minutesByDate[minute.date, default: []].append(minute)
+        }
+        for (_, rows) in minutesByDate where rows.count > 1 {
+            let keeper = rows.first { bookmarksByKey["minute:\($0.segmentHash)"] != nil } ?? rows[0]
+            for row in rows where row !== keeper {
+                context.delete(row)
+            }
+        }
+
+        try context.save()
+        defaults.set(contentSchemaVersion, forKey: contentSchemaVersionKey)
+    }
+
     // MARK: - Persist (MainActor — writes into caller's ModelContext)
 
     /// Upserts the Daily Minute and its inline archive into `context`, saves,
@@ -93,18 +160,34 @@ struct DataService: Sendable {
     @MainActor
     @discardableResult
     static func persistMinute(_ dto: DailyMinuteResponse, in context: ModelContext) throws -> DailyMinuteResponse {
-        let segmentHash = HashUtility.sha256Truncated("minute:\(dto.segment_id)|\(dto.date)|\(dto.text)")
+        try repairContentIdentitiesIfNeeded(in: context)
+
         let publishedAt = parseISODate(dto.date) ?? Date()
 
+        // Look up by date, not by a hash of the text. There is exactly one
+        // Daily Minute per day, so the date is the real key. Hashing the body
+        // meant any correction the publisher made — the paragraph repair, for
+        // one — produced a different hash, missed this lookup, and inserted a
+        // *second* row for the same day. Both rows then shared a `publishedAt`,
+        // so which one the Today tab drew was arbitrary, and devices that had
+        // been running since before the edit kept showing the old text.
+        let date = dto.date
         let descriptor = FetchDescriptor<DailyMinute>(
-            predicate: #Predicate { $0.segmentHash == segmentHash }
+            predicate: #Predicate { $0.date == date }
         )
         let existing = try context.fetch(descriptor).first
         let isNew = existing == nil
 
         let minute = existing ?? DailyMinute()
+        // `segmentHash` is the unique attribute and doubles as the bookmark key
+        // (`"minute:\(segmentHash)"`). Once assigned it never changes, or saved
+        // readings would orphan every time the text was corrected. New rows only.
+        if isNew {
+            minute.segmentHash = HashUtility.sha256Truncated(
+                "minute:\(dto.segment_id)|\(dto.date)|\(dto.text)"
+            )
+        }
         minute.segmentId = dto.segment_id
-        minute.segmentHash = segmentHash
         minute.date = dto.date
         minute.publishedAt = publishedAt
         minute.text = dto.text
