@@ -23,10 +23,9 @@ struct LessonDetailView: View {
 
     /// A lesson bookmark is keyed by number alone, so saving does not depend on
     /// which of the three states rendered. It used to live inside
-    /// `FullLessonView`, which meant a lesson with no published body — most of
-    /// them, while `Workbook365Bodies.json` is still a placeholder — had no way
-    /// to be saved at all, even though the Lessons list would happily show a
-    /// bookmark indicator for one.
+    /// `FullLessonView`, which meant a lesson the feed has not published yet had
+    /// no way to be saved at all, even though the Lessons list would happily
+    /// show a bookmark indicator for one.
     private var itemKey: String { "lesson:\(lessonNumber)" }
 
     private var isBookmarked: Bool {
@@ -225,10 +224,8 @@ private struct MetadataOnlyLessonView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
-                    Text(body)
+                    ReadingTextView(raw: body)
                         .font(.body)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .fixedSize(horizontal: false, vertical: true)
                 } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
                         .aspectRatio(16.0/9.0, contentMode: .fit)
@@ -311,10 +308,8 @@ private struct AbsentLessonView: View {
                         .padding(.top, 4)
                     }
                 } else if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
-                    Text(body)
+                    ReadingTextView(raw: body)
                         .font(.body)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .padding(.horizontal, 20)
