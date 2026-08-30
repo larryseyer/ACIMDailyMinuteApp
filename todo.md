@@ -173,7 +173,66 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       `.lesson(0)` and `.lesson(500)`, which made every Saved row and export heading call them
       "Lesson 0" and "Lesson 500". Confirm both read correctly in Saved and in an export.
 
-## ▶ NEXT — corpus-wide search
+## ▶ NEXT — the Text is missing its chapter openings
+
+⛔ **Found by measurement, not reported: about 12,000 characters of the Text are not in the
+bundle at all.** Nine chapter openings and the front matter are missing from
+`ACIMTextSections.json`, and nothing in the app or in the five committed checks could see it —
+the checks all ask whether what IS there is well formed, and none asks whether anything is
+absent. A reader searching "How simple is salvation!" — the opening line of Chapter 31 — finds
+nothing today and concludes the phrase is not in the book.
+
+**How it was found, and how to re-find it:** every 40-character window of the 1,878 Text and
+Workbook segments was looked for in the readable corpus. 1.87% of windows are absent, and the
+absences cluster into 16 spans of 60+ characters totalling 9,728 normalized characters.
+
+**Where the words went.** The segment stream reads
+`…This is our will. Amen.` / `sixteen` / `The Forgiveness` / `of Illusions To empathize does
+not mean to join in SUFFERING…` — the chapter's opening prose is glued to the last line of the
+wrapped chapter title. The extractor that filled the pipeline's `text_sections` table cut at the
+first *section* heading and discarded everything between the chapter title and it.
+
+**The inventory, by chapter:**
+
+| Chapter | Missing | What is gone |
+|---|---|---|
+| 7 | ~1,060 | opening of the Introduction; what remains is 519 characters |
+| 13 | ~1,020 | the whole opening — no Introduction section exists |
+| 16 | ~1,650 | the whole opening — no Introduction section exists |
+| 18 | ~1,060 | opening of the Introduction; what remains is 522 characters |
+| 20 | ~360 | the whole opening — no Introduction section exists |
+| 22 | ~1,070 | opening of the Introduction |
+| 30-31 | ~1,020 | opening of Chapter 31's Introduction — `How simple is salvation!` |
+| Preface | ~470 | part of the Preface |
+| front matter | ~2,020 | the publisher's acknowledgement and dedication |
+
+**The words are not lost.** Every missing span is present in `ACIMSegments.json`, already
+spacing-repaired, and in the pipeline's `segments.text`. The repair is a recovery at export from
+data the bundle already carries — no re-extraction, no PDF text replacing a row, no write to the
+database.
+
+**What the spec has to answer:**
+
+1. **Does a recovered opening become a new Introduction section, or get prepended to the
+   existing one?** Chapters 7, 18, 22 and 31 have an Introduction that is merely truncated —
+   prepend. Chapters 13, 16 and 20 have none, so one must be created, and creating it as
+   section 1 renumbers every later section in those three chapters and changes their citations.
+   ⛔ The PDFs at `~/Dropbox/ACIM PDF/` are the authority for whether the opening is a chapter
+   introduction or the head of the first named section. Use them for structure only.
+2. **Where does the recovered text stop?** The boundary is where the existing first section
+   begins, and it must be found by matching, not by counting characters.
+3. **What guards it afterwards?** The coverage measurement above is the missing sixth check:
+   every span of the segment stream must appear in the readable corpus, or be named as
+   deliberately excluded. It is what would have caught this on the day it appeared.
+4. **What moves when a body grows at the front?** Highlight offsets in those sections shift.
+   `AnchorResolver` re-anchors by quote and `AnnotationStore.reanchor` writes the repair back, so
+   this is handled rather than avoided — but the two Part Introduction bodies and every stored
+   segment citation in chapters 13, 16 and 20 are re-derived at export and must be re-verified.
+
+⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database, and
+the bundle stays display form so `ReadingText.displayString(from: body) == body` still holds.
+
+## ▶ THEN — corpus-wide search
 
 The book's index. Search that reaches the whole bundled corpus, not just the rolling
 archive window. Spec first, then plan, then execute.
