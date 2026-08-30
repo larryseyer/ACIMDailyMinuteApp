@@ -17,7 +17,8 @@ enum SharedModelContainer {
             Bookmark.self,
             ArchivedReading.self,
             Channel.self,
-            CachedPodcastEpisode.self
+            CachedPodcastEpisode.self,
+            SegmentMedia.self
         ])
         let config = ModelConfiguration(
             schema: schema,
