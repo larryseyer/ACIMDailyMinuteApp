@@ -33,8 +33,6 @@ Built and installed on the phone and the iPad sim. B1, B2 and the notification-p
 confirmed by screenshot on the sim; the rest need eyes and a finger, since the sim has no bookmarks and
 the Listen tab has no deep link.
 
-- [ ] **B3** — Listen: the card shows our artwork clean under a red play button, no channel avatar and no
-      title bar, on both Minute and Lessons. Tapping it plays.
 - [ ] **B4/B5** — no `01:00` chips anywhere; tapping an episode leaves a check mark and
       `Listened <date>`; swipe gives "Mark unplayed" and it clears. Lesson rows carry their length under
       the title. An *unlistened* row shows no date at all.
@@ -52,6 +50,68 @@ the Listen tab has no deep link.
 - [ ] Walk **Archive, Saved, Lessons, deep links, widget, watch** for surfaces that display data they do
       not have. No `TODO`/`FIXME`/stub copy exists in any view/widget/watch source, so what remains is
       behavioural empty-state handling — needs an interactive pass on the device, not a text search.
+
+## ▶ DESIGN — Timeless Today (corpus cycling)
+
+- [ ] **When publishing ends, Today keeps serving the last-published minute forever.** A reader opening
+      the app years later lands on a stale "today". Hiding dates does not fix this — the tab is called
+      Today and the content would not be today's. Same for the widget, the Live Activity, and the
+      "new Daily Minute" notification, which would simply never fire again.
+- [ ] Corpus is small enough to ship with the app: **1,983 minute segments (2.4 MB) + 367 lessons
+      (0.8 MB)**, ~3.2 MB total, measured from `data/acim.db` on MacLive. So the app can be made
+      self-sufficient — no network, no pipeline, works forever.
+- [ ] Direction to design: prefer the live feed while it is fresh, fall back to a deterministic
+      date-keyed pick over the bundled corpus when it is not. Nothing changes while publishing runs;
+      the takeover is automatic. The Workbook has a canonical mapping already — lesson N on day N of the
+      year, which is how the book is meant to be used.
+- [ ] The pick must be identical on phone, widget and watch for a given day, so it has to be a pure
+      function of the date against a fixed epoch — not a random or install-relative choice.
+
+## ▶ DESIGN — Reader annotations (highlights + notes)
+
+Decisions already taken: dictation is the **system keyboard mic** (no permissions, no Speech framework,
+`Data Not Collected` untouched); both live in the **Saved tab as segments** (Saved / Highlights / Notes),
+keeping five tabs; notes attach to **any reading**, not lessons only.
+
+- [ ] **Highlights.** Select words or phrases in a Daily Minute, Lesson or Archive reading and keep them.
+      SwiftUI `Text` cannot do this — `.textSelection(.enabled)` exposes no selected range and takes no
+      custom menu item — so it needs a `UITextView`/`NSTextView` representable with a "Highlight" entry in
+      the edit menu. The same component paints stored highlights back via `NSAttributedString`.
+- [ ] **Notes**, many per reading. Review periods send readers back to the same lesson, and they should
+      find what they wrote last time alongside what they write now.
+- [ ] ⛔ **Anchor them by reading identity plus offset plus the quoted text — never by a hash of the
+      quoted text.** Store `channel|date` / `lesson:N`, the character range, and the quote itself. If the
+      publisher edits the text the range drifts, so re-find by quote; if that fails, keep the highlight
+      and mark it orphaned rather than dropping it silently.
+- [ ] Both are real user content: SwiftData, which means adding to the `Schema` in **both**
+      `ACIMDailyMinuteApp.swift` and `ACIMDailyMinuteWidget/SharedModelContainer.swift`, and to
+      `project.pbxproj` for both targets. A schema mismatch between app and widget fails the shared
+      container at launch.
+- [ ] watchOS is out of scope for both.
+
+## ▶ OPEN — physical-book parity gaps
+
+What a physical *A Course in Miracles* gives a reader that this app does not yet. Ranked by how much
+each one blocks "this replaces my book".
+
+- [ ] **The Text is missing entirely** — 31 chapters, ~669 pages, the largest part of the volume and the
+      whole theoretical basis. The app carries Daily Minute excerpts *drawn from* it but has no way to
+      read it. Without this the app cannot claim to replace the book.
+- [ ] **Manual for Teachers** (29 questions) and **Clarification of Terms** are also absent.
+- [ ] **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). This is how
+      the Course is quoted, taught and cross-referenced; study groups cannot use an app that cannot cite.
+      `sourceReference` today is loose prose, not a citation.
+- [ ] **Search across the whole corpus**, not just the rolling archive window — the book's index.
+- [ ] **Cross-reference links** — the Course refers to itself constantly; tapping a citation should go there.
+- [ ] **Resume where you stopped** — the ribbon in a physical book. Meaningful once the Text exists.
+- [ ] **"Let it fall open"** — a random passage. A real practice with the physical book, trivial to offer.
+- [ ] **Workbook completion tracking** — which lessons the reader has *done*, distinct from listened.
+- [ ] ⛔ **Export / backup of highlights and notes.** No accounts and no analytics means no cloud
+      fallback, so a lifetime of margin notes lives in one SwiftData file and dies with the device. A
+      physical book's annotations survive; these would not. Export, or CloudKit private-database sync
+      (the reader's own iCloud, which does not touch the `Data Not Collected` posture), or both.
+- [ ] ⛔ **`Workbook365Bodies.json` is still `[]`, so most lesson bodies do not render at all.** Parity
+      with the Workbook is blocked on content supply before any of the above matters.
 
 ## ▶ WATCHING — nightly catch-up
 
