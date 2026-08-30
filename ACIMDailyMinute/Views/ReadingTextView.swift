@@ -24,6 +24,17 @@ enum ReadingText {
             }
             .filter { !$0.isEmpty }
     }
+
+    /// The exact string a reader sees, as one value.
+    ///
+    /// Highlight offsets are measured against this and nothing else. If the
+    /// renderer and the anchor arithmetic ever disagree about what the reader is
+    /// looking at, every stored offset is wrong by a variable amount and nothing
+    /// about the failure looks like a bug until someone reopens an old
+    /// highlight. One function, both callers.
+    static func displayString(from raw: String) -> String {
+        paragraphs(from: raw).joined(separator: "\n\n")
+    }
 }
 
 /// Renders a reading as spaced paragraphs rather than one undifferentiated

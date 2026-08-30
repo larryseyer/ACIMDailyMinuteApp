@@ -111,6 +111,7 @@
 		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
 		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
 		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
+		AA000001260 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
 		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
 		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
 		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
@@ -233,6 +234,7 @@
 		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
 		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
 		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
+		AA000002260 /* ReadingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKey.swift; sourceTree = "<group>"; };
 		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
 		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
 		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002036 /* TermExtractor.swift */,
 				AA000002205 /* PhraseStorage.swift */,
+				AA000002260 /* ReadingKey.swift */,
 				AA000002206 /* HashUtility.swift */,
 				AA000002222 /* DeepLinkRoute.swift */,
 				AA000002500 /* ReadableContentWidth.swift */,
@@ -709,6 +712,7 @@
 				AA000001214 /* JumpToLessonSheet.swift in Sources */,
 				AA000001204 /* PhraseMatcher.swift in Sources */,
 				AA000001205 /* PhraseStorage.swift in Sources */,
+				AA000001260 /* ReadingKey.swift in Sources */,
 				AA000001604 /* LiteYouTubeCard.swift in Sources */,
 				AA000001603 /* PlaybackHistory.swift in Sources */,
 				AA000001602 /* YouTubeID.swift in Sources */,
