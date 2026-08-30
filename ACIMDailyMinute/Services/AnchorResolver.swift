@@ -17,9 +17,15 @@ enum AnchorResolver {
     static func resolve(
         startOffset: Int,
         length: Int,
-        quote: String,
+        quote storedQuote: String,
         in display: String
     ) -> Resolution {
+        // A quote captured before the spacing repair reads `planned.We must`
+        // while the text now reads `planned. We must`, and would never be found
+        // again. Repairing the quote by the same rule the display went through
+        // makes the two comparable; the rule is idempotent, so a quote captured
+        // afterwards is untouched.
+        let quote = PunctuationSpacing.repaired(storedQuote)
         guard !quote.isEmpty else { return .orphaned }
         let chars = Array(display)
 

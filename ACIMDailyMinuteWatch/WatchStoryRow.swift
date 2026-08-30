@@ -11,7 +11,9 @@ struct WatchStoryRow: View {
                     .font(.caption2)
                     .foregroundStyle(.tint)
             }
-            Text(minute.text)
+            // The watch has no reading surface, so it repairs the feed's
+            // spacing where it draws it.
+            Text(PunctuationSpacing.repaired(minute.text))
                 .font(.footnote)
                 .lineLimit(6)
         }

@@ -16,7 +16,9 @@ enum LiveActivityManager {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
 
         let state = ACIMDailyMinuteAttributes.ContentState(
-            minuteText: latestText,
+            // Same reason as the widget: a Live Activity is not a reading
+            // surface and never passes through `ReadingText.displayString`.
+            minuteText: PunctuationSpacing.repaired(latestText),
             lessonNumber: lessonNumber,
             publishedAt: publishedDate
         )

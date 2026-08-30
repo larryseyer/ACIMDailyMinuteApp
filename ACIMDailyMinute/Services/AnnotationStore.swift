@@ -38,12 +38,26 @@ enum AnnotationStore {
     ) {
         let fetched = highlightsRaw(key.rawValue, in: context)
         for highlight in fetched {
-            switch AnchorResolver.resolve(
+            let resolution = AnchorResolver.resolve(
                 startOffset: highlight.startOffset,
                 length: highlight.length,
                 quote: highlight.quote,
                 in: display
-            ) {
+            )
+
+            // A quote stored before the spacing repair still reads
+            // `planned.We must`. Writing the repaired form back once it has been
+            // found again is what keeps the Saved tab's rows, the note editor's
+            // quoted passage and the plain-text export reading like the page —
+            // none of which needs a change of its own. Only on a successful
+            // resolution: an orphan's quote is the only record of what the
+            // reader marked.
+            if resolution != .orphaned {
+                let repaired = PunctuationSpacing.repaired(highlight.quote)
+                if repaired != highlight.quote { highlight.quote = repaired }
+            }
+
+            switch resolution {
             case .exact:
                 // A publisher reverting an edit brings an orphan back.
                 if highlight.isOrphaned { highlight.isOrphaned = false }
