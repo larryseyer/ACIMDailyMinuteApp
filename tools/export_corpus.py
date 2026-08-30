@@ -8,6 +8,10 @@ import sqlite3
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from text_paragraphs import display_body, running_head_keys
+
 DB = Path("/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db")
 OUT = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
 
@@ -44,14 +48,22 @@ def main():
         )
     ])
 
-    write("ACIMTextSections.json", [
+    # The Text is the only corpus without a curated `text_paragraphs` column,
+    # so its paragraph structure is recovered here rather than in the app.
+    # Emitting display form keeps ReadingText.displayString a no-op over it,
+    # which is what stops a highlight offset and the screen from drifting.
+    raw_sections = [
         {"chapterNumber": r[0], "chapterTitle": r[1],
          "sectionNumber": r[2], "sectionTitle": r[3], "body": r[4]}
         for r in conn.execute(
             "SELECT chapter_num, chapter_title, section_num, section_title, text "
             "FROM text_sections ORDER BY chapter_num, section_num"
         )
-    ])
+    ]
+    heads = running_head_keys(raw_sections)
+    for row in raw_sections:
+        row["body"] = display_body(row["body"], heads)
+    write("ACIMTextSections.json", raw_sections)
 
     write("ACIMManual.json", [
         {"segmentId": r[0], "body": r[1]}
