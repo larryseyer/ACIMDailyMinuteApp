@@ -38,8 +38,18 @@ struct LessonDetailView: View {
     @State private var hasAutoPresentedVideo = false
     @State private var isShowingVideo = false
 
-    private var lessonVideoURL: String {
-        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
+    /// This lesson's own video, or `nil` when we don't know it.
+    ///
+    /// Never falls back to a playlist position: YouTube ignores `index` on a
+    /// `videoseries` embed and plays the newest upload, so lesson 27 opened
+    /// lesson 81. Showing the wrong lesson is worse than showing none.
+    private var lessonVideoURL: String? {
+        // Scans every match rather than trusting `.first`: duplicate archive
+        // rows from the old title-hash identity may still be on disk until the
+        // next successful fetch collapses them, and only one carries the video.
+        let candidates = lessonMatches.compactMap(\.youtubeID) + archiveMatches.compactMap(\.youtubeID)
+        guard let videoID = candidates.first(where: { !$0.isEmpty }) else { return nil }
+        return "https://www.youtube.com/embed/\(videoID)"
     }
 
     var body: some View {
@@ -56,10 +66,12 @@ struct LessonDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $isShowingVideo) {
-            LessonVideoCover(videoURL: lessonVideoURL)
+            if let videoURL = lessonVideoURL {
+                LessonVideoCover(videoURL: videoURL)
+            }
         }
         .onAppear {
-            guard !hasAutoPresentedVideo else { return }
+            guard !hasAutoPresentedVideo, lessonVideoURL != nil else { return }
             hasAutoPresentedVideo = true
             isShowingVideo = true
         }
@@ -242,8 +254,9 @@ private struct MetadataOnlyLessonView: View {
         WorkbookCatalog.title(for: lessonNumber) ?? (archive.text.isEmpty ? "Lesson \(lessonNumber)" : archive.text)
     }
 
-    private var embedURL: String {
-        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
+    private var embedURL: String? {
+        guard let videoID = archive.youtubeID, !videoID.isEmpty else { return nil }
+        return "https://www.youtube.com/embed/\(videoID)"
     }
 
     var body: some View {
@@ -258,7 +271,7 @@ private struct MetadataOnlyLessonView: View {
                         .font(.body)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
-                } else if lessonNumber > 0 {
+                } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
                         .aspectRatio(16.0/9.0, contentMode: .fit)
                 }
@@ -312,9 +325,6 @@ private struct AbsentLessonView: View {
         WorkbookCatalog.title(for: lessonNumber) ?? "Lesson \(lessonNumber)"
     }
 
-    private var embedURL: String {
-        "https://www.youtube.com/embed/videoseries?list=\(YouTubePlaylists.dailyLesson)&index=\(lessonNumber)"
-    }
 
     var body: some View {
         ScrollView {
@@ -347,9 +357,6 @@ private struct AbsentLessonView: View {
                         .font(.body)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
-                } else {
-                    YouTubePlayerView(videoURL: embedURL)
-                        .aspectRatio(16.0/9.0, contentMode: .fit)
                 }
             }
             .padding(.horizontal, 20)

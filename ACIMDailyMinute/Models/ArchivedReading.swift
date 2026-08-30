@@ -48,6 +48,11 @@ final class ArchivedReading {
     /// base URL by `AudioManager`. `nil` on entries that predate the audio column.
     var audioURL: String?
 
+    /// This lesson's own YouTube video ID. `nil` on entries that predate the
+    /// field. A playlist position is not a substitute — YouTube ignores
+    /// `index` on a videoseries embed and serves the newest upload instead.
+    var youtubeID: String?
+
     /// Concatenation of `text`, `sourceReference`, and `lessonTitle` (when present),
     /// joined by spaces. Exists as a dedicated field because SwiftData `#Predicate`
     /// closures don't traverse into child arrays cleanly — one flat string keeps

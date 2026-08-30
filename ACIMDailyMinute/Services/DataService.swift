@@ -213,4 +213,7 @@ struct InlineArchiveLessonDTO: Codable, Sendable {
     let title: String
     let date: String
     let audio_url: String
+    /// Optional because feeds published before this field existed must still
+    /// decode. Absent means "video unknown", never "use the playlist".
+    let youtube_id: String?
 }

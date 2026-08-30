@@ -42,19 +42,44 @@ final class ArchiveService {
     /// Upserts inline Daily Lesson archive entries. Lesson archive items don't
     /// carry a `source_reference` field — the `lessonTitle` plays the equivalent
     /// human-readable role and is folded into `searchableText`.
+    ///
+    /// Identity is the lesson number, not a hash of date + title. Lesson titles
+    /// have been re-canonicalised at least once, and a title-derived hash makes
+    /// a corrected title look like an entirely new lesson: the old row stays,
+    /// the new row lands beside it, and a `.first` lookup is free to return
+    /// whichever it likes — including the stale one, which carries no video.
+    /// Keying on the lesson number makes re-ingestion a true upsert and lets
+    /// this collapse duplicates that the old scheme already created.
     static func persistInlineLessons(_ items: [InlineArchiveLessonDTO], in context: ModelContext) throws {
         guard !items.isEmpty else { return }
         let channel = "daily-lesson"
-        let existingHashes = try fetchExistingHashes(in: context)
+
+        var rowsByLesson: [Int: ArchivedReading] = [:]
+        let existing = try context.fetch(
+            FetchDescriptor<ArchivedReading>(
+                predicate: #Predicate { $0.channel == channel }
+            )
+        )
+        for row in existing {
+            guard let number = row.lessonNumber else { continue }
+            if rowsByLesson[number] == nil {
+                rowsByLesson[number] = row
+            } else {
+                context.delete(row)
+            }
+        }
 
         for item in items {
-            // Lesson archive entries don't ship a `text` body — only a title,
-            // date, and audio link. Hash the title so each lesson stays unique.
-            let lineHash = HashUtility.sha256Truncated("\(channel)|\(item.date)|\(item.title)")
-            guard !existingHashes.contains(lineHash) else { continue }
+            let row: ArchivedReading
+            if let known = rowsByLesson[item.lesson_id] {
+                row = known
+            } else {
+                row = ArchivedReading()
+                context.insert(row)
+                rowsByLesson[item.lesson_id] = row
+            }
 
-            let row = ArchivedReading()
-            row.lineHash = lineHash
+            row.lineHash = HashUtility.sha256Truncated("\(channel)|lesson|\(item.lesson_id)")
             row.channel = channel
             row.dateString = item.date
             row.timestamp = DataService.parseISODate(item.date)
@@ -62,8 +87,8 @@ final class ArchiveService {
             row.sourceReference = ""
             row.lessonNumber = item.lesson_id
             row.audioURL = item.audio_url.isEmpty ? nil : item.audio_url
+            row.youtubeID = (item.youtube_id?.isEmpty == false) ? item.youtube_id : nil
             row.searchableText = item.title
-            context.insert(row)
         }
     }
 
