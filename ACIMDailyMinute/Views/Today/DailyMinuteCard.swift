@@ -76,8 +76,9 @@ struct DailyMinuteCard: View {
 
     private var footer: some View {
         HStack(spacing: 8) {
-            if !minute.sourceReference.isEmpty {
-                Text(minute.sourceReference)
+            if let reference = CitationResolver.stem(for: .segment(minute.segmentId))
+                ?? CorpusService.shared.segment(id: minute.segmentId)?.bookName {
+                Text(reference)
                     .font(.footnote.italic())
                     .foregroundStyle(.secondary)
             }

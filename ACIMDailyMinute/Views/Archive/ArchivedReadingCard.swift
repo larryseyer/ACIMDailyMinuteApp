@@ -117,7 +117,7 @@ struct ArchivedReadingCard: View {
     private var footerMinute: some View {
         HStack(spacing: 8) {
             if !reading.sourceReference.isEmpty {
-                Text(reading.sourceReference)
+                Text(CorpusSegment.bookName(forSourcePDF: reading.sourceReference))
                     .font(.footnote.italic())
                     .foregroundStyle(.secondary)
             }

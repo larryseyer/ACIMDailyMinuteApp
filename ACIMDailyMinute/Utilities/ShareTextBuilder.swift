@@ -1,12 +1,23 @@
 import Foundation
 
 enum ShareTextBuilder {
+    /// How a shared passage names its source.
+    ///
+    /// Replaces the pipeline's `source_reference`, which is the source PDF's own
+    /// name (`github_push.py:402` writes `source_pdf` straight through) and
+    /// shows a reader `Text Part A`. The lookup is against the bundle, never the
+    /// feed, so a shared passage carries its address offline and after every
+    /// network service here has ended.
+    static func attribution(segmentId: Int, corpus: CorpusService = .shared) -> String {
+        guard let segment = corpus.segment(id: segmentId) else {
+            return "A Course in Miracles"
+        }
+        return "A Course in Miracles, \(segment.citation ?? segment.bookName)"
+    }
+
     static func minuteShareText(_ minute: DailyMinute) -> String {
         var parts: [String] = [minute.text]
-        let reference = minute.sourceReference.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !reference.isEmpty {
-            parts.append("— A Course in Miracles, \(reference)")
-        }
+        parts.append("— \(attribution(segmentId: minute.segmentId))")
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
@@ -31,14 +42,25 @@ enum ShareTextBuilder {
         return parts.joined(separator: "\n\n")
     }
 
+    /// How an archived passage names its source.
+    ///
+    /// ⛔ An archived row has NO segment id — the feed's inline archive entries
+    /// carry neither `segment_id` nor `youtube_id` (`DataService.swift:204`), so
+    /// there is nothing to resolve a citation with. It names its book instead.
+    /// Matching the passage by its text at runtime is not the alternative: the
+    /// locator belongs at export, and keying a row by a hash of its content is
+    /// the bug this project keeps rediscovering.
+    static func attribution(sourceReference: String) -> String {
+        let trimmed = sourceReference.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "A Course in Miracles" }
+        return "A Course in Miracles, \(CorpusSegment.bookName(forSourcePDF: trimmed))"
+    }
+
     /// Matches `minuteShareText`'s format verbatim so the share sheet output
     /// looks identical regardless of whether a user shared from Today or Archive.
     static func archivedMinuteShareText(_ reading: ArchivedReading) -> String {
         var parts: [String] = [reading.text]
-        let reference = reading.sourceReference.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !reference.isEmpty {
-            parts.append("— A Course in Miracles, \(reference)")
-        }
+        parts.append("— \(attribution(sourceReference: reading.sourceReference))")
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
