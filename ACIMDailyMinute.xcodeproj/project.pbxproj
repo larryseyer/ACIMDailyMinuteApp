@@ -86,8 +86,9 @@
 		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
 		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
 		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
-		AA000001082 /* MacCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* MacCalendarView.swift */; };
+		AA000001082 /* ArchiveCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* ArchiveCalendarView.swift */; };
 		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+		AA000001251 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
 		AA000001250 /* ReadingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002250 /* ReadingTextView.swift */; };
 		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
 		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
@@ -194,8 +195,9 @@
 		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
 		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
-		AA000002069 /* MacCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacCalendarView.swift; sourceTree = "<group>"; };
+		AA000002069 /* ArchiveCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendarView.swift; sourceTree = "<group>"; };
 		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA000002251 /* FullScreenVideoCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoCover.swift; sourceTree = "<group>"; };
 		AA000002250 /* ReadingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextView.swift; sourceTree = "<group>"; };
 		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
@@ -332,6 +334,7 @@
 				AA000002216 /* PodcastEpisodeRow.swift */,
 				AA000002016 /* YouTubePlayerView.swift */,
 				AA000002019 /* MiniPlayerView.swift */,
+				AA000002251 /* FullScreenVideoCover.swift */,
 			);
 			path = Listen;
 			sourceTree = "<group>";
@@ -364,7 +367,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000002005 /* ArchiveView.swift */,
-				AA000002069 /* MacCalendarView.swift */,
+				AA000002069 /* ArchiveCalendarView.swift */,
 				AA000002217 /* ArchiveDateDetailView.swift */,
 				AA000002218 /* ArchivedReadingCard.swift */,
 			);
@@ -634,10 +637,11 @@
 				AA000001057 /* ShareTextBuilder.swift in Sources */,
 				AA000001081 /* PlatformTypography.swift in Sources */,
 				AA000001500 /* ReadableContentWidth.swift in Sources */,
-				AA000001082 /* MacCalendarView.swift in Sources */,
+				AA000001082 /* ArchiveCalendarView.swift in Sources */,
 				AA000001217 /* ArchiveDateDetailView.swift in Sources */,
 				AA000001218 /* ArchivedReadingCard.swift in Sources */,
 				AA000001083 /* AboutView.swift in Sources */,
+				AA000001251 /* FullScreenVideoCover.swift in Sources */,
 				AA000001250 /* ReadingTextView.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,

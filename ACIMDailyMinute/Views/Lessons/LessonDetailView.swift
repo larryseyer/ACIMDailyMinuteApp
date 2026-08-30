@@ -67,7 +67,7 @@ struct LessonDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $isShowingVideo) {
             if let videoURL = lessonVideoURL {
-                LessonVideoCover(videoURL: videoURL)
+                FullScreenVideoCover(videoURL: videoURL)
             }
         }
         .onAppear {
@@ -79,44 +79,7 @@ struct LessonDetailView: View {
     }
 }
 
-#if os(iOS)
 
-// MARK: - Full-screen landscape video
-
-/// Full-bleed autoplaying player. Locks to landscape on iPhone for the time it
-/// is on screen; iPad keeps its own orientation (see `OrientationController`).
-private struct LessonVideoCover: View {
-    let videoURL: String
-
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ZStack(alignment: .topLeading) {
-            Color.black
-                .ignoresSafeArea()
-
-            YouTubePlayerView(videoURL: videoURL, autoplay: true)
-                .ignoresSafeArea()
-
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title)
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.white)
-                    .padding(20)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Close video")
-        }
-        .statusBarHidden()
-        .onAppear { OrientationController.lockLandscape() }
-        .onDisappear { OrientationController.unlock() }
-    }
-}
-
-#endif
 
 // MARK: - Full state
 

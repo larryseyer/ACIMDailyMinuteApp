@@ -33,6 +33,9 @@ struct ListenView: View {
     @State private var selectedFeed: PodcastFeed = .minute
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
+    #if os(iOS)
+    @State private var videoRequest: VideoRequest?
+    #endif
 
     @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
 
@@ -55,7 +58,8 @@ struct ListenView: View {
                 title: canonical,
                 date: episode.date,
                 audioURL: episode.audioURL,
-                duration: episode.duration
+                duration: episode.duration,
+                youtubeURL: episode.youtubeURL
             )
         }
     }
@@ -102,6 +106,11 @@ struct ListenView: View {
                 Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
             .navigationTitle("Listen")
+            #if os(iOS)
+            .fullScreenCover(item: $videoRequest) { request in
+                FullScreenVideoCover(videoURL: request.url)
+            }
+            #endif
             .refreshable {
                 await reload(force: true)
             }
@@ -212,7 +221,18 @@ struct ListenView: View {
     // MARK: - Actions
 
     private func play(_ episode: PodcastEpisode) {
-        audio.play(url: episode.audioURL, title: episode.title)
+        // Audio is the intended experience; the video is what exists when no
+        // MP3 has been published for this reading yet. Tapping play should do
+        // something either way rather than silently failing.
+        if !episode.audioURL.isEmpty {
+            audio.play(url: episode.audioURL, title: episode.title)
+            return
+        }
+        #if os(iOS)
+        if !episode.youtubeURL.isEmpty {
+            videoRequest = VideoRequest(id: episode.youtubeURL)
+        }
+        #endif
     }
 
     private func isCurrentlyPlaying(_ episode: PodcastEpisode) -> Bool {
@@ -285,3 +305,13 @@ private enum LoadState: Equatable {
     case loaded
     case failed
 }
+
+
+#if os(iOS)
+/// Wraps the URL so `fullScreenCover(item:)` has something `Identifiable` to
+/// key on, without conforming `String` app-wide.
+private struct VideoRequest: Identifiable {
+    let id: String
+    var url: String { id }
+}
+#endif

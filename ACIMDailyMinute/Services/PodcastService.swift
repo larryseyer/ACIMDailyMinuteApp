@@ -21,6 +21,9 @@ struct PodcastEpisode: Sendable, Identifiable {
     let date: Date
     let audioURL: String
     let duration: String
+    /// The episode's video, from the item's `<link>`. Lets the Listen tab fall
+    /// back to watching when no audio enclosure has been published yet.
+    let youtubeURL: String
 }
 
 extension CachedPodcastEpisode {
@@ -34,7 +37,8 @@ extension CachedPodcastEpisode {
             title: title,
             date: publishedAt,
             audioURL: audioURL,
-            duration: duration
+            duration: duration,
+            youtubeURL: youtubeURL
         )
     }
 }
@@ -120,6 +124,7 @@ actor PodcastService {
             if let existing = try context.fetch(descriptor).first {
                 existing.title = ep.title
                 existing.audioURL = ep.audioURL
+                existing.youtubeURL = ep.youtubeURL
                 existing.publishedAt = ep.date
                 existing.duration = ep.duration
                 existing.channel = channel
@@ -130,6 +135,7 @@ actor PodcastService {
                 model.channel = channel
                 model.title = ep.title
                 model.audioURL = ep.audioURL
+                model.youtubeURL = ep.youtubeURL
                 model.publishedAt = ep.date
                 model.duration = ep.duration
                 model.lastSeenAt = now
@@ -163,6 +169,8 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
     private var currentDate = ""
     private var currentAudioURL = ""
     private var currentDuration = ""
+    private var currentGUID = ""
+    private var currentLink = ""
     private var inItem = false
     /// Set by `parserErrorOccurred` / `validationErrorOccurred`. Read by
     /// `PodcastService.fetch` to decide whether the min-trust threshold
@@ -195,6 +203,8 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
             currentDate = ""
             currentAudioURL = ""
             currentDuration = ""
+            currentGUID = ""
+            currentLink = ""
         } else if elementName == "enclosure" && inItem {
             currentAudioURL = attributeDict["url"] ?? ""
         }
@@ -206,6 +216,8 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
         case "title": currentTitle += string
         case "pubDate": currentDate += string
         case "itunes:duration": currentDuration += string
+        case "guid": currentGUID += string
+        case "link": currentLink += string
         default: break
         }
     }
@@ -227,14 +239,26 @@ final class PodcastXMLParser: NSObject, XMLParserDelegate, @unchecked Sendable {
                 currentElement = ""
                 return
             }
+            let audioURL = currentAudioURL.trimmingCharacters(in: .whitespacesAndNewlines)
+            let link = currentLink.trimmingCharacters(in: .whitespacesAndNewlines)
+            let guid = currentGUID.trimmingCharacters(in: .whitespacesAndNewlines)
+            // The enclosure URL used to be the identity, which collapsed every
+            // enclosure-less item onto the same empty id. Prefer the GUID,
+            // which the feed always ships and which survives an audio URL
+            // changing host.
+            let identity = !guid.isEmpty ? guid : (!audioURL.isEmpty ? audioURL : link)
             let episode = PodcastEpisode(
-                id: currentAudioURL,
+                id: identity,
                 title: currentTitle.trimmingCharacters(in: .whitespacesAndNewlines),
                 date: date,
-                audioURL: currentAudioURL.trimmingCharacters(in: .whitespacesAndNewlines),
-                duration: currentDuration.trimmingCharacters(in: .whitespacesAndNewlines)
+                audioURL: audioURL,
+                duration: currentDuration.trimmingCharacters(in: .whitespacesAndNewlines),
+                youtubeURL: link
             )
-            if !episode.audioURL.isEmpty {
+            // Keep an episode that has either something to play or something to
+            // watch. Requiring audio hid all 157 readings the moment the
+            // unplayable enclosures were removed.
+            if !identity.isEmpty && !(episode.audioURL.isEmpty && episode.youtubeURL.isEmpty) {
                 episodes.append(episode)
             }
         }

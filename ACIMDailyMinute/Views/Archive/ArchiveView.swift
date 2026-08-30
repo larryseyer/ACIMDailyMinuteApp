@@ -114,20 +114,16 @@ struct ArchiveView: View {
         }
     }
 
-    @ViewBuilder
     private var calendar: some View {
-        #if os(iOS)
-        DatePicker(
-            "",
+        ArchiveCalendarView(
             selection: $selectedDate,
-            in: earliestDate...Self.today(),
-            displayedComponents: .date
+            availableDateStrings: datesWithReadings
         )
-        .datePickerStyle(.graphical)
-        .labelsHidden()
-        #else
-        MacCalendarView(selection: $selectedDate)
-        #endif
+    }
+
+    /// Every date that has at least one archived reading, as `yyyy-MM-dd`.
+    private var datesWithReadings: Set<String> {
+        Set(allReadings.map(\.dateString).filter { !$0.isEmpty })
     }
 
     private var selectedDateRow: some View {
