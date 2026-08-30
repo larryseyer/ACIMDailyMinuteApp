@@ -121,6 +121,11 @@ struct ACIMDailyMinuteApp: App {
                     // and watched-phrase notification was silently discarded
                     // for want of authorisation.
                     Task { await NotificationManager.shared.requestPermissionIfNeeded() }
+                    // An annotation made on an archived minute knows only its
+                    // date. Once the feed names the segment behind that date,
+                    // the key is rewritten so the mark points at the permanent
+                    // bundled corpus instead of the rolling window.
+                    AnnotationStore.upgradeDateKeys(in: sharedModelContainer.mainContext)
                 }
                 #if os(iOS)
                 .onChange(of: scenePhase) { _, newPhase in

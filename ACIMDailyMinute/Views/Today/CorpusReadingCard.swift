@@ -17,7 +17,11 @@ struct CorpusReadingCard: View {
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            SelectableReadingText(raw: segment.body, design: .serif)
+            AnnotatableReadingText(
+                raw: segment.body,
+                key: .segment(segment.segmentId),
+                design: .serif
+            )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
 
