@@ -105,16 +105,45 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
       survives where he can see it.
 
-## ▶ NEXT — Spec 2, the Text reading UI
+- [ ] **The Text is readable, and tab 1 is now Read.** It carries two segments, **Workbook** and
+      **Text**. The Text opens on a table of contents — Preface, then Chapters 1-31 — then the
+      sections of a chapter, then the reading. Confirm the Workbook still lands exactly where it
+      did and still scrolls to the current lesson; that a widget or notification tap on a lesson
+      still opens that lesson and never a chapter list; and that "After Lesson 365, the Text
+      begins." switches to the Text.
 
-The largest remaining parity gap, and now unblocked. All 268 Text sections are bundled in
-`ACIMTextSections.json` with chapter and section numbers and titles, `CorpusService.textSections`
-exposes them, and nothing reads them yet. `ReadingKey.textSection(chapter:section:)` already exists
-and already annotates; `savedDestination` returns nil for it because there is nowhere to go. A Text
-reading UI is what turns that row into a link and the app into a book.
+- [ ] **The recovered paragraphing.** The Text arrived as raw page scans: paragraphs marked by
+      indentation, blank lines that were page breaks, and 351 running heads and page numbers sitting
+      inside sentences. It is recovered into 2,911 paragraphs at export, verified to break no
+      sentence. Whether it reads correctly to someone who knows the book is his call. Chapter 1's
+      "Principles of Miracles" is the section to check first — it should be 53 numbered paragraphs,
+      1 through 53, with nothing between them.
 
-- [ ] Write the spec, then the plan, then execute. Reading surfaces should use
-      `AnnotatableReadingText`, which carries selection, highlighting, notes and export already.
+- [ ] **The longest section on the phone.** Chapter 1.2 is 37,222 characters in one non-scrolling
+      text view. Every other section is a fifth of that or less. Confirm it scrolls without stutter.
+
+- [ ] **Reading straight through.** Previous and Next at the foot of a section cross chapter
+      boundaries by design. Confirm the last section of a chapter leads into the next chapter's
+      first, and that the first section of the Preface offers no Previous.
+
+- [ ] **Annotation in the Text.** Highlight and Note work in a Text section exactly as in a lesson,
+      and the Saved tab's Highlights and Notes rows now open the passage instead of sitting inert.
+      A saved Text section shows as "Chapter N" with its section title. A Manual row still will not
+      navigate, by design.
+
+- [ ] **The two Part Introductions.** "Part 1 Introduction" appears above Lesson 1 and "Part 2
+      Introduction" between Lesson 180 and Lesson 181. Both read, annotate and save. Their titles
+      come from the corpus rather than from literals, so the row and the screen cannot disagree.
+
+## ▶ NEXT — canonical citations
+
+`T-1.I.1:1` — Text, chapter, section, paragraph, sentence. A durability requirement rather than a
+study-group convenience: citations are the interoperability layer that lets a reader move between
+this app, a paper book, and whatever comes after both. `sourceReference` today is loose prose.
+
+The Text's paragraphs are addressable now — 2,911 of them, recovered at export and stable, with
+`ReadingText.displayString(from: body) == body` holding for all 268 sections — which is what makes
+this tractable at all. Spec first, then plan, then execute.
 
 ## ⏸ BLOCKED — Archive.org (external; no reply received)
 
@@ -164,31 +193,29 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] **The Text is not readable in the app** — 31 chapters, ~669 pages, the largest part of the
-      volume and the whole theoretical basis. This is the NEXT block above.
 - [ ] ⛔ **Canonical citations** (`T-1.I.1:1` — Text, chapter, section, paragraph, sentence). Promoted
       from a study-group convenience to a **durability requirement**: citations are the interoperability
       layer that lets a reader move between this app, a paper book, and whatever comes after both.
       `sourceReference` today is loose prose, not a citation.
 - [ ] **Search across the whole corpus**, not just the rolling archive window — the book's index.
 - [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be tappable.
-- [ ] **Resume where you stopped** — the ribbon. Meaningful once the Text is readable.
+- [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
+      what a 669-page book needs most: `ReadingKey.textSection` already names the place.
 - [ ] **"Let it fall open"** — a random passage. A real practice with the physical book, nearly free once
       the corpus is bundled.
 - [ ] **Workbook completion tracking** — which lessons the reader has *done*, distinct from listened.
 - [ ] **Structure the Manual for Teachers** into its question-and-answer form. It is bundled as 105
       unstructured segments by decision; a searchable unstructured Manual beats no Manual.
-- [ ] **The two Part Introductions** (lesson ids 0 and 500 in the database) are outside the 1–365 spine
-      and are not exported by `tools/export_corpus.py`. Spec 2 should place them, and the export
-      needs a matching change.
 
 ## ▶ OPEN — content and pipeline
 
 - [ ] **Sentences are run together where a period meets the next word** — `"YOURS.You"` in the
       published minute text, and the same defect throughout `lessons.text`: `"thus far.There"`,
-      `"planned.We"`, `"thinking.The"` in lesson 20 alone. It is now bundled into the app, so a fix
-      means re-running `tools/export_corpus.py` after the extractor's sentence-boundary handling is
-      corrected. Source data, not the app.
+      `"planned.We"`, `"thinking.The"` in lesson 20 alone, and `"Source,Which"` and `"also.This"`
+      throughout the Text, where it is now the most visible defect on any reading surface. It is
+      bundled into the app, so a fix means re-running `tools/export_corpus.py` after the extractor's
+      sentence-boundary handling is corrected. Source data, not the app — and one defect across
+      three corpora, so it is fixed in the extractor, never in one export branch.
 - [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — `ReadingTextView` now
       draws these, and it recovers real paragraph structure for the other 179. Those 186 carry no
       blank line in `lessons.text` at all, so there is nothing in the source to split on. Fixing it
