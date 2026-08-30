@@ -18,23 +18,49 @@ struct SavedView: View {
                     List {
                         ForEach(bookmarks) { bookmark in
                             BookmarkRow(bookmark: bookmark)
+                                // Both edges delete. `.onDelete` only ever
+                                // produces a trailing swipe, and a saved item is
+                                // the kind of thing people flick away in either
+                                // direction.
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    deleteButton(for: bookmark)
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    deleteButton(for: bookmark)
+                                }
                         }
-                        .onDelete(perform: delete)
                     }
                     .listStyle(.plain)
                     .readableContentWidth()
                 }
             }
             .navigationTitle("Saved")
+            .navigationDestination(for: SavedDestination.self) { destination in
+                switch destination {
+                case .lesson(let number):
+                    LessonDetailView(lessonNumber: number)
+                case .archiveDate(let dateString):
+                    ArchiveDateDetailView(dateString: dateString)
+                }
+            }
         }
     }
 
-    private func delete(at offsets: IndexSet) {
-        for idx in offsets {
-            modelContext.delete(bookmarks[idx])
+    private func deleteButton(for bookmark: Bookmark) -> some View {
+        Button(role: .destructive) {
+            modelContext.delete(bookmark)
+            try? modelContext.save()
+        } label: {
+            Label("Delete", systemImage: "trash")
         }
-        try? modelContext.save()
     }
+}
+
+/// Where a saved row leads: back to the reading it was saved from. Hashable so
+/// it can ride the `NavigationStack` path.
+enum SavedDestination: Hashable {
+    case lesson(Int)
+    case archiveDate(String)
 }
 
 #Preview {

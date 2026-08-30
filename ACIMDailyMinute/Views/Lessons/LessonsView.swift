@@ -10,8 +10,12 @@ import SwiftData
 ///   * `ArchivedReading` where `channel == "daily-lesson"` — lightweight: title
 ///     stored in `text`, date in `dateString` (see `ArchiveService.persistInlineLessons`).
 ///
-/// `DailyLesson` wins on conflict (it's a superset). Rows without either source
-/// render a dimmed "Not yet read" state.
+/// `DailyLesson` wins on conflict (it's a superset).
+///
+/// The spine runs to 365 but the publisher records one lesson per weekday, so
+/// most of it is not out yet. `LessonSchedule` turns the latest recorded lesson
+/// into a due date for every later number; those rows render dimmed and inert
+/// with an "Available" date instead of tapping through to an empty screen.
 ///
 /// Phase 3.5c wires two refinements on top of the 3.5a/3.5b spine:
 ///   * `.searchable` — integer queries match that lesson exactly; any non-digit
@@ -36,12 +40,14 @@ struct LessonsView: View {
             let meta = buildMetaIndex()
             let bookmarkedNumbers = bookmarkedLessonNumbers()
 
+            let anchor = recordedAnchor()
+
             FilteredLessonsList(
                 searchText: searchText,
                 meta: meta,
                 bookmarkedNumbers: bookmarkedNumbers,
-                latestLessonNumber: lessons.last?.lessonNumber ?? 0,
-                latestPublishedAt: lessons.last?.publishedAt
+                latestLessonNumber: anchor.number,
+                latestPublishedAt: anchor.date
             )
             .listStyle(.plain)
             .readableContentWidth()
@@ -91,7 +97,6 @@ struct LessonsView: View {
             index[n] = LessonMeta(
                 lessonNumber: n,
                 title: archive.text.isEmpty ? nil : archive.text,
-                dateRead: archive.dateString.isEmpty ? nil : archive.dateString,
                 hasFullText: false
             )
         }
@@ -100,12 +105,32 @@ struct LessonsView: View {
             index[lesson.lessonNumber] = LessonMeta(
                 lessonNumber: lesson.lessonNumber,
                 title: lesson.lessonTitle.isEmpty ? nil : lesson.lessonTitle,
-                dateRead: lesson.date.isEmpty ? nil : lesson.date,
                 hasFullText: !lesson.text.isEmpty
             )
         }
 
         return index
+    }
+
+    /// Highest lesson we have evidence was actually recorded, plus the date it
+    /// was published — the anchor `LessonSchedule` counts weekdays from.
+    ///
+    /// A `DailyLesson` row is the strong signal and carries a parsed
+    /// `publishedAt`. The archive can know about a *later* lesson than the
+    /// Daily Lesson endpoint currently serves, so it is folded in too; its
+    /// `timestamp` is optional, and an archive hit without one is ignored
+    /// rather than anchoring the whole schedule on a guess.
+    private func recordedAnchor() -> (number: Int, date: Date?) {
+        var number = lessons.last?.lessonNumber ?? 0
+        var date = lessons.last?.publishedAt
+
+        for archive in archivedLessons {
+            guard let n = archive.lessonNumber, n > number, let stamp = archive.timestamp else { continue }
+            number = n
+            date = stamp
+        }
+
+        return (number, date)
     }
 
     private func bookmarkedLessonNumbers() -> Set<Int> {
@@ -132,27 +157,64 @@ private struct FilteredLessonsList: View {
     let latestLessonNumber: Int
     let latestPublishedAt: Date?
 
+    /// Opening the tab should land on the lesson in play, not on Lesson 1. Only
+    /// fires once per appearance — re-running it after every filter change would
+    /// yank the list out from under someone who has scrolled away or searched.
+    @State private var hasScrolledToCurrent = false
+
     var body: some View {
         let visible = filteredLessonNumbers()
-        List {
-            if latestLessonNumber > 0 {
-                cadenceHeader
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-            }
-            if visible.isEmpty {
-                ContentUnavailableView.search(text: searchText)
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-            } else {
-                ForEach(visible, id: \.self) { n in
-                    LessonRow(
-                        lessonNumber: n,
-                        meta: meta[n],
-                        isBookmarked: bookmarkedNumbers.contains(n)
-                    )
+        ScrollViewReader { proxy in
+            List {
+                if latestLessonNumber > 0 {
+                    cadenceHeader
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                }
+                if visible.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                } else {
+                    ForEach(visible, id: \.self) { n in
+                        LessonRow(
+                            lessonNumber: n,
+                            meta: meta[n],
+                            isBookmarked: bookmarkedNumbers.contains(n),
+                            availableOn: LessonSchedule.availabilityDate(
+                                for: n,
+                                latestRecorded: latestLessonNumber,
+                                latestDate: latestPublishedAt ?? Date()
+                            )
+                        )
+                    }
                 }
             }
+            .onAppear { scrollToCurrentLesson(proxy: proxy, visible: visible) }
+            .onChange(of: latestLessonNumber) { _, _ in
+                // The anchor arrives asynchronously — the first fetch can land
+                // after the list has already drawn, and until it does there is
+                // no current lesson to scroll to.
+                scrollToCurrentLesson(proxy: proxy, visible: visible)
+            }
+        }
+    }
+
+    /// Scrolls the newest recorded lesson to the top. When today's lesson has
+    /// not been produced yet (a weekend, or before the 02:00 run) the newest
+    /// recorded one *is* the right target, so no separate "today" lookup exists.
+    private func scrollToCurrentLesson(proxy: ScrollViewProxy, visible: [Int]) {
+        guard !hasScrolledToCurrent,
+              latestLessonNumber > 0,
+              searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              visible.contains(latestLessonNumber)
+        else { return }
+
+        hasScrolledToCurrent = true
+        // The row has to exist before it can be scrolled to; on a cold open the
+        // List is still being laid out when `onAppear` runs.
+        DispatchQueue.main.async {
+            proxy.scrollTo(latestLessonNumber, anchor: .top)
         }
     }
 

@@ -53,6 +53,38 @@ struct BookmarkRow: View {
     }
 
     var body: some View {
+        if let destination {
+            NavigationLink(value: destination) {
+                rowContent
+            }
+        } else {
+            rowContent
+        }
+    }
+
+    /// Where tapping this row goes. A lesson opens that lesson; a minute opens
+    /// the archive entry for the day it ran. `nil` when the underlying reading
+    /// is no longer in the store — the row still renders, it just has nowhere
+    /// to go, which is honest about what it can offer.
+    private var destination: SavedDestination? {
+        if parsedChannel == "lesson" {
+            // No store check: `LessonDetailView` renders from `WorkbookCatalog`
+            // for any valid number, so a lesson bookmark always has somewhere
+            // to go even when its text has not been fetched on this device.
+            guard let n = Int(parsedToken), (1...365).contains(n) else { return nil }
+            return .lesson(n)
+        }
+
+        if parsedChannel == "minute" {
+            if let m = minutes.first, !m.date.isEmpty { return .archiveDate(m.date) }
+            if let r = archiveMinutes.first, !r.dateString.isEmpty { return .archiveDate(r.dateString) }
+            return nil
+        }
+
+        return nil
+    }
+
+    private var rowContent: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: parsedChannel == "lesson" ? "book.closed.fill" : "sun.max.fill")
                 .foregroundStyle(Color(red: 0.83, green: 0.69, blue: 0.22))

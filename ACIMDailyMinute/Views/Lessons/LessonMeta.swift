@@ -9,6 +9,5 @@ import Foundation
 struct LessonMeta: Hashable {
     let lessonNumber: Int
     let title: String?
-    let dateRead: String?
     let hasFullText: Bool
 }

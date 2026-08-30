@@ -8,17 +8,24 @@ import SwiftUI
 /// When the episode matches the active `AudioManager` title the leading
 /// glyph swaps from `play.fill` to `waveform` in the gold accent, giving
 /// a now-playing cue without a separate indicator column.
+///
+/// The trailing column is a listened marker rather than a duration. Every Daily
+/// Minute runs the same minute, so printing `01:00` on all of them said nothing;
+/// for lessons the running time moved under the title, where it varies and is
+/// worth reading. The second line answers "have I done this one, and when" —
+/// an absolute date, because a relative "3 days ago" is useless on an archive
+/// that is meant to be years deep.
 struct PodcastEpisodeRow: View {
     let episode: PodcastEpisode
+    let feed: PodcastFeed
     let isPlaying: Bool
+
+    /// When the reader last opened this episode; `nil` if they never have.
+    let playedAt: Date?
+
     let onTap: () -> Void
 
     private static let accent = Color(red: 0.83, green: 0.69, blue: 0.22)
-    private static let relativeFormatter: RelativeDateTimeFormatter = {
-        let f = RelativeDateTimeFormatter()
-        f.unitsStyle = .full
-        return f
-    }()
 
     var body: some View {
         Button(action: onTap) {
@@ -26,16 +33,14 @@ struct PodcastEpisodeRow: View {
                 icon
                 textColumn
                 Spacer(minLength: 8)
-                if !episode.duration.isEmpty {
-                    durationChip
-                }
+                listenedIndicator
             }
             .padding(.vertical, 6)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(episode.title), \(formattedDate)")
+        .accessibilityLabel(accessibilityLabel)
         .accessibilityHint(opensVideo ? "Opens video" : "Plays episode")
     }
 
@@ -46,6 +51,8 @@ struct PodcastEpisodeRow: View {
     private var opensVideo: Bool {
         episode.audioURL.isEmpty && !episode.youtubeURL.isEmpty
     }
+
+    private var isListened: Bool { playedAt != nil }
 
     // MARK: - Subviews
 
@@ -70,32 +77,59 @@ struct PodcastEpisodeRow: View {
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(formattedDate)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+            HStack(spacing: 6) {
+                // Lessons vary in length, so the running time earns its place
+                // here. Minutes do not — they are all a minute.
+                if feed == .lesson, !episode.duration.isEmpty {
+                    Text(episode.duration)
+                        .monospacedDigit()
+                    Text("·")
+                }
+                Text(subtitle)
+            }
+            .font(.caption2)
+            .foregroundStyle(.secondary)
         }
     }
 
-    private var durationChip: some View {
-        Text(episode.duration)
-            .font(.caption2)
-            .monospacedDigit()
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(Color.white.opacity(0.08))
-            .clipShape(Capsule())
-            .foregroundStyle(.secondary)
+    private var listenedIndicator: some View {
+        Image(systemName: isListened ? "checkmark.circle.fill" : "circle")
+            .font(.system(size: 18))
+            .foregroundStyle(isListened ? AnyShapeStyle(Self.accent) : AnyShapeStyle(.tertiary))
+            .accessibilityHidden(true)
     }
 
     // MARK: - Formatting
 
-    private var formattedDate: String {
-        let now = Date()
-        let elapsed = now.timeIntervalSince(episode.date)
-        let sevenDays: TimeInterval = 60 * 60 * 24 * 7
-        if elapsed >= 0 && elapsed < sevenDays {
-            return Self.relativeFormatter.localizedString(for: episode.date, relativeTo: now)
+    private static let listenedFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .short
+        return f
+    }()
+
+    private static let publishedFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .none
+        return f
+    }()
+
+    /// Once listened, the line reports when — that is the fact the reader wants
+    /// back. Until then it reports when the episode was published, absolute so
+    /// it still reads correctly a decade from now.
+    private var subtitle: String {
+        if let playedAt {
+            return "Listened \(Self.listenedFormatter.string(from: playedAt))"
         }
-        return episode.date.formatted(.dateTime.month().day().year())
+        return Self.publishedFormatter.string(from: episode.date)
+    }
+
+    private var accessibilityLabel: String {
+        var parts = [episode.title]
+        if feed == .lesson, !episode.duration.isEmpty { parts.append(episode.duration) }
+        parts.append(subtitle)
+        parts.append(isListened ? "Listened" : "Not listened")
+        return parts.joined(separator: ", ")
     }
 }

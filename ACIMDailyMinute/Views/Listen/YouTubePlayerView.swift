@@ -92,7 +92,7 @@ extension YouTubePlayerView {
         if videoURL.contains("youtube.com/embed/") {
             let separator = videoURL.contains("?") ? "&" : "?"
             embedSrc = "\(videoURL)\(separator)\(params)"
-        } else if let videoID = extractVideoID(from: videoURL) {
+        } else if let videoID = YouTubeID.extract(from: videoURL) {
             embedSrc = "https://www.youtube.com/embed/\(videoID)?\(params)"
         } else {
             return
@@ -146,20 +146,6 @@ extension YouTubePlayerView {
         webView.loadHTMLString(html, baseURL: URL(string: "https://www.acimdailyminute.org"))
     }
 
-    func extractVideoID(from url: String) -> String? {
-        if url.contains("youtube.com/embed/") {
-            return url.components(separatedBy: "embed/").last?.components(separatedBy: "?").first
-        }
-        if let range = url.range(of: "v=") {
-            let start = range.upperBound
-            let end = url[start...].firstIndex(of: "&") ?? url.endIndex
-            return String(url[start..<end])
-        }
-        if url.contains("youtu.be/") {
-            return url.components(separatedBy: "youtu.be/").last?.components(separatedBy: "?").first
-        }
-        return nil
-    }
 }
 
 // MARK: - Coordinator

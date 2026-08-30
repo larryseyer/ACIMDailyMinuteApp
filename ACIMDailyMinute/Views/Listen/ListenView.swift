@@ -39,6 +39,16 @@ struct ListenView: View {
 
     @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
 
+    /// Bound to the same defaults key `PlaybackHistory` writes. Reading the
+    /// store through a plain `static` accessor would give SwiftUI nothing to
+    /// observe, so the check marks would not appear until the tab was rebuilt.
+    @AppStorage(PlaybackHistory.defaultsKey) private var listenedData: Data = Data()
+
+    private var listenedEpisodes: [String: Date] {
+        _ = listenedData
+        return PlaybackHistory.entries
+    }
+
     private let dailyMinutePlaylistID = YouTubePlaylists.dailyMinute
     private let dailyLessonPlaylistID = YouTubePlaylists.dailyLesson
 
@@ -136,19 +146,42 @@ struct ListenView: View {
     // MARK: - YouTube
 
     private func youtubeCard(url: String) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(selectedFeed == .minute ? "Daily Minute Playlist" : "Daily Lessons Playlist")
+        let title = selectedFeed == .minute ? "Daily Minute Playlist" : "Daily Lessons Playlist"
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(title)
                 .font(.caption.weight(.semibold))
                 .textCase(.uppercase)
                 .foregroundStyle(.secondary)
 
-            YouTubePlayerView(videoURL: url)
-                .aspectRatio(16 / 9, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            LiteYouTubeCard(
+                videoID: leadVideoID,
+                playerURL: url,
+                accessibilityTitle: title
+            )
         }
         .padding(16)
         .background(Color(white: 0.11).opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    /// The video the playlist embed will open on, whose thumbnail therefore
+    /// stands in for the playlist. A `videoseries` URL carries no video id of
+    /// its own, so it has to be recovered from the episode list.
+    private var leadVideoID: String? {
+        let list = currentEpisodes
+        guard !list.isEmpty else { return nil }
+
+        let episode: PodcastEpisode
+        switch selectedFeed {
+        case .minute:
+            episode = list[0]
+        case .lesson:
+            // `lastWatchedIndex` is a 1-based position from the oldest end,
+            // matching the `index=` parameter handed to the embed.
+            let offset = list.count - lessonsLastWatchedIndex
+            episode = list[min(max(offset, 0), list.count - 1)]
+        }
+        return YouTubeID.extract(from: episode.youtubeURL)
     }
 
     // MARK: - Feed picker
@@ -202,9 +235,12 @@ struct ListenView: View {
                 .listRowBackground(Color.clear)
             } else {
                 ForEach(Array(list.enumerated()), id: \.element.id) { offset, episode in
+                    let playedAt = listenedEpisodes[episode.id]
                     PodcastEpisodeRow(
                         episode: episode,
+                        feed: selectedFeed,
                         isPlaying: isCurrentlyPlaying(episode),
+                        playedAt: playedAt,
                         onTap: {
                             if selectedFeed == .lesson {
                                 lessonsLastWatchedIndex = list.count - offset
@@ -213,6 +249,17 @@ struct ListenView: View {
                         }
                     )
                     .listRowSeparator(.visible)
+                    .swipeActions(edge: .trailing) {
+                        Button {
+                            PlaybackHistory.toggle(episode.id)
+                        } label: {
+                            Label(
+                                playedAt == nil ? "Mark listened" : "Mark unplayed",
+                                systemImage: playedAt == nil ? "checkmark.circle" : "circle"
+                            )
+                        }
+                        .tint(playedAt == nil ? .green : .gray)
+                    }
                 }
             }
         }
@@ -221,6 +268,11 @@ struct ListenView: View {
     // MARK: - Actions
 
     private func play(_ episode: PodcastEpisode) {
+        // Opening is the only listened signal available: no MP3 is published
+        // yet, so there is no playback position to measure against. A swipe
+        // action undoes an accidental tap.
+        PlaybackHistory.markPlayed(episode.id)
+
         // Audio is the intended experience; the video is what exists when no
         // MP3 has been published for this reading yet. Tapping play should do
         // something either way rather than silently failing.

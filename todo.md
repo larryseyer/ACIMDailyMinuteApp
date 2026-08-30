@@ -22,9 +22,22 @@
 - ⛔ Gating more than the backfill: the Today card's **Listen** button is already built and is invisible
       only because `audioURL` is empty. Do not re-open the hosting decision unprompted.
 
-## ▶ NEXT — operator's bug list
+## ▶ NEXT — confirm the seven fixes on the phone
 
-- [ ] He is reporting bugs from the phone. Take that list first; it outranks the sweep below.
+Built and installed on the phone and the iPad sim. B1, B2 and the notification-permission half of B7 are
+confirmed by screenshot on the sim; the rest need eyes and a finger, since the sim has no bookmarks and
+the Listen tab has no deep link.
+
+- [ ] **B3** — Listen: the card shows our artwork clean under a red play button, no channel avatar and no
+      title bar, on both Minute and Lessons. Tapping it plays.
+- [ ] **B4/B5** — no `01:00` chips anywhere; tapping an episode leaves a check mark and
+      `Listened <date>`; swipe gives "Mark unplayed" and it clears. Lesson rows carry their length under
+      the title.
+- [ ] **B6** — a saved lesson opens that lesson; a saved minute opens its archive day. Swiping either
+      direction deletes.
+- [ ] **B7** — the counter reads `1 of 10` right after adding a phrase. Then set a phrase to a word in
+      today's minute, force-quit, wait past the 60s debounce, relaunch, and confirm the notification
+      arrives.
 
 ## ▶ NEXT — pre-submission sweep
 
