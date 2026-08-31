@@ -99,6 +99,11 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       what `Text` did there before, so it is not a regression.
       A harness already proves the *string* is character-for-character what it was, for all 365
       lesson bodies, 1,983 corpus segments and 268 Text sections. Only the drawing is unverified.
+      ⛔ **On macOS this was broken and is now fixed — do not re-litigate it.** Every reading
+      measured zero height there, so cards collapsed and the text drew over `Add note`, the citation
+      and the word count. `tools/verify_text_measurement.sh` now holds it, and the fixed macOS build
+      was screenshotted and compared against the two he sent. **iOS was never affected**, so what is
+      left to check on the phone is unchanged.
 
 - [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
@@ -211,7 +216,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 one plain `.json` holding highlights, notes, bookmarks, watched phrases, listened history and the
 notification settings, and reads it back as a **merge**. That is a complete answer on every
 platform — Windows, Linux and Android open it with what they already have. `tools/verify_backup.sh`
-is the seventh committed check.
+is the seventh committed check; `tools/verify_text_measurement.sh` is the eighth.
 
 The design for everything below is written and is NOT in git (`docs/` is gitignored):
 `docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` and its plan. **Read the spec
