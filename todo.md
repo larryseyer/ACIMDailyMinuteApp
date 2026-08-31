@@ -188,53 +188,78 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
       `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
-## ▶ NEXT — carrying a reader's own work between devices
+- [ ] **Backup & Restore, end to end.** Settings > Your Work > Backup & Restore. **Save a backup**
+      should open a real Save dialog on the Mac and the Files sheet on the phone, and produce
+      `ACIM Daily Minute backup <date>.json`. Open that file in any text editor: it should read as a
+      document — the edition named at the top, then every mark with the passage it belongs to, its
+      address in the book, and the words. Confirm it makes sense to someone who has never run the
+      app, because that is the whole point of the format.
 
-⭐ **He asked for this to start in a fresh chat.**
+- [ ] **Restoring merges rather than duplicates.** Make a highlight and a note on the Mac, back up,
+      restore that file on the phone, and confirm both arrive once. Restore the SAME file a second
+      time and confirm nothing is added and the summary says so. Then edit the same note differently
+      on both machines, back up from one, restore onto the other, and confirm the note holds **both**
+      versions with the separator line between them rather than only the newer one. Nothing anywhere
+      can re-send a reader what they wrote, so this is the behaviour that matters most.
 
-⛔ **He raised this directly: backup and restore for a reader's settings, highlights, notes and
-bookmarks, shared between devices and machines. iCloud for Apple devices ideally, but not at the
-price of shutting out Windows, Linux and Android.** Not urgent — "no rush, when convenient" — but
-it is his, not inferred, so it does not get quietly dropped.
+- [ ] **The import summary reads the way you want it to.** After a restore it reports what was
+      added, how many notes were written in two places, and that nothing was removed. Say if the
+      wording is wrong — it is the only thing telling a reader what just happened to their work.
 
-**What has to travel:** highlights, notes, bookmarks, the watched-phrase list, reminder settings,
-listened/playback history, and eventually the reading position. Everything a reader made, and
-nothing the app can recompute.
+## ▶ NEXT — iCloud, and the rest of carrying a reader's work between devices
 
-**What already exists, and is the floor rather than the answer.** `AnnotationExport.plainText`
-writes highlights and notes as plain text a stranger can read, with the edition named and a
-citation on every mark. That is the durability promise kept, and it is already a manual backup —
-but it is one-way. Nothing imports it, and it does not carry settings or bookmarks.
+⭐ **The portable file is built and verified.** Settings → **Your Work → Backup & Restore** writes
+one plain `.json` holding highlights, notes, bookmarks, watched phrases, listened history and the
+notification settings, and reads it back as a **merge**. That is a complete answer on every
+platform — Windows, Linux and Android open it with what they already have. `tools/verify_backup.sh`
+is the seventh committed check.
 
-**The constraints that decide this, none of them negotiable:**
+The design for everything below is written and is NOT in git (`docs/` is gitignored):
+`docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` and its plan. **Read the spec
+before starting any of these** — it carries the measurements, not just the conclusions.
 
-- ⛔ **Zero data collection is load-bearing** — no accounts, no analytics, no SDKs, and a "Data
-  Not Collected" App Store label. A sync service *we* run would end that, and end the
-  no-backend architecture with it. Apple's CloudKit **private** database does not: the data
-  stays in the reader's own iCloud, and it is not collected by the developer.
-- ⛔ **The app is not permanent, so nothing may be trapped in it.** Whatever format sync uses has
-  to be readable without this app, on a machine that never ran it.
-- ⛔ **Never key a row by a hash of its content.** A merge across two devices is exactly where
-  that bug bites hardest: an edited note would arrive as a second note. Identity is the
-  annotation's own id and its `ReadingKey`, never its text.
-- **A merge needs a rule for the same note edited in two places**, and "last write wins" silently
-  discards a reader's words. Decide it deliberately.
+⛔ **The conflict rule is decided and implemented; do not re-open it.** A merge may never make a
+reader's words fewer. Highlights union by `id` (a reader never edits one — `reanchor` owns every
+mutable field). Notes union their *passages*, so an extended note absorbs its earlier self and
+genuinely divergent writing is kept as both. Bookmarks union by `itemKey`. **A file import never
+deletes**, because absence in a snapshot carries no information.
 
-**The shape that probably satisfies all of it, to be spec'd rather than assumed:** two tiers, the
-lower one carrying the upper. A **portable file** — one self-describing document holding every
-annotation and setting, exported and imported anywhere, no account and no server — is what makes
-Windows, Linux and Android first-class rather than an afterthought, and it is the same artifact
-that satisfies durability. **CloudKit private database plus SwiftData** then makes that automatic
-and invisible between a reader's Apple devices, syncing the same records the file format
-describes. The open question is whether a third tier is wanted: a folder the reader supplies
-themselves — their own Dropbox, Drive or file share — which would sync across every platform
-without anyone running a service.
+- [ ] **Move bookmark uniqueness into code.** ⛔ **Prerequisite for everything below it**, and it is
+      not optional: SwiftData refuses `@Attribute(.unique)` in a CloudKit-backed store, and
+      `Bookmark.itemKey` is the only thing preventing duplicate bookmark rows today. It has to be a
+      fetch-then-insert at all six `itemKey` call sites before the constraint comes off, not after.
 
-- [ ] Spec the portable backup document: what it holds, how it identifies a record, and how an
-      import merges rather than duplicates.
-- [ ] Spec CloudKit private-database sync for Apple devices on top of that identity model,
-      including what it means for the "Data Not Collected" label.
-- [ ] Decide the conflict rule before writing either.
+- [ ] **Split the container into two stores.** `reader.store` — `Highlight`, `Note`, `Bookmark`,
+      CloudKit-able. `cache.store` — the six network-derived models, local only. Not merely a
+      workaround for the constraint: enabling CloudKit on the single configuration would copy every
+      cached feed reading and the whole podcast cache into the reader's iCloud for no purpose.
+      ⛔ **Four container declarations change together**, not three — app, widget, watch and
+      `Shortcuts/GetTodaysReadingIntent.swift`. A one-time migration moves the three reader models
+      across and **does not delete the old file**: caches are re-derivable, annotations are not.
+
+- [ ] **CloudKit private database, off by default behind an explicit switch.** ⛔ **The widget reads
+      `Bookmark`** (`ACIMDailyMinuteTimelineProvider.swift:41-46`), so the widget extension needs the
+      iCloud entitlement too, not just the app. Deletes propagate here where they do not in a file
+      import — a real difference between the two, and the reader is told rather than left to find it.
+
+- [ ] **Rewrite the privacy policy in the same change, not after it.**
+      `PrivacyPolicyView.swift:23` says on-device data "never leaves your device", which CloudKit
+      makes false. It must say plainly: the reader's own marks live in *their* iCloud private
+      database, readable by them and by no one else including the developer; nothing goes to any
+      server we run; still no account, no analytics, no SDK. The "Data Not Collected" label survives
+      because private-database data is not collected by the developer — but the policy states the
+      mechanism rather than resting on the label.
+
+- [ ] **A folder the reader supplies** — their own Dropbox, Drive or Syncthing. Smallest form only:
+      pick a folder once, hold a security-scoped bookmark, write the same file there when annotations
+      change. ⛔ **No folder-watching and no automatic merge on change.** A live folder synchroniser
+      is a second implementation of conflict resolution running against files two machines may write
+      at once, which is exactly where a reader loses words. Import stays something they ask for.
+
+- [ ] **A reading position, once there is one.** There is none in the app today — no `@SceneStorage`,
+      no scroll offset, no last-read section anywhere. When one exists it is simply another key in
+      the file; older versions ignore what they do not recognise, and nothing is written as a
+      placeholder for it now.
 
 ## ▶ THEN — corpus-wide search
 
@@ -351,7 +376,7 @@ a book.
       deliberately, because a mid-line rule cuts into the delicate paragraph recovery and deserves
       its own measurement. Reproduce with
       `(?<=[a-z] )\d{1,3} [A-Z][A-Z’ ]{8,}(?= [a-z])` over `ACIMTextSections.json`.
-- [ ] **A stray space before a closing quote.** `and He will abide with you. ”The Holy Spirit` — the
+- [ ] **A stray space before a closing quote.** `and He will abide with you. "The Holy Spirit` — the
       mirror of the spacing defect, far rarer. A rule that *removes* a character is more dangerous
       than one that inserts one, so it was left out of the repair rather than guessed at. Measure it
       before writing a rule.
@@ -403,6 +428,17 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 - [ ] **Today-tab and Archive-tab minute bookmarks do not alias.** Today keys on `DailyMinute.segmentHash`,
       Archive on `ArchivedReading.lineHash`, so the same passage saved from both places lands twice.
       Documented in `ArchivedReadingCard.swift`.
+- [ ] **`hasSeenOnboarding` has contradictory defaults.** `false` at `App/ContentView.swift:10` and
+      `Views/Onboarding/OnboardingView.swift:4`, `true` at `Views/Settings/SettingsView.swift:7`.
+      Whichever view reads it first decides, which is not a decision anyone made. It is deliberately
+      not carried in a backup — it is app state, not the reader's work.
+
+- [ ] **Three defaults keys are dead.** `useCustomNotificationSound` is registered at
+      `App/ACIMDailyMinuteApp.swift:92` and never read anywhere; `phraseMatchBadge` is written at
+      `Services/BackgroundRefreshManager.swift:174` and never read; `lastArchiveFetch` is declared at
+      `Services/FetchCooldown.swift:44` and never used. Found while deciding what a backup carries.
+      None of them travels.
+
 - [ ] **Pre-submission sweep.** Walk Archive, Saved, Lessons, deep links, widget and watch for surfaces
       that display data they do not have. No `TODO`/`FIXME`/stub copy remains in any view, widget or watch
       source, so what is left is behavioural empty-state handling — an interactive pass on the device.

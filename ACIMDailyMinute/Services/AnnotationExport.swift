@@ -14,6 +14,13 @@ enum AnnotationExport {
     /// One highlight, as export sees it. A value type so the format can be
     /// asserted without a SwiftData store.
     struct Entry {
+        /// The highlight this came from.
+        ///
+        /// Unused by `plainText`, which is prose. It is here so a caller that
+        /// needs the citation for a *particular* highlight — the backup file
+        /// does — can join back to it exactly, instead of matching on the quote
+        /// and offset it happens to carry.
+        let id: UUID
         let key: ReadingKey
         let quote: String
         let startOffset: Int
@@ -189,6 +196,7 @@ enum AnnotationExport {
         let converted = highlights.compactMap { highlight -> Entry? in
             guard let key = ReadingKey(rawValue: highlight.readingKey) else { return nil }
             return Entry(
+                id: highlight.id,
                 key: key,
                 quote: highlight.quote,
                 startOffset: highlight.startOffset,

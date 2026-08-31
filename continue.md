@@ -8,25 +8,27 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ NOTHING IS CLAIMED
 
-Working tree clean, branch `ralph/acim-3.9-to-5-finish-2026-04-14` through the chapter-opening
-recovery, pushed. Nothing of mine is running.
+Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14` through the portable backup
+file, committed. Nothing of mine is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
-one. MacLive is an SMB mount of another machine (`//…@Chat._smb._tcp.local/MacLive`), so `pgrep` from
+one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep` from
 this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
 machine**, never through the mount.
 
-**Build state — all three live targets are current, the recovered chapter openings included:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **installed** with the
-  recovered openings; not launched, because the phone was locked and `process launch` returns
-  `FBSOpenApplicationErrorDomain error 7`. Nothing is waiting on that: this change alters no
-  SwiftData model, and the macOS build below proves the same bundle runs with its widget extension
-  alive. ⭐ **This is where he tests.** ⛔ The first `devicectl install` returned
-  `CoreDeviceError 4000, "the device disconnected immediately after connecting"`; the identical second
-  attempt succeeded. That is the phone, not the build — retry once before believing it.
-- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, signed team `RR5DY39W4Q`, running
-  with its widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it from
-  **Edit Widgets**.
+**Build state — all three live targets are current and carry Backup & Restore:**
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **installed and launched**.
+  Both processes confirmed alive with `xcrun devicectl device info processes`: the app and
+  `ACIMDailyMinuteWidgetExtension`. The widget extension coming up is the proof the schema is
+  clean, since it is what `fatalError`s on a mismatch — and this change adds no model and no schema
+  entry, deliberately. ⭐ **This is where he tests.** ⛔ A `devicectl install` that returns
+  `CoreDeviceError 4000, "the device disconnected immediately after connecting"` is the phone, not
+  the build — retry once before believing it.
+- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, arm64, signed team `RR5DY39W4Q`,
+  launched, with its widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds
+  it from **Edit Widgets**. ⛔ **`build/Debug/` is the macOS product.** `build/Debug-iphonesimulator/`
+  also contains an `ACIMDailyMinute.app` and a `find` that is not anchored will hand you the wrong
+  one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q` before believing you installed it.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
@@ -41,17 +43,20 @@ machine**, never through the mount.
   `process launch`. ⛔ **A locked phone refuses `process launch` with `FBSOpenApplicationErrorDomain
   error 7` and can drop the install connection entirely** — that is the lock, not the build. Check with
   `xcrun devicectl device info processes`; **the widget extension process being alive is the proof** of
-  a clean schema, since it is what `fatalError`s on mismatch, and it comes up even while locked.
+  a clean schema.
 - **macOS + widget:** `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination
-  "platform=macOS" -allowProvisioningUpdates DEVELOPMENT_TEAM=RR5DY39W4Q build`, copy to
-  `/Applications`, launch once. Verify with `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
+  "platform=macOS" -allowProvisioningUpdates DEVELOPMENT_TEAM=RR5DY39W4Q -derivedDataPath build build`,
+  copy `build/Debug/ACIMDailyMinute.app` to `/Applications`, launch once. Verify with
+  `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
   ⛔ Quit the running copy first, or `rm -rf /Applications/ACIMDailyMinute.app` fails mid-flight.
 - **Real SwiftData migrations can be proved here without the phone.** The macOS App Group store at
   `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/ACIMDailyMinute.sqlite` holds real
   data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
-  `sqlite3` to see the migration actually happened and the rows survived.
+  `sqlite3` to see the migration actually happened and the rows survived. ⛔ **Its annotation tables
+  are empty** — `ZHIGHLIGHT`, `ZNOTE` and `ZBOOKMARK` are all 0 — so it can prove a schema change but
+  it cannot prove anything about annotations. For that, drive the real corpus through a harness.
 
-⛔ **Six committed checks now guard the corpus. Run all six after any change to a bundled file:**
+⛔ **Seven committed checks now guard this repo. Run all seven after any change to a bundled file:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -75,6 +80,14 @@ machine**, never through the mount.
   characters of the Text had never been there at all. The segments are a continuous cut of the same
   PDFs, so anything present there and missing from the readable corpus is missing text. Zero gaps of
   60+ characters in the Text, zero in the Workbook, all 105 Manual rows accounted for.
+- `./tools/verify_backup.sh` — ⛔ **the only check that guards a reader's OWN words rather than the
+  book's.** 599 assertions: the backup file round trips, refuses a foreign or newer file, and the
+  merge is idempotent, commutative, associative and loses no passage of any note. 232 of the
+  highlights it drives are cut from the shipped corpus at real offsets, so the em dashes, curly
+  apostrophes and restored spaces are the real ones. **It compiles `BackupDocument.swift` and
+  `BackupMerge.swift` and nothing else, and that is half the check** — those two files must stay
+  free of SwiftData, SwiftUI, `Bundle` and `CorpusService`, or a reader's backup starts depending on
+  the app it exists to outlive.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -86,6 +99,13 @@ this Mac:
   terminator; and the two Part Introduction rows take their titles from the corpus rather than from
   literals.
 - `docs/superpowers/specs/2026-08-30-canonical-citations-design.md` + its plan — implemented.
+- `docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` + its plan — **step 1 of five
+  implemented** (the portable file). Steps 2-5 are spec'd and not started; they are the
+  `▶ NEXT` block of [`todo.md`](todo.md). Two places where the code is ahead of the plan's text,
+  both deliberate: `AnnotationExport.Entry` gained an `id` so the backup can join a citation to a
+  particular highlight without matching on its quote; and the file records milliseconds while the
+  store keeps full precision, so `BackupMerge` compares dates at the format's own resolution rather
+  than with `<`.
 - ⛔ **The chapter-opening recovery has NO design document.** It was found by measurement rather
   than requested, so it went straight from evidence to an approved plan, which is at
   `~/.claude/plans/iridescent-moseying-engelbart.md` — outside the repo, and the only written
@@ -109,31 +129,55 @@ this Mac:
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, the six committed checks above, `./build.sh`, the arm64 device build,
-install + launch, process-alive checks, the macOS store migration, real feed payloads. The six
-committed checks above are the first thing to run in a new session — they take under a minute and
+against real bundled data, the seven committed checks above, `./build.sh`, the arm64 device build,
+install + launch, process-alive checks, the macOS store migration, real feed payloads. **The seven
+committed checks above are the first thing to run in a new session** — they take about a minute and
 they are how you find out the tree is what this file says it is.
 
-**⭐ He asked for the next piece to start in a fresh chat, and named it: a way to back up, restore
-and share a reader's own work — settings, highlights, notes, bookmarks — between devices and
-machines.** iCloud for Apple devices ideally, "but we also do not want to leave out our Windows and
-Linux and Android friends." He marked it *no rush, when convenient*, and it is his own words rather
-than anything inferred, so it does not get quietly dropped or quietly narrowed.
+**⭐ The next piece is the rest of carrying a reader's work between devices, and its whole brief is
+the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done; iCloud is not. Take the
+items in the order they are written there, because the first one is a hard prerequisite:
 
-The whole brief is the `▶ NEXT — carrying a reader's own work between devices` block in
-[`todo.md`](todo.md), including the four constraints that actually decide the design. **Read that
-block before proposing anything.** The two that kill most obvious answers: a sync service *we* run
-would end both the no-backend architecture and the "Data Not Collected" label, while CloudKit's
-**private** database would not; and a cross-device merge is exactly where "never key a row by a hash
-of its content" bites hardest, because an edited note would arrive as a second note. Spec first,
-then plan, then execute — and the conflict rule gets decided before either, because "last write
-wins" silently discards a reader's words.
+1. **Bookmark uniqueness has to move into code before anything else.** SwiftData refuses
+   `@Attribute(.unique)` in a CloudKit-backed store and `Bookmark.itemKey` is the only thing
+   preventing duplicate bookmark rows today, so the constraint cannot come off until the six
+   `itemKey` call sites fetch before they insert.
+2. Split the container into a reader store and a cache store — **four container declarations, not
+   three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`.
+3. CloudKit private database, off by default. **The widget reads `Bookmark`**, so the widget
+   extension needs the iCloud entitlement too.
+4. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
+   becomes false the moment CloudKit is on.
+5. The reader-chosen folder, in its smallest form only.
+
+⛔ **The conflict rule is decided, implemented and proved; do not re-open it.** A merge may never
+make a reader's words fewer. It is in `BackupMerge.swift` with the reasoning attached, and
+`./tools/verify_backup.sh` holds it: idempotent, commutative, associative, and no passage of any
+note body is ever lost.
 
 **Corpus-wide search — the book's index — is still the other open item** and is unstarted. Its brief
 is the `▶ THEN` block of [`todo.md`](todo.md): the three narrow searches that exist today and what
 each actually matches, the 5,137,927 characters over 2,727 records a real search has to cover, and
-the four questions its spec has to answer. Take it only if he says so; he asked for the sync work
-in the new chat.
+the four questions its spec has to answer.
+
+⛔ **A reader's backup file is `.json` on purpose, and that is not a small decision.** No private
+extension and no private UTI: the file has to open on a Windows, Linux or Android machine with what
+that machine already has, which is the whole reason tier A exists. It carries the edition note and a
+human name and citation on every mark so it reads as a document rather than a table of identifiers.
+**Those decorative fields are written and never read back** — the receiving device derives its own,
+and nothing may come to depend on them.
+
+⛔ **Import is strictly additive, and the screen says so before the reader taps.** A backup file is a
+snapshot, not a log, so a record's absence carries no information at all — treating it as a deletion
+would let a six-month-old file erase six months of work. `MergePlan` has no field that can express a
+deletion, deliberately. **CloudKit will be different**: it is a live sync and deletes do propagate,
+which is a real behavioural difference between the two tiers and the reader has to be told rather
+than left to discover it.
+
+⛔ **The file records milliseconds; the store keeps full precision.** So `BackupMerge` compares dates
+at the format's own resolution rather than with `<`. Without that, a device importing its own export
+would find every birthday a fraction earlier than the one it holds, rewrite them all, and report
+changes that were not real. `BackupDocument.timeResolution` is the one place that number lives.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
@@ -242,9 +286,10 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **corpus-wide search**, then cross-reference links — which
-citations unblocked, since `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
-already navigates — then the pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
+From [`todo.md`](todo.md), in order: **the four remaining sync items** (bookmark uniqueness, the
+store split, CloudKit, the reader-chosen folder), then **corpus-wide search**, then cross-reference
+links — which citations unblocked, since `Citation(rawValue:)` parses an address back to a
+`ReadingKey` the app already navigates — then the pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
 running heads still sitting inside Chapter 11's prose are the two remaining corpus defects; the lesson
 bodies are the one job that genuinely needs the PDFs. The Manual is the last bundled corpus with no
 reading UI, and structuring it is its own item.
@@ -257,5 +302,6 @@ feed are rented and will end. Bundled content is permanent, the feed lasts decad
 YouTube and archive.org are certain to end. **The app must be wholly usable on bundled content alone,
 and every higher tier must be purely additive.** The app is not permanent either, so nothing may be
 trapped inside it: bundled data stays human-readable JSON, and reader-created content must export as
-plain text. `AnnotationExport.plainText` is that promise kept for highlights and notes; anything that
-lets a reader create something new owes the same.
+plain text. `AnnotationExport.plainText` is that promise kept for reading, and the backup `.json` is
+it kept for reading *back* — plain UTF-8 a stranger's text editor opens, on a machine that never ran
+this app. **Anything that lets a reader create something new owes both.**

@@ -79,6 +79,21 @@ struct SettingsView: View {
                     }
                 }
 
+                Section {
+                    NavigationLink {
+                        BackupRestoreView()
+                    } label: {
+                        Text("Backup & Restore")
+                    }
+                } header: {
+                    Text("Your Work")
+                } footer: {
+                    // Nothing can re-send a reader what they wrote: there is no
+                    // server and no account. The one copy is on this device
+                    // until they make another.
+                    Text("Carry your highlights, notes and bookmarks to another device.")
+                }
+
                 Section("About") {
                     NavigationLink {
                         CompanionNoteView()
