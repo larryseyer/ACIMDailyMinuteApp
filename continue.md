@@ -147,8 +147,15 @@ install + launch, process-alive checks, the macOS store migration, real feed pay
 committed checks above are the first thing to run in a new session** — they take about a minute and
 they are how you find out the tree is what this file says it is.
 
-**⭐ The next piece is the rest of carrying a reader's work between devices, and its whole brief is
-the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done; iCloud is not. Take the
+⏳ **Two things are IN FLIGHT and come before anything else — both are the `⏳ IN FLIGHT` block of
+[`todo.md`](todo.md).** The archive.org ban is lifted, both items exist, and the back-catalogue is
+publishing; **the recorded URLs are in `untracked/archive-backfill/acim.db.with-archive-urls`, NOT on
+MacLive**, and landing them is his call because the 02:00 run writes that file nightly. The
+standardized reading layout was designed with him and then paused mid-brainstorm — the decisions are
+in the `⏸ PAUSED` block and no spec or code exists yet.
+
+**⭐ After those, the next piece is the rest of carrying a reader's work between devices, and its
+whole brief is the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done; iCloud is not. Take the
 items in the order they are written there, because the first one is a hard prerequisite:
 
 1. **Bookmark uniqueness has to move into code before anything else.** SwiftData refuses

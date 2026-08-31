@@ -210,6 +210,73 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       added, how many notes were written in two places, and that nothing was removed. Say if the
       wording is wrong — it is the only thing telling a reader what just happened to their work.
 
+## ⏳ IN FLIGHT — archive.org audio is publishing, and the DB has NOT been landed
+
+⛔ **The IA ban is lifted and both items exist.** `acim-daily-minute` and `acim-daily-lessons` were
+created 2026-08-31 through `archive_upload._upload()` itself — the hand-creation step its docstring
+still describes was not needed, and that docstring is now stale. A new item serves from its storage
+node immediately but 404s on the public `/download/` path for 10-45 minutes; `verify()` correctly
+refuses to record a URL until it routes, so nothing can advertise audio that is not there.
+
+⛔ **Recorded URLs are in a LOCAL COPY of `acim.db`, not on MacLive.** SQLite was never written across
+the SMB mount. Two files, both gitignored:
+- `untracked/archive-backfill/acim.db.with-archive-urls` — the copy carrying the new
+  `audio_public_url` / `audio_bytes` / `audio_duration` values.
+- `untracked/archive-backfill/acim.db.backup-before-archive-urls` — the untouched original.
+- `untracked/archive-backfill/run_backfill.py` — the driver; takes `<db> <minute|lesson|all> <limit>`
+  and is safe to re-run, since a row that already carries a URL is skipped.
+
+**Three things are open, and the first is his to authorise:**
+- [ ] **Land the DB on MacLive.** `/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db`.
+      ⛔ It holds `segments.id`, `used_date` and `youtube_id` for all 158 published entries.
+      **The 02:00 run adds a row every night**, so a copy-back must be reconciled against whatever
+      the live file holds at that moment — do NOT copy over a newer file. Compare mtime first; it was
+      `2026-08-31 03:05:32` when the local copy was taken.
+- [ ] **Finish the lessons.** 83 lesson MP3s were still pending when the run was interrupted; the
+      minute back-catalogue was at 149 of 154 recorded. Re-run the driver to resume.
+- [ ] **`github_push.py`** afterward, to rebuild the feeds from the recorded column. Only then do the
+      Today card's **Listen** button and the Listen tab's Download action appear — **no app change and
+      no rebuild**, because both already key off `audio_url` being non-empty.
+
+## ⏸ PAUSED — the standardized reading layout (design, not started)
+
+He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
+is written down as a spec yet and no code exists.** The decisions he made are worth keeping:
+
+- **One scaffold, three bands, for every reading surface:** header (`LABEL` + play + Save + Share) →
+  title → body → `Add note` / Export → footer (citation + word count). Controls above, the reader's
+  response below, the reading itself untouched between them.
+- **`Add note` stays at the bottom.** His call, and it belongs with the citation, not the actions.
+- **Save moves out of the nav toolbar into the header row on pushed screens**, so all surfaces are
+  identical rather than each being locally idiomatic.
+- **One play control, audio-first.** Tap plays narration and the reader keeps reading; video is
+  deliberate (long-press / menu), because video takes the screen and is the most perishable tier.
+  It sits leftmost so Save and Share never shift position between passages.
+- **The tab bar becomes Today | Read | Listen | Video | Saved.** `Archive` becomes `Video` — all 158
+  published entries already carry a `youtube_id`, so it is a recast rather than a build, and it
+  retires the last exemption to the no-publication-dates rule. Label items by citation, not date.
+- **Listen becomes activity, not a catalogue** — now playing, part-finished, downloaded, finished.
+  The Course stays organized exactly once, in Read.
+
+**The work decomposes into five pieces, in this order: A → D → E → B → C.**
+- **A — the scaffold** across the five surfaces that already exist. App-only, no new data. Next.
+- **D — Archive → Video.** App-only; the data exists today.
+- **E — structure the Manual.** ⛔ **The Manual is NOT free.** Its 105 bundled rows are arbitrary
+  ~1,300-character word-count cuts that begin mid-thought, with no titles and `citation: nil`. Its
+  real Introduction / 29 questions / Clarification of Terms exist only in `4_ACIM_Manual.pdf`, so it
+  needs a structure layer built at export, the way the Text's 272 sections were. Annotations key on
+  `manual:<segmentId>`, **not** a section address, so structuring it cannot move a reader's marks —
+  unlike the Text renumber that made `T-16.1` into `T-16.2`.
+- **B — media index + inline play control.** The only piece needing a pipeline change. Availability
+  must be a feed-driven overlay keyed by `segment:<id>` / `lesson:<n>` — never bundled (stale the
+  next day), never computed from a filename.
+- **C — Listen as activity.** Needs playback progress, which does not exist yet.
+
+⛔ **Audio and video are produced about one a day: ~1.5 years for the 365 lessons, ~7 years for the
+1,983 minute segments.** So **most readings will have no media for the life of this app.** Absence is
+the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
+position when one does appear.
+
 ## ▶ NEXT — iCloud, and the rest of carrying a reader's work between devices
 
 ⭐ **The portable file is built and verified.** Settings → **Your Work → Backup & Restore** writes
