@@ -98,6 +98,10 @@
 		AA000001330 /* AnchorResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002330 /* AnchorResolver.swift */; };
 		AA000001342 /* AnnotationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002342 /* AnnotationStore.swift */; };
 		AA000001346 /* AnnotationExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002346 /* AnnotationExport.swift */; };
+		AA000001400 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
+		AA000001407 /* BackupMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002407 /* BackupMerge.swift */; };
+		AA000001408 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002408 /* BackupService.swift */; };
+		AA000001409 /* BackupRestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002409 /* BackupRestoreView.swift */; };
 		AA000001312 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
@@ -242,6 +246,10 @@
 		AA000002330 /* AnchorResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnchorResolver.swift; sourceTree = "<group>"; };
 		AA000002342 /* AnnotationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationStore.swift; sourceTree = "<group>"; };
 		AA000002346 /* AnnotationExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationExport.swift; sourceTree = "<group>"; };
+		AA000002400 /* BackupDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDocument.swift; sourceTree = "<group>"; };
+		AA000002407 /* BackupMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupMerge.swift; sourceTree = "<group>"; };
+		AA000002408 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
+		AA000002409 /* BackupRestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestoreView.swift; sourceTree = "<group>"; };
 		AA000002310 /* CorpusFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusFallback.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
@@ -389,6 +397,9 @@
 				AA000002330 /* AnchorResolver.swift */,
 				AA000002342 /* AnnotationStore.swift */,
 				AA000002346 /* AnnotationExport.swift */,
+				AA000002400 /* BackupDocument.swift */,
+				AA000002407 /* BackupMerge.swift */,
+				AA000002408 /* BackupService.swift */,
 				AA000002310 /* CorpusFallback.swift */,
 				AA000002312 /* AudioDownloadStore.swift */,
 			);
@@ -475,6 +486,7 @@
 				AA000002025 /* SettingsView.swift */,
 				AA000002221 /* PhrasesEditorView.swift */,
 				AA000002030 /* PrivacyPolicyView.swift */,
+				AA000002409 /* BackupRestoreView.swift */,
 				AA000002313 /* CompanionNoteView.swift */,
 			);
 			path = Settings;
@@ -813,6 +825,10 @@
 				AA000001330 /* AnchorResolver.swift in Sources */,
 				AA000001342 /* AnnotationStore.swift in Sources */,
 				AA000001346 /* AnnotationExport.swift in Sources */,
+				AA000001400 /* BackupDocument.swift in Sources */,
+				AA000001407 /* BackupMerge.swift in Sources */,
+				AA000001408 /* BackupService.swift in Sources */,
+				AA000001409 /* BackupRestoreView.swift in Sources */,
 				AA000001312 /* CorpusFallback.swift in Sources */,
 				AA000001314 /* AudioDownloadStore.swift in Sources */,
 			);
