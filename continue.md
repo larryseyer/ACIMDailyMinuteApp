@@ -17,16 +17,20 @@ this Mac cannot see its processes — read `logs/acim.log` instead, and run `./s
 machine**, never through the mount.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **installed and launched**.
-  Both processes confirmed alive with `xcrun devicectl device info processes`: the app and
-  `ACIMDailyMinuteWidgetExtension`. The widget extension coming up is the proof the schema is
-  clean, since it is what `fatalError`s on a mismatch — and this change adds no model and no schema
-  entry, deliberately. ⭐ **This is where he tests.** ⛔ A `devicectl install` that returns
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current**.
+  It launched cleanly and both processes were seen alive at the time — the app and
+  `ACIMDailyMinuteWidgetExtension` — which is the proof the schema is clean, since the extension is
+  what `fatalError`s on a mismatch. ⛔ **`devicectl device info processes` will show none of them
+  now, and that means nothing is wrong**: the app is simply not open. It is a check to run *after*
+  launching, never a way to ask what is installed.
+  ⭐ **This is where he tests.** ⛔ A `devicectl install` that returns
   `CoreDeviceError 4000, "the device disconnected immediately after connecting"` is the phone, not
   the build — retry once before believing it.
-- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app`, arm64, signed team `RR5DY39W4Q`,
-  launched, with its widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds
-  it from **Edit Widgets**. ⛔ **`build/Debug/` is the macOS product.** `build/Debug-iphonesimulator/`
+- 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app` is current: arm64, signed team
+  `RR5DY39W4Q`, widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it
+  from **Edit Widgets**. It is not running right now, which is the ordinary state and not a fault.
+  Confirm the install with `codesign -dv` and `pluginkit -mAv -p com.apple.widgetkit-extension`,
+  which answer without launching anything. ⛔ **`build/Debug/` is the macOS product.** `build/Debug-iphonesimulator/`
   also contains an `ACIMDailyMinute.app` and a `find` that is not anchored will hand you the wrong
   one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q` before believing you installed it.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
@@ -140,8 +144,9 @@ items in the order they are written there, because the first one is a hard prere
 
 1. **Bookmark uniqueness has to move into code before anything else.** SwiftData refuses
    `@Attribute(.unique)` in a CloudKit-backed store and `Bookmark.itemKey` is the only thing
-   preventing duplicate bookmark rows today, so the constraint cannot come off until the six
-   `itemKey` call sites fetch before they insert.
+   preventing duplicate bookmark rows today, so the constraint cannot come off until the six insert
+   sites fetch before they insert — and the seventh writer in `DataService` is checked too. All
+   seven are listed further down.
 2. Split the container into a reader store and a cache store — **four container declarations, not
    three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`.
 3. CloudKit private database, off by default. **The widget reads `Bookmark`**, so the widget
@@ -179,6 +184,30 @@ at the format's own resolution rather than with `<`. Without that, a device impo
 would find every birthday a fraction earlier than the one it holds, rewrite them all, and report
 changes that were not real. `BackupDocument.timeResolution` is the one place that number lives.
 
+⛔ **Where the reader-data layer lives, and the one rule it must keep.** Four files, app target only:
+- `Services/BackupDocument.swift` — the `Codable` file format and the ISO-8601 conversion.
+- `Services/BackupMerge.swift` — the merge algebra. Takes a snapshot of what is local plus a decoded
+  document and returns a `MergePlan`; it never touches a model.
+- `Services/BackupService.swift` — **the only one that touches `ModelContext` or `UserDefaults`.**
+- `Views/Settings/BackupRestoreView.swift` — the screen, under Settings > Your Work.
+
+⛔ **The first two must stay pure** — no SwiftData, no SwiftUI, no `Bundle`, no `CorpusService`.
+`tools/verify_backup.sh` compiles exactly those two and nothing else, so purity is not a convention
+anyone has to remember: breaking it breaks the check. Keep new logic on that side of the line.
+
+⛔ **Every reader setting lives in `UserDefaults.standard`, NOT the App Group.** There is not one
+`UserDefaults(suiteName:)` call in the repo; the App Group holds only the SQLite file. Two
+consequences that decide real designs: **the widget and watch targets can see none of these keys**,
+and CloudKit sync of SwiftData will not carry any of them either — the reminder time, the alert
+toggles, the watched phrases and the listened history travel **only** in the backup file. Anything
+that wants a setting on more than one Apple device has to move it deliberately.
+
+⛔ **`Bookmark.itemKey` is written at six insert sites** — `DailyMinuteCard:105`,
+`DailyLessonCard:96`, `WorkbookIntroductionView:82`, `LessonDetailView:103`, `TextSectionView:166`,
+`ArchivedReadingCard:138` — **and rewritten in a seventh place**, `DataService.swift:125`, where a
+migration re-keys archive bookmarks onto the stable hash. All seven are in scope when the `.unique`
+constraint comes off for CloudKit, not just the six.
+
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
 narrations, the YouTube renders, and every reader annotation keyed `segment:<id>`. Re-extraction
@@ -199,7 +228,7 @@ confirmed by wording and by the 53 numbered miracle principles. `pdftotext` is i
 text, which would reintroduce page furniture and change words the publisher has already narrated.
 
 ⛔ **The Text's bodies in `ACIMTextSections.json` are display form, and that is load-bearing.**
-`ReadingText.displayString(from: body) == body` holds for all 268 sections, so what is in the JSON,
+`ReadingText.displayString(from: body) == body` holds for all 272 sections, so what is in the JSON,
 what is drawn, and what a highlight offset counts are one string. It survives the spacing repair
 **because the repair is idempotent and runs on both sides** — `tools/export_corpus.py` applies it to
 the bundle, `ReadingText.paragraphs` applies it at render, and applying it twice changes nothing.
