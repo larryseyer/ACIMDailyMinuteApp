@@ -60,7 +60,7 @@ machine**, never through the mount.
   are empty** — `ZHIGHLIGHT`, `ZNOTE` and `ZBOOKMARK` are all 0 — so it can prove a schema change but
   it cannot prove anything about annotations. For that, drive the real corpus through a harness.
 
-⛔ **Seven committed checks now guard this repo. Run all seven after any change to a bundled file:**
+⛔ **Eight committed checks now guard this repo. Run all eight after any change to a bundled file:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -92,6 +92,15 @@ machine**, never through the mount.
   `BackupMerge.swift` and nothing else, and that is half the check** — those two files must stay
   free of SwiftData, SwiftUI, `Bundle` and `CorpusService`, or a reader's backup starts depending on
   the app it exists to outlive.
+- `./tools/verify_text_measurement.sh` — ⛔ **the only check that guards the BOX rather than the
+  words.** 182 measurements over 45 real bodies at four window widths: every reading occupies real
+  height, at least one line of it, never shorter as the window narrows, and a body twenty times
+  longer is more than twice as tall. **It compiles `ReadingTextMeasurement.swift` and nothing else**,
+  which is what keeps the measurement free of SwiftUI and therefore checkable at all. It exists
+  because the macOS build shipped every reading measuring **zero** — `widthTracksTextView` silently
+  discarded the width `sizeThatFits` assigned — so cards collapsed, `Add note` and the citation were
+  laid out under the header, and the text drew over them until the card's `clipShape` cut it off
+  mid-sentence. Nothing crashed and no other check could see it.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -133,8 +142,8 @@ this Mac:
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, the seven committed checks above, `./build.sh`, the arm64 device build,
-install + launch, process-alive checks, the macOS store migration, real feed payloads. **The seven
+against real bundled data, the eight committed checks above, `./build.sh`, the arm64 device build,
+install + launch, process-alive checks, the macOS store migration, real feed payloads. **The eight
 committed checks above are the first thing to run in a new session** — they take about a minute and
 they are how you find out the tree is what this file says it is.
 

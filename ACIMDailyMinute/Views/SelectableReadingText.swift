@@ -230,8 +230,13 @@ private struct TextViewRepresentable: UIViewRepresentable {
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: UITextView, context: Context) -> CGSize? {
         guard let width = proposal.width, width > 0, width < .greatestFiniteMagnitude else { return nil }
-        let fitted = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
-        return CGSize(width: width, height: ceil(fitted.height))
+        // Measured through `ReadingTextMeasurement` rather than the view, so both
+        // platforms size a reading by the one rule `verify_text_measurement.sh`
+        // compiles and checks.
+        return CGSize(
+            width: width,
+            height: ReadingTextMeasurement.height(of: attributed, width: width)
+        )
     }
 }
 #elseif os(macOS)
@@ -305,12 +310,17 @@ private struct TextViewRepresentable: NSViewRepresentable {
     }
 
     func sizeThatFits(_ proposal: ProposedViewSize, nsView: NSTextView, context: Context) -> CGSize? {
-        guard let width = proposal.width, width > 0, width < .greatestFiniteMagnitude,
-              let container = nsView.textContainer, let layout = nsView.layoutManager
+        guard let width = proposal.width, width > 0, width < .greatestFiniteMagnitude
         else { return nil }
-        container.containerSize = NSSize(width: width, height: .greatestFiniteMagnitude)
-        layout.ensureLayout(for: container)
-        return CGSize(width: width, height: ceil(layout.usedRect(for: container).height))
+        // ⛔ Never measure through `nsView`'s own container. `widthTracksTextView`
+        // keeps that container's width equal to the view's frame width, so a
+        // width assigned to it here is discarded and every reading measures
+        // zero. The view keeps tracking — that is what makes it DRAW at the
+        // width SwiftUI hands it — and measuring happens somewhere else.
+        return CGSize(
+            width: width,
+            height: ReadingTextMeasurement.height(of: attributed, width: width)
+        )
     }
 }
 #endif
