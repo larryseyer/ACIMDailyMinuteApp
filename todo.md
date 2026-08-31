@@ -48,9 +48,8 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       bookmark — say so if the leading edge should require a tap on Delete instead.
 - [ ] **B7 — watched phrases.** The counter reads `1 of 10` immediately after adding a phrase. Then set a
       phrase to a word in today's minute, force-quit, wait past the 60s debounce, relaunch, and confirm
-      the notification arrives. Notification permission is now requested at launch; it used to be reached
-      only by switching the daily reminder on, so anyone who left that off was never asked and every
-      alert was discarded unasked-for.
+      the notification arrives. Permission is requested at launch, so a reader who leaves the daily
+      reminder switched off is still asked — which is what makes a phrase alert reach anyone at all.
 - [ ] **Lesson bodies.** Open a lesson the feed has not published yet — anything in 1-80. Expected:
       the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
       All 365 bodies are bundled now. Note that choosing a lesson that *has* a video still opens that
