@@ -192,6 +192,14 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
       `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
+- [ ] **Saving a passage, twice.** Tap Save on any reading, leave the screen, come back, tap Save
+      again. Expected: it saves, then un-saves, every time. This used to be decided from the view's
+      own `@Query` snapshot, so a row written by the watch or by an import in the same tick was
+      invisible to it — the view inserted a second row, the unique index rejected the save, and
+      `try?` threw the error away. The reader tapped Save and **nothing happened, with no error
+      anywhere**. It now decides against a fetch. The rule is proved by 381 cases in
+      `tools/verify_bookmark_identity.sh`; only the tap is unverified, because it needs a hand.
+
 - [ ] **Backup & Restore, end to end.** Settings > Your Work > Backup & Restore. **Save a backup**
       should open a real Save dialog on the Mac and the Files sheet on the phone, and produce
       `ACIM Daily Minute backup <date>.json`. Open that file in any text editor: it should read as a
@@ -210,30 +218,39 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       added, how many notes were written in two places, and that nothing was removed. Say if the
       wording is wrong — it is the only thing telling a reader what just happened to their work.
 
-## ⏳ IN FLIGHT — archive.org audio is publishing, and the DB has NOT been landed
+## ⏳ IN FLIGHT — every MP3 is published; ONE step is left and it is his
 
-⛔ **The IA ban is lifted and both items exist.** `acim-daily-minute` and `acim-daily-lessons` were
-created 2026-08-31 through `archive_upload._upload()` itself — the hand-creation step its docstring
-still describes was not needed, and that docstring is now stale. A new item serves from its storage
-node immediately but 404s on the public `/download/` path for 10-45 minutes; `verify()` correctly
-refuses to record a URL until it routes, so nothing can advertise audio that is not there.
+⛔ **The back-catalogue is finished on archive.org.** Both items hold every recording that exists:
+`acim-daily-lessons` is complete at **84 of 84**, and `acim-daily-minute` at **156**. The remaining
+**9 minutes (2026-03-18 … 2026-03-26) have no local MP3 at all** — audio was never made for those
+days, so they are not pending, they are absent, and the driver skips them by design.
 
-⛔ **Recorded URLs are in a LOCAL COPY of `acim.db`, not on MacLive.** SQLite was never written across
-the SMB mount. Two files, both gitignored:
-- `untracked/archive-backfill/acim.db.with-archive-urls` — the copy carrying the new
-  `audio_public_url` / `audio_bytes` / `audio_duration` values.
-- `untracked/archive-backfill/acim.db.backup-before-archive-urls` — the untouched original.
-- `untracked/archive-backfill/run_backfill.py` — the driver; takes `<db> <minute|lesson|all> <limit>`
-  and is safe to re-run, since a row that already carries a URL is skipped.
+⛔ **All of it is recorded in a LOCAL SNAPSHOT, and MacLive has NOT been written.** SQLite has still
+never been written across the SMB mount; the live file's mtime is untouched. Files, all gitignored:
+- `untracked/archive-backfill/acim.db.live-snapshot-2026-09-01` — **this is the one that matters.**
+  A copy of the live DB taken 2026-09-01, with the 149 previously-recorded URLs folded in and the
+  97 new ones written into it. It is the live file plus URLs and nothing else.
+- `untracked/archive-backfill/reconcile_into_snapshot.py` — folds recorded URLs from one DB into
+  another, keyed by primary key, only onto rows still empty. Idempotent; a second run applies 0.
+- `untracked/archive-backfill/resume_backfill.py` — takes `<db> record|upload [limit]`. `record`
+  writes a URL for an episode already on archive.org **only after its md5 matches the local MP3**,
+  so a URL is never recorded against bytes he did not narrate; `upload` sends what is missing.
+- `untracked/archive-backfill/acim.db.with-archive-urls`, `.backup-before-archive-urls`,
+  `run_backfill.py` — the earlier round. Superseded by the snapshot above; keep until it is landed.
 
-**Three things are open, and the first is his to authorise:**
-- [ ] **Land the DB on MacLive.** `/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db`.
-      ⛔ It holds `segments.id`, `used_date` and `youtube_id` for all 158 published entries.
-      **The 02:00 run adds a row every night**, so a copy-back must be reconciled against whatever
-      the live file holds at that moment — do NOT copy over a newer file. Compare mtime first; it was
-      `2026-08-31 03:05:32` when the local copy was taken.
-- [ ] **Finish the lessons.** 83 lesson MP3s were still pending when the run was interrupted; the
-      minute back-catalogue was at 149 of 154 recorded. Re-run the driver to resume.
+⛔ **A whole-file copy back is WRONG and would destroy work.** The 02:00 run writes every night: the
+live file already gained two `upload_log` rows, one `lessons_log` row and three URLs of its own after
+the first local copy was taken. The snapshot was built by folding columns in, not by overwriting, and
+it was verified to differ from the live file **only** in `audio_public_url` / `audio_bytes` /
+`audio_duration` — 0 differences in `segments`, in `used_date`, in `youtube_id`, in any `_log` key.
+**Land it the same way, or reconcile again from a fresh copy.**
+
+**Two things are open. The first is his, and the second waits on it:**
+- [ ] **Land the recorded URLs on MacLive.** `/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db`.
+      ⛔ It holds `segments.id`, `used_date` and `youtube_id` for every published entry. The snapshot
+      was taken when the live mtime was `2026-09-01 03:08:51`; **compare mtime first and re-fold if a
+      newer run has happened**, rather than copying a stale file over a newer one. Doing this on
+      MacLive itself, not through the mount, is what has kept SQLite off SMB so far.
 - [ ] **`github_push.py`** afterward, to rebuild the feeds from the recorded column. Only then do the
       Today card's **Listen** button and the Listen tab's Download action appear — **no app change and
       no rebuild**, because both already key off `audio_url` being non-empty.
@@ -295,10 +312,23 @@ mutable field). Notes union their *passages*, so an extended note absorbs its ea
 genuinely divergent writing is kept as both. Bookmarks union by `itemKey`. **A file import never
 deletes**, because absence in a snapshot carries no information.
 
-- [ ] **Move bookmark uniqueness into code.** ⛔ **Prerequisite for everything below it**, and it is
-      not optional: SwiftData refuses `@Attribute(.unique)` in a CloudKit-backed store, and
-      `Bookmark.itemKey` is the only thing preventing duplicate bookmark rows today. It has to be a
-      fetch-then-insert at all six `itemKey` call sites before the constraint comes off, not after.
+⭐ **Bookmark uniqueness now lives in code, and the constraint's removal is no longer a guess.**
+Every write goes through `BookmarkStore`, which decides against a fetch instead of a view's `@Query`
+snapshot; the rule itself is `BookmarkIdentity`, pure, and `tools/verify_bookmark_identity.sh` is
+the **ninth committed check** (381 cases). `@Attribute(.unique)` is still on the model deliberately —
+it comes off with the store split below, so the index holds right up to the moment it is dropped and
+no duplicate can exist when it is.
+
+⛔ **The split's central assumption was measured, not assumed.** A build with `.unique` removed was
+run against the real macOS App Group store: `Z_Bookmark_UNIQUE_itemKey` disappeared from
+`sqlite_master`, the app opened the schema without `fatalError`, and both highlights and both notes
+survived. Restoring the attribute rebuilt the index over the same store, so **it is reversible**.
+Lightweight migration handles this; there is no `VersionedSchema` to write.
+
+⛔ **There is an eighth bookmark writer nobody had listed:** `BackupService.swift:187-192`. It is
+already safe — `BackupMerge` computes `insertBookmarks` against a live fetch and guards it with
+`insertedBookmarkKeys` — so it needs no change, but it is a raw `Bookmark()` insert and should be
+looked at whenever this invariant moves again.
 
 - [ ] **Split the container into two stores.** `reader.store` — `Highlight`, `Note`, `Bookmark`,
       CloudKit-able. `cache.store` — the six network-derived models, local only. Not merely a
@@ -307,6 +337,9 @@ deletes**, because absence in a snapshot carries no information.
       ⛔ **Four container declarations change together**, not three — app, widget, watch and
       `Shortcuts/GetTodaysReadingIntent.swift`. A one-time migration moves the three reader models
       across and **does not delete the old file**: caches are re-derivable, annotations are not.
+      ⛔ **`@Attribute(.unique)` comes off `Bookmark.itemKey` in THIS step, not earlier** — the code
+      that replaces it is already in and checked. `Highlight.id` and `Note.id` lose theirs too, and
+      that costs nothing: they are UUIDs, unique by construction. The six cache models keep theirs.
 
 - [ ] **CloudKit private database, off by default behind an explicit switch.** ⛔ **The widget reads
       `Bookmark`** (`ACIMDailyMinuteTimelineProvider.swift:41-46`), so the widget extension needs the
