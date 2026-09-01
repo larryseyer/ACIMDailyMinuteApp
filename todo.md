@@ -534,11 +534,6 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 - [ ] **Today-tab and Archive-tab minute bookmarks do not alias.** Today keys on `DailyMinute.segmentHash`,
       Archive on `ArchivedReading.lineHash`, so the same passage saved from both places lands twice.
       Documented in `ArchivedReadingCard.swift`.
-- [ ] **`hasSeenOnboarding` has contradictory defaults.** `false` at `App/ContentView.swift:10` and
-      `Views/Onboarding/OnboardingView.swift:4`, `true` at `Views/Settings/SettingsView.swift:7`.
-      Whichever view reads it first decides, which is not a decision anyone made. It is deliberately
-      not carried in a backup — it is app state, not the reader's work.
-
 - [ ] **Three defaults keys are dead.** `useCustomNotificationSound` is registered at
       `App/ACIMDailyMinuteApp.swift:92` and never read anywhere; `phraseMatchBadge` is written at
       `Services/BackgroundRefreshManager.swift:174` and never read; `lastArchiveFetch` is declared at
