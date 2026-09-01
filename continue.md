@@ -50,14 +50,12 @@ publishes the URLs into the feeds on its own.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current and
-  carries the store split**. ⛔ **The app has NOT been launched there since that install** — the phone
-  was locked and refused `process launch` — so **the phone's one-time reader migration has not run
-  yet**; it runs by itself the first time he opens the app. `ACIMDailyMinuteWidgetExtension` *was*
-  seen alive from the new bundle with the app never launched, which is the proof that the read-only
-  container can open a store the app has not created yet.
-  It launched cleanly and both processes were seen alive at the time — the app and
-  `ACIMDailyMinuteWidgetExtension` — which is the proof the schema is clean, since the extension is
-  what `fatalError`s on a mismatch. ⛔ **`devicectl device info processes` will show none of them
+  carries the store split**. It launched cleanly on the unlocked phone and **both processes stayed
+  alive** — the app and `ACIMDailyMinuteWidgetExtension` — which is the proof the schema is clean,
+  since the extension is what `fatalError`s on a mismatch. So the phone has run its one-time reader
+  migration and no crash report followed it. ⛔ Before that launch the extension was *also* seen alive
+  from the new bundle while the app had never been opened, which is the proof that a read-only
+  container can come up against stores the app has not created yet. ⛔ **`devicectl device info processes` will show none of them
   now, and that means nothing is wrong**: the app is simply not open. It is a check to run *after*
   launching, never a way to ask what is installed.
   ⭐ **This is where he tests.** ⛔ A `devicectl install` that returns
