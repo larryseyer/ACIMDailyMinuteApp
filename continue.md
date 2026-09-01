@@ -70,7 +70,7 @@ columns in rather than overwriting.
   are empty** — `ZHIGHLIGHT`, `ZNOTE` and `ZBOOKMARK` are all 0 — so it can prove a schema change but
   it cannot prove anything about annotations. For that, drive the real corpus through a harness.
 
-⛔ **Nine committed checks now guard this repo. Run all nine first thing — they take about a
+⛔ **Ten committed checks now guard this repo. Run all ten first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -120,6 +120,12 @@ minute and they are how you find out the tree is what this file says it is:**
   the survivor keeps the earlier `createdAt` exactly as `BackupMerge` does, and that no rule depends
   on the order a fetch returned rows in. All three failures it guards are silent: a half-deleted
   duplicate makes un-save do nothing, and a collision throws today's minute out of `persistMinute`.
+- `./tools/verify_header_reflow.sh` — ⛔ **the only check that guards the STRIP ABOVE a reading.**
+  211 cases, and **it compiles `CardHeaderRow.swift` and nothing else**. When the label and the
+  controls want more width than the card has, SwiftUI drops nothing and warns about nothing — it
+  squeezes the only squeezable things, which are the words. It proves the row takes a second line
+  instead: one line wherever one line still fits, exactly two lines when it does not, and never a
+  broken word at any width down to 60pt.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -170,13 +176,19 @@ checks first thing in a new session.**
 upload. Do not copy the snapshot over the live file without re-comparing mtime and re-folding, and
 do not re-open the hosting decision.
 
-⛔ **A LIVE BUG is now the first thing to fix — the `⛔ BUG` block of [`todo.md`](todo.md).** The
-Listen button appears on the Today card every day now (the nightly run publishes today's audio through
-the ordinary path), and it is a third control in a header row that holds two: `DAILY MINUTE` wraps to
-two lines and `Listen` hyphenates to `Lis-`/`ten`. ⛔ **His phone gives the app a 375pt canvas, not
-414pt** — the Pro Max is running **Display Zoom**, proved by his screenshot being 1125x2436 rather
-than 1242x2688, exactly 0.906x. His Dynamic Type is about `xxLarge` besides. The row needs 310pt and
-has 303pt. **Re-check every width assumption in this repo against 375pt, not 414pt.**
+⛔ **His phone gives the app a 375pt canvas, not 414pt, and nothing had said so.** The Pro Max is
+running **Display Zoom** — proved by his screenshot being 1125x2436 rather than the native 1242x2688,
+exactly 0.906x on both axes — and his Dynamic Type is about `xxLarge`. **Re-check every width
+assumption against 375pt.** The card header overflowed there the day `audio_url` filled in and the
+Listen button appeared: 310pt of controls in 303pt, which SwiftUI resolved by wrapping both labels
+into `DAILY / MINUTE` and `Lis-`/`ten`. It now reflows to two lines instead, via `CardHeaderRow`, and
+`tools/verify_header_reflow.sh` is the tenth check.
+
+⛔ **A control that appears because DATA changed has never been drawn.** The Listen button was
+described in both docs as needing "no app change and no rebuild" to come alive. It needed one, and
+nothing caught it because no build had ever laid out that row at full width. **The Listen tab's
+Download action is the same shape of risk and is still undrawn** — check it at 375pt when the
+back-catalogue lands.
 
 ⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
 [`todo.md`](todo.md) holds the decisions he made. **No spec and no code exist yet**, so it needs him
