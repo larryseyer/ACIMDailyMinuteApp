@@ -110,20 +110,21 @@ struct DataService: Sendable {
         let defaults = UserDefaults.standard
         guard defaults.integer(forKey: contentSchemaVersionKey) < contentSchemaVersion else { return }
 
-        var bookmarksByKey: [String: [Bookmark]] = [:]
-        for bookmark in try context.fetch(FetchDescriptor<Bookmark>()) {
-            bookmarksByKey[bookmark.itemKey, default: []].append(bookmark)
-        }
-
         // --- Archived minutes: re-key to channel|date, keeping saves attached.
         let archived = try context.fetch(FetchDescriptor<ArchivedReading>())
         var seenArchiveKeys: Set<String> = []
         for row in archived where row.channel == "daily-minute" {
             let stable = ArchiveService.minuteLineHash(date: row.dateString)
             if row.lineHash != stable {
-                for bookmark in bookmarksByKey["minute:\(row.lineHash)"] ?? [] {
-                    bookmark.itemKey = "minute:\(stable)"
-                }
+                // Several old-scheme rows for one date collapse to the same
+                // `stable`, so a blind rewrite can put two bookmarks on one key —
+                // which the unique index rejects, throwing today's minute out of
+                // `persistMinute` entirely. `resolveRename` folds them instead.
+                BookmarkStore.resolveRename(
+                    from: "minute:\(row.lineHash)",
+                    to: "minute:\(stable)",
+                    in: context
+                )
                 row.lineHash = stable
             }
             // A date already seen is a superseded copy of the same reading.
@@ -137,6 +138,14 @@ struct DataService: Sendable {
         // --- Daily Minutes: one row per date. Keep whichever a bookmark
         //     references so the save survives; the current fetch overwrites the
         //     survivor's text moments later.
+        // Read after the re-keying above, not before: those renames move and fold
+        // bookmark rows, so a map built earlier would name keys that no longer
+        // exist and hold rows that have since been deleted.
+        var bookmarksByKey: [String: [Bookmark]] = [:]
+        for bookmark in try context.fetch(FetchDescriptor<Bookmark>()) {
+            bookmarksByKey[bookmark.itemKey, default: []].append(bookmark)
+        }
+
         var minutesByDate: [String: [DailyMinute]] = [:]
         for minute in try context.fetch(FetchDescriptor<DailyMinute>()) {
             minutesByDate[minute.date, default: []].append(minute)

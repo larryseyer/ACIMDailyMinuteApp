@@ -131,15 +131,6 @@ struct ArchivedReadingCard: View {
     }
 
     private func toggleBookmark() {
-        if let existing = bookmarks.first(where: { $0.itemKey == itemKey }) {
-            modelContext.delete(existing)
-        } else {
-            let bookmark = Bookmark()
-            bookmark.itemKey = itemKey
-            bookmark.channel = reading.channel
-            bookmark.createdAt = Date()
-            modelContext.insert(bookmark)
-        }
-        try? modelContext.save()
+        BookmarkStore.toggle(key: itemKey, channel: reading.channel, in: modelContext)
     }
 }
