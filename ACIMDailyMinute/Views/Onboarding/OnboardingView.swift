@@ -3,6 +3,13 @@ import SwiftUI
 struct OnboardingView: View {
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @State private var currentPage = 0
+    /// The companion note is the last thing the introduction says, and it is a
+    /// stage rather than a sixth carousel page: it is a different kind of screen
+    /// — a note from one student to another, set in serif and scrolled — and it
+    /// reads as one. Living inside this view is what makes it reach both
+    /// entrances for free, since `hasSeenOnboarding` is the only thing that
+    /// presents the introduction and **Replay introduction** merely clears it.
+    @State private var showingNote = false
 
     private var pages: [(systemImage: String, title: String, description: String)] {
         [
@@ -23,81 +30,119 @@ struct OnboardingView: View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            #if os(iOS)
-            VStack(spacing: 0) {
-                TabView(selection: $currentPage) {
-                    ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
-                        OnboardingPage(
-                            systemImage: page.systemImage,
-                            title: page.title,
-                            description: page.description,
-                            showButton: index == pages.count - 1
-                        ) {
-                            hasSeenOnboarding = true
-                        }
-                        .tag(index)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .always))
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
-
+            if showingNote {
+                noteStage
+            } else {
+                carousel
             }
-            #else
-            // macOS: no page-style TabView exists in plain SwiftUI, so
-            // render one page at a time with a dot indicator and a
-            // discreet chevron nav that matches the iOS visual language.
-            VStack(spacing: 0) {
-                let page = pages[currentPage]
-                OnboardingPage(
-                    systemImage: page.systemImage,
-                    title: page.title,
-                    description: page.description,
-                    showButton: currentPage == pages.count - 1
-                ) {
-                    hasSeenOnboarding = true
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .id(currentPage)
-                .transition(.opacity)
-
-                HStack(spacing: 16) {
-                    Button {
-                        withAnimation { currentPage -= 1 }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.title3)
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(currentPage == 0)
-                    .opacity(currentPage == 0 ? 0.3 : 0.8)
-
-                    HStack(spacing: 10) {
-                        ForEach(0..<pages.count, id: \.self) { index in
-                            Circle()
-                                .fill(index == currentPage
-                                      ? Color(red: 0.83, green: 0.69, blue: 0.22)
-                                      : .gray.opacity(0.4))
-                                .frame(width: 8, height: 8)
-                        }
-                    }
-                    .padding(.horizontal, 8)
-
-                    Button {
-                        withAnimation { currentPage += 1 }
-                    } label: {
-                        Image(systemName: "chevron.right")
-                            .font(.title3)
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(currentPage == pages.count - 1)
-                    .opacity(currentPage == pages.count - 1 ? 0.3 : 0.8)
-                }
-                .padding(.bottom, 28)
-            }
-            .animation(.easeInOut(duration: 0.25), value: currentPage)
-            #endif
         }
         .preferredColorScheme(.dark)
+    }
+
+    // MARK: - The companion note, as the introduction's last word
+
+    /// Renders `CompanionNoteBody` — the same view Settings > About pushes — so
+    /// the wording exists once. Only the frame around it differs: a button here,
+    /// a navigation title there.
+    private var noteStage: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                CompanionNoteBody()
+            }
+
+            Button {
+                hasSeenOnboarding = true
+            } label: {
+                Text("Get Started")
+                    .font(.acimHeadline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color(red: 0.83, green: 0.69, blue: 0.22))
+            .padding(.horizontal, 40)
+            .padding(.top, 12)
+            .padding(.bottom, 28)
+        }
+    }
+
+    // MARK: - The carousel
+
+    @ViewBuilder
+    private var carousel: some View {
+        #if os(iOS)
+        VStack(spacing: 0) {
+            TabView(selection: $currentPage) {
+                ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
+                    OnboardingPage(
+                        systemImage: page.systemImage,
+                        title: page.title,
+                        description: page.description,
+                        showButton: index == pages.count - 1
+                    ) {
+                        showingNote = true
+                    }
+                    .tag(index)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            .indexViewStyle(.page(backgroundDisplayMode: .always))
+
+        }
+        #else
+        // macOS: no page-style TabView exists in plain SwiftUI, so
+        // render one page at a time with a dot indicator and a
+        // discreet chevron nav that matches the iOS visual language.
+        VStack(spacing: 0) {
+            let page = pages[currentPage]
+            OnboardingPage(
+                systemImage: page.systemImage,
+                title: page.title,
+                description: page.description,
+                showButton: currentPage == pages.count - 1
+            ) {
+                showingNote = true
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .id(currentPage)
+            .transition(.opacity)
+
+            HStack(spacing: 16) {
+                Button {
+                    withAnimation { currentPage -= 1 }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                }
+                .buttonStyle(.plain)
+                .disabled(currentPage == 0)
+                .opacity(currentPage == 0 ? 0.3 : 0.8)
+
+                HStack(spacing: 10) {
+                    ForEach(0..<pages.count, id: \.self) { index in
+                        Circle()
+                            .fill(index == currentPage
+                                  ? Color(red: 0.83, green: 0.69, blue: 0.22)
+                                  : .gray.opacity(0.4))
+                            .frame(width: 8, height: 8)
+                    }
+                }
+                .padding(.horizontal, 8)
+
+                Button {
+                    withAnimation { currentPage += 1 }
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .font(.title3)
+                }
+                .buttonStyle(.plain)
+                .disabled(currentPage == pages.count - 1)
+                .opacity(currentPage == pages.count - 1 ? 0.3 : 0.8)
+            }
+            .padding(.bottom, 28)
+        }
+        .animation(.easeInOut(duration: 0.25), value: currentPage)
+        #endif
     }
 }
 
@@ -108,7 +153,7 @@ private struct OnboardingPage: View {
     let title: String
     let description: String
     var showButton: Bool = false
-    var onGetStarted: (() -> Void)?
+    var onContinue: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 24) {
@@ -132,9 +177,12 @@ private struct OnboardingPage: View {
 
             if showButton {
                 Button {
-                    onGetStarted?()
+                    onContinue?()
                 } label: {
-                    Text("Get Started")
+                    // "Get Started" belongs to the note that follows, which is
+                    // the actual last act. Saying it twice would promise the
+                    // introduction was over a screen early.
+                    Text("Continue")
                         .font(.acimHeadline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
