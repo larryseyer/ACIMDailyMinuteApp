@@ -4,7 +4,12 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("dailyReminderEnabled") private var reminderEnabled = false
     @AppStorage("dailyReminderTimeInterval") private var reminderTimeInterval: Double = Date().timeIntervalSinceReferenceDate
-    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = true
+    // `false`, matching `ContentView` and `OnboardingView`. An install that has
+    // never stored this key has, by definition, not seen the introduction, so
+    // `true` was the wrong answer to give — it was inert only because this
+    // screen writes the flag and never reads it to decide anything. The first
+    // condition in Settings keyed on it would have inherited the disagreement.
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     @AppStorage("notifyNewMinute") private var notifyNewMinute = true
     @AppStorage("notifyNewLesson") private var notifyNewLesson = true
     @AppStorage("notifyPhraseMatches") private var notifyPhraseMatches = true
