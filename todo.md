@@ -228,43 +228,6 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       added, how many notes were written in two places, and that nothing was removed. Say if the
       wording is wrong — it is the only thing telling a reader what just happened to their work.
 
-## ⏳ IN FLIGHT — every MP3 is published; ONE step is left and it is his
-
-⛔ **The back-catalogue is finished on archive.org.** Both items hold every recording that exists:
-`acim-daily-lessons` is complete at **84 of 84**, and `acim-daily-minute` at **156**. The remaining
-**9 minutes (2026-03-18 … 2026-03-26) have no local MP3 at all** — audio was never made for those
-days, so they are not pending, they are absent, and the driver skips them by design.
-
-⛔ **All of it is recorded in a LOCAL SNAPSHOT, and MacLive has NOT been written.** SQLite has still
-never been written across the SMB mount; the live file's mtime is untouched. Files, all gitignored:
-- `untracked/archive-backfill/acim.db.live-snapshot-2026-09-01` — **this is the one that matters.**
-  A copy of the live DB taken 2026-09-01, with the 149 previously-recorded URLs folded in and the
-  97 new ones written into it. It is the live file plus URLs and nothing else.
-- `untracked/archive-backfill/reconcile_into_snapshot.py` — folds recorded URLs from one DB into
-  another, keyed by primary key, only onto rows still empty. Idempotent; a second run applies 0.
-- `untracked/archive-backfill/resume_backfill.py` — takes `<db> record|upload [limit]`. `record`
-  writes a URL for an episode already on archive.org **only after its md5 matches the local MP3**,
-  so a URL is never recorded against bytes he did not narrate; `upload` sends what is missing.
-- `untracked/archive-backfill/acim.db.with-archive-urls`, `.backup-before-archive-urls`,
-  `run_backfill.py` — the earlier round. Superseded by the snapshot above; keep until it is landed.
-
-⛔ **A whole-file copy back is WRONG and would destroy work.** The 02:00 run writes every night: the
-live file already gained two `upload_log` rows, one `lessons_log` row and three URLs of its own after
-the first local copy was taken. The snapshot was built by folding columns in, not by overwriting, and
-it was verified to differ from the live file **only** in `audio_public_url` / `audio_bytes` /
-`audio_duration` — 0 differences in `segments`, in `used_date`, in `youtube_id`, in any `_log` key.
-**Land it the same way, or reconcile again from a fresh copy.**
-
-**Two things are open. The first is his, and the second waits on it:**
-- [ ] **Land the recorded URLs on MacLive.** `/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db`.
-      ⛔ It holds `segments.id`, `used_date` and `youtube_id` for every published entry. The snapshot
-      was taken when the live mtime was `2026-09-01 03:08:51`; **compare mtime first and re-fold if a
-      newer run has happened**, rather than copying a stale file over a newer one. Doing this on
-      MacLive itself, not through the mount, is what has kept SQLite off SMB so far.
-- [ ] **`github_push.py`** afterward, to rebuild the feeds from the recorded column. Only then do the
-      Today card's **Listen** button and the Listen tab's Download action appear — **no app change and
-      no rebuild**, because both already key off `audio_url` being non-empty.
-
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
 He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
@@ -421,11 +384,20 @@ and whatever is added must survive the app.
 - Re-check cheaply: `curl -s https://archive.org/metadata/acim-daily-minute` → `{}` means still blocked.
 - ⛔ Do not re-open the hosting decision unprompted.
 
-## ▶ WATCHING — nightly catch-up
+## ▶ WATCHING — the feeds pick up the landed URLs, and the nightly catch-up
 
-- [ ] Five gaps remain: **2026-04-08, 04-29, 05-16, 05-31, 08-14**. One per night by design
-      (`CATCH_UP_MAX_PER_RUN = 1`); ~five nights to clear. Confirm with `./catchup.sh list`.
-- [ ] Next reach is **2026-04-08** at the 02:00 run. Fails soft; retries the next night.
+⛔ **MacLive now carries every recorded archive.org URL** — `upload_log` 156 of 166, `lessons_log`
+84 of 84. The ten minute rows still empty are the nine that have no MP3 at all (2026-03-18 … 03-26)
+plus 2026-05-31, which is an unfilled catch-up gap rather than a missing recording.
+
+- [ ] **Confirm the 02:00 run published them.** `main.py:427` calls `push_all_daily_minute` at the end
+      of every successful run and rebuilds the whole archive list from the database, so no hand-run of
+      `github_push.py` is needed. After the 2026-09-02 run, check the feed carries `audio_url` on the
+      back catalogue — then the Today card's **Listen** button and the Listen tab's Download action
+      appear with **no app change and no rebuild**. ⛔ Both are undrawn controls appearing because
+      DATA changed; check the Listen row's Download at 375pt when it does.
+- [ ] Three catch-up gaps remain: **2026-05-16, 05-31, 08-14**. One per night by design
+      (`CATCH_UP_MAX_PER_RUN = 1`); ~three nights to clear. Confirm with `./catchup.sh list`.
 
 ## ▶ OPEN — platform expansion
 
