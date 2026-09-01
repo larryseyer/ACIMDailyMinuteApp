@@ -22,7 +22,9 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
 
     private func fetchEntry() -> WidgetStoryEntry {
         do {
-            let container = SharedModelContainer.shared
+            // `shared` is optional now: a widget that cannot open the store
+            // draws its empty state instead of taking the process down.
+            guard let container = SharedModelContainer.shared else { return .empty }
             let context = ModelContext(container)
 
             var minuteDescriptor = FetchDescriptor<DailyMinute>(

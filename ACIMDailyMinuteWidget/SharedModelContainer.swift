@@ -1,5 +1,9 @@
 import Foundation
 import SwiftData
+// Imported for its linker side effect as much as its API: macOS does not
+// auto-link CloudKit the way iOS does, and the failure mode is sync that works
+// in Debug and silently does nothing in a distributed build.
+import CloudKit
 
 /// Where this app's SwiftData stores live, and how every target opens them.
 ///
@@ -58,8 +62,54 @@ enum SharedModelContainer {
     /// recovery path for reader data that has no upstream anywhere.
     static var legacyStoreURL: URL { groupURL.appending(path: "ACIMDailyMinute.sqlite") }
 
-    static func makeContainer(allowsSave: Bool) throws -> ModelContainer {
+    /// The reader's iCloud container. ⛔ Named explicitly rather than left to
+    /// `.automatic`: `.automatic` picks from the entitlement's array, so if a
+    /// second container ever appears there it would silently repoint and the
+    /// reader's marks would land somewhere new.
+    static let cloudKitContainerIdentifier = "iCloud.com.larryseyer.acimdailyminute"
+
+    /// Whether the reader has asked for iCloud sync. **Off unless they say so.**
+    ///
+    /// ⛔ Plain `UserDefaults.standard`, and that is only correct because of the
+    /// rule below: the app is the sole process that ever mirrors, so it is the
+    /// sole process that needs this answer. An earlier design put the flag in the
+    /// App Group so the widget could agree — which would have been the first
+    /// `UserDefaults(suiteName:)` in the repo and, worse, unreliable on macOS,
+    /// where this app is unsandboxed while its widget extension is sandboxed and
+    /// the two resolve group preference domains differently.
+    static var syncEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: syncEnabledKey) }
+        set { UserDefaults.standard.set(newValue, forKey: syncEnabledKey) }
+    }
+
+    static let syncEnabledKey = "iCloudSyncEnabled"
+
+    /// ⛔ **THE RULE: `allowsSave == false` ⇒ `cloudKitDatabase == .none`.**
+    ///
+    /// Only the app's one writable container mirrors, and only its reader
+    /// configuration. Everything else — the widget, the Shortcut, the legacy
+    /// store the migration reads — is structurally incapable of mirroring
+    /// whatever the reader's setting says.
+    ///
+    /// Two failures this prevents, both documented rather than guessed:
+    /// - Mirroring wants to *write* imported records, so a read-only store is the
+    ///   wrong thing to hand it.
+    /// - Two containers mirroring the same store **in one process** fail with
+    ///   "CloudKit setup failed because there is another instance of this
+    ///   persistent store actively syncing with CloudKit in this process." An App
+    ///   Intent can run inside the app's process, and
+    ///   `GetTodaysReadingIntent` builds its own container — so this is reachable
+    ///   here, not theoretical.
+    ///
+    /// ⛔ And the trap underneath all of it: `cloudKitDatabase` defaults to
+    /// **`.automatic`**, which means "mirror if the app is entitled to". Adding
+    /// the iCloud entitlement would therefore have switched mirroring on for the
+    /// cache store, the Shortcut and the legacy recovery copy, all by doing
+    /// nothing. Every configuration in this file names its choice.
+    static func makeContainer(allowsSave: Bool, includeReader: Bool = true) throws -> ModelContainer {
         if !allowsSave { try createStoresIfMissing() }
+
+        let mirrorsReader = allowsSave && includeReader && syncEnabled
 
         // ⛔ **Both configurations must be NAMED, and that is not cosmetic.**
         // Two unnamed configurations collapse onto the one default
@@ -74,14 +124,27 @@ enum SharedModelContainer {
             "reader",
             schema: Schema(readerModels),
             url: readerStoreURL,
-            allowsSave: allowsSave
+            allowsSave: allowsSave,
+            cloudKitDatabase: mirrorsReader ? .private(cloudKitContainerIdentifier) : .none
         )
+        // ⛔ `.none`, always and explicitly. The cache is the feed and the bundle
+        // re-derived — megabytes of already-public text that would otherwise be
+        // copied into the reader's iCloud for no purpose. Keeping it out is the
+        // reason the store was split in the first place.
         let cacheConfiguration = ModelConfiguration(
             "cache",
             schema: Schema(cacheModels),
             url: cacheStoreURL,
-            allowsSave: allowsSave
+            allowsSave: allowsSave,
+            cloudKitDatabase: .none
         )
+
+        guard includeReader else {
+            return try ModelContainer(
+                for: Schema(cacheModels),
+                configurations: [cacheConfiguration]
+            )
+        }
         return try ModelContainer(
             for: Schema(readerModels + cacheModels),
             configurations: [readerConfiguration, cacheConfiguration]
@@ -111,14 +174,15 @@ enum SharedModelContainer {
         _ = try makeContainer(allowsSave: true)
     }
 
-    /// The widget extension's container. Read-only: a widget draws, it never
-    /// writes.
-    static let shared: ModelContainer = {
-        do {
-            return try makeContainer(allowsSave: false)
-        } catch {
-            fatalError("Could not create widget ModelContainer: \(error)")
-        }
+    /// The widget extension's container. Read-only, so by the rule above it
+    /// never mirrors and the widget target needs no iCloud entitlement.
+    ///
+    /// ⛔ Returns `nil` rather than `fatalError`ing. A blank widget beats a
+    /// crashed one, and once CloudKit is anywhere near this store there are more
+    /// ways for the open to fail than there were — none of which the reader can
+    /// do anything about from their home screen.
+    static let shared: ModelContainer? = {
+        try? makeContainer(allowsSave: false)
     }()
 }
 
@@ -165,9 +229,19 @@ enum ReaderStoreMigration {
             let legacySchema = Schema(
                 SharedModelContainer.readerModels + SharedModelContainer.cacheModels
             )
+            // ⛔ `.none` is the most important word in this function. This
+            // configuration points at `ACIMDailyMinute.sqlite`, the only recovery
+            // copy of data that has no upstream anywhere, and it carries all nine
+            // models and all their unique constraints. Left at the default
+            // `.automatic`, the arrival of the iCloud entitlement would have set
+            // it mirroring.
             let legacyContainer = try ModelContainer(
                 for: legacySchema,
-                configurations: [ModelConfiguration(schema: legacySchema, url: legacyURL)]
+                configurations: [ModelConfiguration(
+                    schema: legacySchema,
+                    url: legacyURL,
+                    cloudKitDatabase: .none
+                )]
             )
             let source = ModelContext(legacyContainer)
             let destination = ModelContext(container)

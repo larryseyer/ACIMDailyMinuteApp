@@ -39,6 +39,13 @@ enum BackupService {
     /// - `hasSeenOnboarding` — app state, not the reader's work. A new device
     ///   should still introduce itself.
     /// - `useCustomNotificationSound` — registered and never read anywhere.
+    /// - `iCloudSyncEnabled` — whether a device mirrors the reader's work to
+    ///   their iCloud is consent, and consent is given per device. A backup that
+    ///   switched sync on for a machine its owner never chose it for would be
+    ///   the worst kind of surprise this app could spring.
+    /// - `readerStoreMigrated` — describes whether THIS device has lifted its
+    ///   annotations into `reader.store`. Importing it would make a device skip
+    ///   a migration it has not performed.
     private enum NotTheReaders {}
 
     // MARK: - Writing
