@@ -9,26 +9,8 @@ struct GetTodaysReadingIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
-        let schema = Schema([
-            DailyMinute.self,
-            DailyLesson.self,
-            Bookmark.self,
-            ArchivedReading.self,
-            Channel.self,
-            CachedPodcastEpisode.self,
-            SegmentMedia.self,
-            Highlight.self,
-            Note.self
-        ])
-        let containerURL = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!
-            .appending(path: "ACIMDailyMinute.sqlite")
-        let config = ModelConfiguration(
-            schema: schema,
-            url: containerURL,
-            allowsSave: false
-        )
-        let container = try ModelContainer(for: schema, configurations: [config])
+        // Read-only: a Shortcut reports today's reading, it never changes one.
+        let container = try SharedModelContainer.makeContainer(allowsSave: false)
         let context = container.mainContext
 
         var descriptor = FetchDescriptor<DailyMinute>(

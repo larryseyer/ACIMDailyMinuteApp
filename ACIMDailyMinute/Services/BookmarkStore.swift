@@ -34,6 +34,24 @@ enum BookmarkStore {
         try? context.save()
     }
 
+    /// Un-save the passage at `key`, however many rows are holding it.
+    ///
+    /// The Saved tab deletes the row a reader swiped, which was exactly right
+    /// while `@Attribute(.unique)` guaranteed there was only ever one. It is off
+    /// `itemKey` now — SwiftData refuses it in a CloudKit-backed store — so a
+    /// pair can exist, and deleting the swiped row alone would leave the passage
+    /// saved after the reader removed it, with the row reappearing the next time
+    /// the list redrew. `BookmarkIdentity.toggle` already returns *every* index
+    /// holding the key rather than the first, which is the whole reason it
+    /// returns indices at all.
+    static func remove(key: String, in context: ModelContext) {
+        let rows = fetch(key: key, in: context)
+        guard case .delete(let indices) = BookmarkIdentity.toggle(key: key, among: rows.map(\.identity)) else {
+            return
+        }
+        for index in indices { context.delete(rows[index]) }
+    }
+
     /// Move any bookmark naming `from` onto `destination`.
     ///
     /// Used where a reading's identity is repaired and its saves have to follow.

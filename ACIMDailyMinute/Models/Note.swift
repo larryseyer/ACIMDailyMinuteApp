@@ -7,9 +7,12 @@ import SwiftData
 ///
 /// `highlightID` present means a thought about a passage; absent means a thought
 /// about the whole reading. Both are ordinary.
+///
+/// `id` carries no `@Attribute(.unique)`: SwiftData refuses that in a
+/// CloudKit-backed store, and a UUID is unique by construction anyway.
 @Model
 final class Note {
-    @Attribute(.unique) var id: UUID = UUID()
+    var id: UUID = UUID()
     var readingKey: String = ""
     var body: String = ""
     var createdAt: Date = Date()

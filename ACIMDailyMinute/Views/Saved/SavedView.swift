@@ -87,11 +87,15 @@ struct SavedView: View {
                         // Both edges delete. `.onDelete` only ever produces a
                         // trailing swipe, and a saved item is the kind of thing
                         // people flick away in either direction.
+                        // Through `BookmarkStore`, not `modelContext.delete`:
+                        // `itemKey` no longer carries a unique index, so a
+                        // passage can be held by more than one row and only the
+                        // store removes all of them.
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            deleteButton { modelContext.delete(bookmark) }
+                            deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            deleteButton { modelContext.delete(bookmark) }
+                            deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
                         }
                 }
             }

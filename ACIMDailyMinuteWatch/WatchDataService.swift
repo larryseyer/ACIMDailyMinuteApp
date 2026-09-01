@@ -9,27 +9,14 @@ final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
     let container: ModelContainer
 
     private override init() {
-        let schema = Schema([
-            DailyMinute.self,
-            DailyLesson.self,
-            Bookmark.self,
-            ArchivedReading.self,
-            Channel.self,
-            CachedPodcastEpisode.self,
-            SegmentMedia.self,
-            Highlight.self,
-            Note.self
-        ])
-        let containerURL = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!
-            .appending(path: "ACIMDailyMinute.sqlite")
-        let config = ModelConfiguration(
-            schema: schema,
-            url: containerURL,
-            allowsSave: true
-        )
+        // The watch names the reader models in its schema but never reads or
+        // writes one — it draws today's minute and lesson and nothing else.
+        // It still opens both configurations so all four declarations stay one
+        // declaration; the empty `reader.store` it creates costs nothing, and
+        // divergence here is what put four hand-copied schemas in this project
+        // in the first place.
         do {
-            container = try ModelContainer(for: schema, configurations: [config])
+            container = try SharedModelContainer.makeContainer(allowsSave: true)
         } catch {
             fatalError("Could not create Watch ModelContainer: \(error)")
         }

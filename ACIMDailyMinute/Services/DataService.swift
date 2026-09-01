@@ -105,6 +105,15 @@ struct DataService: Sendable {
     /// saved reading. Instead each surviving row is re-keyed and any bookmark
     /// naming its old hash is rewritten in the same pass, while both values are
     /// still in hand.
+    ///
+    /// ⛔ **The single `save()` below now spans two store files** — the readings
+    /// live in `cache.store` and the bookmarks in `reader.store` — so the pass is
+    /// no longer atomic across both, and a failure between them could leave a
+    /// reading re-keyed with its save still naming the old hash. It is left as it
+    /// is on purpose: the whole method is gated on `contentSchemaVersion < 2`,
+    /// which every existing install already satisfies, and a fresh install has no
+    /// old-scheme rows to repair — so the window is real but unreachable. If that
+    /// guard ever moves, this needs a two-phase write before it runs again.
     @MainActor
     static func repairContentIdentitiesIfNeeded(in context: ModelContext) throws {
         let defaults = UserDefaults.standard

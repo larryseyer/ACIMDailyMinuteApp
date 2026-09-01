@@ -228,6 +228,27 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       added, how many notes were written in two places, and that nothing was removed. Say if the
       wording is wrong — it is the only thing telling a reader what just happened to their work.
 
+- [ ] **The companion note now closes the introduction.** Launch fresh (or Settings > Onboarding >
+      **Replay introduction**) and page through to the end. Expected: the last carousel page's button
+      now reads **Continue** rather than Get Started; tapping it shows "A Note About Using ACIM Daily
+      Minute" in full, scrollable, on the introduction's black ground; and its **Get Started** button
+      is what finally dismisses the introduction. Confirm the same note still reads correctly under
+      Settings > About, because both screens render one view and the words exist in only one place.
+      ⛔ Check it at 375pt: the note is long and it is the first thing a new reader meets.
+
+- [ ] **Saving still works after the unique index came off.** Tap Save on a reading, leave, come back,
+      tap again — it must save then un-save, every time. Then delete a saved row from the Saved tab by
+      swiping. Nothing in the database prevents duplicate bookmarks any more; `BookmarkStore` does, and
+      the Saved tab's delete was rerouted through it in this change. 381 cases hold the rule, but the
+      tap needs a hand.
+
+- [ ] **Your highlights and notes survived the store split.** The app now keeps the reader's work in
+      `reader.store` and the feed caches in `cache.store`, and lifts the old rows across once on first
+      launch. Proved on the Mac against real data — 2 highlights and 2 notes moved, the old file kept
+      its copy, and a second launch added nothing — but the phone's own store has only ever been
+      migrated by the phone. Open Saved and confirm every highlight and note is still there, and that
+      the Archive tab refilled itself.
+
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
 He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
@@ -285,34 +306,33 @@ mutable field). Notes union their *passages*, so an extended note absorbs its ea
 genuinely divergent writing is kept as both. Bookmarks union by `itemKey`. **A file import never
 deletes**, because absence in a snapshot carries no information.
 
-⭐ **Bookmark uniqueness now lives in code, and the constraint's removal is no longer a guess.**
-Every write goes through `BookmarkStore`, which decides against a fetch instead of a view's `@Query`
-snapshot; the rule itself is `BookmarkIdentity`, pure, and `tools/verify_bookmark_identity.sh` is
-the **ninth committed check** (381 cases). `@Attribute(.unique)` is still on the model deliberately —
-it comes off with the store split below, so the index holds right up to the moment it is dropped and
-no duplicate can exist when it is.
+⭐ **The store split is done, and `@Attribute(.unique)` is off all three reader models.**
+`reader.store` holds `Highlight`, `Note` and `Bookmark`; `cache.store` holds the six network-derived
+models; both are opened as **one** `ModelContainer` so a single `ModelContext` still spans them, which
+the widget, `BackupService` and nine views all depend on. `SharedModelContainer.makeContainer` is the
+single declaration all four sites now call. The pre-split `ACIMDailyMinute.sqlite` is left on disk
+untouched as the recovery copy and is never opened again after the one-time lift.
 
-⛔ **The split's central assumption was measured, not assumed.** A build with `.unique` removed was
-run against the real macOS App Group store: `Z_Bookmark_UNIQUE_itemKey` disappeared from
-`sqlite_master`, the app opened the schema without `fatalError`, and both highlights and both notes
-survived. Restoring the attribute rebuilt the index over the same store, so **it is reversible**.
-Lightweight migration handles this; there is no `VersionedSchema` to write.
+⛔ **Two configurations must be NAMED, and this cost a crash to learn.** Two unnamed
+`ModelConfiguration`s collapse onto the one default configuration, every entity is registered against
+both stores, and the first insert dies with `NSInvalidArgumentException` — *"Can't assign an object to
+a store that does not contain the object's entity."* **That is an Objective-C exception, not a Swift
+`Error`, so no `do`/`catch` can see it**: the app aborts at launch inside the container's own
+initializer, before any view exists. Named, the rows partition cleanly — proved twice, in a minimal
+`swiftc` harness and against the real store.
+
+⛔ **A read-only configuration cannot create a store it cannot find.** It throws
+`loadIssueModelContainer` ("Attempt to open missing file read only"), and both read-only callers turn
+that into a hard failure — the widget `fatalError`s, the Shortcut throws. This is not theoretical: a
+widget redraws on the system's schedule, so after the update that lands this split there is a window
+where neither store exists because the app has not been opened once. `createStoresIfMissing` closes
+it, and the phone proved it — the widget extension came up alive from the new bundle while the app
+had never been launched, because the device was locked.
 
 ⛔ **There is an eighth bookmark writer nobody had listed:** `BackupService.swift:187-192`. It is
 already safe — `BackupMerge` computes `insertBookmarks` against a live fetch and guards it with
 `insertedBookmarkKeys` — so it needs no change, but it is a raw `Bookmark()` insert and should be
 looked at whenever this invariant moves again.
-
-- [ ] **Split the container into two stores.** `reader.store` — `Highlight`, `Note`, `Bookmark`,
-      CloudKit-able. `cache.store` — the six network-derived models, local only. Not merely a
-      workaround for the constraint: enabling CloudKit on the single configuration would copy every
-      cached feed reading and the whole podcast cache into the reader's iCloud for no purpose.
-      ⛔ **Four container declarations change together**, not three — app, widget, watch and
-      `Shortcuts/GetTodaysReadingIntent.swift`. A one-time migration moves the three reader models
-      across and **does not delete the old file**: caches are re-derivable, annotations are not.
-      ⛔ **`@Attribute(.unique)` comes off `Bookmark.itemKey` in THIS step, not earlier** — the code
-      that replaces it is already in and checked. `Highlight.id` and `Note.id` lose theirs too, and
-      that costs nothing: they are UUIDs, unique by construction. The six cache models keep theirs.
 
 - [ ] **CloudKit private database, off by default behind an explicit switch.** ⛔ **The widget reads
       `Bookmark`** (`ACIMDailyMinuteTimelineProvider.swift:41-46`), so the widget extension needs the
