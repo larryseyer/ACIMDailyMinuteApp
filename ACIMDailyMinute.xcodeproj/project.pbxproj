@@ -127,6 +127,8 @@
 		AA000001405 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
 		AA000001406 /* WorkbookIntroductions.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002406 /* WorkbookIntroductions.json */; };
 		AA000001999 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
+		AA000001412 /* CardHeaderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002412 /* CardHeaderRow.swift */; };
+		AA000001413 /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002413 /* ListenButton.swift */; };
 		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
 		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
 		AA000001313 /* CorpusReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002311 /* CorpusReadingCard.swift */; };
@@ -278,6 +280,8 @@
 		AA000002405 /* WorkbookIntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookIntroductionView.swift; sourceTree = "<group>"; };
 		AA000002406 /* WorkbookIntroductions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookIntroductions.json; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
+		AA000002412 /* CardHeaderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHeaderRow.swift; sourceTree = "<group>"; };
+		AA000002413 /* ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenButton.swift; sourceTree = "<group>"; };
 		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
 		AA000002311 /* CorpusReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusReadingCard.swift; sourceTree = "<group>"; };
@@ -431,6 +435,8 @@
 				AA000002399 /* ReadingTextMeasurement.swift */,
 				AA000002341 /* AnnotatableReadingText.swift */,
 				AA000002999 /* SaveButton.swift */,
+				AA000002412 /* CardHeaderRow.swift */,
+				AA000002413 /* ListenButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -795,6 +801,8 @@
 				AA000001404 /* TextSectionView.swift in Sources */,
 				AA000001405 /* WorkbookIntroductionView.swift in Sources */,
 				AA000001999 /* SaveButton.swift in Sources */,
+				AA000001412 /* CardHeaderRow.swift in Sources */,
+				AA000001413 /* ListenButton.swift in Sources */,
 				AA000001058 /* SavedView.swift in Sources */,
 				AA000001222 /* BookmarkRow.swift in Sources */,
 				AA000001343 /* NoteEditorView.swift in Sources */,

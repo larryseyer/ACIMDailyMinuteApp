@@ -41,12 +41,7 @@ struct DailyMinuteCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center, spacing: 4) {
-            Text("Daily Minute")
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .foregroundStyle(.secondary)
-            Spacer()
+        CardHeaderRow("Daily Minute") {
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
                 Image(systemName: "square.and.arrow.up")
@@ -57,19 +52,9 @@ struct DailyMinuteCard: View {
             }
             .accessibilityLabel("Share")
             if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                Button {
+                ListenButton(title: "Daily Minute") {
                     audio.play(url: audioURL, title: "Daily Minute")
-                } label: {
-                    Label("Listen", systemImage: "play.fill")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.white.opacity(0.08), in: Capsule())
                 }
-                .buttonStyle(.plain)
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-                .accessibilityLabel("Listen to Daily Minute")
             }
         }
     }

@@ -42,12 +42,7 @@ struct DailyLessonCard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center, spacing: 4) {
-            Text("Lesson \(lesson.lessonNumber)")
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .foregroundStyle(.secondary)
-            Spacer()
+        CardHeaderRow("Lesson \(lesson.lessonNumber)") {
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
                 Image(systemName: "square.and.arrow.up")
@@ -58,19 +53,9 @@ struct DailyLessonCard: View {
             }
             .accessibilityLabel("Share")
             if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                Button {
+                ListenButton(title: "Lesson \(lesson.lessonNumber)") {
                     audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                } label: {
-                    Label("Listen", systemImage: "play.fill")
-                        .font(.caption.weight(.medium))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(Color.white.opacity(0.08), in: Capsule())
                 }
-                .buttonStyle(.plain)
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-                .accessibilityLabel("Listen to Lesson")
             }
         }
     }

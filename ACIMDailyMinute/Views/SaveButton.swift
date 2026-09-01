@@ -21,6 +21,12 @@ struct SaveButton: View {
         Button(action: action) {
             Label(isSaved ? "Saved" : "Save", systemImage: isSaved ? "bookmark.fill" : "bookmark")
                 .font(.caption.weight(.medium))
+                // ⛔ "Saved" is about 8pt wider than "Save", so this button grows
+                // when it is tapped. Without this the header row could fit before
+                // the save and wrap after it — the layout changing under the
+                // reader's finger, as a result of their own tap.
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
                 .foregroundStyle(isSaved ? Self.accent : .secondary)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
