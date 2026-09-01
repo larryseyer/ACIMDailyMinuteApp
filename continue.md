@@ -8,23 +8,42 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ WHAT IS TRUE RIGHT NOW
 
-Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14` through
-`Decide a bookmark against the store, not the screen`, committed and pushed. Nothing of mine is
-running. One untracked file sits in the repo root — `000000 Bug - Widget.png`, his screenshot of the
-macOS card-collapse bug that is already fixed by `Give a reading on macOS the height it actually
-draws`. It is his to keep or delete; do not commit it.
+Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
+of mine is running. **He is testing on the phone right now** — the install is current and the app was
+launched and seen alive. One untracked file sits in the repo root, `000000 Bug - Widget.png`; it is
+his, it predates the macOS height fix, and it must not be committed.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
-one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep` from
-this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
+one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep`
+from this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
 `./start.sh` there, never through the mount.
 
-⛔ **Every MP3 that exists is now published to archive.org** — 84 of 84 lessons, 156 minutes — but
-**MacLive still has none of the recorded URLs.** They are in
+⛔ **The card header is now two bands on every card and every screen size** — title centred on its
+own line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow`
+owns it, `ListenButton` and `SaveButton` are the shared controls, and `tools/verify_card_header.sh`
+is the tenth check. **The play control is leftmost on purpose**: most readings have no audio, so it
+is usually absent, and anchoring it there is what stops Share and Save moving between passages. His
+layout decisions, taken while looking at the phone — do not undo them without asking.
+
+⛔ **His phone gives the app a 375pt canvas, not 414pt.** The Pro Max runs **Display Zoom** — his
+screenshots are 1125x2436 rather than the native 1242x2688, exactly 0.906x — and his Dynamic Type is
+about `xxLarge`. **Check every width assumption against 375pt.** This is what made the header
+overflow: 310pt of controls in 303pt, which SwiftUI resolved by breaking words rather than by
+warning.
+
+⛔ **A control that appears because DATA changed has never been drawn by anyone.** The play control
+was described in both docs as needing "no app change and no rebuild" to come alive; it needed one,
+and nothing caught it because no build had ever laid that row out at full width. **The Listen tab's
+Download action is the same shape of risk and is still undrawn** — check it at 375pt when the
+back-catalogue lands.
+
+⛔ **Every MP3 that exists is published to archive.org** — 84 of 84 lessons, 156 minutes — but
+**MacLive still has none of the recorded back-catalogue URLs.** Today's minute carries audio only
+because the nightly run publishes it through the ordinary path. The recorded URLs are in
 `untracked/archive-backfill/acim.db.live-snapshot-2026-09-01`, and landing that file is the one thing
-in the `⏳ IN FLIGHT` block of [`todo.md`](todo.md) that is his. Read that block before touching it:
-a whole-file copy back would destroy a night's run, and the snapshot was built by folding three
-columns in rather than overwriting.
+in the `⏳ IN FLIGHT` block of [`todo.md`](todo.md) that is his. Read that block first: a whole-file
+copy back would destroy a night's run, and the snapshot was built by folding three columns in rather
+than overwriting.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current**.
@@ -120,12 +139,13 @@ minute and they are how you find out the tree is what this file says it is:**
   the survivor keeps the earlier `createdAt` exactly as `BackupMerge` does, and that no rule depends
   on the order a fetch returned rows in. All three failures it guards are silent: a half-deleted
   duplicate makes un-save do nothing, and a collision throws today's minute out of `persistMinute`.
-- `./tools/verify_header_reflow.sh` — ⛔ **the only check that guards the STRIP ABOVE a reading.**
-  211 cases, and **it compiles `CardHeaderRow.swift` and nothing else**. When the label and the
-  controls want more width than the card has, SwiftUI drops nothing and warns about nothing — it
-  squeezes the only squeezable things, which are the words. It proves the row takes a second line
-  instead: one line wherever one line still fits, exactly two lines when it does not, and never a
-  broken word at any width down to 60pt.
+- `./tools/verify_card_header.sh` — ⛔ **the only check that guards the STRIP ABOVE a reading.**
+  401 cases, and **it compiles `CardHeaderRow.swift` and nothing else**. When a title and its controls
+  want more width than the card has, SwiftUI drops nothing and warns about nothing — it squeezes the
+  only squeezable things, which are the words. It proves the block is two bands at every width from
+  90pt to 672pt with no word ever broken, that Share precedes Save on the trailing edge, and that
+  **neither moves when the play control appears** — which is what the leading play control buys, since
+  most readings have no audio and that button is usually absent.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -166,38 +186,27 @@ this Mac:
 ⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the entire confirmation list until every
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
-handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, the nine committed checks above, `./build.sh`, the arm64 device build,
-install + launch, process-alive checks, the macOS store migration, real feed payloads. **Run the nine
-checks first thing in a new session.**
+handed over once, whole, at the end. **He is testing the card header himself right now**, which is
+the one exception and was his own call, not a request from here.
+
+Verify everything else without him: `swiftc` harnesses against real bundled data, the ten committed
+checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
+store migration, real feed payloads. **Run the ten checks first thing in a new session** — about a
+minute, and they are how you find out the tree is what this file says it is.
 
 ⏳ **One thing is IN FLIGHT and it is HIS** — landing the recorded archive.org URLs on MacLive, the
-`⏳ IN FLIGHT` block of [`todo.md`](todo.md). Every MP3 is already published; nothing is left to
-upload. Do not copy the snapshot over the live file without re-comparing mtime and re-folding, and
-do not re-open the hosting decision.
-
-⛔ **His phone gives the app a 375pt canvas, not 414pt, and nothing had said so.** The Pro Max is
-running **Display Zoom** — proved by his screenshot being 1125x2436 rather than the native 1242x2688,
-exactly 0.906x on both axes — and his Dynamic Type is about `xxLarge`. **Re-check every width
-assumption against 375pt.** The card header overflowed there the day `audio_url` filled in and the
-Listen button appeared: 310pt of controls in 303pt, which SwiftUI resolved by wrapping both labels
-into `DAILY / MINUTE` and `Lis-`/`ten`. It now reflows to two lines instead, via `CardHeaderRow`, and
-`tools/verify_header_reflow.sh` is the tenth check.
-
-⛔ **A control that appears because DATA changed has never been drawn.** The Listen button was
-described in both docs as needing "no app change and no rebuild" to come alive. It needed one, and
-nothing caught it because no build had ever laid out that row at full width. **The Listen tab's
-Download action is the same shape of risk and is still undrawn** — check it at 375pt when the
-back-catalogue lands.
+`⏳ IN FLIGHT` block of [`todo.md`](todo.md). Nothing is left to upload. Do not copy the snapshot over
+the live file without re-comparing mtime and re-folding, and do not re-open the hosting decision.
 
 ⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
-[`todo.md`](todo.md) holds the decisions he made. **No spec and no code exist yet**, so it needs him
-back before it can move.
+[`todo.md`](todo.md) holds the decisions he made. ⭐ **Piece A has effectively begun**: the card
+header is now one shared `CardHeaderRow` across the three cards, audio-first with the play control
+leftmost, which is what that block asked for. The rest of the scaffold — the title/body/footer bands,
+`Archive` becoming `Video`, structuring the Manual — is still his to resume.
 
-**⭐ The live work is the rest of carrying a reader's work between devices, and its whole brief is
-the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done. **So is bookmark
-uniqueness** — every write goes through `BookmarkStore`, the rule is `BookmarkIdentity`, and
-`tools/verify_bookmark_identity.sh` is the ninth check. What is left, in order:
+**⭐ The live agent work is the rest of carrying a reader's work between devices**, the `▶ NEXT`
+block of [`todo.md`](todo.md). The portable file is done and so is bookmark uniqueness. Next, in
+order:
 
 1. **Split the container into a reader store and a cache store** — **four container declarations,
    not three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`. ⛔ **This is where
@@ -211,6 +220,9 @@ uniqueness** — every write goes through `BookmarkStore`, the rule is `Bookmark
 3. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
    becomes false the moment CloudKit is on.
 4. The reader-chosen folder, in its smallest form only.
+
+Then **corpus-wide search** (the `▶ THEN` block), then cross-reference links, then the pre-submission
+sweep.
 
 ⛔ **Write a `Bookmark` only through `BookmarkStore`, never by inserting the model.** `itemKey` is the
 whole identity — there is no `id` — and the six Save controls used to decide whether a row existed by

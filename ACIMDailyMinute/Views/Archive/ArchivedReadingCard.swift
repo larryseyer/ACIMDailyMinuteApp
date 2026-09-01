@@ -82,7 +82,12 @@ struct ArchivedReadingCard: View {
 
     private var header: some View {
         CardHeaderRow(headerLabel) {
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            if let audioURL = reading.audioURL, !audioURL.isEmpty {
+                ListenButton(title: listenTitle) {
+                    audio.play(url: audioURL, title: listenTitle)
+                }
+            }
+        } trailing: {
             ShareLink(item: shareText) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.caption)
@@ -91,11 +96,7 @@ struct ArchivedReadingCard: View {
                     .contentShape(Rectangle())
             }
             .accessibilityLabel("Share")
-            if let audioURL = reading.audioURL, !audioURL.isEmpty {
-                ListenButton(title: listenTitle) {
-                    audio.play(url: audioURL, title: listenTitle)
-                }
-            }
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 

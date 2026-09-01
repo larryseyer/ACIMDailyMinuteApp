@@ -1,66 +1,60 @@
 import SwiftUI
 
-/// The label-and-controls strip across the top of a reading card, and the one
-/// place that decides what happens when it will not fit on a line.
+/// The title-and-controls block at the top of a reading card.
 ///
-/// ⛔ **It will not fit, on a real phone, today.** The card gives this row 303pt
-/// on a 375pt canvas — which is what an iPhone 11 Pro Max reports while Display
-/// Zoom is on — and a label plus Save, Share and Listen needs about 310pt once
-/// the reader's text size reaches `xxLarge`. Before `audio_url` was filled in
-/// there was no Listen button and the row fitted at every size, which is why
-/// nothing had ever drawn it too narrow.
+/// Two bands, always: the title centred on its own line, and beneath it the
+/// controls — the play control on the leading edge, Share and Save on the
+/// trailing edge.
 ///
-/// Given 7pt too little, SwiftUI squeezes whatever can be squeezed, and the only
-/// squeezable things in the row are the two pieces of text. So both wrapped:
-/// `DAILY MINUTE` broke across two lines and `Listen` hyphenated into `Lis-` and
-/// `ten`. Nothing was clipped and nothing warned.
+/// ⛔ **The play control is leftmost so that Share and Save never move.** Audio
+/// and video are produced about one a day, so most readings carry neither and
+/// this button is usually absent. Anchoring it to the leading edge means its
+/// arrival pushes nothing: the two controls a reader uses on every passage stay
+/// exactly where they were on the passage before.
 ///
-/// ⛔ **`lineLimit(1)` alone is not the fix** — it turns the wrap into `DAILY
-/// MINU…`, which is worse, because the row still does not fit. The row has to
-/// reflow: keep every control and every word, and take a second line when one
-/// line cannot hold them. `ViewThatFits` picks the first candidate whose ideal
-/// size fits, so the single row is used wherever it still can be and the phone
-/// only ever sees two lines when it has to.
+/// ⛔ **One line was tried and does not fit.** A card gives this block 303pt on
+/// a 375pt canvas — which is what an iPhone 11 Pro Max reports while Display Zoom
+/// is on — and a label plus three controls needs about 310pt once the reader's
+/// text size reaches `xxLarge`. Given 7pt too little, SwiftUI squeezes whatever
+/// can be squeezed, and the only squeezable things are the words: `DAILY MINUTE`
+/// broke across two lines and `Listen` hyphenated into `Lis-` and `ten`. Nothing
+/// was clipped and nothing warned. Two bands are used on every size rather than
+/// only where one line fails, so a card looks the same on a phone, a Mac and an
+/// iPad instead of rearranging itself between them.
 ///
-/// The label and the controls are deliberately non-shrinking, so a candidate is
-/// measured at the width it actually wants rather than at the width it could be
-/// crushed to — otherwise the one-line candidate always "fits" by wrapping, which
-/// is the bug rather than the fix.
-struct CardHeaderRow<Controls: View>: View {
+/// ⛔ **Nothing here is allowed to shrink or wrap.** `lineLimit(1)` on its own
+/// would have turned the wrap into `DAILY MINU…`, which is worse; the width is
+/// bought by the second band instead. `tools/verify_card_header.sh` holds it.
+struct CardHeaderRow<Leading: View, Trailing: View>: View {
     private let label: String
-    private let controls: Controls
+    private let leading: Leading
+    private let trailing: Trailing
 
-    init(_ label: String, @ViewBuilder controls: () -> Controls) {
+    init(
+        _ label: String,
+        @ViewBuilder leading: () -> Leading,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
         self.label = label
-        self.controls = controls()
+        self.leading = leading()
+        self.trailing = trailing()
     }
 
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(alignment: .center, spacing: 4) {
-                title
+        VStack(spacing: 4) {
+            Text(label)
+                .font(.caption.weight(.semibold))
+                .textCase(.uppercase)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+                .frame(maxWidth: .infinity, alignment: .center)
+
+            HStack(spacing: 4) {
+                leading
                 Spacer(minLength: 4)
-                controls
-            }
-            // The fallback. The label keeps the leading edge it has on one line,
-            // and the controls stay right-aligned and in the same order, so a
-            // reader who has seen the wide layout finds them where they were.
-            VStack(alignment: .leading, spacing: 2) {
-                title
-                HStack(spacing: 4) {
-                    Spacer(minLength: 0)
-                    controls
-                }
+                trailing
             }
         }
-    }
-
-    private var title: some View {
-        Text(label)
-            .font(.caption.weight(.semibold))
-            .textCase(.uppercase)
-            .foregroundStyle(.secondary)
-            .lineLimit(1)
-            .fixedSize(horizontal: true, vertical: false)
     }
 }

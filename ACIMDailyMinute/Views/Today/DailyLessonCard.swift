@@ -43,7 +43,12 @@ struct DailyLessonCard: View {
 
     private var header: some View {
         CardHeaderRow("Lesson \(lesson.lessonNumber)") {
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            if let audioURL = lesson.audioURL, !audioURL.isEmpty {
+                ListenButton(title: "Lesson \(lesson.lessonNumber)") {
+                    audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
+                }
+            }
+        } trailing: {
             ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.caption)
@@ -52,11 +57,7 @@ struct DailyLessonCard: View {
                     .contentShape(Rectangle())
             }
             .accessibilityLabel("Share")
-            if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                ListenButton(title: "Lesson \(lesson.lessonNumber)") {
-                    audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                }
-            }
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 

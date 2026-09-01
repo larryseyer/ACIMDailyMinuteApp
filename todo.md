@@ -192,15 +192,15 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
       `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
-- [ ] **The card header, now that Listen is on it every day.** Today's Daily Minute card carries
-      `DAILY MINUTE`, Save, Share and Listen. On your phone the row does not fit on one line — you
-      are in **Display Zoom**, so the app gets a 375pt canvas rather than 414pt, and your text size
-      is about `xxLarge`; the row needs ~310pt and has 303pt. It now takes a **second line** instead
-      of breaking words: label on the first line, the three controls right-aligned beneath it.
-      Expected: no `DAILY / MINUTE` split and no `Lis-`/`ten` hyphen anywhere. Check the Lesson card
-      and an Archive card too, and **tap Save** — `Saved` is wider than `Save`, so that tap used to
-      be able to change the layout under your finger. `tools/verify_header_reflow.sh` proves the row
-      never wraps at any width; only whether the two-line arrangement looks right is yours.
+- [ ] **The card header, now that a play control is on it every day.** Two bands on every card and
+      every screen size: the title centred on its own line, then **Listen on the leading edge, Share
+      and Save on the trailing edge**. Check the Daily Minute card, a Lesson card and an Archive
+      card. Expected: no `DAILY / MINUTE` split and no `Lis-`/`ten` hyphen anywhere; Share and Save
+      in the same place on a passage that has audio and one that does not; and **tap Save** —
+      `Saved` is wider than `Save`, and that tap used to be able to change the layout under your
+      finger. ⛔ Most readings have no audio, so the usual state is the control band holding only
+      Share and Save. `tools/verify_card_header.sh` proves the words never break and the two
+      controls never move; whether the two-band arrangement reads well is yours.
 
 - [ ] **Saving a passage, twice.** Tap Save on any reading, leave the screen, come back, tap Save
       again. Expected: it saves, then un-saves, every time. This used to be decided from the view's
