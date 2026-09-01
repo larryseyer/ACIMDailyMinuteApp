@@ -10,6 +10,10 @@ struct SettingsView: View {
     // screen writes the flag and never reads it to decide anything. The first
     // condition in Settings keyed on it would have inherited the disagreement.
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    /// The same key `SharedModelContainer` reads when it decides whether to
+    /// build the reader store with mirroring, named from there so the two
+    /// can never drift apart. Written here, acted on at the next launch.
+    @AppStorage(SharedModelContainer.syncEnabledKey) private var iCloudSyncEnabled = false
     @AppStorage("notifyNewMinute") private var notifyNewMinute = true
     @AppStorage("notifyNewLesson") private var notifyNewLesson = true
     @AppStorage("notifyPhraseMatches") private var notifyPhraseMatches = true
@@ -85,18 +89,34 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Toggle("Sync with iCloud", isOn: $iCloudSyncEnabled)
+                } header: {
+                    Text("Your Work")
+                } footer: {
+                    // Three things the reader has to know BEFORE they flip it,
+                    // which is why they are here rather than in the privacy
+                    // policy.
+                    //
+                    // The middle one matters most: a file restore is strictly
+                    // additive, because a backup is a snapshot and an absence in
+                    // it carries no information. iCloud is a live sync and
+                    // deletes really do travel. That is a genuine behavioural
+                    // difference between the two ways of carrying work, and a
+                    // reader should meet it here rather than discover it after a
+                    // mark disappears.
+                    Text("Keeps your highlights, notes and bookmarks on your own Apple devices, in your own iCloud. Nothing goes to any server we run, there is still no account, and only your own marks travel — never the daily readings.\n\nUnlike restoring from a file, deleting a mark on one device deletes it on the others.\n\nTurning this on or off takes effect the next time you open the app.")
+                }
+
+                Section {
                     NavigationLink {
                         BackupRestoreView()
                     } label: {
                         Text("Backup & Restore")
                     }
-                } header: {
-                    Text("Your Work")
                 } footer: {
-                    // Nothing can re-send a reader what they wrote: there is no
-                    // server and no account. The one copy is on this device
-                    // until they make another.
-                    Text("Carry your highlights, notes and bookmarks to another device.")
+                    // The file tier answers what iCloud cannot: a machine that
+                    // has never run this app, and will never be an Apple one.
+                    Text("Carry your highlights, notes and bookmarks to another device — including a Windows, Linux or Android one, which iCloud cannot reach.")
                 }
 
                 Section("About") {

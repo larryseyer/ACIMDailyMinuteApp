@@ -9,14 +9,19 @@ final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
     let container: ModelContainer
 
     private override init() {
-        // The watch names the reader models in its schema but never reads or
-        // writes one — it draws today's minute and lesson and nothing else.
-        // It still opens both configurations so all four declarations stay one
-        // declaration; the empty `reader.store` it creates costs nothing, and
-        // divergence here is what put four hand-copied schemas in this project
-        // in the first place.
+        // ⛔ Cache only. The watch draws today's minute and lesson and touches no
+        // reader model anywhere in its own sources, so it has no reason to open
+        // `reader.store` and one good reason not to: were that store ever
+        // mirrored here, the watch would pull down every highlight and note the
+        // reader has ever written onto a device with no screen to show them. It
+        // also keeps iCloud off this target's entitlements entirely.
+        //
+        // Still one declaration, not two — the difference is a parameter.
         do {
-            container = try SharedModelContainer.makeContainer(allowsSave: true)
+            container = try SharedModelContainer.makeContainer(
+                allowsSave: true,
+                includeReader: false
+            )
         } catch {
             fatalError("Could not create Watch ModelContainer: \(error)")
         }

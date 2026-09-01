@@ -249,6 +249,23 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       migrated by the phone. Open Saved and confirm every highlight and note is still there, and that
       the Archive tab refilled itself.
 
+- [ ] **iCloud sync, the part no harness can reach: two devices.** Settings > Your Work > **Sync with
+      iCloud**, on the Mac and on the phone, then reopen each — the switch deliberately takes effect at
+      next launch, and the footer says so. Expected: a highlight made on one appears on the other, and
+      **deleting one on either device removes it from both** — that is the real difference from a file
+      restore, which only ever adds. ⛔ Proved so far only on the Mac alone: the container builds, 4
+      records reached iCloud, and off → on → off leaves the work intact. Device-to-device is yours.
+      ⛔ Expect one `badContainer` failure on a device's very first sync; the next launch fixes it.
+- [ ] **The privacy policy now describes iCloud, and three of its claims changed.** Settings > About >
+      Privacy Policy. Read it against what the app now does: "never leaves your device" and "no data is
+      sent to any server" and "no push notification server is used" were all falsified by CloudKit and
+      were rewritten in the same change. There is a new **iCloud Sync** section. The App Store label
+      stays "Data Not Collected". ⛔ This is the one screen in the app where a wrong sentence is a
+      promise broken rather than a bug, so it is worth reading as a whole rather than skimmed.
+- [ ] ⛔ **Before any release build: deploy the CloudKit schema from Development to Production** in the
+      CloudKit Dashboard. Debug builds use Development; TestFlight and the App Store use Production, and
+      no amount of local testing detects the gap. This is a release-gate step, not a test.
+
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
 He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
@@ -321,6 +338,31 @@ a store that does not contain the object's entity."* **That is an Objective-C ex
 initializer, before any view exists. Named, the rows partition cleanly — proved twice, in a minimal
 `swiftc` harness and against the real store.
 
+⭐ **iCloud sync is built and switched OFF by default.** Settings → **Your Work → Sync with iCloud**.
+Only `reader.store` mirrors, into the reader's own private database
+(`iCloud.com.larryseyer.acimdailyminute`); the cache and the pre-split recovery copy were verified
+clean after a real sync. Measured on this Mac end to end: 4 records exported, 2 highlights and 2 notes
+intact, and the off → on → off round trip leaves the store healthy.
+
+⛔ **`cloudKitDatabase` defaults to `.automatic`, which means "mirror if the app is entitled to".** So
+adding the entitlement would have silently started mirroring the **cache store**, the Shortcut's
+container, and — worst — the container `ReaderStoreMigration` opens over `ACIMDailyMinute.sqlite`, the
+only recovery copy of data with no upstream. Every configuration in `SharedModelContainer.swift` now
+names its choice, and the rule that keeps it that way is:
+**`allowsSave == false` ⇒ `cloudKitDatabase == .none`.** Only the app's one writable container mirrors.
+
+⛔ **The widget and watch need NO iCloud entitlement, and must not get one.** An earlier note here
+said the widget did, because it reads `Bookmark`. That is wrong and the correction matters: the widget
+opens the store read-only, so by the rule above it never mirrors. Two containers mirroring one store
+**in the same process** fail with "another instance of this persistent store actively syncing with
+CloudKit in this process" — reachable here, because `GetTodaysReadingIntent` builds its own container
+and an App Intent can run inside the app's process. The watch is cache-only and never opens
+`reader.store` at all.
+
+⛔ **A brand-new CloudKit container is not usable for its first few minutes.** The first launch logged
+`CKErrorDomain` code 5, `badContainer`, and the next launch succeeded with no intervention. Expect it
+once on any fresh container; it heals itself and is not a bug to chase.
+
 ⛔ **A read-only configuration cannot create a store it cannot find.** It throws
 `loadIssueModelContainer` ("Attempt to open missing file read only"), and both read-only callers turn
 that into a hard failure — the widget `fatalError`s, the Shortcut throws. This is not theoretical: a
@@ -333,19 +375,6 @@ had never been launched, because the device was locked.
 already safe — `BackupMerge` computes `insertBookmarks` against a live fetch and guards it with
 `insertedBookmarkKeys` — so it needs no change, but it is a raw `Bookmark()` insert and should be
 looked at whenever this invariant moves again.
-
-- [ ] **CloudKit private database, off by default behind an explicit switch.** ⛔ **The widget reads
-      `Bookmark`** (`ACIMDailyMinuteTimelineProvider.swift:41-46`), so the widget extension needs the
-      iCloud entitlement too, not just the app. Deletes propagate here where they do not in a file
-      import — a real difference between the two, and the reader is told rather than left to find it.
-
-- [ ] **Rewrite the privacy policy in the same change, not after it.**
-      `PrivacyPolicyView.swift:23` says on-device data "never leaves your device", which CloudKit
-      makes false. It must say plainly: the reader's own marks live in *their* iCloud private
-      database, readable by them and by no one else including the developer; nothing goes to any
-      server we run; still no account, no analytics, no SDK. The "Data Not Collected" label survives
-      because private-database data is not collected by the developer — but the policy states the
-      mechanism rather than resting on the label.
 
 - [ ] **A folder the reader supplies** — their own Dropbox, Drive or Syncthing. Smallest form only:
       pick a folder once, hold a security-scoped bookmark, write the same file there when annotations

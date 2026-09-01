@@ -215,22 +215,24 @@ leftmost, which is what that block asked for. The rest of the scaffold — the t
 `Archive` becoming `Video`, structuring the Manual — is still his to resume.
 
 **⭐ The live agent work is the rest of carrying a reader's work between devices**, the `▶ NEXT`
-block of [`todo.md`](todo.md). The portable file, bookmark uniqueness **and the store split** are all
-done. Next, in order:
+block of [`todo.md`](todo.md). The portable file, bookmark uniqueness, the store split **and iCloud
+sync** are all done. **Only step 5 is left: the reader-chosen folder, in its smallest form only** — no
+folder watching and no automatic merge, because a live folder synchroniser is a second conflict
+resolver running against files two machines may write at once.
 
-1. **CloudKit private database, off by default.** The prerequisite is paid: `reader.store` exists,
-   carries no `@Attribute(.unique)` on any of its three models, and is already a separate
-   configuration. **The widget reads `Bookmark`**, so the widget extension needs the iCloud
-   entitlement too, not just the app.
-2. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
-   becomes false the moment CloudKit is on.
-3. The reader-chosen folder, in its smallest form only.
+⛔ **iCloud sync is OFF by default and only `reader.store` mirrors.** The rule that keeps it that way
+is **`allowsSave == false` ⇒ `cloudKitDatabase == .none`**, because `cloudKitDatabase` defaults to
+`.automatic` — "mirror if entitled" — which would otherwise have started mirroring the cache store,
+the Shortcut's container and the pre-split recovery copy the moment the entitlement landed. **Only the
+app target has the iCloud entitlement**; the widget and watch must never get one.
 
-⛔ **Two SwiftData facts the split paid for, and step 1 will meet both again.** A second
+⛔ **Three SwiftData facts this work paid for in crashes and failed syncs.** A second
 `ModelConfiguration` **must be named** — two unnamed ones collapse onto the default configuration and
 the first insert aborts the process with an Objective-C `NSInvalidArgumentException` no `catch` can
-see. And a **read-only** configuration cannot create a store it cannot find, which is why
-`createStoresIfMissing` exists: the widget renders before the app is ever opened after an update.
+see. A **read-only** configuration cannot create a store it cannot find, which is why
+`createStoresIfMissing` exists. And a **brand-new CloudKit container fails its first setup** with
+`CKErrorDomain` 5 `badContainer` and works on the next launch — expect it once per fresh container and
+do not chase it.
 
 Then **corpus-wide search** (the `▶ THEN` block), then cross-reference links, then the pre-submission
 sweep.
