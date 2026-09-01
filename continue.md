@@ -37,13 +37,16 @@ and nothing caught it because no build had ever laid that row out at full width.
 Download action is the same shape of risk and is still undrawn** — check it at 375pt when the
 back-catalogue lands.
 
-⛔ **Every MP3 that exists is published to archive.org** — 84 of 84 lessons, 156 minutes — but
-**MacLive still has none of the recorded back-catalogue URLs.** Today's minute carries audio only
-because the nightly run publishes it through the ordinary path. The recorded URLs are in
-`untracked/archive-backfill/acim.db.live-snapshot-2026-09-01`, and landing that file is the one thing
-in the `⏳ IN FLIGHT` block of [`todo.md`](todo.md) that is his. Read that block first: a whole-file
-copy back would destroy a night's run, and the snapshot was built by folding three columns in rather
-than overwriting.
+⛔ **Every MP3 that exists is published to archive.org and MacLive now carries every recorded
+URL** — `upload_log` 156 of 166, `lessons_log` 84 of 84. The ten empty minute rows are the nine with
+no MP3 at all (2026-03-18 … 03-26) plus 2026-05-31, an unfilled catch-up gap. The landing was a
+staged temp file plus an atomic rename over the mount, guarded on mtime and verified by sha256 and
+`PRAGMA integrity_check` read back over the mount; SQLite has still never been opened read-write
+across SMB. The pre-landing live file is kept at
+`untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242`, byte-identical to
+what was there. **Nothing is left to do by hand**: `main.py:427` calls `push_all_daily_minute` at the
+end of every successful run and rebuilds the whole archive list from the database, so the 02:00 run
+publishes the URLs into the feeds on its own.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current**.
@@ -194,9 +197,12 @@ checks above, `./build.sh`, the arm64 device build, install + launch, process-al
 store migration, real feed payloads. **Run the ten checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
-⏳ **One thing is IN FLIGHT and it is HIS** — landing the recorded archive.org URLs on MacLive, the
-`⏳ IN FLIGHT` block of [`todo.md`](todo.md). Nothing is left to upload. Do not copy the snapshot over
-the live file without re-comparing mtime and re-folding, and do not re-open the hosting decision.
+⏳ **The archive.org URLs are landed on MacLive and the next thing is to WATCH, not to do.** After
+the 2026-09-02 02:00 run, confirm the feeds carry `audio_url` on the back catalogue — the `▶ WATCHING`
+block of [`todo.md`](todo.md). Nothing is left to upload and no hand-run is needed. ⛔ When the URLs
+reach the app, the Today card's **Listen** button and the Listen tab's **Download** action come alive
+with no app change — and the Download action has never been drawn by anyone, so check it at 375pt.
+Do not re-open the hosting decision.
 
 ⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
 [`todo.md`](todo.md) holds the decisions he made. ⭐ **Piece A has effectively begun**: the card
