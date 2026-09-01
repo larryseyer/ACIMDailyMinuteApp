@@ -59,28 +59,15 @@ struct ACIMDailyMinuteApp: App {
     @UIApplicationDelegateAdaptor(OrientationController.self) private var orientationController
 #endif
 
+    /// ⛔ The migration runs **here**, inside the container's own initializer,
+    /// rather than in `onAppear`. By the time a view appears its `@Query`
+    /// properties have already fetched, and a reader whose highlights had not
+    /// been lifted across yet would watch an empty Saved tab draw itself.
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            DailyMinute.self,
-            DailyLesson.self,
-            Bookmark.self,
-            ArchivedReading.self,
-            Channel.self,
-            CachedPodcastEpisode.self,
-            SegmentMedia.self,
-            Highlight.self,
-            Note.self
-        ])
-        let containerURL = FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.com.larryseyer.acimdailyminute")!
-            .appending(path: "ACIMDailyMinute.sqlite")
-        let config = ModelConfiguration(
-            schema: schema,
-            url: containerURL,
-            allowsSave: true
-        )
         do {
-            return try ModelContainer(for: schema, configurations: [config])
+            let container = try SharedModelContainer.makeContainer(allowsSave: true)
+            ReaderStoreMigration.runIfNeeded(into: container)
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

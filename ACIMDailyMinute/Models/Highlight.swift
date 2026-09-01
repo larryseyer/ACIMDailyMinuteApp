@@ -10,12 +10,15 @@ import SwiftData
 ///
 /// `id` is a UUID, not a hash of the quote. The same phrase recurs all over the
 /// Course, and hashing content is the bug this project keeps rediscovering.
+/// It carries no `@Attribute(.unique)`: SwiftData refuses that in a
+/// CloudKit-backed store, and a UUID is unique by construction anyway, so the
+/// index was buying nothing.
 ///
 /// `readingKey` holds a `ReadingKey.rawValue`. `startOffset` and `length` are
 /// `Character` counts into `ReadingText.displayString(from:)`, not UTF-16 units.
 @Model
 final class Highlight {
-    @Attribute(.unique) var id: UUID = UUID()
+    var id: UUID = UUID()
     var readingKey: String = ""
     var startOffset: Int = 0
     var length: Int = 0

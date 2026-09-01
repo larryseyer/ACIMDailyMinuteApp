@@ -49,7 +49,12 @@ end of every successful run and rebuilds the whole archive list from the databas
 publishes the URLs into the feeds on its own.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current**.
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current and
+  carries the store split**. ⛔ **The app has NOT been launched there since that install** — the phone
+  was locked and refused `process launch` — so **the phone's one-time reader migration has not run
+  yet**; it runs by itself the first time he opens the app. `ACIMDailyMinuteWidgetExtension` *was*
+  seen alive from the new bundle with the app never launched, which is the proof that the read-only
+  container can open a store the app has not created yet.
   It launched cleanly and both processes were seen alive at the time — the app and
   `ACIMDailyMinuteWidgetExtension` — which is the proof the schema is clean, since the extension is
   what `fatalError`s on a mismatch. ⛔ **`devicectl device info processes` will show none of them
@@ -85,12 +90,13 @@ publishes the URLs into the feeds on its own.
   copy `build/Debug/ACIMDailyMinute.app` to `/Applications`, launch once. Verify with
   `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
   ⛔ Quit the running copy first, or `rm -rf /Applications/ACIMDailyMinute.app` fails mid-flight.
-- **Real SwiftData migrations can be proved here without the phone.** The macOS App Group store at
-  `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/ACIMDailyMinute.sqlite` holds real
-  data. Back it up, launch the signed build, then read `.tables` and `PRAGMA table_info(...)` with
-  `sqlite3` to see the migration actually happened and the rows survived. ⛔ **Its annotation tables
-  are empty** — `ZHIGHLIGHT`, `ZNOTE` and `ZBOOKMARK` are all 0 — so it can prove a schema change but
-  it cannot prove anything about annotations. For that, drive the real corpus through a harness.
+- **Real SwiftData migrations can be proved here without the phone, and now with real annotations.**
+  `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/` holds **three** files since the
+  split: `reader.store` (2 highlights, 2 notes, 0 bookmarks), `cache.store` (the feed caches), and
+  `ACIMDailyMinute.sqlite`, the pre-split file kept untouched as the recovery copy. ⛔ An older note
+  here said the annotation tables were all 0; they are not, which is what let the split's migration be
+  proved rather than merely compiled. Back the directory up, launch the signed build, then read
+  `.tables`, row counts and `sqlite_master` indexes with `sqlite3`.
 
 ⛔ **Ten committed checks now guard this repo. Run all ten first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
@@ -211,31 +217,36 @@ leftmost, which is what that block asked for. The rest of the scaffold — the t
 `Archive` becoming `Video`, structuring the Manual — is still his to resume.
 
 **⭐ The live agent work is the rest of carrying a reader's work between devices**, the `▶ NEXT`
-block of [`todo.md`](todo.md). The portable file is done and so is bookmark uniqueness. Next, in
-order:
+block of [`todo.md`](todo.md). The portable file, bookmark uniqueness **and the store split** are all
+done. Next, in order:
 
-1. **Split the container into a reader store and a cache store** — **four container declarations,
-   not three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`. ⛔ **This is where
-   `@Attribute(.unique)` comes off `Bookmark.itemKey`**, deliberately not earlier: the index holds
-   right up to the moment it is dropped, so no duplicate can exist when it goes. That the drop works
-   is **measured, not assumed** — a build with the attribute removed was run against the real macOS
-   App Group store, the unique index disappeared, the app opened the schema, both highlights and both
-   notes survived, and restoring the attribute rebuilt the index. It is reversible.
-2. CloudKit private database, off by default. **The widget reads `Bookmark`**, so the widget
-   extension needs the iCloud entitlement too.
-3. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
+1. **CloudKit private database, off by default.** The prerequisite is paid: `reader.store` exists,
+   carries no `@Attribute(.unique)` on any of its three models, and is already a separate
+   configuration. **The widget reads `Bookmark`**, so the widget extension needs the iCloud
+   entitlement too, not just the app.
+2. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
    becomes false the moment CloudKit is on.
-4. The reader-chosen folder, in its smallest form only.
+3. The reader-chosen folder, in its smallest form only.
+
+⛔ **Two SwiftData facts the split paid for, and step 1 will meet both again.** A second
+`ModelConfiguration` **must be named** — two unnamed ones collapse onto the default configuration and
+the first insert aborts the process with an Objective-C `NSInvalidArgumentException` no `catch` can
+see. And a **read-only** configuration cannot create a store it cannot find, which is why
+`createStoresIfMissing` exists: the widget renders before the app is ever opened after an update.
 
 Then **corpus-wide search** (the `▶ THEN` block), then cross-reference links, then the pre-submission
 sweep.
 
-⛔ **Write a `Bookmark` only through `BookmarkStore`, never by inserting the model.** `itemKey` is the
+⛔ **Write or delete a `Bookmark` only through `BookmarkStore`, and that is now the ONLY thing
+keeping two rows off one passage** — the unique index is gone. `BookmarkStore.remove(key:in:)` exists
+for the Saved tab, which used to call `modelContext.delete(bookmark)` on the single row it drew.
+Never insert or delete the model directly. `itemKey` is the
 whole identity — there is no `id` — and the six Save controls used to decide whether a row existed by
 searching their own `@Query` snapshot, which is what the view last drew rather than what the store
 holds. When a row was already there and the snapshot had not caught up, the view inserted a second
 one, the unique index rejected the save, and `try?` threw the error away: **the reader tapped Save and
-nothing happened, silently.** There is an eighth writer besides the six and `DataService` —
+nothing happened, silently.** ⛔ That index is no longer there to reject anything, so the same mistake
+would now write the duplicate rather than fail loudly. There is an eighth writer besides the six and `DataService` —
 `BackupService.swift:187-192` — already safe, because `BackupMerge` computes its inserts against a
 live fetch, but it is a raw insert and belongs on the list.
 
