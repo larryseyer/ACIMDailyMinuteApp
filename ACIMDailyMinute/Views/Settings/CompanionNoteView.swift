@@ -2,6 +2,11 @@ import SwiftUI
 
 /// The publisher's note on what this app is for, and what it is not for.
 ///
+/// ⛔ **The words live here and only here.** The note is shown in two places —
+/// the last stage of the introduction (`OnboardingView`) and Settings > About —
+/// and a second copy of this copy would drift without anyone seeing it happen.
+/// Both callers render this view; neither restates a line of it.
+///
 /// Set in serif, like the readings rather than like the privacy policy: this is
 /// a note from one student to another, not a legal notice. Emphasis is carried
 /// inline through markdown in the literal strings — `Text` parses it because the
@@ -15,40 +20,34 @@ import SwiftUI
 /// Still others may need to start at the more abstract levels of the text."),
 /// and it must let the Workbook's Introduction make the central point in its own
 /// words rather than paraphrasing it.
-struct CompanionNoteView: View {
+struct CompanionNoteBody: View {
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text("A Note About Using ACIM Daily Minute")
-                    .font(.system(.title, design: .serif).weight(.semibold))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading, spacing: 20) {
+            Text("A Note About Using ACIM Daily Minute")
+                .font(.system(.title, design: .serif).weight(.semibold))
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                lead
+            lead
 
-                paragraph("The Daily Minute readings are brief selections from various parts of the Course — including the Text, Workbook for Students, and Manual for Teachers — chosen to provide a moment of reflection, inspiration, and connection with its teachings.")
+            paragraph("The Daily Minute readings are brief selections from various parts of the Course — including the Text, Workbook for Students, and Manual for Teachers — chosen to provide a moment of reflection, inspiration, and connection with its teachings.")
 
-                paragraph("We strongly encourage students to **actually engage with the Course itself** — to practice the Workbook lessons as they are written, and to read and study the Text and the Manual for Teachers.")
+            paragraph("We strongly encourage students to **actually engage with the Course itself** — to practice the Workbook lessons as they are written, and to read and study the Text and the Manual for Teachers.")
 
-                paragraph("Where to begin is left to you. The Course says that some students do best to read the Manual first, others to begin with the Workbook, and still others to start with the Text. The Workbook asks only one thing of its own pace: *do not undertake more than one lesson a day.*")
+            paragraph("Where to begin is left to you. The Course says that some students do best to read the Manual first, others to begin with the Workbook, and still others to start with the Text. The Workbook asks only one thing of its own pace: *do not undertake more than one lesson a day.*")
 
-                quotation(
-                    "A theoretical foundation, such as the text, is necessary as a background to make these exercises meaningful. Yet it is the exercises that will make the goal possible.",
-                    source: "Workbook for Students, Introduction"
-                )
+            quotation(
+                "A theoretical foundation, such as the text, is necessary as a background to make these exercises meaningful. Yet it is the exercises that will make the goal possible.",
+                source: "Workbook for Students, Introduction"
+            )
 
-                paragraph("A one-minute reading can offer a meaningful reminder, a thought to carry with you throughout the day, or an opportunity to pause and reflect. But the deeper transformation offered by *A Course in Miracles* comes through **the practice and study of the Course itself**.")
+            paragraph("A one-minute reading can offer a meaningful reminder, a thought to carry with you throughout the day, or an opportunity to pause and reflect. But the deeper transformation offered by *A Course in Miracles* comes through **the practice and study of the Course itself**.")
 
-                paragraph("Please consider ACIM Daily Minute a **tool and companion for your journey with the Course** — something that can help you stay connected to its teachings throughout your day, while encouraging you to return to the Course itself for deeper study and practice.")
+            paragraph("Please consider ACIM Daily Minute a **tool and companion for your journey with the Course** — something that can help you stay connected to its teachings throughout your day, while encouraging you to return to the Course itself for deeper study and practice.")
 
-                closing
-            }
-            .padding(20)
-            .readableContentWidth()
+            closing
         }
-        .navigationTitle("About")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .padding(20)
+        .readableContentWidth()
     }
 
     /// The thesis of the whole note, so it carries the weight of a standfirst
@@ -101,6 +100,21 @@ struct CompanionNoteView: View {
             .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, 4)
+    }
+}
+
+/// The note as Settings presents it: pushed onto the About section's navigation
+/// stack. The introduction presents the same body its own way, with a button
+/// instead of a navigation title — see `OnboardingView`.
+struct CompanionNoteView: View {
+    var body: some View {
+        ScrollView {
+            CompanionNoteBody()
+        }
+        .navigationTitle("About")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
