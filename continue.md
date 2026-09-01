@@ -170,6 +170,14 @@ checks first thing in a new session.**
 upload. Do not copy the snapshot over the live file without re-comparing mtime and re-folding, and
 do not re-open the hosting decision.
 
+⛔ **A LIVE BUG is now the first thing to fix — the `⛔ BUG` block of [`todo.md`](todo.md).** The
+Listen button appears on the Today card every day now (the nightly run publishes today's audio through
+the ordinary path), and it is a third control in a header row that holds two: `DAILY MINUTE` wraps to
+two lines and `Listen` hyphenates to `Lis-`/`ten`. ⛔ **His phone gives the app a 375pt canvas, not
+414pt** — the Pro Max is running **Display Zoom**, proved by his screenshot being 1125x2436 rather
+than 1242x2688, exactly 0.906x. His Dynamic Type is about `xxLarge` besides. The row needs 310pt and
+has 303pt. **Re-check every width assumption in this repo against 375pt, not 414pt.**
+
 ⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
 [`todo.md`](todo.md) holds the decisions he made. **No spec and no code exist yet**, so it needs him
 back before it can move.
