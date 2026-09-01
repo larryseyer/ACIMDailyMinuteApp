@@ -42,7 +42,12 @@ struct DailyMinuteCard: View {
 
     private var header: some View {
         CardHeaderRow("Daily Minute") {
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            if let audioURL = minute.audioURL, !audioURL.isEmpty {
+                ListenButton(title: "Daily Minute") {
+                    audio.play(url: audioURL, title: "Daily Minute")
+                }
+            }
+        } trailing: {
             ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
                 Image(systemName: "square.and.arrow.up")
                     .font(.caption)
@@ -51,11 +56,7 @@ struct DailyMinuteCard: View {
                     .contentShape(Rectangle())
             }
             .accessibilityLabel("Share")
-            if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                ListenButton(title: "Daily Minute") {
-                    audio.play(url: audioURL, title: "Daily Minute")
-                }
-            }
+            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
 
