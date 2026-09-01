@@ -6,15 +6,25 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ---
 
-## ✅ NOTHING IS CLAIMED
+## ✅ WHAT IS TRUE RIGHT NOW
 
-Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14` through the portable backup
-file, committed. Nothing of mine is running.
+Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14` through
+`Decide a bookmark against the store, not the screen`, committed and pushed. Nothing of mine is
+running. One untracked file sits in the repo root — `000000 Bug - Widget.png`, his screenshot of the
+macOS card-collapse bug that is already fixed by `Give a reading on macOS the height it actually
+draws`. It is his to keep or delete; do not commit it.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep` from
-this Mac cannot see its processes — read `logs/acim.log` instead, and run `./start.sh` **on that
-machine**, never through the mount.
+this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
+`./start.sh` there, never through the mount.
+
+⛔ **Every MP3 that exists is now published to archive.org** — 84 of 84 lessons, 156 minutes — but
+**MacLive still has none of the recorded URLs.** They are in
+`untracked/archive-backfill/acim.db.live-snapshot-2026-09-01`, and landing that file is the one thing
+in the `⏳ IN FLIGHT` block of [`todo.md`](todo.md) that is his. Read that block before touching it:
+a whole-file copy back would destroy a night's run, and the snapshot was built by folding three
+columns in rather than overwriting.
 
 **Build state — all three live targets are current and carry Backup & Restore:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current**.
@@ -60,7 +70,8 @@ machine**, never through the mount.
   are empty** — `ZHIGHLIGHT`, `ZNOTE` and `ZBOOKMARK` are all 0 — so it can prove a schema change but
   it cannot prove anything about annotations. For that, drive the real corpus through a harness.
 
-⛔ **Eight committed checks now guard this repo. Run all eight after any change to a bundled file:**
+⛔ **Nine committed checks now guard this repo. Run all nine first thing — they take about a
+minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -101,6 +112,14 @@ machine**, never through the mount.
   discarded the width `sizeThatFits` assigned — so cards collapsed, `Add note` and the citation were
   laid out under the header, and the text drew over them until the card's `clipShape` cut it off
   mid-sentence. Nothing crashed and no other check could see it.
+- `./tools/verify_bookmark_identity.sh` — ⛔ **the only check that guards a reader's SAVE.** 381 cases
+  over `BookmarkIdentity`, and **it compiles that one file and nothing else**, which is what keeps the
+  rule free of SwiftData and therefore checkable. `Bookmark` has no `id` — `itemKey` is its whole
+  identity — so it proves that a save is an involution, that ONE un-save removes EVERY row holding a
+  key rather than the first, that a re-key onto an occupied address folds rather than collides, that
+  the survivor keeps the earlier `createdAt` exactly as `BackupMerge` does, and that no rule depends
+  on the order a fetch returned rows in. All three failures it guards are silent: a half-deleted
+  duplicate makes un-save do nothing, and a collision throws today's minute out of `persistMinute`.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -142,34 +161,45 @@ this Mac:
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end. Verify everything verifiable without him: `swiftc` harnesses
-against real bundled data, the eight committed checks above, `./build.sh`, the arm64 device build,
-install + launch, process-alive checks, the macOS store migration, real feed payloads. **The eight
-committed checks above are the first thing to run in a new session** — they take about a minute and
-they are how you find out the tree is what this file says it is.
+against real bundled data, the nine committed checks above, `./build.sh`, the arm64 device build,
+install + launch, process-alive checks, the macOS store migration, real feed payloads. **Run the nine
+checks first thing in a new session.**
 
-⏳ **Two things are IN FLIGHT and come before anything else — both are the `⏳ IN FLIGHT` block of
-[`todo.md`](todo.md).** The archive.org ban is lifted, both items exist, and the back-catalogue is
-publishing; **the recorded URLs are in `untracked/archive-backfill/acim.db.with-archive-urls`, NOT on
-MacLive**, and landing them is his call because the 02:00 run writes that file nightly. The
-standardized reading layout was designed with him and then paused mid-brainstorm — the decisions are
-in the `⏸ PAUSED` block and no spec or code exists yet.
+⏳ **One thing is IN FLIGHT and it is HIS** — landing the recorded archive.org URLs on MacLive, the
+`⏳ IN FLIGHT` block of [`todo.md`](todo.md). Every MP3 is already published; nothing is left to
+upload. Do not copy the snapshot over the live file without re-comparing mtime and re-folding, and
+do not re-open the hosting decision.
 
-**⭐ After those, the next piece is the rest of carrying a reader's work between devices, and its
-whole brief is the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done; iCloud is not. Take the
-items in the order they are written there, because the first one is a hard prerequisite:
+⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
+[`todo.md`](todo.md) holds the decisions he made. **No spec and no code exist yet**, so it needs him
+back before it can move.
 
-1. **Bookmark uniqueness has to move into code before anything else.** SwiftData refuses
-   `@Attribute(.unique)` in a CloudKit-backed store and `Bookmark.itemKey` is the only thing
-   preventing duplicate bookmark rows today, so the constraint cannot come off until the six insert
-   sites fetch before they insert — and the seventh writer in `DataService` is checked too. All
-   seven are listed further down.
-2. Split the container into a reader store and a cache store — **four container declarations, not
-   three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`.
-3. CloudKit private database, off by default. **The widget reads `Bookmark`**, so the widget
+**⭐ The live work is the rest of carrying a reader's work between devices, and its whole brief is
+the `▶ NEXT` block of [`todo.md`](todo.md).** The portable file is done. **So is bookmark
+uniqueness** — every write goes through `BookmarkStore`, the rule is `BookmarkIdentity`, and
+`tools/verify_bookmark_identity.sh` is the ninth check. What is left, in order:
+
+1. **Split the container into a reader store and a cache store** — **four container declarations,
+   not three**: app, widget, watch and `Shortcuts/GetTodaysReadingIntent.swift`. ⛔ **This is where
+   `@Attribute(.unique)` comes off `Bookmark.itemKey`**, deliberately not earlier: the index holds
+   right up to the moment it is dropped, so no duplicate can exist when it goes. That the drop works
+   is **measured, not assumed** — a build with the attribute removed was run against the real macOS
+   App Group store, the unique index disappeared, the app opened the schema, both highlights and both
+   notes survived, and restoring the attribute rebuilt the index. It is reversible.
+2. CloudKit private database, off by default. **The widget reads `Bookmark`**, so the widget
    extension needs the iCloud entitlement too.
-4. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
+3. **Rewrite `PrivacyPolicyView.swift:23` in the same change**, because "never leaves your device"
    becomes false the moment CloudKit is on.
-5. The reader-chosen folder, in its smallest form only.
+4. The reader-chosen folder, in its smallest form only.
+
+⛔ **Write a `Bookmark` only through `BookmarkStore`, never by inserting the model.** `itemKey` is the
+whole identity — there is no `id` — and the six Save controls used to decide whether a row existed by
+searching their own `@Query` snapshot, which is what the view last drew rather than what the store
+holds. When a row was already there and the snapshot had not caught up, the view inserted a second
+one, the unique index rejected the save, and `try?` threw the error away: **the reader tapped Save and
+nothing happened, silently.** There is an eighth writer besides the six and `DataService` —
+`BackupService.swift:187-192` — already safe, because `BackupMerge` computes its inserts against a
+live fetch, but it is a raw insert and belongs on the list.
 
 ⛔ **The conflict rule is decided, implemented and proved; do not re-open it.** A merge may never
 make a reader's words fewer. It is in `BackupMerge.swift` with the reasoning attached, and
@@ -217,12 +247,6 @@ consequences that decide real designs: **the widget and watch targets can see no
 and CloudKit sync of SwiftData will not carry any of them either — the reminder time, the alert
 toggles, the watched phrases and the listened history travel **only** in the backup file. Anything
 that wants a setting on more than one Apple device has to move it deliberately.
-
-⛔ **`Bookmark.itemKey` is written at six insert sites** — `DailyMinuteCard:105`,
-`DailyLessonCard:96`, `WorkbookIntroductionView:82`, `LessonDetailView:103`, `TextSectionView:166`,
-`ArchivedReadingCard:138` — **and rewritten in a seventh place**, `DataService.swift:125`, where a
-migration re-keys archive bookmarks onto the stable hash. All seven are in scope when the `.unique`
-constraint comes off for CloudKit, not just the six.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
