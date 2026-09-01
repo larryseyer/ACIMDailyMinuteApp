@@ -192,6 +192,16 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
       `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
 
+- [ ] **The card header, now that Listen is on it every day.** Today's Daily Minute card carries
+      `DAILY MINUTE`, Save, Share and Listen. On your phone the row does not fit on one line — you
+      are in **Display Zoom**, so the app gets a 375pt canvas rather than 414pt, and your text size
+      is about `xxLarge`; the row needs ~310pt and has 303pt. It now takes a **second line** instead
+      of breaking words: label on the first line, the three controls right-aligned beneath it.
+      Expected: no `DAILY / MINUTE` split and no `Lis-`/`ten` hyphen anywhere. Check the Lesson card
+      and an Archive card too, and **tap Save** — `Saved` is wider than `Save`, so that tap used to
+      be able to change the layout under your finger. `tools/verify_header_reflow.sh` proves the row
+      never wraps at any width; only whether the two-line arrangement looks right is yours.
+
 - [ ] **Saving a passage, twice.** Tap Save on any reading, leave the screen, come back, tap Save
       again. Expected: it saves, then un-saves, every time. This used to be decided from the view's
       own `@Query` snapshot, so a row written by the watch or by an import in the same tick was
@@ -254,50 +264,6 @@ it was verified to differ from the live file **only** in `audio_public_url` / `a
 - [ ] **`github_push.py`** afterward, to rebuild the feeds from the recorded column. Only then do the
       Today card's **Listen** button and the Listen tab's Download action appear — **no app change and
       no rebuild**, because both already key off `audio_url` being non-empty.
-
-## ⛔ BUG — the Listen button breaks the card header on his phone, every day
-
-⛔ **This is live now and it recurs nightly.** The ban being lifted means the 02:00 run publishes
-today's audio through the ordinary path, so `audio_url` is non-empty on the Today card **every day
-from now on**. The Listen button that appears is a third control in a header row that only holds two
-at his settings, and the row overflows: `DAILY MINUTE` wraps to two lines and `Listen` hyphenates to
-`Lis-` / `ten`. Both cards do it — `DailyMinuteCard.swift` and `DailyLessonCard.swift` share the row,
-and `LessonDetailView` and `ArchivedReadingCard` carry the same button.
-
-⛔ **His phone is 375pt wide, not 414pt, and nothing in this repo said so.** The paired device really
-is an iPhone 11 Pro Max, but his screenshot is 1125x2436 rather than the Pro Max's native 1242x2688 —
-exactly 0.906x on both axes, which is **Display Zoom**. The app therefore gets a 375x812pt canvas.
-His Dynamic Type is enlarged too: the reading body measures a 24pt line pitch, about `xxLarge`.
-**Every width assumption made against 414pt is 39pt optimistic.**
-
-**Measured, not guessed** — inside the card there are **303pt**; the row needs:
-
-| Dynamic Type | needed | 375pt (his) | 414pt |
-|---|---|---|---|
-| Large (default) | 284 | fits | fits |
-| xLarge | 297 | fits | fits |
-| **xxLarge (his)** | **310** | **OVER by 7** | fits |
-| xxxLarge | 323 | OVER | fits |
-
-⛔ **Saving makes it worse, so the row can break on a tap.** `Save` becomes `Saved`, ~8pt wider. A
-Lesson header that fits at xLarge goes over the moment the reader saves it.
-
-⛔ **Wrapping is SwiftUI resolving a 7pt shortfall**, not a font bug: the label and the button are
-both flexible `Text`, so both wrap rather than one truncating. `.lineLimit(1)` alone is NOT the fix —
-it converts wrapping into truncation (`DAILY MINU…`), which is worse. **The row genuinely does not
-fit and has to reflow**, which is why this belongs with the item below rather than beside it.
-
-- [ ] **Let the header reflow when it cannot fit on one line.** `ViewThatFits` with the current single
-      row first and a two-row fallback (label on its own line, controls beneath) is the smallest
-      correct fix and pre-empts none of the decisions in the paused block below.
-      ⛔ **Do not fix this by making Listen icon-only.** `SaveButton`'s own header records that bare
-      glyphs tested as unfindable, which is why these controls carry words at all.
-
-⛔ **`todo.md` and `continue.md` both said the Listen button and the Listen-tab Download would come
-alive with "no app change and no rebuild".** That was wrong for the button, and it is the reason this
-shipped unseen: a feature whose arrival is triggered by data rather than by code is never laid out
-against the surface it lands on. **The Download action in the Listen tab is the same shape of risk
-and has still never been drawn** — check it at 375pt when the back-catalogue lands.
 
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
