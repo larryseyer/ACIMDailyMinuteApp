@@ -21,6 +21,28 @@ struct LessonDetailView: View {
     @Query private var archiveMatches: [ArchivedReading]
     @Query private var bookmarks: [Bookmark]
 
+    /// Everything recorded, for the anchor `LessonSchedule` counts weekdays
+    /// from — the same candidates `LessonsView` hands it, so the date this
+    /// screen prints is the date the row printed.
+    @Query(sort: \DailyLesson.lessonNumber) private var allLessons: [DailyLesson]
+    @Query(
+        filter: #Predicate<ArchivedReading> { $0.channel == "daily-lesson" },
+        sort: \ArchivedReading.lessonNumber
+    ) private var allArchivedLessons: [ArchivedReading]
+
+    /// The day this lesson's recording is due, or `nil` once it has been
+    /// recorded — or when nothing dated has been seen yet, in which case the
+    /// screen says nothing rather than guessing.
+    private var availableOn: Date? {
+        guard let anchor = LessonSchedule.anchor(
+            from: allLessons.map { ($0.lessonNumber, $0.publishedAt) }
+                + allArchivedLessons.map { ($0.lessonNumber ?? 0, $0.timestamp) }
+        ) else { return nil }
+        return LessonSchedule.availabilityDate(
+            for: lessonNumber, latestRecorded: anchor.number, latestDate: anchor.date
+        )
+    }
+
     /// A lesson bookmark is keyed by number alone, so saving does not depend on
     /// which of the three states rendered. It used to live inside
     /// `FullLessonView`, which meant a lesson the feed has not published yet had
@@ -72,7 +94,7 @@ struct LessonDetailView: View {
             } else if let archive = archiveMatches.first {
                 MetadataOnlyLessonView(lessonNumber: lessonNumber, archive: archive)
             } else {
-                AbsentLessonView(lessonNumber: lessonNumber)
+                AbsentLessonView(lessonNumber: lessonNumber, availableOn: availableOn)
             }
         }
         .navigationTitle("Lesson \(lessonNumber)")
@@ -260,6 +282,9 @@ private struct MetadataOnlyLessonView: View {
 
 private struct AbsentLessonView: View {
     let lessonNumber: Int
+    /// Set when the recording is still to come. The text below is bundled and
+    /// readable regardless; this line is what answers the tap on a dimmed row.
+    let availableOn: Date?
 
     @Query(filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" })
     private var cachedLessons: [CachedPodcastEpisode]
@@ -283,6 +308,18 @@ private struct AbsentLessonView: View {
                 Text(title)
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let availableOn {
+                    Label(
+                        "Not recorded yet. Audio and video available \(LessonSchedule.formatted(availableOn)).",
+                        systemImage: "clock"
+                    )
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                }
 
                 if lessonNumber == 0 {
                     if let audioURL = introAudioURL, !audioURL.isEmpty {

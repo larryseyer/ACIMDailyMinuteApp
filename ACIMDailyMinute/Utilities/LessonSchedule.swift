@@ -23,6 +23,45 @@ enum LessonSchedule {
         return c
     }()
 
+    /// The publisher's own `yyyy-MM-dd`, in the publication calendar's zone, so
+    /// a printed day never slips either side of midnight depending on where
+    /// the reader is. One formatter for every surface that names a day this
+    /// way — the lesson row, the lesson screen and the Archive — so they
+    /// cannot disagree.
+    static let dayFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.calendar = publicationCalendar
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = publicationCalendar.timeZone
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+
+    static func formatted(_ date: Date) -> String {
+        dayFormatter.string(from: date)
+    }
+
+    static func day(from string: String) -> Date? {
+        dayFormatter.date(from: string)
+    }
+
+    /// The highest numbered lesson known to be recorded, with the day it was
+    /// published — the anchor every availability date is counted from.
+    ///
+    /// A candidate without a date cannot anchor anything: without a day to
+    /// count weekdays from, a guessed date would be worse than none. So a
+    /// dateless archive hit is passed over even when its number is higher, and
+    /// `nil` means nothing dated has been seen yet.
+    static func anchor(from candidates: [(number: Int, date: Date?)]) -> (number: Int, date: Date)? {
+        var best: (number: Int, date: Date)?
+        for candidate in candidates {
+            guard let date = candidate.date, candidate.number > 0 else { continue }
+            if let current = best, current.number >= candidate.number { continue }
+            best = (candidate.number, date)
+        }
+        return best
+    }
+
     /// Advances `count` publishing days (Mon–Fri) past `date`.
     ///
     /// `date` itself is never returned for a positive `count`: the walk always

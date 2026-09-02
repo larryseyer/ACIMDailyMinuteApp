@@ -44,7 +44,10 @@ struct ArchiveView: View {
                     }
                 }
                 .navigationDestination(for: String.self) { dateString in
-                    ArchiveDateDetailView(dateString: dateString)
+                    ArchiveDateDetailView(
+                        dateString: dateString,
+                        availability: availability(of: dateString)
+                    )
                 }
                 .toolbar {
                     #if os(iOS)
@@ -126,9 +129,17 @@ struct ArchiveView: View {
         Set(allReadings.map(\.dateString).filter { !$0.isEmpty })
     }
 
+    /// When the reading for a day exists or will. A day with no rows is told
+    /// when, not just that — the same sentence `ArchiveDateDetailView` shows
+    /// once the reader taps through.
+    private func availability(of dateString: String) -> MinuteSchedule.Availability {
+        guard let day = LessonSchedule.day(from: dateString) else { return .unknown }
+        return MinuteSchedule.availability(of: day, archived: datesWithReadings, today: Self.today())
+    }
+
     private var selectedDateRow: some View {
         let dateString = Self.dateString(from: selectedDate)
-        let hasRows = allReadings.contains { $0.dateString == dateString }
+        let sentence = availability(of: dateString).sentence
 
         return Button {
             path.append(dateString)
@@ -138,7 +149,7 @@ struct ArchiveView: View {
                     Text(Self.longDateString(from: selectedDate))
                         .font(.body.weight(.medium))
                         .foregroundStyle(.primary)
-                    Text(hasRows ? "Open readings" : "No readings archived on this date")
+                    Text(sentence ?? "Open readings")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

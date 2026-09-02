@@ -148,6 +148,7 @@
 		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
 		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
 		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
+		AA000001417 /* MinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002417 /* MinuteSchedule.swift */; };
 		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
 		AA000001350 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
 		AA000001351 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
@@ -304,6 +305,7 @@
 		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
 		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
 		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
+		AA000002417 /* MinuteSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteSchedule.swift; sourceTree = "<group>"; };
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
 		AA000002350 /* PunctuationSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunctuationSpacing.swift; sourceTree = "<group>"; };
 		AA000002360 /* Citation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Citation.swift; sourceTree = "<group>"; };
@@ -479,6 +481,7 @@
 				AA000002603 /* PlaybackHistory.swift */,
 				AA000002602 /* YouTubeID.swift */,
 				AA000002601 /* LessonSchedule.swift */,
+				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002036 /* TermExtractor.swift */,
@@ -841,6 +844,7 @@
 				AA000001603 /* PlaybackHistory.swift in Sources */,
 				AA000001602 /* YouTubeID.swift in Sources */,
 				AA000001601 /* LessonSchedule.swift in Sources */,
+				AA000001417 /* MinuteSchedule.swift in Sources */,
 				AA000001206 /* HashUtility.swift in Sources */,
 				AA000001350 /* PunctuationSpacing.swift in Sources */,
 				AA000001360 /* Citation.swift in Sources */,

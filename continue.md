@@ -91,7 +91,7 @@ iCloud sync and the reader-chosen folder:**
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Eleven committed checks now guard this repo. Run all eleven first thing — they take about a
+⛔ **Twelve committed checks now guard this repo. Run all twelve first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -156,6 +156,14 @@ minute and they are how you find out the tree is what this file says it is:**
   and leaves the previous copy intact with no temporary file behind; a deleted folder, a plain file
   and garbage bookmark data all come back as `folderMissing` with the sentence the reader sees,
   never a crash.
+- `./tools/verify_schedules.sh` — ⛔ **the only check that guards a PROMISE about the future.**
+  37 cases, and **it compiles `LessonSchedule.swift` and `MinuteSchedule.swift` and nothing else**.
+  A lesson the publisher has not recorded is told the weekday it lands, counted from the newest
+  dated recording and never from a dateless one; a day the Daily Minute run missed is told its
+  place in the line of missed days, which the nightly run clears one per night oldest first, with
+  the real feed's two gaps (05-31, 08-14) as the case; a future day publishes on itself; a day
+  before the first is before the archive; an empty archive says nothing. Every sentence names its
+  day as `yyyy-MM-dd` in the publisher's zone.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:

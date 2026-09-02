@@ -13,11 +13,15 @@ import SwiftData
 /// (`m` > `l`), which matches the Today-tab reading order.
 struct ArchiveDateDetailView: View {
     let dateString: String
+    /// Decided by `ArchiveView`, which already holds every archived date; a
+    /// day with nothing to show is told when its reading will exist.
+    let availability: MinuteSchedule.Availability
 
     @Query private var readings: [ArchivedReading]
 
-    init(dateString: String) {
+    init(dateString: String, availability: MinuteSchedule.Availability) {
         self.dateString = dateString
+        self.availability = availability
         _readings = Query(
             filter: #Predicate<ArchivedReading> { $0.dateString == dateString },
             sort: [SortDescriptor(\ArchivedReading.channel, order: .reverse)]
@@ -48,9 +52,9 @@ struct ArchiveDateDetailView: View {
 
     private var empty: some View {
         ContentUnavailableView(
-            "No readings for this date",
+            "No reading for this day",
             systemImage: "calendar.badge.exclamationmark",
-            description: Text("Nothing was archived on \(dateString). Pull to refresh on the Archive tab to top up today's feeds.")
+            description: Text(availability.sentence ?? "Pull to refresh on the Archive tab.")
         )
     }
 
@@ -74,7 +78,7 @@ struct ArchiveDateDetailView: View {
 
 #Preview {
     NavigationStack {
-        ArchiveDateDetailView(dateString: "2026-04-10")
+        ArchiveDateDetailView(dateString: "2026-04-10", availability: .unknown)
     }
     .preferredColorScheme(.dark)
     .modelContainer(for: [ArchivedReading.self, Bookmark.self], inMemory: true)

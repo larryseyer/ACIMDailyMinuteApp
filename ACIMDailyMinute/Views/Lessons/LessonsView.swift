@@ -164,16 +164,11 @@ struct LessonsView: View {
     /// `timestamp` is optional, and an archive hit without one is ignored
     /// rather than anchoring the whole schedule on a guess.
     private func recordedAnchor() -> (number: Int, date: Date?) {
-        var number = lessons.last?.lessonNumber ?? 0
-        var date = lessons.last?.publishedAt
-
-        for archive in archivedLessons {
-            guard let n = archive.lessonNumber, n > number, let stamp = archive.timestamp else { continue }
-            number = n
-            date = stamp
-        }
-
-        return (number, date)
+        let anchor = LessonSchedule.anchor(
+            from: lessons.map { ($0.lessonNumber, $0.publishedAt) }
+                + archivedLessons.map { ($0.lessonNumber ?? 0, $0.timestamp) }
+        )
+        return (anchor?.number ?? 0, anchor?.date)
     }
 
     private func bookmarkedLessonNumbers() -> Set<Int> {
