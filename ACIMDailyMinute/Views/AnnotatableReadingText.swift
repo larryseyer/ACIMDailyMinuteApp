@@ -13,6 +13,9 @@ struct AnnotatableReadingText: View {
     let key: ReadingKey
     var design: SelectableReadingText.Design = .serif
     var lineSpacing: CGFloat = 0
+    /// Passed straight through: a reading opened from a search hit re-anchors
+    /// and paints it, every other caller leaves it nil.
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Query private var storedHighlights: [Highlight]
@@ -23,12 +26,14 @@ struct AnnotatableReadingText: View {
         raw: String,
         key: ReadingKey,
         design: SelectableReadingText.Design = .serif,
-        lineSpacing: CGFloat = 0
+        lineSpacing: CGFloat = 0,
+        spotlight: ReadingSpotlight? = nil
     ) {
         self.raw = raw
         self.key = key
         self.design = design
         self.lineSpacing = lineSpacing
+        self.spotlight = spotlight
         let rawKey = key.rawValue
         _storedHighlights = Query(
             filter: #Predicate<Highlight> { $0.readingKey == rawKey },
@@ -47,7 +52,8 @@ struct AnnotatableReadingText: View {
                 design: design,
                 lineSpacing: lineSpacing,
                 highlights: storedHighlights,
-                menuActions: menuActions
+                menuActions: menuActions,
+                spotlight: spotlight
             )
             .frame(maxWidth: .infinity, alignment: .leading)
 
