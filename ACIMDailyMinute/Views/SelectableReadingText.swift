@@ -44,6 +44,10 @@ struct SelectableReadingText: View {
     /// scrolled into view once on first layout.
     var spotlight: ReadingSpotlight? = nil
 
+    /// Where a tapped cross-reference goes. Installed by the enclosing stack's
+    /// `readingDestinations(path:)`.
+    @Environment(\.openReading) private var openReading
+
     /// One item offered on a selection.
     ///
     /// The range it receives is in `Character` offsets. Converting from the text
@@ -72,17 +76,26 @@ struct SelectableReadingText: View {
     var body: some View {
         let display = ReadingText.displayString(from: raw)
         let spotlightRange = resolvedSpotlight(in: display)
+        let links = CrossReference.lessonReferences(in: display)
+            .map { (range: $0.range, url: CrossReference.url(forLesson: $0.lesson)) }
         TextViewRepresentable(
             attributed: Self.attributed(
                 raw: raw,
                 design: design,
                 lineSpacing: lineSpacing,
                 highlightedRanges: paintedRanges,
-                spotlightRange: spotlightRange
+                spotlightRange: spotlightRange,
+                links: links
             ),
             display: display,
             menuActions: menuActions,
-            spotlight: spotlightRange.flatMap { Self.utf16Range(of: $0, in: display) }
+            spotlight: spotlightRange.flatMap { Self.utf16Range(of: $0, in: display) },
+            openLink: { url in
+                // Following a reference from inside a reading is a request to
+                // read the lesson it names, not to watch it.
+                guard let lesson = CrossReference.lesson(from: url) else { return }
+                openReading(.lesson(LessonRef(lessonNumber: lesson, presentsVideo: false)))
+            }
         )
     }
 
@@ -119,7 +132,8 @@ struct SelectableReadingText: View {
         design: Design = .serif,
         lineSpacing: CGFloat = 0,
         highlightedRanges: [Range<Int>] = [],
-        spotlightRange: Range<Int>? = nil
+        spotlightRange: Range<Int>? = nil,
+        links: [(range: Range<Int>, url: URL)] = []
     ) -> NSAttributedString {
         let display = ReadingText.displayString(from: raw)
         let paragraph = NSMutableParagraphStyle()
@@ -143,6 +157,12 @@ struct SelectableReadingText: View {
         }
         if let spotlightRange, let utf16Range = utf16Range(of: spotlightRange, in: display) {
             result.addAttribute(.backgroundColor, value: spotlightColor, range: utf16Range)
+        }
+        // A link is a foreground attribute, so a highlight or a spotlight over
+        // it still paints its background and the link still answers a tap.
+        for link in links {
+            guard let utf16Range = utf16Range(of: link.range, in: display) else { continue }
+            result.addAttribute(.link, value: link.url, range: utf16Range)
         }
         return result
     }
@@ -191,6 +211,18 @@ struct SelectableReadingText: View {
         PlatformColor.systemBlue.withAlphaComponent(0.22)
     }
 
+    /// The platform's own interactive-text colour, with no underline: the
+    /// reference reads as the app's chrome and not as a web link. On macOS
+    /// that is whatever accent the reader chose, which is what every other
+    /// control in the window already wears.
+    fileprivate static var linkAttributes: [NSAttributedString.Key: Any] {
+        #if os(iOS)
+        [.foregroundColor: PlatformColor.tintColor, .underlineStyle: 0]
+        #else
+        [.foregroundColor: PlatformColor.controlAccentColor, .underlineStyle: 0]
+        #endif
+    }
+
     private static func font(for design: Design) -> PlatformFont {
         let base = PlatformFont.preferredFont(forTextStyle: .body)
         switch design {
@@ -213,6 +245,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
     let display: String
     let menuActions: [SelectableReadingText.MenuAction]
     let spotlight: NSRange?
+    let openLink: (URL) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -230,6 +263,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
         view.textContainer.lineFragmentPadding = 0
         view.adjustsFontForContentSizeCategory = true
         view.dataDetectorTypes = []
+        view.linkTextAttributes = SelectableReadingText.linkAttributes
         view.setContentCompressionResistancePriority(.required, for: .vertical)
         view.setContentHuggingPriority(.required, for: .vertical)
         return view
@@ -238,6 +272,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
     func updateUIView(_ view: UITextView, context: Context) {
         context.coordinator.display = display
         context.coordinator.menuActions = menuActions
+        context.coordinator.openLink = openLink
         if view.attributedText != attributed { view.attributedText = attributed }
         if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
             context.coordinator.scrolledSpotlight = spotlight
@@ -292,6 +327,30 @@ private struct TextViewRepresentable: UIViewRepresentable {
         /// spotlight; `updateUIView` runs on every redraw, and re-scrolling
         /// would drag the reader back here every time they moved.
         var scrolledSpotlight: NSRange?
+        var openLink: (URL) -> Void = { _ in }
+
+        /// A tap on a reference opens the lesson in this app. The default
+        /// action would hand the URL to the system, which has nothing
+        /// registered for it and would open nothing.
+        func textView(
+            _ textView: UITextView,
+            primaryActionFor textItem: UITextItem,
+            defaultAction: UIAction
+        ) -> UIAction? {
+            guard case .link(let url) = textItem.content else { return defaultAction }
+            return UIAction { [openLink] _ in openLink(url) }
+        }
+
+        /// No preview and no share sheet on a long press: the URL is private
+        /// to this app and would read as gibberish.
+        func textView(
+            _ textView: UITextView,
+            menuConfigurationFor textItem: UITextItem,
+            defaultMenu: UIMenu
+        ) -> UITextItem.MenuConfiguration? {
+            nil
+        }
+
 
         func textView(
             _ textView: UITextView,
@@ -330,6 +389,7 @@ private struct TextViewRepresentable: NSViewRepresentable {
     let display: String
     let menuActions: [SelectableReadingText.MenuAction]
     let spotlight: NSRange?
+    let openLink: (URL) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -345,12 +405,14 @@ private struct TextViewRepresentable: NSViewRepresentable {
         view.isVerticallyResizable = true
         view.isHorizontallyResizable = false
         view.isAutomaticLinkDetectionEnabled = false
+        view.linkTextAttributes = SelectableReadingText.linkAttributes
         return view
     }
 
     func updateNSView(_ view: NSTextView, context: Context) {
         context.coordinator.display = display
         context.coordinator.menuActions = menuActions
+        context.coordinator.openLink = openLink
         guard let storage = view.textStorage else { return }
         if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
         if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
@@ -392,6 +454,14 @@ private struct TextViewRepresentable: NSViewRepresentable {
         /// would drag the reader back here every time they moved.
         var scrolledSpotlight: NSRange?
         private weak var textView: NSTextView?
+        var openLink: (URL) -> Void = { _ in }
+
+        func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
+            guard let url = link as? URL else { return false }
+            openLink(url)
+            return true
+        }
+
 
         func textView(
             _ view: NSTextView,
