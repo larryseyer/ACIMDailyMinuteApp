@@ -13,9 +13,10 @@ struct TodayView: View {
     @State private var hasLoadedOnce = false
     @State private var isRefreshing = false
     @State private var showOfflineToast = false
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     if !connectivity.isConnected && (minutes.first != nil || lessons.first != nil) {
@@ -42,6 +43,7 @@ struct TodayView: View {
                 .readableContentWidth()
             }
             .navigationTitle("Today")
+            .readingDestinations(path: $path)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {

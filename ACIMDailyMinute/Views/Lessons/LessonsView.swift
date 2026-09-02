@@ -80,18 +80,16 @@ struct LessonsView: View {
             .navigationDestination(for: TextChapterRef.self) { ref in
                 TextChapterView(chapter: ref.chapter)
             }
-            .navigationDestination(for: TextSectionRef.self) { ref in
-                TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
-            }
             .navigationDestination(for: IntroductionRef.self) { ref in
                 WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
             }
             .navigationDestination(for: LessonRef.self) { ref in
-                LessonDetailView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+                LessonDetailView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight, presentsVideo: ref.presentsVideo)
             }
             .navigationDestination(for: ManualSegmentRef.self) { ref in
                 ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
             }
+            .readingDestinations(path: $path)
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
                 // A widget or notification tap on a lesson must never land on a
