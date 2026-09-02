@@ -295,6 +295,30 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Mac's `Host` name is what it is called on that machine; the phone says `iPhone` because iOS
       stopped giving apps the reader's own device name.
 
+- [ ] **Search, the book's index.** Read tab, the one search field, prompt "Search the Course".
+      Type `holy instant`: a Headings group if any title matches, then every occurrence in book
+      order under its section, lesson or Manual heading, each row a snippet with the match in bold
+      and its address (`T-15.1.3`, `W-45.2`) beneath. Tap a Text hit, a lesson hit, an Introduction
+      hit and a Manual hit: each opens with the matched words tinted blue and scrolled into view.
+      A lesson opened this way does NOT open its video first. Type `45`: Lesson 45 leads the
+      Headings group. Type `the`: the list ends with "Showing the first 1,000 matches." Type
+      `God's` with a straight apostrophe: it finds the Course's `God’s`. Then clear the field: the
+      Workbook and Text shelves are exactly as they were, and the Text's chapter list no longer has
+      a search field of its own. The Jump button is absent while a query is typed, by design —
+      typing the number is the jump.
+      ⛔ Check the spotlight scroll at 375pt on a long section (Chapter 1.2): the scroll happens
+      once, on arrival, and never fights the reader afterwards. The tint is `systemBlue` at 0.22 —
+      chosen because the app's accent is gold and a highlight is yellow; if it reads wrong on the
+      dark ground, `SelectableReadingText.spotlightColor` is the one place it lives.
+      ⛔ At your Dynamic Type (about xxLarge) a snippet row is capped at three lines, and a long
+      `…before` fragment can push the bolded match itself off the row. Search `forgiveness`, look
+      at the rows: if the bold words are clipped anywhere, that cap is the thing to change. A
+      single letter typed shows an empty list, not "No Results", by design; a single digit is a
+      lesson number and shows that lesson.
+- [ ] **The Manual opens now.** A Manual highlight, note or saved row in Saved opens its passage on
+      a screen titled Manual, with Save in the toolbar and annotation working. No Previous or Next,
+      no contents, by design — structuring the Manual is its own item.
+
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
 He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
@@ -334,39 +358,17 @@ is written down as a spec yet and no code exists.** The decisions he made are wo
 the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
 position when one does appear.
 
-## ▶ NEXT — corpus-wide search
+## ▶ NEXT — cross-reference links
 
-The book's index. Search that reaches the whole bundled corpus, not just the rolling
-archive window. Spec first, then plan, then execute.
-
-**What exists today, verified rather than assumed:**
-
-- **Search exists in three places and none of them searches a body.** `ArchiveView` filters
-  `ArchivedReading.searchableText` through a SwiftData `#Predicate` with
-  `localizedStandardContains` — the rolling archive window only. `LessonsView` matches a
-  lesson number or title. `TextChaptersView` matches chapter and section titles.
-- **The corpus a real search must cover is 5,137,927 characters over 2,727 records**:
-  272 Text sections (1.64M), 365 lesson bodies (799K), 1,983 segments (2.55M), 105 Manual
-  segments (137K), 2 Part Introductions (7K). All already in memory through `CorpusService`.
-- **Every hit now has an address to show.** `CitationResolver.citation(for:characterOffset:)`
-  turns a match position into `T-5.3.7`, so a result can name where it is.
-
-**The questions the spec has to answer:**
-
-1. **Segments overlap the Text and the Workbook.** The same passage is bundled twice — once
-   as a Text section and once as a word-count cut. Searching both returns it twice. Does
-   search cover the readable corpus (Text, lessons, Manual) and leave segments out, or
-   deduplicate by citation?
-2. **Raw body or display string?** Only `ReadingText.displayString` matches what the reader
-   sees and what a highlight offset counts. Searching raw bodies would return offsets that
-   point at nothing drawable.
-3. **What is a result?** A citation plus a snippet, presumably — but a snippet has to be cut
-   without breaking a grapheme, and the offset has to survive the jump into the reading.
-4. **Where does it live?** A fourth `.searchable` surface, or one search that replaces the
-   three narrow ones. The three disagree about what a query means today.
-
-⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
-and whatever is added must survive the app.
+The Course refers to itself constantly; a citation printed inside a reading should be tappable.
+Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app already
+navigates, and every reading screen now takes a `ReadingSpotlight`, so a tapped citation can open
+its paragraph with the words in view. Spec first, then plan, then build. The open questions:
+which surfaces print citations a reader would tap (the corpus card's stem, a Text section's stem,
+a search row's caption, an export is text and cannot); whether a reference inside the prose
+(`T-5.3`) is detected and linked or only the app's own printed addresses; and what a paragraph
+address with no spotlight quote scrolls to — `ReadingSpotlight` carries a quote today, and a
+paragraph-only target needs either the paragraph's opening words or a second kind of pointer.
 
 ## ▶ WATCHING — the nightly catch-up
 
@@ -407,23 +409,23 @@ Apple-platform design.
 
 What a physical *A Course in Miracles* gives a reader that this app does not. Ranked by how much each
 blocks "this replaces my book". The content is now bundled and reachable through `CorpusService` —
-1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
+1,983 segments, 272 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ NEXT` block above.
-- [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be
-      tappable. Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
-      already navigates, so this is a view change and not a format change.
 - [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
       what a 669-page book needs most: `ReadingKey.textSection` already names the place. There is no
       reading position anywhere in the app today — no `@SceneStorage`, no scroll offset. When one
       exists it is one more key in the backup file; older versions ignore what they do not
       recognise, and nothing is written as a placeholder for it now.
-- [ ] **"Let it fall open"** — a random passage. A real practice with the physical book, nearly free once
-      the corpus is bundled.
+- [ ] **"Let it fall open"** — a random passage. A real practice with the physical book. His
+      proposal, not yet built: a random *published* Daily Minute from the archive rather than a
+      random corpus passage, so it arrives with narration and video; fall back to a random bundled
+      segment when the archive cache is empty. Draws from ~165 entries instead of the whole book,
+      so it repeats sooner; that is the trade he chose.
 - [ ] **Workbook completion tracking** — which lessons the reader has *done*, distinct from listened.
 - [ ] **Structure the Manual for Teachers** into its question-and-answer form. It is bundled as 105
-      unstructured segments by decision; a searchable unstructured Manual beats no Manual.
+      unstructured segments by decision, searchable and readable one passage at a time through
+      `ManualSegmentView`; a browsable structure is what is missing.
 
 ## ▶ OPEN — content and pipeline
 

@@ -212,6 +212,13 @@ if failures.isEmpty {
 }
 SWIFT
 
+# A lone-file swiftc happily links SwiftUI, SwiftData and Foundation's Bundle,
+# so the compile alone cannot see this drift; the grep can.
+if grep -qE '^[[:space:]]*import[[:space:]]+(SwiftUI|SwiftData)|Bundle\.' "$REPO/ACIMDailyMinute/Services/CorpusSearch.swift"; then
+    echo "FAIL: CorpusSearch.swift imports a UI or storage framework, or touches Bundle"
+    exit 1
+fi
+
 swiftc -O \
     "$REPO/ACIMDailyMinute/Services/CorpusSearch.swift" \
     "$WORK/main.swift" \
