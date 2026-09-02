@@ -318,6 +318,17 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] **The Manual opens now.** A Manual highlight, note or saved row in Saved opens its passage on
       a screen titled Manual, with Save in the toolbar and annotation working. No Previous or Next,
       no contents, by design — structuring the Manual is its own item.
+- [ ] **Cross-reference links.** Open a review lesson — 84 is today's, or any of 51-60, 81-90,
+      111-120, 141-150, 171-180, 201-220 — and the bracketed numbers, `[67]`, draw in the accent
+      colour. Tap one: Lesson 67 opens to read, with NO video first, and Back returns to the
+      review. A long press on the number shows no link preview. Highlight across one and the
+      yellow paints behind it while it stays tappable. Then Today: the Daily Minute's footer
+      (`T-5.3.7`, `W-45.2`) is in the accent colour; tap it and the Text section or lesson opens
+      with that whole paragraph tinted blue and scrolled into view, Back returns to Today, and the
+      tab has not changed. A `Pref.N` footer opens the Preface at its head with nothing painted,
+      by design. The offline corpus card's footer does the same. On the Mac all of it is a click.
+      ⛔ Check `[67]` at 375pt and xxLarge: the tint must not make the number look like a button
+      the words around it are not.
 
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
@@ -357,28 +368,6 @@ is written down as a spec yet and no code exists.** The decisions he made are wo
 1,983 minute segments.** So **most readings will have no media for the life of this app.** Absence is
 the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
 position when one does appear.
-
-## ▶ NEXT — cross-reference links (spec'd and planned, not built)
-
-Spec: `docs/superpowers/specs/2026-09-02-cross-reference-links-design.md`. Plan:
-`docs/superpowers/plans/2026-09-02-cross-reference-links.md`, six tasks. Plan mode with an
-execution pointer, approval, then build. The three open questions are settled in the spec by
-measurement: the Course never cites itself by address, so nothing is detected in prose except
-the review lessons' 150 bracketed lesson numbers; the Today cards' citation footers are the
-only printed addresses that become tappable; and a citation resolves to its whole paragraph as
-a `ReadingSpotlight`, so no second pointer kind is needed. A link pushes in place on the Read,
-Saved or Today stack and never switches tabs; a lesson reached by a link opens to read, not to
-watch.
-
-- [ ] Task 1 — `Citation.paragraphRange(_:in:)` + the citation agreement harness proves it.
-- [ ] Task 2 — `Utilities/CrossReference.swift` + `tools/verify_cross_references.sh`, the
-      fourteenth check.
-- [ ] Task 3 — `Views/ReadingNavigation.swift`: `ReadingDestination`, `openReading`,
-      `.readingDestinations(path:)` on Read, Saved, Today; `LessonRef.presentsVideo`.
-- [ ] Task 4 — `.link` attributes and tap delegates in `SelectableReadingText` on both platforms.
-- [ ] Task 5 — `CitationResolver.destination(for:)` + `CitationButton` on both Today cards.
-- [ ] Task 6 — fourteen checks, `./build.sh`, `continue.md`, `todo.md` (the parked entry and
-      the fourteenth-check description are written out in the plan).
 
 ## ▶ WATCHING — the nightly catch-up
 
@@ -442,9 +431,9 @@ a book.
 - [ ] ⛔ **`Pref.N` names two paragraphs.** The Preface ships as two sections — `0.1 Publisher's
       Note`, 17 paragraphs, and `0.2 The Use of Terms`, 42 — but the citation format carries no
       section number, so `Pref.10` is paragraph 10 of either, and 21 shipped segments carry the
-      form (`Pref.1` … `Pref.40`). `Citation.swift`'s own comment still says the Preface has one
-      section. A citation tap will open the Preface at its head rather than guess. Fixing it
-      means a `Pref.S.N` form, which changes a citation already printed into exports; his call.
+      form (`Pref.1` … `Pref.40`). A tap on one opens the Preface at its head rather than guess.
+      Fixing it means a `Pref.S.N` form, which changes a citation already printed into exports;
+      his call.
       `Citation.swift`'s `preface` case and `tools/citations.py`'s `text_citation` are the two
       places the format lives.
 
