@@ -181,14 +181,14 @@ struct SelectableReadingText: View {
         PlatformColor.systemYellow.withAlphaComponent(0.28)
     }
 
-    /// The app's own pointer, in the accent colour, so a reader can tell at a
-    /// glance which mark is theirs and which one the search just made.
+    /// The app's own pointer, and deliberately not the accent colour: this
+    /// app's accent is gold and a highlight is yellow, so an accent wash would
+    /// read as a second, slightly different mark of the reader's own — and on
+    /// macOS the accent is whatever the user set in System Settings, which may
+    /// be yellow outright. A fixed blue reads as neither the reader's mark nor
+    /// the app's chrome.
     fileprivate static var spotlightColor: PlatformColor {
-        #if os(iOS)
-        PlatformColor.tintColor.withAlphaComponent(0.25)
-        #else
-        PlatformColor.controlAccentColor.withAlphaComponent(0.25)
-        #endif
+        PlatformColor.systemBlue.withAlphaComponent(0.22)
     }
 
     private static func font(for design: Design) -> PlatformFont {
