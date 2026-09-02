@@ -37,6 +37,7 @@ enum AnnotationStore {
         in context: ModelContext
     ) {
         let fetched = highlightsRaw(key.rawValue, in: context)
+        var changed = false
         for highlight in fetched {
             let resolution = AnchorResolver.resolve(
                 startOffset: highlight.startOffset,
@@ -54,21 +55,35 @@ enum AnnotationStore {
             // reader marked.
             if resolution != .orphaned {
                 let repaired = PunctuationSpacing.repaired(highlight.quote)
-                if repaired != highlight.quote { highlight.quote = repaired }
+                if repaired != highlight.quote {
+                    highlight.quote = repaired
+                    changed = true
+                }
             }
 
             switch resolution {
             case .exact:
                 // A publisher reverting an edit brings an orphan back.
-                if highlight.isOrphaned { highlight.isOrphaned = false }
+                if highlight.isOrphaned {
+                    highlight.isOrphaned = false
+                    changed = true
+                }
             case .moved(let range):
                 highlight.startOffset = range.lowerBound
                 highlight.length = range.count
                 highlight.isOrphaned = false
+                changed = true
             case .orphaned:
-                if !highlight.isOrphaned { highlight.isOrphaned = true }
+                if !highlight.isOrphaned {
+                    highlight.isOrphaned = true
+                    changed = true
+                }
             }
         }
+        // A repaired quote or a moved offset is what the backup file carries,
+        // so the folder copy follows it — but only when something moved, since
+        // this runs every time a reading opens.
+        if changed { FolderCopyService.noteChange(in: context) }
     }
 
     /// Every highlight the reader has made, newest first. For the Saved tab.
@@ -100,6 +115,7 @@ enum AnnotationStore {
         highlight.length = range.count
         highlight.quote = quote
         context.insert(highlight)
+        FolderCopyService.noteChange(in: context)
         return highlight
     }
 
@@ -112,6 +128,7 @@ enum AnnotationStore {
         )) ?? []
         for note in attached { note.highlightID = nil }
         context.delete(highlight)
+        FolderCopyService.noteChange(in: context)
     }
 
     // MARK: - Notes
@@ -144,6 +161,7 @@ enum AnnotationStore {
         note.body = trimmed
         note.highlightID = highlightID
         context.insert(note)
+        FolderCopyService.noteChange(in: context)
         return note
     }
 
@@ -153,10 +171,12 @@ enum AnnotationStore {
         guard !trimmed.isEmpty, trimmed != note.body else { return }
         note.body = trimmed
         note.updatedAt = Date()
+        FolderCopyService.noteChange(in: context)
     }
 
     static func delete(_ note: Note, in context: ModelContext) {
         context.delete(note)
+        FolderCopyService.noteChange(in: context)
     }
 
     // MARK: - Growing a date key up into a corpus key

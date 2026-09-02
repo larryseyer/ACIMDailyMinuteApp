@@ -9,8 +9,7 @@ says what is true now and what is next. REPLACE the state block below — never 
 ## ✅ WHAT IS TRUE RIGHT NOW
 
 Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing of
-mine is running. One untracked file sits in the repo root, `000000 Bug - Widget.png`; it is his and it
-must not be committed.
+mine is running.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep`
@@ -30,23 +29,25 @@ about `xxLarge`. **Check every width assumption against 375pt.** When a row want
 has, SwiftUI drops nothing and warns about nothing: it breaks the words.
 
 ⛔ **A control that appears because DATA changed has never been drawn by anyone.** **The Listen tab's
-Download action is undrawn and is next in line** — it comes alive by itself when the feed carries
-`audio_url`, with no app change and no rebuild. Lay it out at 375pt before believing it is fine.
+Download action and the Today card's Listen button are LIVE now and still undrawn by any eye** — the
+feeds carry archive.org `audio_url` on every recorded episode, so both appeared on the phone with no
+app change. The swipe is system-drawn and collapses to icons when narrow, so there is no word for it
+to break; it is in the `⏸ PARKED` block to be looked at once at 375pt, not to be built.
 
-⛔ **MacLive carries every recorded archive.org URL** — `upload_log` 156 of 166, `lessons_log` 84 of
-84. The ten empty minute rows are the nine with no MP3 at all (2026-03-18 … 03-26) plus 2026-05-31, an
-unfilled catch-up gap. **Nothing is left to do by hand**: `main.py:427` calls `push_all_daily_minute`
-at the end of every successful run and rebuilds the whole archive list from the database, so the 02:00
-run publishes the URLs into the feeds on its own. ⛔ SQLite has never been opened read-write across
-SMB and must not be; the pre-landing copy of the live database is kept at
+**The feeds carry the archive.org URLs.** `daily-minute.json` 157 of 164 archive entries plus today,
+`daily-lesson.json` 84 of 84 plus today, `podcast-minute.xml` 158 enclosures of 165, `podcast-lessons.xml`
+85 of 85, and all 243 recorded MP3 URLs answer a ranged GET. The seven minutes without one are
+2026-03-20 … 03-26, which have no recording. Two catch-up gaps remain, **2026-05-31 and 08-14**; the
+nightly run fills one per night. ⛔ SQLite has never been opened read-write across SMB and must not
+be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — all three live targets are current and carry Backup & Restore, the store split and
-iCloud sync:**
+**Build state — all three live targets are current and carry Backup & Restore, the store split,
+iCloud sync and the reader-chosen folder:**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
-  is **off**, its default.
+  is **off**, its default. No folder is chosen, its default.
   ⛔ **`devicectl device info processes` showing none of them means nothing is wrong** — the app is
   simply not open. It is a check to run *after* launching, never a way to ask what is installed.
   ⭐ **This is where he tests.** ⛔ A `devicectl install` returning
@@ -57,7 +58,8 @@ iCloud sync:**
   `RR5DY39W4Q`, widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it
   from **Edit Widgets**. Not running is the ordinary state, not a fault. Confirm with `codesign -dv`
   and `pluginkit -mAv -p com.apple.widgetkit-extension`, which answer without launching anything.
-  iCloud sync is **off**, its default. ⛔ **`build/Debug/` is the macOS product.**
+  iCloud sync is **off**, its default. No folder is chosen — `defaults read com.larryseyer.acimdailyminute`
+  shows no `folderCopy` key, checked after the launch. ⛔ **`build/Debug/` is the macOS product.**
   `build/Debug-iphonesimulator/` also contains an `ACIMDailyMinute.app`, and a `find` that is not
   anchored hands you the wrong one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q`.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
@@ -86,9 +88,10 @@ iCloud sync:**
   `ACIMDailyMinute.sqlite`, the pre-split file kept untouched as the recovery copy. Back the directory
   up first, launch the signed build, then read `.tables`, row counts and `sqlite_master` indexes with
   `sqlite3`. ⛔ Those two highlights and two notes are the only real annotation data reachable from
-  here — treat them as precious and back them up before any store work.
+  here — treat them as precious and back them up before any store work. The most recent copy is
+  `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Ten committed checks now guard this repo. Run all ten first thing — they take about a
+⛔ **Eleven committed checks now guard this repo. Run all eleven first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -145,6 +148,14 @@ minute and they are how you find out the tree is what this file says it is:**
   90pt to 672pt with no word ever broken, that Share precedes Save on the trailing edge, and that
   **neither moves when the play control appears** — which is what the leading play control buys, since
   most readings have no audio and that button is usually absent.
+- `./tools/verify_folder_copy.sh` — ⛔ **the only check that guards the FOLDER a reader chose.**
+  27 cases against a real directory on this Mac, and **it compiles `FolderCopy.swift` and
+  `BackupDocument.swift` and nothing else**. A real encoded backup lands, reads back byte for byte,
+  and a second write replaces rather than accumulates; a folder renamed after it was chosen is still
+  found, and the refreshed bookmark resolves straight to it; a read-only folder refuses the write
+  and leaves the previous copy intact with no temporary file behind; a deleted folder, a plain file
+  and garbage bookmark data all come back as `folderMissing` with the sentence the reader sees,
+  never a crash.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -156,13 +167,14 @@ this Mac:
   terminator; and the two Part Introduction rows take their titles from the corpus rather than from
   literals.
 - `docs/superpowers/specs/2026-08-30-canonical-citations-design.md` + its plan — implemented.
-- `docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` + its plan — **step 1 of five
-  implemented** (the portable file). Steps 2-5 are spec'd and not started; they are the
-  `▶ NEXT` block of [`todo.md`](todo.md). Two places where the code is ahead of the plan's text,
-  both deliberate: `AnnotationExport.Entry` gained an `id` so the backup can join a citation to a
-  particular highlight without matching on its quote; and the file records milliseconds while the
-  store keeps full precision, so `BackupMerge` compares dates at the format's own resolution rather
-  than with `<`.
+- `docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` + its plan — **all five steps
+  implemented.** The plan covers step 1 only; steps 2-5 were planned in session. Places where the
+  code is ahead of the spec's text, all deliberate: `AnnotationExport.Entry` gained an `id` so the
+  backup can join a citation to a particular highlight without matching on its quote; the file
+  records milliseconds while the store keeps full precision, so `BackupMerge` compares dates at the
+  format's own resolution rather than with `<`; and the folder tier writes a **stable, per-device
+  filename** — `ACIM Daily Minute backup (<device>).json` — rather than the dated one the Save
+  button uses, so the folder never fills and two machines sharing it never race on one name.
 - ⛔ **The chapter-opening recovery has NO design document.** Its only written record besides
   `tools/chapter_openings.py`'s own docstrings is an approved plan at
   `~/.claude/plans/iridescent-moseying-engelbart.md`, outside the repo.
@@ -191,12 +203,10 @@ checks above, `./build.sh`, the arm64 device build, install + launch, process-al
 store migration, real feed payloads. **Run the ten checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
-⏳ **The archive.org URLs are landed on MacLive and the next thing is to WATCH, not to do.** After
-the 2026-09-02 02:00 run, confirm the feeds carry `audio_url` on the back catalogue — the `▶ WATCHING`
-block of [`todo.md`](todo.md). Nothing is left to upload and no hand-run is needed. ⛔ When the URLs
-reach the app, the Today card's **Listen** button and the Listen tab's **Download** action come alive
-with no app change — and the Download action has never been drawn by anyone, so check it at 375pt.
-Do not re-open the hosting decision.
+⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
+[`todo.md`](todo.md) holds the one thing still moving on its own: two catch-up gaps the nightly run
+fills one per night. Read them off the feed's archive dates; nothing needs a hand. Do not re-open
+the hosting decision.
 
 ⏸ **The standardized reading layout is PAUSED and is his to resume** — the `⏸ PAUSED` block of
 [`todo.md`](todo.md) holds the decisions he made. Its first piece is partly standing already: one
@@ -204,11 +214,22 @@ shared `CardHeaderRow` across the three cards, audio-first with the play control
 left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
 structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
-**⭐ The live agent work is the rest of carrying a reader's work between devices**, the `▶ NEXT`
-block of [`todo.md`](todo.md). The portable file, bookmark uniqueness, the store split **and iCloud
-sync** are all done. **Only step 5 is left: the reader-chosen folder, in its smallest form only** — no
-folder watching and no automatic merge, because a live folder synchroniser is a second conflict
-resolver running against files two machines may write at once.
+**⭐ The live agent work is corpus-wide search — the book's index**, the `▶ NEXT` block of
+[`todo.md`](todo.md). Spec first, then plan, then build. Carrying a reader's work between devices is
+**finished, all five steps**: the portable file, bookmark uniqueness, the store split, iCloud sync
+and the reader-chosen folder.
+
+⛔ **The folder tier writes and never reads, and that boundary is the whole design.** A reader
+picks a folder once (Settings > Your Work > Backup & Restore > Keep a copy in a folder); the app
+holds a security-scoped bookmark to it in `UserDefaults.standard` and writes the backup file there
+**three seconds after the last change to a highlight, note or bookmark**, and at once when the app
+leaves the foreground. Settings, phrases and listened history ride along in the next write; they do
+not trigger one. **Nothing is ever read from the folder**: a folder two machines both write into is
+where an automatic merge would lose words, so restoring stays a thing the reader asks for. Every
+call in is one line, `FolderCopyService.noteChange(in:)`, at the end of each writer in
+`AnnotationStore`, `BookmarkStore` and `BackupService.apply` — a new writer owes the same line. The
+four `folderCopy*` keys are device-local and on the `NotTheReaders` list; a bookmark means nothing on
+another machine.
 
 ⛔ **iCloud sync is OFF by default and only `reader.store` mirrors.** The rule that keeps it that way
 is **`allowsSave == false` ⇒ `cloudKitDatabase == .none`**, because `cloudKitDatabase` defaults to
@@ -224,8 +245,7 @@ see. A **read-only** configuration cannot create a store it cannot find, which i
 `CKErrorDomain` 5 `badContainer` and works on the next launch — expect it once per fresh container and
 do not chase it.
 
-Then **corpus-wide search** (the `▶ THEN` block), then cross-reference links, then the pre-submission
-sweep.
+After search: cross-reference links, then the pre-submission sweep.
 
 ⛔ **Write or delete a `Bookmark` only through `BookmarkStore` — it is the ONLY thing keeping two
 rows off one passage.** `itemKey` is the whole identity; there is no `id`; and `@Attribute(.unique)`
@@ -243,10 +263,10 @@ make a reader's words fewer. It is in `BackupMerge.swift` with the reasoning att
 `./tools/verify_backup.sh` holds it: idempotent, commutative, associative, and no passage of any
 note body is ever lost.
 
-**Corpus-wide search — the book's index — is still the other open item** and is unstarted. Its brief
-is the `▶ THEN` block of [`todo.md`](todo.md): the three narrow searches that exist today and what
-each actually matches, the 5,137,927 characters over 2,727 records a real search has to cover, and
-the four questions its spec has to answer.
+**Corpus-wide search — the book's index — is unstarted.** Its brief is the `▶ NEXT` block of
+[`todo.md`](todo.md): the three narrow searches that exist today and what each actually matches, the
+5,137,927 characters over 2,727 records a real search has to cover, and the four questions its spec
+has to answer.
 
 ⛔ **A reader's backup file is `.json` on purpose, and that is not a small decision.** No private
 extension and no private UTI: the file has to open on a Windows, Linux or Android machine with what
@@ -267,16 +287,22 @@ at the format's own resolution rather than with `<`. Without that, a device impo
 would find every birthday a fraction earlier than the one it holds, rewrite them all, and report
 changes that were not real. `BackupDocument.timeResolution` is the one place that number lives.
 
-⛔ **Where the reader-data layer lives, and the one rule it must keep.** Four files, app target only:
+⛔ **Where the reader-data layer lives, and the one rule it must keep.** Six files, app target only:
 - `Services/BackupDocument.swift` — the `Codable` file format and the ISO-8601 conversion.
 - `Services/BackupMerge.swift` — the merge algebra. Takes a snapshot of what is local plus a decoded
   document and returns a `MergePlan`; it never touches a model.
-- `Services/BackupService.swift` — **the only one that touches `ModelContext` or `UserDefaults`.**
-- `Views/Settings/BackupRestoreView.swift` — the screen, under Settings > Your Work.
+- `Services/FolderCopy.swift` — the folder: bookmark, resolve, the per-device filename, the atomic
+  write, and the three sentences a reader sees when it fails.
+- `Services/BackupService.swift` and `Services/FolderCopyService.swift` — **the only two that touch
+  `ModelContext` or `UserDefaults`.** The second also owns the debounce and the clock.
+- `Views/Settings/BackupRestoreView.swift` — the screen, under Settings > Your Work, all three
+  sections.
 
-⛔ **The first two must stay pure** — no SwiftData, no SwiftUI, no `Bundle`, no `CorpusService`.
-`tools/verify_backup.sh` compiles exactly those two and nothing else, so purity is not a convention
-anyone has to remember: breaking it breaks the check. Keep new logic on that side of the line.
+⛔ **`BackupDocument`, `BackupMerge` and `FolderCopy` must stay pure** — no SwiftData, no SwiftUI, no
+`Bundle`, no `CorpusService`, no `UserDefaults`, no `Date()`. `tools/verify_backup.sh` compiles the
+first two and `tools/verify_folder_copy.sh` the first and third, and nothing else, so purity is not a
+convention anyone has to remember: breaking it breaks the check. Keep new logic on that side of the
+line.
 
 ⛔ **Every reader setting lives in `UserDefaults.standard`, NOT the App Group.** There is not one
 `UserDefaults(suiteName:)` call in the repo; the App Group holds only the SQLite file. Two
@@ -394,11 +420,10 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-1. **The reader-chosen folder** — the last of the five sync steps, and the smallest. `▶ NEXT`.
-2. **Corpus-wide search**, the book's index — spec first, then plan, then build. `▶ THEN`.
-3. **Cross-reference links**, which citations unblocked: `Citation(rawValue:)` already parses an
+1. **Corpus-wide search**, the book's index — spec first, then plan, then build. `▶ NEXT`.
+2. **Cross-reference links**, which citations unblocked: `Citation(rawValue:)` already parses an
    address back to a `ReadingKey` the app navigates, so it is a view change, not a format change.
-4. **The pre-submission sweep**, then the smaller open items.
+3. **The pre-submission sweep**, then the smaller open items.
 
 Two corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
 PDFs — and the eleven running heads still inside Chapter 11's prose. The Manual is the last bundled

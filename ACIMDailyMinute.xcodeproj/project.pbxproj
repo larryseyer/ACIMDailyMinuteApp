@@ -101,6 +101,8 @@
 		AA000001400 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
 		AA000001407 /* BackupMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002407 /* BackupMerge.swift */; };
 		AA000001408 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002408 /* BackupService.swift */; };
+		AA000001414 /* FolderCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002414 /* FolderCopy.swift */; };
+		AA000001415 /* FolderCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002415 /* FolderCopyService.swift */; };
 		AA000001410 /* BookmarkIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002410 /* BookmarkIdentity.swift */; };
 		AA000001411 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002411 /* BookmarkStore.swift */; };
 		AA000001409 /* BackupRestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002409 /* BackupRestoreView.swift */; };
@@ -254,6 +256,8 @@
 		AA000002400 /* BackupDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDocument.swift; sourceTree = "<group>"; };
 		AA000002407 /* BackupMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupMerge.swift; sourceTree = "<group>"; };
 		AA000002408 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
+		AA000002414 /* FolderCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopy.swift; sourceTree = "<group>"; };
+		AA000002415 /* FolderCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopyService.swift; sourceTree = "<group>"; };
 		AA000002410 /* BookmarkIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkIdentity.swift; sourceTree = "<group>"; };
 		AA000002411 /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
 		AA000002409 /* BackupRestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestoreView.swift; sourceTree = "<group>"; };
@@ -410,6 +414,8 @@
 				AA000002400 /* BackupDocument.swift */,
 				AA000002407 /* BackupMerge.swift */,
 				AA000002408 /* BackupService.swift */,
+				AA000002414 /* FolderCopy.swift */,
+				AA000002415 /* FolderCopyService.swift */,
 				AA000002410 /* BookmarkIdentity.swift */,
 				AA000002411 /* BookmarkStore.swift */,
 				AA000002310 /* CorpusFallback.swift */,
@@ -846,6 +852,8 @@
 				AA000001400 /* BackupDocument.swift in Sources */,
 				AA000001407 /* BackupMerge.swift in Sources */,
 				AA000001408 /* BackupService.swift in Sources */,
+				AA000001414 /* FolderCopy.swift in Sources */,
+				AA000001415 /* FolderCopyService.swift in Sources */,
 				AA000001410 /* BookmarkIdentity.swift in Sources */,
 				AA000001411 /* BookmarkStore.swift in Sources */,
 				AA000001409 /* BackupRestoreView.swift in Sources */,

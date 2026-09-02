@@ -4,10 +4,11 @@ import SwiftData
 /// Reads the reader's own work out of the store and defaults into a
 /// `BackupDocument`, and merges one back in.
 ///
-/// The only file in this feature that touches `ModelContext` or `UserDefaults`.
-/// The format and the merge are deliberately pure so a harness can drive them
-/// (`tools/verify_backup.sh`); everything that cannot be pure is collected here
-/// and kept thin.
+/// With `FolderCopyService`, one of the two files in this feature that touch
+/// `ModelContext` or `UserDefaults`. The format, the merge and the folder work
+/// are deliberately pure so harnesses can drive them (`tools/verify_backup.sh`,
+/// `tools/verify_folder_copy.sh`); everything that cannot be pure is collected
+/// here and kept thin.
 @MainActor
 enum BackupService {
     // MARK: - Which defaults are the reader's
@@ -46,6 +47,10 @@ enum BackupService {
     /// - `readerStoreMigrated` — describes whether THIS device has lifted its
     ///   annotations into `reader.store`. Importing it would make a device skip
     ///   a migration it has not performed.
+    /// - `folderCopyBookmark`, `folderCopyFolderName`, `folderCopyLastWrittenAt`,
+    ///   `folderCopyLastFailure` — the folder this device keeps a copy in. A
+    ///   security-scoped bookmark means nothing on another machine, and where a
+    ///   device writes is consent given per device, like `iCloudSyncEnabled`.
     private enum NotTheReaders {}
 
     // MARK: - Writing
@@ -207,6 +212,9 @@ enum BackupService {
 
         try context.save()
         applySettings(document.settings, restoreScalars: restoreSettings)
+        // What arrived is now part of this device's work, and the folder copy
+        // is a snapshot of that.
+        FolderCopyService.noteChange(in: context)
         return plan
     }
 
