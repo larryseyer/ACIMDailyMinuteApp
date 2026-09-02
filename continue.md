@@ -43,9 +43,10 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac carry Backup & Restore, the store split, iCloud sync and the
-reader-chosen folder, and NOT search: nothing has been installed since search landed. The next
-install on each is what puts the Read-tab search, the spotlight and the Manual screen in front of
-him; `./build.sh` and the thirteen checks are green at the search commits.**
+reader-chosen folder, and NOT search and NOT cross-reference links: nothing has been installed
+since search landed. The next install on each is what puts the Read-tab search, the spotlight, the
+Manual screen and the tappable citations and `[N]` links in front of him; `./build.sh` and the
+fourteen checks are green at the link commits.**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
@@ -93,7 +94,7 @@ him; `./build.sh` and the thirteen checks are green at the search commits.**
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Thirteen committed checks now guard this repo. Run all thirteen first thing — they take about a
+⛔ **Fourteen committed checks now guard this repo. Run all fourteen first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -173,6 +174,15 @@ minute and they are how you find out the tree is what this file says it is:**
   `ReadingKey` or `Citation` may enter that file — the compile pins the three repo types, and a
   `grep` in the same script pins the two frameworks and `Bundle`, because a lone-file `swiftc`
   would link those without complaint.
+- `./tools/verify_cross_references.sh` — ⛔ **the only check that guards where a TAP goes.**
+  Over all 2,727 bundled records it proves the bracket rule finds exactly the 150 lesson
+  numbers the 70 review lessons print, each earlier than its host, none in the Text, the Manual,
+  the Introductions or any segment not cut from the Workbook; that the reader's own blanks
+  (`[name of person]`) are not links; and that the link's URL decodes back to the same lesson
+  for all 365 and refuses everything else — 5,215 checks. **It compiles `CrossReference.swift`
+  and nothing else**, and a `grep` pins the frameworks a lone-file `swiftc` would link without
+  complaint. That `grep` strips comments first: what must stay out of the file is a dependency,
+  and the doc comment names `CorpusService` and `ReadingKey` precisely to say it uses neither.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -205,6 +215,15 @@ this Mac:
   in }` rather than `DispatchQueue.main.asyncAfter`, because the latter's closure is `@Sendable`
   and cannot capture a text view under strict concurrency; and `BookmarkRow` gained a Manual
   branch the spec did not name, because the Manual screen offers Save.
+- `docs/superpowers/specs/2026-09-02-cross-reference-links-design.md` + its plan — implemented, all
+  five code tasks. The Course was measured before it was designed: it never cites itself by
+  address, so nothing of the app's own `T-5.3` shape is detected in prose; the review lessons'
+  bracketed numbers are the one numbered self-reference, and they are the only in-prose link.
+  Two places where the code is ahead of the plan's text, both deliberate: `OpenReadingAction` is
+  `Sendable` with a `@Sendable` handler, because an `EnvironmentKey`'s `defaultValue` is a
+  nonisolated static under complete strict concurrency; and the harness accepts `[5][` as the
+  reference `[5]` followed by a stray bracket, because Python's `\[(\d+)\]` — the oracle for all
+  2,727 records — reads it that way and the two must not disagree.
 - `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
   where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
   `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
@@ -221,9 +240,9 @@ outstanding item is spec'd, planned and implemented — "otherwise, I will just 
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the thirteen committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the fourteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the thirteen checks first thing in a new session** — about a
+store migration, real feed payloads. **Run the fourteen checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
 ⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
@@ -237,16 +256,13 @@ shared `CardHeaderRow` across the three cards, audio-first with the play control
 left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
 structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
-**⭐ The live agent work is cross-reference links — spec'd and planned, NOT built.** The spec is
-`docs/superpowers/specs/2026-09-02-cross-reference-links-design.md` and the plan is
-`docs/superpowers/plans/2026-09-02-cross-reference-links.md`, six tasks, every code step written
-out, both outside git like the rest of `docs/`. **Next session: enter plan mode with a one-page
-execution pointer to that plan, get it approved through `ExitPlanMode`, then execute it
-task-by-task with `superpowers:subagent-driven-development`.** No code for it exists yet; the
-tree at this commit is exactly the search commits plus documents.
+**⭐ Cross-reference links are built.** A citation printed on a Today card and a bracketed lesson
+number inside a review lesson both answer a tap and open the passage they name with the words in
+view. **The next item is the standardized reading layout, which is `⏸ PAUSED` and his to resume as
+a brainstorm, not mine to start** — it stopped mid-brainstorm. The next agent-owned *build* is
+"Resume where you stopped", the reading ribbon.
 
-The three open questions were settled by measuring the bundle, not by preference, and the
-answers are load-bearing:
+These facts were settled by measuring the bundle, not by preference, and they are load-bearing:
 - **The Course never cites itself by address.** Zero `T-`/`W-`/`M-` forms, zero `Lesson N` or
   `Chapter N`, in all 2,727 bundled records. Nothing of the app's own citation shape is detected
   in prose, and no detector for it is planned.
@@ -261,9 +277,10 @@ answers are load-bearing:
 - **`Pref.N` cannot name a paragraph** — the Preface ships as two sections sharing one
   numbering — so a tap on it opens the Preface at its head with nothing painted. The defect is
   on the ledger; it is his call because it changes printed exports.
-- **A link pushes in place and never switches tabs.** Today has no navigation destinations at
-  all, so the plan adds one modifier, `.readingDestinations(path:)`, to the Read, Saved and
-  Today stacks. `LessonRef` gains `presentsVideo`, false for a reference.
+- **A link pushes in place and never switches tabs.** Today declares no navigation destinations
+  of its own, so one modifier, `.readingDestinations(path:)`, sits on the Read, Saved and Today
+  stacks and is the only thing that declares them.
+  `LessonRef` carries `presentsVideo`, false for a reference.
 
 Search is built: one field on the Read tab over the 744 readable records, hits in book order
 with a citation and a snippet, every reading screen opening on a `ReadingSpotlight` that the
@@ -296,7 +313,7 @@ see. A **read-only** configuration cannot create a store it cannot find, which i
 `CKErrorDomain` 5 `badContainer` and works on the next launch — expect it once per fresh container and
 do not chase it.
 
-After cross-reference links: the pre-submission sweep.
+After the reading layout and the physical-book parity items: the pre-submission sweep.
 
 ⛔ **Write or delete a `Bookmark` only through `BookmarkStore` — it is the ONLY thing keeping two
 rows off one passage.** `itemKey` is the whole identity; there is no `id`; and `@Attribute(.unique)`
@@ -321,6 +338,15 @@ lesson draws the feed's text while the index was built over the bundle, so the s
 words again the way it finds a highlight. A lesson opened on a spotlight does not auto-present
 its video. It paints `systemBlue` at 0.22, not the accent: the app's accent is gold and a
 highlight is yellow, and on the Mac the accent is whatever the reader set in System Settings.
+
+⛔ **A link pushes in place and never switches tabs.** `ReadingDestination` is the one value a
+link pushes; `.readingDestinations(path:)` declares it and installs `openReading` on the three
+stacks that draw a reading — Read, Saved, Today — and a fourth stack that draws one owes the
+same line, or its links assert in Debug and do nothing in Release. `TextSectionRef` is declared
+by that modifier and nowhere else on those stacks, because two declarations of one type on one
+stack is a warning and the later one wins silently. `LessonRef.presentsVideo` is false for a
+reference and for a citation, true for a list, a widget and a search heading: following a
+reference is a request to read. The link URL `reading:lesson/N` is private and unregistered.
 
 ⛔ **Where search lives, and the one rule it keeps.** `Services/CorpusSearch.swift` is pure —
 the fold, the index, the scan, the cap, the snippet — and `tools/verify_corpus_search.sh`
@@ -479,12 +505,9 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-1. **Cross-reference links** — spec and plan written, build not started. `▶ NEXT`. Plan mode
-   with an execution pointer to `docs/superpowers/plans/2026-09-02-cross-reference-links.md`,
-   approval, then the six tasks in order; Task 6 is the handoff.
-2. **The standardized reading layout** — his list for today put it second; it is `⏸ PAUSED` and
-   its decisions are recorded there. Resume it as a brainstorm, not a build.
-3. **Resume where you stopped, Workbook completion tracking, structuring the Manual**, then the
+1. **The standardized reading layout** — `⏸ PAUSED`, and its decisions are recorded there.
+   Resume it as a brainstorm with him, not as a build.
+2. **Resume where you stopped, Workbook completion tracking, structuring the Manual**, then the
    pre-submission sweep and the smaller open items.
 
 Two corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
