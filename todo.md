@@ -358,17 +358,27 @@ is written down as a spec yet and no code exists.** The decisions he made are wo
 the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
 position when one does appear.
 
-## ▶ NEXT — cross-reference links
+## ▶ NEXT — cross-reference links (spec'd and planned, not built)
 
-The Course refers to itself constantly; a citation printed inside a reading should be tappable.
-Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app already
-navigates, and every reading screen now takes a `ReadingSpotlight`, so a tapped citation can open
-its paragraph with the words in view. Spec first, then plan, then build. The open questions:
-which surfaces print citations a reader would tap (the corpus card's stem, a Text section's stem,
-a search row's caption, an export is text and cannot); whether a reference inside the prose
-(`T-5.3`) is detected and linked or only the app's own printed addresses; and what a paragraph
-address with no spotlight quote scrolls to — `ReadingSpotlight` carries a quote today, and a
-paragraph-only target needs either the paragraph's opening words or a second kind of pointer.
+Spec: `docs/superpowers/specs/2026-09-02-cross-reference-links-design.md`. Plan:
+`docs/superpowers/plans/2026-09-02-cross-reference-links.md`, six tasks. Plan mode with an
+execution pointer, approval, then build. The three open questions are settled in the spec by
+measurement: the Course never cites itself by address, so nothing is detected in prose except
+the review lessons' 150 bracketed lesson numbers; the Today cards' citation footers are the
+only printed addresses that become tappable; and a citation resolves to its whole paragraph as
+a `ReadingSpotlight`, so no second pointer kind is needed. A link pushes in place on the Read,
+Saved or Today stack and never switches tabs; a lesson reached by a link opens to read, not to
+watch.
+
+- [ ] Task 1 — `Citation.paragraphRange(_:in:)` + the citation agreement harness proves it.
+- [ ] Task 2 — `Utilities/CrossReference.swift` + `tools/verify_cross_references.sh`, the
+      fourteenth check.
+- [ ] Task 3 — `Views/ReadingNavigation.swift`: `ReadingDestination`, `openReading`,
+      `.readingDestinations(path:)` on Read, Saved, Today; `LessonRef.presentsVideo`.
+- [ ] Task 4 — `.link` attributes and tap delegates in `SelectableReadingText` on both platforms.
+- [ ] Task 5 — `CitationResolver.destination(for:)` + `CitationButton` on both Today cards.
+- [ ] Task 6 — fourteen checks, `./build.sh`, `continue.md`, `todo.md` (the parked entry and
+      the fourteenth-check description are written out in the plan).
 
 ## ▶ WATCHING — the nightly catch-up
 
@@ -428,6 +438,15 @@ a book.
       `ManualSegmentView`; a browsable structure is what is missing.
 
 ## ▶ OPEN — content and pipeline
+
+- [ ] ⛔ **`Pref.N` names two paragraphs.** The Preface ships as two sections — `0.1 Publisher's
+      Note`, 17 paragraphs, and `0.2 The Use of Terms`, 42 — but the citation format carries no
+      section number, so `Pref.10` is paragraph 10 of either, and 21 shipped segments carry the
+      form (`Pref.1` … `Pref.40`). `Citation.swift`'s own comment still says the Preface has one
+      section. A citation tap will open the Preface at its head rather than guess. Fixing it
+      means a `Pref.S.N` form, which changes a citation already printed into exports; his call.
+      `Citation.swift`'s `preface` case and `tools/citations.py`'s `text_citation` are the two
+      places the format lives.
 
 - [ ] ⛔ **Letter-spaced headings are still sitting inside reader-facing text.** Found while
       recovering the Text's chapter openings, and deliberately **not fixed** there — it is a

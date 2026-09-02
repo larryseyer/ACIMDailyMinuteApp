@@ -237,14 +237,38 @@ shared `CardHeaderRow` across the three cards, audio-first with the play control
 left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
 structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
-**⭐ The live agent work is cross-reference links**, the `▶ NEXT` block of [`todo.md`](todo.md).
-Search is built: one field on the Read tab over the 744 readable records (Text, Workbook with its
-two Part Introductions, Manual), hits in book order with a citation and a snippet, and every
-reading screen opens on a `ReadingSpotlight` — offset, length and quote — that the screen
-re-anchors with `AnchorResolver` against the string it actually draws. The segments are not
-indexed: they are the same words cut a second time. Its spec and plan are
-`docs/superpowers/specs/2026-09-02-corpus-search-design.md` and `docs/superpowers/plans/2026-09-02-corpus-search.md`,
-both outside git like the rest of `docs/`.
+**⭐ The live agent work is cross-reference links — spec'd and planned, NOT built.** The spec is
+`docs/superpowers/specs/2026-09-02-cross-reference-links-design.md` and the plan is
+`docs/superpowers/plans/2026-09-02-cross-reference-links.md`, six tasks, every code step written
+out, both outside git like the rest of `docs/`. **Next session: enter plan mode with a one-page
+execution pointer to that plan, get it approved through `ExitPlanMode`, then execute it
+task-by-task with `superpowers:subagent-driven-development`.** No code for it exists yet; the
+tree at this commit is exactly the search commits plus documents.
+
+The three open questions were settled by measuring the bundle, not by preference, and the
+answers are load-bearing:
+- **The Course never cites itself by address.** Zero `T-`/`W-`/`M-` forms, zero `Lesson N` or
+  `Chapter N`, in all 2,727 bundled records. Nothing of the app's own citation shape is detected
+  in prose, and no detector for it is planned.
+- **The review lessons' bracketed numbers are the one numbered self-reference.** Exactly 150
+  `[N]` in exactly the 70 review lessons (51-60, 81-90, 111-120, 141-150, 171-180, 201-220), all
+  in 1…365, all earlier than their host, none in the Text, Manual, Introductions or any
+  non-Workbook segment. The feed carries the same brackets (today's Lesson 84 arrives with
+  `[67]` `[68]`). That is the only in-prose link.
+- **A printed citation resolves to its paragraph**, carried whole in the existing
+  `ReadingSpotlight` (offset, length, the paragraph's own text as the quote), so no second
+  pointer kind is needed. `Citation.paragraphRange(_:in:)` is the inverse of the existing count.
+- **`Pref.N` cannot name a paragraph** — the Preface ships as two sections sharing one
+  numbering — so a tap on it opens the Preface at its head with nothing painted. The defect is
+  on the ledger; it is his call because it changes printed exports.
+- **A link pushes in place and never switches tabs.** Today has no navigation destinations at
+  all, so the plan adds one modifier, `.readingDestinations(path:)`, to the Read, Saved and
+  Today stacks. `LessonRef` gains `presentsVideo`, false for a reference.
+
+Search is built: one field on the Read tab over the 744 readable records, hits in book order
+with a citation and a snippet, every reading screen opening on a `ReadingSpotlight` that the
+screen re-anchors with `AnchorResolver`. Its spec and plan are
+`docs/superpowers/specs/2026-09-02-corpus-search-design.md` and `docs/superpowers/plans/2026-09-02-corpus-search.md`.
 
 ⛔ **The folder tier writes and never reads, and that boundary is the whole design.** A reader
 picks a folder once (Settings > Your Work > Backup & Restore > Keep a copy in a folder); the app
@@ -455,9 +479,9 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-1. **Cross-reference links** — spec first, then plan, then build. `▶ NEXT`. `Citation(rawValue:)`
-   already parses an address back to a `ReadingKey` the app navigates, and every reading screen
-   takes a spotlight, so it is a view change, not a format change.
+1. **Cross-reference links** — spec and plan written, build not started. `▶ NEXT`. Plan mode
+   with an execution pointer to `docs/superpowers/plans/2026-09-02-cross-reference-links.md`,
+   approval, then the six tasks in order; Task 6 is the handoff.
 2. **The standardized reading layout** — his list for today put it second; it is `⏸ PAUSED` and
    its decisions are recorded there. Resume it as a brainstorm, not a build.
 3. **Resume where you stopped, Workbook completion tracking, structuring the Manual**, then the
