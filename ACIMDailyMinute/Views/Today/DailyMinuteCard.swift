@@ -61,9 +61,7 @@ struct DailyMinuteCard: View {
             // card in the same place, so the two cannot disagree about how
             // precisely a Daily Minute is addressed.
             if let segment = CorpusService.shared.segment(id: minute.segmentId) {
-                Text(segment.citation ?? segment.bookName)
-                    .font(.footnote.italic())
-                    .foregroundStyle(.secondary)
+                CitationButton(citation: segment.citation, bookName: segment.bookName)
             }
             Spacer()
             Text("\(minute.wordCount) words")
