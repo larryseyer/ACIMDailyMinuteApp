@@ -112,6 +112,7 @@
 		AA000001612 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
 		AA000001613 /* ReadSearchResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002613 /* ReadSearchResultsList.swift */; };
 		AA000001614 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
+		AA000001615 /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
@@ -274,6 +275,7 @@
 		AA000002612 /* ReadingSpotlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpotlight.swift; sourceTree = "<group>"; };
 		AA000002613 /* ReadSearchResultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadSearchResultsList.swift; sourceTree = "<group>"; };
 		AA000002614 /* ManualSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSegmentView.swift; sourceTree = "<group>"; };
+		AA000002615 /* CrossReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossReference.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 				AA000002500 /* ReadableContentWidth.swift */,
 				AA000002350 /* PunctuationSpacing.swift */,
 				AA000002360 /* Citation.swift */,
+				AA000002615 /* CrossReference.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -895,6 +898,7 @@
 				AA000001612 /* ReadingSpotlight.swift in Sources */,
 				AA000001613 /* ReadSearchResultsList.swift in Sources */,
 				AA000001614 /* ManualSegmentView.swift in Sources */,
+				AA000001615 /* CrossReference.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
