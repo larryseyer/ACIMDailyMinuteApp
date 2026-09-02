@@ -18,8 +18,7 @@ import SwiftData
 /// with an "Available" date instead of tapping through to an empty screen.
 ///
 /// Phase 3.5c wires two refinements on top of the 3.5a/3.5b spine:
-///   * `.searchable` — integer queries match that lesson exactly; any non-digit
-///     query falls back to a `localizedStandardContains` title match.
+///   * `.searchable` — one field for the whole Course; see ReadSearchResultsList.
 ///   * Jump-to-N sheet — toolbar button opens `JumpToLessonSheet`, which
 ///     programmatically appends an `Int` to the shared `NavigationPath`.
 struct LessonsView: View {
@@ -47,6 +46,10 @@ struct LessonsView: View {
     @State private var isJumpSheetPresented: Bool = false
     @State private var shelf: Shelf = .workbook
 
+    private var trimmedQuery: String {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
             VStack(spacing: 0) {
@@ -58,14 +61,19 @@ struct LessonsView: View {
                 .padding(.bottom, 8)
 
                 Group {
-                    switch shelf {
-                    case .workbook: workbookShelf
-                    case .text: TextChaptersView()
+                    if trimmedQuery.isEmpty {
+                        switch shelf {
+                        case .workbook: workbookShelf
+                        case .text: TextChaptersView()
+                        }
+                    } else {
+                        ReadSearchResultsList(query: trimmedQuery)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Read")
+            .searchable(text: $searchText, prompt: "Search the Course")
             .navigationDestination(for: Int.self) { lessonNumber in
                 LessonDetailView(lessonNumber: lessonNumber)
             }
@@ -73,10 +81,16 @@ struct LessonsView: View {
                 TextChapterView(chapter: ref.chapter)
             }
             .navigationDestination(for: TextSectionRef.self) { ref in
-                TextSectionView(chapter: ref.chapter, section: ref.section)
+                TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
             }
             .navigationDestination(for: IntroductionRef.self) { ref in
-                WorkbookIntroductionView(lessonNumber: ref.lessonNumber)
+                WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+            }
+            .navigationDestination(for: LessonRef.self) { ref in
+                LessonDetailView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+            }
+            .navigationDestination(for: ManualSegmentRef.self) { ref in
+                ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
             }
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
@@ -94,7 +108,6 @@ struct LessonsView: View {
         let anchor = recordedAnchor()
 
         return FilteredLessonsList(
-            searchText: searchText,
             meta: meta,
             bookmarkedNumbers: bookmarkedNumbers,
             latestLessonNumber: anchor.number,
@@ -106,7 +119,6 @@ struct LessonsView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
-        .searchable(text: $searchText, prompt: "Search lessons")
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button {
@@ -181,15 +193,14 @@ struct LessonsView: View {
     }
 }
 
-// MARK: - Filtered list
+// MARK: - Lesson spine
 
-/// Private subview that owns the filtered `ForEach(1...365)`.
+/// Private subview that owns the `ForEach(1...365)`.
 ///
 /// Pulling this out of `LessonsView.body` keeps the parent's `@Query`
-/// re-evaluation independent of `searchText` changes, and lets `List` diff
-/// rows cleanly as the filter predicate tightens and loosens.
+/// re-evaluation independent of the rows' own state, and lets `List` diff
+/// rows cleanly as the metadata behind them fills in.
 private struct FilteredLessonsList: View {
-    let searchText: String
     let meta: [Int: LessonMeta]
     let bookmarkedNumbers: Set<Int>
     let latestLessonNumber: Int
@@ -197,12 +208,12 @@ private struct FilteredLessonsList: View {
     let onOpenText: () -> Void
 
     /// Opening the tab should land on the lesson in play, not on Lesson 1. Only
-    /// fires once per appearance — re-running it after every filter change would
-    /// yank the list out from under someone who has scrolled away or searched.
+    /// fires once per appearance — re-running it on a later redraw would yank
+    /// the list out from under someone who has scrolled away.
     @State private var hasScrolledToCurrent = false
 
     var body: some View {
-        let visible = filteredLessonNumbers()
+        let visible = lessonNumbers()
         ScrollViewReader { proxy in
             List {
                 if latestLessonNumber > 0 {
@@ -210,29 +221,23 @@ private struct FilteredLessonsList: View {
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                 }
-                if visible.isEmpty {
-                    ContentUnavailableView.search(text: searchText)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
-                } else {
-                    ForEach(visible, id: \.self) { n in
-                        if n == 1 {
-                            introductionRow(0)
-                        }
-                        if n == 181 {
-                            introductionRow(500)
-                        }
-                        LessonRow(
-                            lessonNumber: n,
-                            meta: meta[n],
-                            isBookmarked: bookmarkedNumbers.contains(n),
-                            availableOn: LessonSchedule.availabilityDate(
-                                for: n,
-                                latestRecorded: latestLessonNumber,
-                                latestDate: latestPublishedAt ?? Date()
-                            )
-                        )
+                ForEach(visible, id: \.self) { n in
+                    if n == 1 {
+                        introductionRow(0)
                     }
+                    if n == 181 {
+                        introductionRow(500)
+                    }
+                    LessonRow(
+                        lessonNumber: n,
+                        meta: meta[n],
+                        isBookmarked: bookmarkedNumbers.contains(n),
+                        availableOn: LessonSchedule.availabilityDate(
+                            for: n,
+                            latestRecorded: latestLessonNumber,
+                            latestDate: latestPublishedAt ?? Date()
+                        )
+                    )
                 }
             }
             .onAppear { scrollToCurrentLesson(proxy: proxy, visible: visible) }
@@ -247,9 +252,10 @@ private struct FilteredLessonsList: View {
 
     /// The Workbook opens with an introduction, and Part II opens with its own.
     /// They ride alongside the lesson they precede rather than being inserted
-    /// into the 1...365 spine, so filtering and searching keep working on plain
-    /// integers. The title comes from the corpus rather than from a literal
-    /// here, so the row and the reading can never disagree about its name.
+    /// into the 1...365 spine, so the list's rows stay plain integers and a
+    /// lesson number is still its own row id. The title comes from the corpus
+    /// rather than from a literal here, so the row and the reading can never
+    /// disagree about its name.
     @ViewBuilder
     private func introductionRow(_ lessonNumber: Int) -> some View {
         if let intro = WorkbookBodiesCatalog.introduction(for: lessonNumber) {
@@ -274,7 +280,6 @@ private struct FilteredLessonsList: View {
     private func scrollToCurrentLesson(proxy: ScrollViewProxy, visible: [Int]) {
         guard !hasScrolledToCurrent,
               latestLessonNumber > 0,
-              searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               visible.contains(latestLessonNumber)
         else { return }
 
@@ -308,26 +313,9 @@ private struct FilteredLessonsList: View {
         .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
     }
 
-    /// Filter contract (locked for Phase 3.5c):
-    ///   * Empty / whitespace-only query → full spine 1…365.
-    ///   * Trimmed query parses as `Int` → exact-match that single lesson iff in 1…365.
-    ///   * Otherwise → title substring match via `localizedStandardContains` on
-    ///     the merged `LessonMeta.title` (case + diacritic insensitive).
-    private func filteredLessonNumbers() -> [Int] {
-        let trimmed = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            return Array(1...365)
-        }
-
-        if let n = Int(trimmed) {
-            return (1...365).contains(n) ? [n] : []
-        }
-
-        return (1...365).filter { n in
-            guard let title = meta[n]?.title, !title.isEmpty else { return false }
-            return title.localizedStandardContains(trimmed)
-        }
-    }
+    /// The whole spine. Searching the Workbook is the Read tab's one search,
+    /// which replaces this list while a query is typed.
+    private func lessonNumbers() -> [Int] { Array(1...365) }
 }
 
 #Preview {
