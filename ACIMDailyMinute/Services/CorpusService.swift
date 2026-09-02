@@ -163,6 +163,11 @@ final class CorpusService: @unchecked Sendable {
 
     func segment(id: Int) -> CorpusSegment? { segmentsByID[id] }
 
+    /// The Manual is 105 rows; a scan is cheaper than a second dictionary.
+    func manualSegment(id: Int) -> CorpusSegment? {
+        manual.first { $0.segmentId == id }
+    }
+
     func textChapter(_ number: Int) -> CorpusTextChapter? {
         textChapters.first { $0.number == number }
     }
