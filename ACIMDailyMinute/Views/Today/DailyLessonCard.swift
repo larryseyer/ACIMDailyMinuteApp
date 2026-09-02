@@ -49,14 +49,7 @@ struct DailyLessonCard: View {
                 }
             }
         } trailing: {
-            ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
-            }
-            .accessibilityLabel("Share")
+            ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
