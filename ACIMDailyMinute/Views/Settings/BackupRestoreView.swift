@@ -35,6 +35,15 @@ struct BackupRestoreView: View {
     @State private var isImporting = false
     @State private var restoreSettings = true
     @State private var outcome: Outcome?
+    @State private var isChoosingFolder = false
+
+    /// Bound to the keys `FolderCopyService` writes, so the section redraws
+    /// when a write lands or fails — the service is a plain enum SwiftUI has no
+    /// dependency on otherwise.
+    @AppStorage(FolderCopyService.Key.bookmark) private var folderBookmark = Data()
+    @AppStorage(FolderCopyService.Key.folderName) private var folderName = ""
+    @AppStorage(FolderCopyService.Key.lastWrittenAt) private var folderLastWrittenAt = 0.0
+    @AppStorage(FolderCopyService.Key.lastFailure) private var folderFailure = ""
 
     private enum Outcome: Equatable {
         case saved
@@ -87,6 +96,40 @@ struct BackupRestoreView: View {
             }
 
             Section {
+                if folderBookmark.isEmpty {
+                    Button("Choose a folder…") { isChoosingFolder = true }
+                } else {
+                    LabeledContent("Folder", value: folderName)
+                    if !folderFailure.isEmpty {
+                        Text(folderFailure)
+                            .foregroundStyle(.red)
+                    } else if folderLastWrittenAt > 0 {
+                        LabeledContent(
+                            "Last written",
+                            value: Date(timeIntervalSinceReferenceDate: folderLastWrittenAt)
+                                .formatted(date: .abbreviated, time: .shortened)
+                        )
+                    }
+                    Button("Write now") { FolderCopyService.writeNow(in: modelContext) }
+                    Button("Choose a different folder…") { isChoosingFolder = true }
+                    Button("Stop keeping a copy", role: .destructive) { FolderCopyService.forget() }
+                }
+            } header: {
+                Text("Keep a copy in a folder")
+            } footer: {
+                // The second sentence is the boundary of this feature. Nothing
+                // is ever read from the folder by itself: a folder two machines
+                // both write into is where an automatic merge would lose words.
+                Text(
+                    "Writes the same backup file into a folder you choose, by itself, whenever "
+                    + "your highlights, notes or bookmarks change. Point it at a folder your "
+                    + "Dropbox, Drive or Syncthing already carries and the file follows you.\n\n"
+                    + "Nothing is read from the folder on its own. To bring work in from another "
+                    + "device, restore its file from the section above."
+                )
+            }
+
+            Section {
                 Text(
                     "This file is for carrying your work to another device, and it can be read "
                     + "back in. “Export as text” in the Saved tab writes your highlights and "
@@ -122,6 +165,12 @@ struct BackupRestoreView: View {
             switch result {
             case .success(let url): performImport(from: url)
             case .failure(let error): outcome = .failed(error.localizedDescription)
+            }
+        }
+        .fileImporter(isPresented: $isChoosingFolder, allowedContentTypes: [.folder]) { result in
+            switch result {
+            case .success(let url): FolderCopyService.choose(folder: url, in: modelContext)
+            case .failure(let error): folderFailure = error.localizedDescription
             }
         }
     }

@@ -1,6 +1,6 @@
 # ACIM Daily Minute — open items
 
-> **Role:** open-items ledger — what is open, blocked, or next. · **Status:** authoritative · **Verified:** 2026-08-30
+> **Role:** open-items ledger — what is open, blocked, or next. · **Status:** authoritative · **Verified:** 2026-09-02
 > **Forward state:** [continue.md](continue.md)
 >
 > ⛔⛔ **FORWARD-ONLY, AND THAT IS AN OPERATOR RULE, NOT A STYLE.** Nothing here records what was done,
@@ -57,9 +57,14 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] **The corpus floor.** Airplane mode, delete and reinstall, cold launch. Expected: Today shows a
       complete reading from the bundle with no network, no spinner and no empty state. It is a plain
       card with no save, share or Listen control, because that passage was never published.
-- [ ] **Downloads stay invisible.** Swipe a Listen row. Expected: no Download action, because
-      `audio_url` is empty on every episode and all 158 archive entries. It appears by itself once
-      archive.org hosting exists — no app change.
+- [ ] **Downloads are live now, and nobody has drawn them.** The feeds carry an archive.org
+      `audio_url` on every episode that has an MP3 (158 of 165 minutes, all 85 lessons), so the
+      Today card's **Listen** control and the Listen row's swipe **Download** appeared on the phone
+      with no app change. Swipe a Listen row: expected **Mark listened** and **Download** side by
+      side, then **Remove download** in its place once fetched, and a downloaded row plays from
+      disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
+      collapse to icons when narrow, but no one has seen them do it on this phone. The seven
+      March minutes with no recording show no Download, by design.
 - [ ] **The companion note.** Settings > About > "A note about using this app". Three places depart
       from the wording he supplied, each to keep it in harmony with the Course, and each is his to
       veto: the prescribed order of study is gone (the Manual says some should read the Manual first,
@@ -264,6 +269,19 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] ⛔ **Before any release build: deploy the CloudKit schema from Development to Production** in the
       CloudKit Dashboard. Debug builds use Development; TestFlight and the App Store use Production, and
       no amount of local testing detects the gap. This is a release-gate step, not a test.
+- [ ] **A folder of your own, end to end.** Settings > Your Work > Backup & Restore > **Keep a copy
+      in a folder** > Choose a folder… Pick a Dropbox or iCloud Drive folder on the Mac. Expected:
+      `ACIM Daily Minute backup (<this Mac's name>).json` appears in it at once and the screen shows
+      the folder and "Last written". Then make a highlight and wait three seconds — the file's
+      modification time moves; make one and immediately put the app in the background — it still
+      moves. On the phone, choose the same folder through Files: its file is named `(iPhone)`, so
+      the two devices never overwrite each other. Rename the folder in Finder and tap **Write now**
+      — it must still land, since the bookmark follows the folder. Delete the folder and tap Write
+      now — expected the red sentence "The folder can no longer be found. Choose it again." and
+      nothing else changes. ⛔ Nothing is ever read from that folder: bringing the phone's file onto
+      the Mac is still **Restore from a file…** by hand, and that is the design, not a gap. The
+      Mac's `Host` name is what it is called on that machine; the phone says `iPhone` because iOS
+      stopped giving apps the reader's own device name.
 
 ## ⏸ PAUSED — the standardized reading layout (design, not started)
 
@@ -304,88 +322,7 @@ is written down as a spec yet and no code exists.** The decisions he made are wo
 the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
 position when one does appear.
 
-## ▶ NEXT — iCloud, and the rest of carrying a reader's work between devices
-
-⭐ **The portable file is built and verified.** Settings → **Your Work → Backup & Restore** writes
-one plain `.json` holding highlights, notes, bookmarks, watched phrases, listened history and the
-notification settings, and reads it back as a **merge**. That is a complete answer on every
-platform — Windows, Linux and Android open it with what they already have. `tools/verify_backup.sh`
-is the seventh committed check; `tools/verify_text_measurement.sh` is the eighth.
-
-The design for everything below is written and is NOT in git (`docs/` is gitignored):
-`docs/superpowers/specs/2026-08-30-portable-reader-data-design.md` and its plan. **Read the spec
-before starting any of these** — it carries the measurements, not just the conclusions.
-
-⛔ **The conflict rule is decided and implemented; do not re-open it.** A merge may never make a
-reader's words fewer. Highlights union by `id` (a reader never edits one — `reanchor` owns every
-mutable field). Notes union their *passages*, so an extended note absorbs its earlier self and
-genuinely divergent writing is kept as both. Bookmarks union by `itemKey`. **A file import never
-deletes**, because absence in a snapshot carries no information.
-
-⭐ **The store split is done, and `@Attribute(.unique)` is off all three reader models.**
-`reader.store` holds `Highlight`, `Note` and `Bookmark`; `cache.store` holds the six network-derived
-models; both are opened as **one** `ModelContainer` so a single `ModelContext` still spans them, which
-the widget, `BackupService` and nine views all depend on. `SharedModelContainer.makeContainer` is the
-single declaration all four sites now call. The pre-split `ACIMDailyMinute.sqlite` is left on disk
-untouched as the recovery copy and is never opened again after the one-time lift.
-
-⛔ **Two configurations must be NAMED.** Two unnamed
-`ModelConfiguration`s collapse onto the one default configuration, every entity is registered against
-both stores, and the first insert dies with `NSInvalidArgumentException` — *"Can't assign an object to
-a store that does not contain the object's entity."* **That is an Objective-C exception, not a Swift
-`Error`, so no `do`/`catch` can see it**: the app aborts at launch inside the container's own
-initializer, before any view exists. Named, the rows partition cleanly — proved twice, in a minimal
-`swiftc` harness and against the real store.
-
-⭐ **iCloud sync is built and switched OFF by default.** Settings → **Your Work → Sync with iCloud**.
-Only `reader.store` mirrors, into the reader's own private database
-(`iCloud.com.larryseyer.acimdailyminute`); the cache and the pre-split recovery copy were verified
-clean after a real sync. Measured on this Mac end to end: 4 records exported, 2 highlights and 2 notes
-intact, and the off → on → off round trip leaves the store healthy.
-
-⛔ **`cloudKitDatabase` defaults to `.automatic`, which means "mirror if the app is entitled to".** So
-adding the entitlement would have silently started mirroring the **cache store**, the Shortcut's
-container, and — worst — the container `ReaderStoreMigration` opens over `ACIMDailyMinute.sqlite`, the
-only recovery copy of data with no upstream. Every configuration in `SharedModelContainer.swift` now
-names its choice, and the rule that keeps it that way is:
-**`allowsSave == false` ⇒ `cloudKitDatabase == .none`.** Only the app's one writable container mirrors.
-
-⛔ **The widget and watch need NO iCloud entitlement, and must not be given one** — not even though
-the widget reads `Bookmark`. It opens the store read-only, so by the rule above it never mirrors. Two containers mirroring one store
-**in the same process** fail with "another instance of this persistent store actively syncing with
-CloudKit in this process" — reachable here, because `GetTodaysReadingIntent` builds its own container
-and an App Intent can run inside the app's process. The watch is cache-only and never opens
-`reader.store` at all.
-
-⛔ **A brand-new CloudKit container is not usable for its first few minutes.** The first launch logged
-`CKErrorDomain` code 5, `badContainer`, and the next launch succeeded with no intervention. Expect it
-once on any fresh container; it heals itself and is not a bug to chase.
-
-⛔ **A read-only configuration cannot create a store it cannot find.** It throws
-`loadIssueModelContainer` ("Attempt to open missing file read only"), and both read-only callers turn
-that into a hard failure — the widget `fatalError`s, the Shortcut throws. This is not theoretical: a
-widget redraws on the system's schedule, so after the update that lands this split there is a window
-where neither store exists because the app has not been opened once. `createStoresIfMissing` closes
-it, and the phone proved it — the widget extension came up alive from the new bundle while the app
-had never been launched, because the device was locked.
-
-⛔ **There is an eighth bookmark writer nobody had listed:** `BackupService.swift:187-192`. It is
-already safe — `BackupMerge` computes `insertBookmarks` against a live fetch and guards it with
-`insertedBookmarkKeys` — so it needs no change, but it is a raw `Bookmark()` insert and should be
-looked at whenever this invariant moves again.
-
-- [ ] **A folder the reader supplies** — their own Dropbox, Drive or Syncthing. Smallest form only:
-      pick a folder once, hold a security-scoped bookmark, write the same file there when annotations
-      change. ⛔ **No folder-watching and no automatic merge on change.** A live folder synchroniser
-      is a second implementation of conflict resolution running against files two machines may write
-      at once, which is exactly where a reader loses words. Import stays something they ask for.
-
-- [ ] **A reading position, once there is one.** There is none in the app today — no `@SceneStorage`,
-      no scroll offset, no last-read section anywhere. When one exists it is simply another key in
-      the file; older versions ignore what they do not recognise, and nothing is written as a
-      placeholder for it now.
-
-## ▶ THEN — corpus-wide search
+## ▶ NEXT — corpus-wide search
 
 The book's index. Search that reaches the whole bundled corpus, not just the rolling
 archive window. Spec first, then plan, then execute.
@@ -431,20 +368,17 @@ and whatever is added must survive the app.
 - Re-check cheaply: `curl -s https://archive.org/metadata/acim-daily-minute` → `{}` means still blocked.
 - ⛔ Do not re-open the hosting decision unprompted.
 
-## ▶ WATCHING — the feeds pick up the landed URLs, and the nightly catch-up
+## ▶ WATCHING — the nightly catch-up
 
-⛔ **MacLive now carries every recorded archive.org URL** — `upload_log` 156 of 166, `lessons_log`
-84 of 84. The ten minute rows still empty are the nine that have no MP3 at all (2026-03-18 … 03-26)
-plus 2026-05-31, which is an unfilled catch-up gap rather than a missing recording.
+The feeds carry the archive.org URLs now: `daily-minute.json` on 157 of 164 archive entries plus
+today, `daily-lesson.json` on all 84 plus today, `podcast-minute.xml` 158 enclosures of 165 items,
+`podcast-lessons.xml` 85 of 85. All 243 recorded MP3 URLs answer a ranged GET. The seven minutes
+without one are 2026-03-20 … 03-26, which have no recording at all.
 
-- [ ] **Confirm the 02:00 run published them.** `main.py:427` calls `push_all_daily_minute` at the end
-      of every successful run and rebuilds the whole archive list from the database, so no hand-run of
-      `github_push.py` is needed. After the 2026-09-02 run, check the feed carries `audio_url` on the
-      back catalogue — then the Today card's **Listen** button and the Listen tab's Download action
-      appear with **no app change and no rebuild**. ⛔ Both are undrawn controls appearing because
-      DATA changed; check the Listen row's Download at 375pt when it does.
-- [ ] Three catch-up gaps remain: **2026-05-16, 05-31, 08-14**. One per night by design
-      (`CATCH_UP_MAX_PER_RUN = 1`); ~three nights to clear. Confirm with `./catchup.sh list`.
+- [ ] Two catch-up gaps remain: **2026-05-31 and 08-14** — the two dates missing from the archive
+      list between 03-20 and today. One per night by design (`CATCH_UP_MAX_PER_RUN = 1`); two
+      nights to clear. Read it off the feed's archive dates; `./catchup.sh list` on MacLive says the
+      same, when that machine is mounted.
 
 ## ▶ OPEN — platform expansion
 
@@ -476,12 +410,15 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 268 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ THEN` block above.
+- [ ] ⛔ **Search across the whole corpus** — promoted to the `▶ NEXT` block above.
 - [ ] **Cross-reference links** — the Course refers to itself constantly; a citation should be
       tappable. Unblocked: `Citation(rawValue:)` parses an address back to a `ReadingKey` the app
       already navigates, so this is a view change and not a format change.
 - [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
-      what a 669-page book needs most: `ReadingKey.textSection` already names the place.
+      what a 669-page book needs most: `ReadingKey.textSection` already names the place. There is no
+      reading position anywhere in the app today — no `@SceneStorage`, no scroll offset. When one
+      exists it is one more key in the backup file; older versions ignore what they do not
+      recognise, and nothing is written as a placeholder for it now.
 - [ ] **"Let it fall open"** — a random passage. A real practice with the physical book, nearly free once
       the corpus is bundled.
 - [ ] **Workbook completion tracking** — which lessons the reader has *done*, distinct from listened.

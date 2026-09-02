@@ -32,6 +32,7 @@ enum BookmarkStore {
         }
 
         try? context.save()
+        FolderCopyService.noteChange(in: context)
     }
 
     /// Un-save the passage at `key`, however many rows are holding it.
@@ -50,6 +51,7 @@ enum BookmarkStore {
             return
         }
         for index in indices { context.delete(rows[index]) }
+        FolderCopyService.noteChange(in: context)
     }
 
     /// Move any bookmark naming `from` onto `destination`.

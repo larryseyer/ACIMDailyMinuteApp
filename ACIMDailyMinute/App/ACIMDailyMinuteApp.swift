@@ -126,6 +126,14 @@ struct ACIMDailyMinuteApp: App {
                     }
                 }
                 #endif
+                .onChange(of: scenePhase) { _, newPhase in
+                    // A mark made and the app put away inside the debounce
+                    // would otherwise wait for the next launch to reach the
+                    // reader's folder.
+                    if newPhase != .active {
+                        FolderCopyService.flush()
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
         #if os(macOS)
