@@ -110,6 +110,7 @@
 		AA000001610 /* CorpusSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002610 /* CorpusSearch.swift */; };
 		AA000001611 /* CorpusSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002611 /* CorpusSearchService.swift */; };
 		AA000001612 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
+		AA000001614 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
@@ -270,6 +271,7 @@
 		AA000002610 /* CorpusSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearch.swift; sourceTree = "<group>"; };
 		AA000002611 /* CorpusSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearchService.swift; sourceTree = "<group>"; };
 		AA000002612 /* ReadingSpotlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpotlight.swift; sourceTree = "<group>"; };
+		AA000002614 /* ManualSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSegmentView.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
@@ -442,6 +444,7 @@
 				AA000005020 /* Today */,
 				AA000005022 /* Lessons */,
 				AA000005023 /* Text */,
+				AA000005024 /* Manual */,
 				AA000005008 /* Listen */,
 				AA000005011 /* Archive */,
 				AA000005012 /* Settings */,
@@ -623,6 +626,14 @@
 				AA000002404 /* TextSectionView.swift */,
 			);
 			path = Text;
+			sourceTree = "<group>";
+		};
+		AA000005024 /* Manual */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002614 /* ManualSegmentView.swift */,
+			);
+			path = Manual;
 			sourceTree = "<group>";
 		};
 		AA000005022 /* Lessons */ = {
@@ -879,6 +890,7 @@
 				AA000001610 /* CorpusSearch.swift in Sources */,
 				AA000001611 /* CorpusSearchService.swift in Sources */,
 				AA000001612 /* ReadingSpotlight.swift in Sources */,
+				AA000001614 /* ManualSegmentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
