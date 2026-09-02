@@ -113,6 +113,7 @@
 		AA000001613 /* ReadSearchResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002613 /* ReadSearchResultsList.swift */; };
 		AA000001614 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
 		AA000001615 /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
+		AA000001616 /* ReadingNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002616 /* ReadingNavigation.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
@@ -276,6 +277,7 @@
 		AA000002613 /* ReadSearchResultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadSearchResultsList.swift; sourceTree = "<group>"; };
 		AA000002614 /* ManualSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSegmentView.swift; sourceTree = "<group>"; };
 		AA000002615 /* CrossReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossReference.swift; sourceTree = "<group>"; };
+		AA000002616 /* ReadingNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingNavigation.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
@@ -463,6 +465,7 @@
 				AA000002416 /* ShareButton.swift */,
 				AA000002412 /* CardHeaderRow.swift */,
 				AA000002413 /* ListenButton.swift */,
+				AA000002616 /* ReadingNavigation.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -899,6 +902,7 @@
 				AA000001613 /* ReadSearchResultsList.swift in Sources */,
 				AA000001614 /* ManualSegmentView.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
+				AA000001616 /* ReadingNavigation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

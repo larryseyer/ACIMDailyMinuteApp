@@ -16,9 +16,14 @@ struct TextSectionRef: Hashable {
     var spotlight: ReadingSpotlight? = nil
 }
 
-/// A lesson opened on a search hit. Bare `Int` is already the lesson
-/// destination and stays so for deep links; this ref exists to carry the words.
+/// A lesson opened on a search hit or a cross-reference. Bare `Int` is already
+/// the lesson destination and stays so for lists and deep links; this ref
+/// exists to carry the words, and to say whether arriving is a request to
+/// watch.
 struct LessonRef: Hashable {
     let lessonNumber: Int
     var spotlight: ReadingSpotlight? = nil
+    /// False when the reader followed a reference from inside another reading:
+    /// that is a request to read, and the video would take the screen.
+    var presentsVideo: Bool = true
 }

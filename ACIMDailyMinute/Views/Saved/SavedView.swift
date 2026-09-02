@@ -18,9 +18,10 @@ struct SavedView: View {
     @Query(sort: \Highlight.createdAt, order: .reverse) private var highlights: [Highlight]
     @Query(sort: \Note.createdAt, order: .reverse) private var notes: [Note]
     @State private var segment: Segment = .saved
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 Picker("Shelf", selection: $segment) {
                     ForEach(Segment.allCases) { Text($0.rawValue).tag($0) }
@@ -67,12 +68,7 @@ struct SavedView: View {
                     ManualSegmentView(segmentId: segmentId)
                 }
             }
-            // TextSectionView's Previous and Next push refs of their own, so
-            // this stack has to know them too, or reading onward from a saved
-            // passage dead-ends.
-            .navigationDestination(for: TextSectionRef.self) { ref in
-                TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
-            }
+            .readingDestinations(path: $path)
         }
     }
 

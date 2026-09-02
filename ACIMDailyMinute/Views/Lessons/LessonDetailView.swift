@@ -16,6 +16,9 @@ import SwiftData
 struct LessonDetailView: View {
     let lessonNumber: Int
     var spotlight: ReadingSpotlight? = nil
+    /// Choosing a lesson from a list is a request to watch it; following a
+    /// reference or a search hit into it is a request to read it.
+    var presentsVideo: Bool = true
 
     @Environment(\.modelContext) private var modelContext
     @Query private var lessonMatches: [DailyLesson]
@@ -55,9 +58,10 @@ struct LessonDetailView: View {
         bookmarks.contains(where: { $0.itemKey == itemKey })
     }
 
-    init(lessonNumber: Int, spotlight: ReadingSpotlight? = nil) {
+    init(lessonNumber: Int, spotlight: ReadingSpotlight? = nil, presentsVideo: Bool = true) {
         self.lessonNumber = lessonNumber
         self.spotlight = spotlight
+        self.presentsVideo = presentsVideo
         _lessonMatches = Query(
             filter: #Predicate<DailyLesson> { $0.lessonNumber == lessonNumber }
         )
@@ -115,7 +119,7 @@ struct LessonDetailView: View {
         .onAppear {
             // Choosing a lesson from the list is a request to watch it; choosing
             // a sentence from a search is a request to read it.
-            guard !hasAutoPresentedVideo, spotlight == nil, lessonVideoURL != nil else { return }
+            guard presentsVideo, !hasAutoPresentedVideo, spotlight == nil, lessonVideoURL != nil else { return }
             hasAutoPresentedVideo = true
             isShowingVideo = true
         }
