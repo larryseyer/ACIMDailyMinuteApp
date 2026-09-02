@@ -71,7 +71,7 @@ struct SavedView: View {
             // this stack has to know them too, or reading onward from a saved
             // passage dead-ends.
             .navigationDestination(for: TextSectionRef.self) { ref in
-                TextSectionView(chapter: ref.chapter, section: ref.section)
+                TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
             }
         }
     }
