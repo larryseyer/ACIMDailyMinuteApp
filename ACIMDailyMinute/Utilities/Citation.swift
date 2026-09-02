@@ -20,8 +20,10 @@ import Foundation
 /// `swiftc` harness can compile it alone and check every shape of the format.
 enum Citation: Hashable, Sendable {
     case text(chapter: Int, section: Int, paragraph: Int)
-    /// The Preface has exactly one section, so a middle number would always be
-    /// 1 and carry nothing.
+    /// The Preface ships as two sections (Publisher's Note, The Use of Terms)
+    /// but the format carries no section number, so `Pref.N` counts from the
+    /// head of whichever section the passage is in and cannot name one
+    /// paragraph. Recorded in todo.md; changing it changes printed exports.
     case preface(paragraph: Int)
     case lesson(number: Int, paragraph: Int)
     /// The two Workbook Part Introductions, which sit outside the 1-365 spine.
@@ -133,5 +135,37 @@ enum Citation: Hashable, Sendable {
             consumed += 1
         }
         return number
+    }
+
+    /// The `Character` range of paragraph `number`, 1-based, in a display
+    /// string — the inverse of `paragraphNumber(atCharacterOffset:in:)`, and
+    /// the same rule read the other way: paragraphs are joined by exactly
+    /// "\n\n" and never by a run of three.
+    ///
+    /// Nil for 0 and for a number past the last paragraph, so a citation that
+    /// names a paragraph the reading does not have resolves to nothing rather
+    /// than to the end of the text.
+    static func paragraphRange(_ number: Int, in displayString: String) -> Range<Int>? {
+        guard number >= 1 else { return nil }
+        var current = 1
+        var start = 0
+        var offset = 0
+        var previousWasNewline = false
+        for character in displayString {
+            if character == "\n" {
+                if previousWasNewline {
+                    if current == number { return start..<(offset - 1) }
+                    current += 1
+                    start = offset + 1
+                    previousWasNewline = false
+                } else {
+                    previousWasNewline = true
+                }
+            } else {
+                previousWasNewline = false
+            }
+            offset += 1
+        }
+        return current == number ? start..<offset : nil
     }
 }
