@@ -88,14 +88,7 @@ struct ArchivedReadingCard: View {
                 }
             }
         } trailing: {
-            ShareLink(item: shareText) {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
-            }
-            .accessibilityLabel("Share")
+            ShareButton(text: shareText)
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }

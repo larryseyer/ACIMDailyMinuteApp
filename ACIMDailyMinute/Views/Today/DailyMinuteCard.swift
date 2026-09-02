@@ -48,14 +48,7 @@ struct DailyMinuteCard: View {
                 }
             }
         } trailing: {
-            ShareLink(item: ShareTextBuilder.minuteShareText(minute)) {
-                Image(systemName: "square.and.arrow.up")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .contentShape(Rectangle())
-            }
-            .accessibilityLabel("Share")
+            ShareButton(text: ShareTextBuilder.minuteShareText(minute))
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
         }
     }
