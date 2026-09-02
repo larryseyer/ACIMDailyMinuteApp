@@ -54,6 +54,23 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
       All 365 bodies are bundled now. Note that choosing a lesson that *has* a video still opens that
       video full screen first by design; dismissing it lands on the text.
+- [ ] **An unrecorded lesson answers the tap.** Tap Lesson 90 — dimmed, with `Available yyyy-MM-dd`
+      under its title. Expected: it opens, and above the text a clock line says `Not recorded yet.
+      Audio and video available <the same date>`. The two dates must agree; both come from one
+      formatter and one anchor. The row used to be inert, so a tap did nothing at all.
+- [ ] **A day with no Daily Minute says when.** Archive tab, calendar. Pick **2026-09-10** — the row
+      under the calendar reads "The Daily Minute for this day will be available on 2026-09-10." and
+      tapping through shows the same sentence. Pick **2026-05-31** — "No reading was published on this
+      day. Missed days are filled in one a night; expect this one on <tomorrow>." Pick **2026-03-01** —
+      "The Daily Minute began on 2026-03-20. There is nothing before it." ⛔ The missed-day date rests
+      on the publisher's own rule, one catch-up per night oldest first; if the nightly run ever
+      changes that, `MinuteSchedule` is where the app's promise lives.
+- [ ] **One notification for a new day, not three.** With New Daily Minute, New Daily Lesson and
+      Watched phrases all on, the morning after a publish should bring ONE notification —
+      "Today's reading is ready" naming the lesson — not "New Daily Minute" followed by "Lesson N".
+      A phrase match rides in the same notification and its tap still opens the phrase editor.
+- [ ] **Share on the Mac.** The Share glyph on the Daily Minute, Lesson and Archive cards draws bare,
+      like the phone — no bordered well the height of the header beside Save.
 - [ ] **The corpus floor.** Airplane mode, delete and reinstall, cold launch. Expected: Today shows a
       complete reading from the bundle with no network, no spinner and no empty state. It is a plain
       card with no save, share or Listen control, because that passage was never published.

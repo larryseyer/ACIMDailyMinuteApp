@@ -56,7 +56,9 @@ struct SavedView: View {
                 case .lesson(let number):
                     LessonDetailView(lessonNumber: number)
                 case .archiveDate(let dateString):
-                    ArchiveDateDetailView(dateString: dateString)
+                    // A saved minute was saved from an archived row, so its day
+                    // has a reading to show and no sentence to explain.
+                    ArchiveDateDetailView(dateString: dateString, availability: .archived)
                 case .textSection(let chapter, let section):
                     TextSectionView(chapter: chapter, section: section)
                 case .introduction(let lessonNumber):

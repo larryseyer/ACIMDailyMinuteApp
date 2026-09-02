@@ -2,11 +2,12 @@ import SwiftUI
 
 /// Single row in the Lessons workbook list.
 ///
-/// Recorded lessons tap through a `NavigationLink(value: Int)` to the matching
-/// `.navigationDestination(for: Int.self)` on `LessonsView`. Lessons the
-/// publisher has not reached yet render dimmed and *without* the link, so the
-/// row is inert rather than opening a screen with nothing on it — the second
-/// line carries the date the recording is due instead.
+/// Every lesson taps through a `NavigationLink(value: Int)` to the matching
+/// `.navigationDestination(for: Int.self)` on `LessonsView`. A lesson the
+/// publisher has not reached yet renders dimmed, with the date its recording is
+/// due on the second line — and still opens, because its text is bundled and
+/// readable now; only the audio and video are still to come. The screen it
+/// opens repeats the date, so a tap is answered rather than ignored.
 struct LessonRow: View {
     let lessonNumber: Int
     let meta: LessonMeta?
@@ -21,14 +22,14 @@ struct LessonRow: View {
     private var isAvailable: Bool { availableOn == nil }
 
     var body: some View {
-        if isAvailable {
-            NavigationLink(value: lessonNumber) {
+        NavigationLink(value: lessonNumber) {
+            if isAvailable {
                 rowContent
+            } else {
+                rowContent
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(unavailableAccessibilityLabel)
             }
-        } else {
-            rowContent
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(unavailableAccessibilityLabel)
         }
     }
 
@@ -81,31 +82,16 @@ struct LessonRow: View {
             }
 
             if let availableOn {
-                Text("Available \(Self.availabilityFormatter.string(from: availableOn))")
+                Text("Available \(LessonSchedule.formatted(availableOn))")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }
         }
     }
 
-    // MARK: - Formatting
-
-    /// Deliberately the publisher's own `yyyy-MM-dd`, matching how every other
-    /// date in the app's data is written, so a reader can line the row up
-    /// against the feed without translating formats.
-    private static let availabilityFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        // Must match the zone the date was computed in, or the printed day
-        // slips either side of midnight depending on where the reader is.
-        f.timeZone = LessonSchedule.publicationCalendar.timeZone
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
-
     private var unavailableAccessibilityLabel: String {
         let title = resolvedTitle ?? "Lesson \(lessonNumber)"
         guard let availableOn else { return title }
-        return "Lesson \(lessonNumber), \(title). Not recorded yet. Available \(Self.availabilityFormatter.string(from: availableOn))."
+        return "Lesson \(lessonNumber), \(title). Not recorded yet. Available \(LessonSchedule.formatted(availableOn))."
     }
 }
