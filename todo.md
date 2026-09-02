@@ -373,18 +373,6 @@ archive window. Spec first, then plan, then execute.
 ⛔ Same standing rules: never re-extract the corpus, never write to the pipeline database,
 and whatever is added must survive the app.
 
-## ⏸ BLOCKED — Archive.org (external; no reply received)
-
-- [ ] **Create the two items** `acim-daily-minute` and `acim-daily-lessons` (mediatype: audio) by hand at
-      https://archive.org/upload. Blocked: the spam flag refuses item *creation*. Adding files to an item
-      that already exists returns 200. He has heard nothing back about the ban.
-- [ ] **Run the backfill** once they exist, on MacLive:
-      `venv/bin/python3 backfill_archive_audio.py --dry-run` then for real.
-      239 MP3s (604 MB) sit in `audio/` on MacLive covering everything published so far; the rest are
-      produced daily alongside publishing. No app release needed — everything is feed-driven.
-- Re-check cheaply: `curl -s https://archive.org/metadata/acim-daily-minute` → `{}` means still blocked.
-- ⛔ Do not re-open the hosting decision unprompted.
-
 ## ▶ WATCHING — the nightly catch-up
 
 The feeds carry the archive.org URLs now: `daily-minute.json` on 157 of 164 archive entries plus

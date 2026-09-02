@@ -410,12 +410,6 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⛔ WHAT ONLY HE CAN CLOSE
 
-- **Archive.org.** He has heard nothing back about the spam ban. The flag refuses item *creation*;
-  adding files to an item that already exists returns 200. Re-check cheaply, no write path touched:
-  `curl -s https://archive.org/metadata/acim-daily-minute` → `{}` means still blocked.
-  ⛔ **Do not re-open the hosting decision unprompted.** Two finished features wait on it and neither
-  needs an app change to come alive: the Today card's **Listen** button, and MP3 download in the Listen
-  tab. Both are invisible only because `audio_url` is empty on every episode and all 158 archive entries.
 - **Anything needing eyes on a device**, which is now everything in the parked block. Three entries
   there are the ones no harness can reach: whether the Text's recovered paragraphing reads correctly
   to someone who knows the book, whether the 6,221 restored spaces read as the book does, and whether
