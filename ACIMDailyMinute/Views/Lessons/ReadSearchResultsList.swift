@@ -33,9 +33,13 @@ struct ReadSearchResultsList: View {
             }
             if let results, let index {
                 if results.hits.isEmpty && headings.isEmpty {
-                    ContentUnavailableView.search(text: query)
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
+                    if SearchFold.normalizedQuery(query) != nil {
+                        ContentUnavailableView.search(text: query)
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    } else {
+                        EmptyView()
+                    }
                 } else {
                     ForEach(groups(results.hits)) { group in
                         Section {
@@ -49,14 +53,14 @@ struct ReadSearchResultsList: View {
                         }
                     }
                     if results.truncated {
-                        Text("Showing the first \(SearchIndex.hitCap) matches. Add a word to narrow it.")
+                        Text("Showing the first \(SearchIndex.hitCap.formatted()) matches. Add a word to narrow it.")
                             .font(.acimCaption)
                             .foregroundStyle(.secondary)
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                     }
                 }
-            } else if headings.isEmpty {
+            } else {
                 ProgressView()
                     .frame(maxWidth: .infinity)
                     .listRowSeparator(.hidden)
@@ -69,6 +73,9 @@ struct ReadSearchResultsList: View {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
         .task(id: query) {
+            // Cleared up front so a superseded query's rows do not linger
+            // while the new one's pause and scan are still running.
+            results = nil
             // A pause after the last keystroke, so a reader typing a phrase
             // does not run one scan per letter.
             try? await Task.sleep(for: .milliseconds(250))

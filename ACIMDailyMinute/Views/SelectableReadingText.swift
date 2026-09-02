@@ -39,9 +39,9 @@ struct SelectableReadingText: View {
     /// What the selection menu offers. Empty means nothing is added to the
     /// system menu at all, and the view is inert.
     var menuActions: [MenuAction] = []
-    /// The words to open on, if any. Painted in the accent colour rather than
-    /// highlight yellow so the app's pointer is never mistaken for the reader's
-    /// own mark, and scrolled into view once on first layout.
+    /// The words to open on, if any. Painted in a fixed blue, distinct from
+    /// both the reader's own yellow highlight and the app's gold accent, and
+    /// scrolled into view once on first layout.
     var spotlight: ReadingSpotlight? = nil
 
     /// One item offered on a selection.
@@ -242,8 +242,9 @@ private struct TextViewRepresentable: UIViewRepresentable {
         if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
             context.coordinator.scrolledSpotlight = spotlight
             // Layout has not happened when this runs; the rect is asked for on
-            // the next turn, and once more after that if the view was still
-            // empty, which is what a cold push looks like.
+            // the next turn, and retried up to twice more if the text view is
+            // not yet inside the SwiftUI scroll view or the rect is still
+            // empty, either of which is what a cold push looks like.
             Self.scroll(view, to: spotlight, attempt: 0)
         }
     }
@@ -269,7 +270,10 @@ private struct TextViewRepresentable: UIViewRepresentable {
                 if let found = current as? UIScrollView { scrollView = found; break }
                 candidate = current.superview
             }
-            guard let scrollView else { return }
+            guard let scrollView else {
+                if attempt < 2 { scroll(view, to: range, attempt: attempt + 1) }
+                return
+            }
             guard rect.height > 0, rect.height.isFinite, scrollView.bounds.height > 0 else {
                 if attempt < 2 { scroll(view, to: range, attempt: attempt + 1) }
                 return

@@ -42,8 +42,10 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — all three live targets are current and carry Backup & Restore, the store split,
-iCloud sync and the reader-chosen folder:**
+**Build state — the phone and the Mac carry Backup & Restore, the store split, iCloud sync and the
+reader-chosen folder, and NOT search: nothing has been installed since search landed. The next
+install on each is what puts the Read-tab search, the spotlight and the Manual screen in front of
+him; `./build.sh` and the thirteen checks are green at the search commits.**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
@@ -91,7 +93,7 @@ iCloud sync and the reader-chosen folder:**
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Twelve committed checks now guard this repo. Run all twelve first thing — they take about a
+⛔ **Thirteen committed checks now guard this repo. Run all thirteen first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -162,6 +164,15 @@ minute and they are how you find out the tree is what this file says it is:**
   the real feed's two gaps (05-31, 08-14) as the case; a future day publishes on itself; a day
   before the first is before the archive; an empty archive says nothing. Every sentence names its
   day as `yyyy-MM-dd` in the publisher's zone.
+- `./tools/verify_corpus_search.sh` — ⛔ **the only check that guards the ADDRESS of a match.**
+  Over all 744 readable records it proves the fold is one character in and one out, that every
+  hit's range holds the folded query, that hits come back in book order without overlap, that
+  the 1,000 cap holds and is reported, that snippets cut on word boundaries, and that a passage
+  cut from a record at a known offset is found at that offset — 9,796 checks. **It compiles
+  `CorpusSearch.swift` and nothing else** — no SwiftUI, SwiftData, `Bundle`, `CorpusService`,
+  `ReadingKey` or `Citation` may enter that file — the compile pins the three repo types, and a
+  `grep` in the same script pins the two frameworks and `Bundle`, because a lone-file `swiftc`
+  would link those without complaint.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -188,6 +199,12 @@ this Mac:
   single section titled `Publisher's Note`, even though the source sets a letter-spaced
   `p u b l i s h e r ’s n o t e` heading part-way through it, which would justify splitting it in
   two. The heading is stripped; ask before splitting.
+- `docs/superpowers/specs/2026-09-02-corpus-search-design.md` + its plan — implemented, all six code
+  tasks. Places where the code is ahead of the spec's text, all deliberate: the spotlight paints
+  `systemBlue`, not the accent (the accent is gold); the two `scroll` helpers use `Task { @MainActor
+  in }` rather than `DispatchQueue.main.asyncAfter`, because the latter's closure is `@Sendable`
+  and cannot capture a text view under strict concurrency; and `BookmarkRow` gained a Manual
+  branch the spec did not name, because the Manual screen offers Save.
 - `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
   where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
   `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
@@ -204,9 +221,9 @@ outstanding item is spec'd, planned and implemented — "otherwise, I will just 
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the ten committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the thirteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the ten checks first thing in a new session** — about a
+store migration, real feed payloads. **Run the thirteen checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
 ⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
@@ -220,10 +237,14 @@ shared `CardHeaderRow` across the three cards, audio-first with the play control
 left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
 structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
-**⭐ The live agent work is corpus-wide search — the book's index**, the `▶ NEXT` block of
-[`todo.md`](todo.md). Spec first, then plan, then build. Carrying a reader's work between devices is
-**finished, all five steps**: the portable file, bookmark uniqueness, the store split, iCloud sync
-and the reader-chosen folder.
+**⭐ The live agent work is cross-reference links**, the `▶ NEXT` block of [`todo.md`](todo.md).
+Search is built: one field on the Read tab over the 744 readable records (Text, Workbook with its
+two Part Introductions, Manual), hits in book order with a citation and a snippet, and every
+reading screen opens on a `ReadingSpotlight` — offset, length and quote — that the screen
+re-anchors with `AnchorResolver` against the string it actually draws. The segments are not
+indexed: they are the same words cut a second time. Its spec and plan are
+`docs/superpowers/specs/2026-09-02-corpus-search-design.md` and `docs/superpowers/plans/2026-09-02-corpus-search.md`,
+both outside git like the rest of `docs/`.
 
 ⛔ **The folder tier writes and never reads, and that boundary is the whole design.** A reader
 picks a folder once (Settings > Your Work > Backup & Restore > Keep a copy in a folder); the app
@@ -251,7 +272,7 @@ see. A **read-only** configuration cannot create a store it cannot find, which i
 `CKErrorDomain` 5 `badContainer` and works on the next launch — expect it once per fresh container and
 do not chase it.
 
-After search: cross-reference links, then the pre-submission sweep.
+After cross-reference links: the pre-submission sweep.
 
 ⛔ **Write or delete a `Bookmark` only through `BookmarkStore` — it is the ONLY thing keeping two
 rows off one passage.** `itemKey` is the whole identity; there is no `id`; and `@Attribute(.unique)`
@@ -269,10 +290,22 @@ make a reader's words fewer. It is in `BackupMerge.swift` with the reasoning att
 `./tools/verify_backup.sh` holds it: idempotent, commutative, associative, and no passage of any
 note body is ever lost.
 
-**Corpus-wide search — the book's index — is unstarted.** Its brief is the `▶ NEXT` block of
-[`todo.md`](todo.md): the three narrow searches that exist today and what each actually matches, the
-5,137,927 characters over 2,727 records a real search has to cover, and the four questions its spec
-has to answer.
+⛔ **The spotlight is a pointer, not a mark.** `ReadingSpotlight` is never stored, never
+exported and never keyed; it rides `TextSectionRef`, `LessonRef`, `IntroductionRef` and
+`ManualSegmentRef` into a screen and dies with it. It carries the quote because a published
+lesson draws the feed's text while the index was built over the bundle, so the screen finds the
+words again the way it finds a highlight. A lesson opened on a spotlight does not auto-present
+its video. It paints `systemBlue` at 0.22, not the accent: the app's accent is gold and a
+highlight is yellow, and on the Mac the accent is whatever the reader set in System Settings.
+
+⛔ **Where search lives, and the one rule it keeps.** `Services/CorpusSearch.swift` is pure —
+the fold, the index, the scan, the cap, the snippet — and `tools/verify_corpus_search.sh`
+compiles it alone. `Services/CorpusSearchService.swift` is the actor that builds the record
+table in book order and owns the only `CorpusService`/catalog/`ReadingText` calls; the index is
+built once per process, on the actor, on the first non-empty query. `Views/Lessons/ReadSearchResultsList.swift`
+is the list. The Read tab has ONE `.searchable`, on its root content; `TextChaptersView` is a
+contents page only, and `FilteredLessonsList` no longer filters — the results list replaces the
+shelf while a query is typed, so the Jump button is absent then and typing the number is the jump.
 
 ⛔ **A reader's backup file is `.json` on purpose, and that is not a small decision.** No private
 extension and no private UTI: the file has to open on a Windows, Linux or Android machine with what
@@ -384,8 +417,10 @@ Archive a real citation means adding `segment_id` to the pipeline's archive entr
 
 ⛔ **The reading surfaces already carry annotation.** Any new reading view should render through
 `AnnotatableReadingText(raw:key:design:lineSpacing:)`, which brings selection, highlighting, notes and
-export with it for free. The Manual is the one bundled corpus still without a reading UI, and
-`savedDestination` returns nil for `.manual` alone now.
+export with it for free. Every bundled corpus has a reading screen now; the Manual's
+(`Views/Manual/ManualSegmentView.swift`) is one passage at a time with no structure behind it,
+and `BookmarkRow` parses its channel separately from `savedDestination`, so a new reading kind
+owes both a branch.
 
 ⛔ **The idea that breaks silently, and it now has a name:** what the reader sees is not what is in
 the model. `ReadingText.displayString(from:)` is the one string both the renderer and every highlight
@@ -420,14 +455,17 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-1. **Corpus-wide search**, the book's index — spec first, then plan, then build. `▶ NEXT`.
-2. **Cross-reference links**, which citations unblocked: `Citation(rawValue:)` already parses an
-   address back to a `ReadingKey` the app navigates, so it is a view change, not a format change.
-3. **The pre-submission sweep**, then the smaller open items.
+1. **Cross-reference links** — spec first, then plan, then build. `▶ NEXT`. `Citation(rawValue:)`
+   already parses an address back to a `ReadingKey` the app navigates, and every reading screen
+   takes a spotlight, so it is a view change, not a format change.
+2. **The standardized reading layout** — his list for today put it second; it is `⏸ PAUSED` and
+   its decisions are recorded there. Resume it as a brainstorm, not a build.
+3. **Resume where you stopped, Workbook completion tracking, structuring the Manual**, then the
+   pre-submission sweep and the smaller open items.
 
 Two corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
-PDFs — and the eleven running heads still inside Chapter 11's prose. The Manual is the last bundled
-corpus with no reading UI, and structuring it is its own item.
+PDFs — and the eleven running heads still inside Chapter 11's prose. Structuring the Manual is its
+own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
