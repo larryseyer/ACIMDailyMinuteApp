@@ -39,6 +39,10 @@ struct SelectableReadingText: View {
     /// What the selection menu offers. Empty means nothing is added to the
     /// system menu at all, and the view is inert.
     var menuActions: [MenuAction] = []
+    /// The words to open on, if any. Painted in the accent colour rather than
+    /// highlight yellow so the app's pointer is never mistaken for the reader's
+    /// own mark, and scrolled into view once on first layout.
+    var spotlight: ReadingSpotlight? = nil
 
     /// One item offered on a selection.
     ///
@@ -66,16 +70,35 @@ struct SelectableReadingText: View {
     }
 
     var body: some View {
+        let display = ReadingText.displayString(from: raw)
+        let spotlightRange = resolvedSpotlight(in: display)
         TextViewRepresentable(
             attributed: Self.attributed(
                 raw: raw,
                 design: design,
                 lineSpacing: lineSpacing,
-                highlightedRanges: paintedRanges
+                highlightedRanges: paintedRanges,
+                spotlightRange: spotlightRange
             ),
-            display: ReadingText.displayString(from: raw),
-            menuActions: menuActions
+            display: display,
+            menuActions: menuActions,
+            spotlight: spotlightRange.flatMap { Self.utf16Range(of: $0, in: display) }
         )
+    }
+
+    /// The spotlight's words, found again in the string this view draws. An
+    /// orphaned spotlight paints and scrolls nothing.
+    private func resolvedSpotlight(in display: String) -> Range<Int>? {
+        guard let spotlight else { return nil }
+        switch AnchorResolver.resolve(
+            startOffset: spotlight.startOffset,
+            length: spotlight.length,
+            quote: spotlight.quote,
+            in: display
+        ) {
+        case .exact(let range), .moved(let range): return range
+        case .orphaned: return nil
+        }
     }
 
     /// An orphaned highlight paints nothing: its stored offsets no longer point
@@ -95,7 +118,8 @@ struct SelectableReadingText: View {
         raw: String,
         design: Design = .serif,
         lineSpacing: CGFloat = 0,
-        highlightedRanges: [Range<Int>] = []
+        highlightedRanges: [Range<Int>] = [],
+        spotlightRange: Range<Int>? = nil
     ) -> NSAttributedString {
         let display = ReadingText.displayString(from: raw)
         let paragraph = NSMutableParagraphStyle()
@@ -116,6 +140,9 @@ struct SelectableReadingText: View {
         for range in highlightedRanges {
             guard let utf16Range = utf16Range(of: range, in: display) else { continue }
             result.addAttribute(.backgroundColor, value: highlightColor, range: utf16Range)
+        }
+        if let spotlightRange, let utf16Range = utf16Range(of: spotlightRange, in: display) {
+            result.addAttribute(.backgroundColor, value: spotlightColor, range: utf16Range)
         }
         return result
     }
@@ -154,6 +181,16 @@ struct SelectableReadingText: View {
         PlatformColor.systemYellow.withAlphaComponent(0.28)
     }
 
+    /// The app's own pointer, in the accent colour, so a reader can tell at a
+    /// glance which mark is theirs and which one the search just made.
+    fileprivate static var spotlightColor: PlatformColor {
+        #if os(iOS)
+        PlatformColor.tintColor.withAlphaComponent(0.25)
+        #else
+        PlatformColor.controlAccentColor.withAlphaComponent(0.25)
+        #endif
+    }
+
     private static func font(for design: Design) -> PlatformFont {
         let base = PlatformFont.preferredFont(forTextStyle: .body)
         switch design {
@@ -175,6 +212,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
     let attributed: NSAttributedString
     let display: String
     let menuActions: [SelectableReadingText.MenuAction]
+    let spotlight: NSRange?
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -201,12 +239,55 @@ private struct TextViewRepresentable: UIViewRepresentable {
         context.coordinator.display = display
         context.coordinator.menuActions = menuActions
         if view.attributedText != attributed { view.attributedText = attributed }
+        if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
+            context.coordinator.scrolledSpotlight = spotlight
+            // Layout has not happened when this runs; the rect is asked for on
+            // the next turn, and once more after that if the view was still
+            // empty, which is what a cold push looks like.
+            Self.scroll(view, to: spotlight, attempt: 0)
+        }
+    }
+
+    /// Brings the spotlight into view by walking up to the SwiftUI `ScrollView`
+    /// this text view already lives in, rather than scrolling itself — the text
+    /// view has scrolling switched off, and a second scroller would break both.
+    ///
+    /// The rect comes from `firstRect(for:)` rather than the layout manager:
+    /// touching `layoutManager` forces the view back onto TextKit 1.
+    @MainActor
+    private static func scroll(_ view: UITextView, to range: NSRange, attempt: Int) {
+        Task { @MainActor in
+            if attempt > 0 { try? await Task.sleep(nanoseconds: 150_000_000) }
+            guard let start = view.position(from: view.beginningOfDocument, offset: range.location),
+                  let end = view.position(from: start, offset: range.length),
+                  let textRange = view.textRange(from: start, to: end)
+            else { return }
+            let rect = view.firstRect(for: textRange)
+            var scrollView: UIScrollView?
+            var candidate = view.superview
+            while let current = candidate {
+                if let found = current as? UIScrollView { scrollView = found; break }
+                candidate = current.superview
+            }
+            guard let scrollView else { return }
+            guard rect.height > 0, rect.height.isFinite, scrollView.bounds.height > 0 else {
+                if attempt < 2 { scroll(view, to: range, attempt: attempt + 1) }
+                return
+            }
+            let target = view.convert(rect, to: scrollView)
+                .insetBy(dx: 0, dy: -scrollView.bounds.height / 3)
+            scrollView.scrollRectToVisible(target, animated: false)
+        }
     }
 
     @MainActor
     final class Coordinator: NSObject, UITextViewDelegate {
         var display: String = ""
         var menuActions: [SelectableReadingText.MenuAction] = []
+        /// What has already been scrolled to. The scroll happens once per
+        /// spotlight; `updateUIView` runs on every redraw, and re-scrolling
+        /// would drag the reader back here every time they moved.
+        var scrolledSpotlight: NSRange?
 
         func textView(
             _ textView: UITextView,
@@ -244,6 +325,7 @@ private struct TextViewRepresentable: NSViewRepresentable {
     let attributed: NSAttributedString
     let display: String
     let menuActions: [SelectableReadingText.MenuAction]
+    let spotlight: NSRange?
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -267,12 +349,44 @@ private struct TextViewRepresentable: NSViewRepresentable {
         context.coordinator.menuActions = menuActions
         guard let storage = view.textStorage else { return }
         if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
+        if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
+            context.coordinator.scrolledSpotlight = spotlight
+            Self.scroll(view, to: spotlight, attempt: 0)
+        }
+    }
+
+    /// The rect comes from `firstRect(forCharacterRange:actualRange:)` rather
+    /// than the layout manager, which would force the view back onto TextKit 1.
+    /// It arrives in screen coordinates, so it is converted back down through
+    /// the window before the enclosing scroller is asked to show it.
+    @MainActor
+    private static func scroll(_ view: NSTextView, to range: NSRange, attempt: Int) {
+        Task { @MainActor in
+            if attempt > 0 { try? await Task.sleep(nanoseconds: 150_000_000) }
+            guard let window = view.window else {
+                if attempt < 2 { scroll(view, to: range, attempt: attempt + 1) }
+                return
+            }
+            let screenRect = view.firstRect(forCharacterRange: range, actualRange: nil)
+            let windowRect = window.convertFromScreen(screenRect)
+            let local = view.convert(windowRect, from: nil)
+            guard local.height > 0, local.height.isFinite else {
+                if attempt < 2 { scroll(view, to: range, attempt: attempt + 1) }
+                return
+            }
+            let visibleHeight = view.enclosingScrollView?.contentView.bounds.height ?? 400
+            view.scrollToVisible(local.insetBy(dx: 0, dy: -visibleHeight / 3))
+        }
     }
 
     @MainActor
     final class Coordinator: NSObject, NSTextViewDelegate {
         var display: String = ""
         var menuActions: [SelectableReadingText.MenuAction] = []
+        /// What has already been scrolled to. The scroll happens once per
+        /// spotlight; `updateNSView` runs on every redraw, and re-scrolling
+        /// would drag the reader back here every time they moved.
+        var scrolledSpotlight: NSRange?
         private weak var textView: NSTextView?
 
         func textView(
