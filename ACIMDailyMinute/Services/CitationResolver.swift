@@ -125,4 +125,57 @@ enum CitationResolver {
         guard let display = displayString(for: key, corpus: corpus) else { return nil }
         return citation(for: key, characterOffset: characterOffset, displayString: display)
     }
+    /// Where a tap on a printed citation goes: the reading it names, opened on
+    /// the paragraph it names, painted and scrolled into view.
+    ///
+    /// Nil when the bundle does not hold the section, lesson or paragraph, so
+    /// a citation that names nothing is printed and not tappable rather than
+    /// opening the wrong place. The Preface is the one address that cannot
+    /// name a paragraph — its two sections share one `Pref.N` numbering — so
+    /// it opens at its head with nothing painted. Nothing is guessed.
+    static func destination(
+        for citation: Citation,
+        corpus: CorpusService = .shared
+    ) -> ReadingDestination? {
+        switch citation {
+        case .text(let chapter, let section, let paragraph):
+            let key = ReadingKey.textSection(chapter: chapter, section: section)
+            guard let spotlight = paragraphSpotlight(paragraph, of: key, corpus: corpus) else { return nil }
+            return .textSection(TextSectionRef(chapter: chapter, section: section, spotlight: spotlight))
+
+        case .preface:
+            guard corpus.textSection(chapter: 0, section: 1) != nil else { return nil }
+            return .textSection(TextSectionRef(chapter: 0, section: 1))
+
+        case .lesson(let number, let paragraph):
+            guard let spotlight = paragraphSpotlight(paragraph, of: .lesson(number), corpus: corpus) else { return nil }
+            return .lesson(LessonRef(lessonNumber: number, spotlight: spotlight, presentsVideo: false))
+
+        case .partIntroduction(let part, let paragraph):
+            let lessonNumber = part == 1 ? 0 : 500
+            guard let spotlight = paragraphSpotlight(paragraph, of: .lesson(lessonNumber), corpus: corpus) else { return nil }
+            return .introduction(IntroductionRef(lessonNumber: lessonNumber, spotlight: spotlight))
+        }
+    }
+
+    /// A whole paragraph as a spotlight: its offsets in the bundled display
+    /// string and its own text as the quote, so the screen finds it again in
+    /// whatever string it draws — a published lesson draws the feed's.
+    private static func paragraphSpotlight(
+        _ paragraph: Int,
+        of key: ReadingKey,
+        corpus: CorpusService
+    ) -> ReadingSpotlight? {
+        guard let display = displayString(for: key, corpus: corpus),
+              let range = Citation.paragraphRange(paragraph, in: display),
+              !range.isEmpty
+        else { return nil }
+        let start = display.index(display.startIndex, offsetBy: range.lowerBound)
+        let end = display.index(start, offsetBy: range.count)
+        return ReadingSpotlight(
+            startOffset: range.lowerBound,
+            length: range.count,
+            quote: String(display[start..<end])
+        )
+    }
 }

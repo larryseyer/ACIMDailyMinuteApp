@@ -25,9 +25,7 @@ struct CorpusReadingCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Text(segment.citation ?? segment.bookName)
-                .font(.footnote.italic())
-                .foregroundStyle(.secondary)
+            CitationButton(citation: segment.citation, bookName: segment.bookName)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(16)
