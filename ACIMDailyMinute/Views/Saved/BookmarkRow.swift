@@ -77,10 +77,10 @@ struct BookmarkRow: View {
     }
 
     /// Where tapping this row goes. A lesson opens that lesson, a Text section
-    /// opens that section, and a minute opens the archive entry for the day it
-    /// ran. `nil` when the underlying reading is no longer in the store — the
-    /// row still renders, it just has nowhere to go, which is honest about what
-    /// it can offer.
+    /// opens that section, a Manual passage opens that passage, and a minute
+    /// opens the archive entry for the day it ran. `nil` when the underlying
+    /// reading is no longer in the store — the row still renders, it just has
+    /// nowhere to go, which is honest about what it can offer.
     private var destination: SavedDestination? {
         if parsedChannel == "lesson" {
             // No store check: `LessonDetailView` renders from `WorkbookCatalog`
@@ -101,6 +101,11 @@ struct BookmarkRow: View {
         if parsedChannel == "text" {
             guard let address = textAddress, textSection != nil else { return nil }
             return .textSection(chapter: address.chapter, section: address.section)
+        }
+
+        if parsedChannel == "manual" {
+            guard let id = Int(parsedToken), CorpusService.shared.manualSegment(id: id) != nil else { return nil }
+            return .manual(id)
         }
 
         return nil
@@ -150,7 +155,7 @@ struct BookmarkRow: View {
     private var rowIcon: String {
         switch parsedChannel {
         case "lesson": "book.closed.fill"
-        case "text": "text.book.closed"
+        case "text", "manual": "text.book.closed"
         default: "sun.max.fill"
         }
     }
@@ -164,6 +169,9 @@ struct BookmarkRow: View {
         if parsedChannel == "text" {
             guard let address = textAddress else { return "Text" }
             return address.chapter == 0 ? "Preface" : "Chapter \(address.chapter)"
+        }
+        if parsedChannel == "manual" {
+            return "Manual for Teachers"
         }
         return "Daily Minute"
     }
@@ -179,6 +187,14 @@ struct BookmarkRow: View {
 
         if parsedChannel == "text" {
             return textSection?.sectionTitle
+        }
+
+        if parsedChannel == "manual" {
+            // The Manual has no titles, so unlike a Text section, which shows
+            // its section title, this shows a preview of the passage itself.
+            guard let id = Int(parsedToken), let segment = CorpusService.shared.manualSegment(id: id)
+            else { return nil }
+            return preview(segment.body)
         }
 
         if parsedChannel == "lesson" {
