@@ -63,6 +63,8 @@ struct SavedView: View {
                     TextSectionView(chapter: chapter, section: section)
                 case .introduction(let lessonNumber):
                     WorkbookIntroductionView(lessonNumber: lessonNumber)
+                case .manual(let segmentId):
+                    ManualSegmentView(segmentId: segmentId)
                 }
             }
             // TextSectionView's Previous and Next push refs of their own, so
@@ -181,6 +183,7 @@ enum SavedDestination: Hashable {
     case archiveDate(String)
     case textSection(chapter: Int, section: Int)
     case introduction(Int)
+    case manual(Int)
 }
 
 extension ReadingKey {
@@ -188,10 +191,9 @@ extension ReadingKey {
     ///
     /// A lesson opens that lesson, a Text section opens that section, and a
     /// minute opens the archive day it ran on — found by segment where the
-    /// mapping is recorded, and by the stored date otherwise. `nil` for the
-    /// Manual, which has no reading UI yet: the row still renders and still
-    /// exports, it simply has nowhere to go, which is honest about what it can
-    /// offer.
+    /// mapping is recorded, and by the stored date otherwise. A Manual passage
+    /// opens `ManualSegmentView`, gated on the segment being in the bundle
+    /// exactly as a Text section is.
     func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
         switch self {
         case .lesson(let n):
@@ -211,8 +213,9 @@ extension ReadingKey {
             return .archiveDate(row.publishedDate)
         case .minuteDate(let date):
             return date.isEmpty ? nil : .archiveDate(date)
-        case .manual:
-            return nil
+        case .manual(let id):
+            guard CorpusService.shared.manualSegment(id: id) != nil else { return nil }
+            return .manual(id)
         }
     }
 }
