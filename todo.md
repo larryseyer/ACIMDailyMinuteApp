@@ -197,18 +197,17 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       and Save on the trailing edge**. Check the Daily Minute card, a Lesson card and an Archive
       card. Expected: no `DAILY / MINUTE` split and no `Lis-`/`ten` hyphen anywhere; Share and Save
       in the same place on a passage that has audio and one that does not; and **tap Save** —
-      `Saved` is wider than `Save`, and that tap used to be able to change the layout under your
+      `Saved` is wider than `Save`, so that tap is the one that can shift the layout under your
       finger. ⛔ Most readings have no audio, so the usual state is the control band holding only
       Share and Save. `tools/verify_card_header.sh` proves the words never break and the two
       controls never move; whether the two-band arrangement reads well is yours.
 
 - [ ] **Saving a passage, twice.** Tap Save on any reading, leave the screen, come back, tap Save
-      again. Expected: it saves, then un-saves, every time. This used to be decided from the view's
-      own `@Query` snapshot, so a row written by the watch or by an import in the same tick was
-      invisible to it — the view inserted a second row, the unique index rejected the save, and
-      `try?` threw the error away. The reader tapped Save and **nothing happened, with no error
-      anywhere**. It now decides against a fetch. The rule is proved by 381 cases in
-      `tools/verify_bookmark_identity.sh`; only the tap is unverified, because it needs a hand.
+      again. Expected: it saves, then un-saves, every time. Every write now decides against a fetch
+      rather than the view's own `@Query` snapshot, which is what makes a row written by the watch or
+      by an import in the same tick visible to it. ⛔ There is no unique index behind this any more —
+      `BookmarkStore` is the whole guarantee. The rule is proved by 381 cases in
+      `tools/verify_bookmark_identity.sh`; only the tap needs a hand.
 
 - [ ] **Backup & Restore, end to end.** Settings > Your Work > Backup & Restore. **Save a backup**
       should open a real Save dialog on the Mac and the Files sheet on the phone, and produce
@@ -330,7 +329,7 @@ the widget, `BackupService` and nine views all depend on. `SharedModelContainer.
 single declaration all four sites now call. The pre-split `ACIMDailyMinute.sqlite` is left on disk
 untouched as the recovery copy and is never opened again after the one-time lift.
 
-⛔ **Two configurations must be NAMED, and this cost a crash to learn.** Two unnamed
+⛔ **Two configurations must be NAMED.** Two unnamed
 `ModelConfiguration`s collapse onto the one default configuration, every entity is registered against
 both stores, and the first insert dies with `NSInvalidArgumentException` — *"Can't assign an object to
 a store that does not contain the object's entity."* **That is an Objective-C exception, not a Swift
@@ -351,9 +350,8 @@ only recovery copy of data with no upstream. Every configuration in `SharedModel
 names its choice, and the rule that keeps it that way is:
 **`allowsSave == false` ⇒ `cloudKitDatabase == .none`.** Only the app's one writable container mirrors.
 
-⛔ **The widget and watch need NO iCloud entitlement, and must not get one.** An earlier note here
-said the widget did, because it reads `Bookmark`. That is wrong and the correction matters: the widget
-opens the store read-only, so by the rule above it never mirrors. Two containers mirroring one store
+⛔ **The widget and watch need NO iCloud entitlement, and must not be given one** — not even though
+the widget reads `Bookmark`. It opens the store read-only, so by the rule above it never mirrors. Two containers mirroring one store
 **in the same process** fail with "another instance of this persistent store actively syncing with
 CloudKit in this process" — reachable here, because `GetTodaysReadingIntent` builds its own container
 and an App Intent can run inside the app's process. The watch is cache-only and never opens

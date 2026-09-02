@@ -8,66 +8,58 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ WHAT IS TRUE RIGHT NOW
 
-Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
-of mine is running. **He is testing on the phone right now** — the install is current and the app was
-launched and seen alive. One untracked file sits in the repo root, `000000 Bug - Widget.png`; it is
-his, it predates the macOS height fix, and it must not be committed.
+Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing of
+mine is running. One untracked file sits in the repo root, `000000 Bug - Widget.png`; it is his and it
+must not be committed.
 
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep`
 from this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
 `./start.sh` there, never through the mount.
 
-⛔ **The card header is now two bands on every card and every screen size** — title centred on its
-own line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow`
-owns it, `ListenButton` and `SaveButton` are the shared controls, and `tools/verify_card_header.sh`
-is the tenth check. **The play control is leftmost on purpose**: most readings have no audio, so it
-is usually absent, and anchoring it there is what stops Share and Save moving between passages. His
-layout decisions, taken while looking at the phone — do not undo them without asking.
+⛔ **The card header is two bands on every card and every screen size** — title centred on its own
+line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow` owns
+it, `ListenButton` and `SaveButton` are the shared controls, and `tools/verify_card_header.sh` is the
+tenth check. **The play control is leftmost on purpose**: most readings have no audio, so it is
+usually absent, and anchoring it there is what stops Share and Save moving between passages. His
+layout decisions — do not undo them without asking.
 
 ⛔ **His phone gives the app a 375pt canvas, not 414pt.** The Pro Max runs **Display Zoom** — his
 screenshots are 1125x2436 rather than the native 1242x2688, exactly 0.906x — and his Dynamic Type is
-about `xxLarge`. **Check every width assumption against 375pt.** This is what made the header
-overflow: 310pt of controls in 303pt, which SwiftUI resolved by breaking words rather than by
-warning.
+about `xxLarge`. **Check every width assumption against 375pt.** When a row wants more width than it
+has, SwiftUI drops nothing and warns about nothing: it breaks the words.
 
-⛔ **A control that appears because DATA changed has never been drawn by anyone.** The play control
-was described in both docs as needing "no app change and no rebuild" to come alive; it needed one,
-and nothing caught it because no build had ever laid that row out at full width. **The Listen tab's
-Download action is the same shape of risk and is still undrawn** — check it at 375pt when the
-back-catalogue lands.
+⛔ **A control that appears because DATA changed has never been drawn by anyone.** **The Listen tab's
+Download action is undrawn and is next in line** — it comes alive by itself when the feed carries
+`audio_url`, with no app change and no rebuild. Lay it out at 375pt before believing it is fine.
 
-⛔ **Every MP3 that exists is published to archive.org and MacLive now carries every recorded
-URL** — `upload_log` 156 of 166, `lessons_log` 84 of 84. The ten empty minute rows are the nine with
-no MP3 at all (2026-03-18 … 03-26) plus 2026-05-31, an unfilled catch-up gap. The landing was a
-staged temp file plus an atomic rename over the mount, guarded on mtime and verified by sha256 and
-`PRAGMA integrity_check` read back over the mount; SQLite has still never been opened read-write
-across SMB. The pre-landing live file is kept at
-`untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242`, byte-identical to
-what was there. **Nothing is left to do by hand**: `main.py:427` calls `push_all_daily_minute` at the
-end of every successful run and rebuilds the whole archive list from the database, so the 02:00 run
-publishes the URLs into the feeds on its own.
+⛔ **MacLive carries every recorded archive.org URL** — `upload_log` 156 of 166, `lessons_log` 84 of
+84. The ten empty minute rows are the nine with no MP3 at all (2026-03-18 … 03-26) plus 2026-05-31, an
+unfilled catch-up gap. **Nothing is left to do by hand**: `main.py:427` calls `push_all_daily_minute`
+at the end of every successful run and rebuilds the whole archive list from the database, so the 02:00
+run publishes the URLs into the feeds on its own. ⛔ SQLite has never been opened read-write across
+SMB and must not be; the pre-landing copy of the live database is kept at
+`untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — all three live targets are current and carry Backup & Restore:**
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, **the install is current and
-  carries the store split**. It launched cleanly on the unlocked phone and **both processes stayed
-  alive** — the app and `ACIMDailyMinuteWidgetExtension` — which is the proof the schema is clean,
-  since the extension is what `fatalError`s on a mismatch. So the phone has run its one-time reader
-  migration and no crash report followed it. ⛔ Before that launch the extension was *also* seen alive
-  from the new bundle while the app had never been opened, which is the proof that a read-only
-  container can come up against stores the app has not created yet. ⛔ **`devicectl device info processes` will show none of them
-  now, and that means nothing is wrong**: the app is simply not open. It is a check to run *after*
-  launching, never a way to ask what is installed.
-  ⭐ **This is where he tests.** ⛔ A `devicectl install` that returns
-  `CoreDeviceError 4000, "the device disconnected immediately after connecting"` is the phone, not
-  the build — retry once before believing it.
+**Build state — all three live targets are current and carry Backup & Restore, the store split and
+iCloud sync:**
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
+  and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
+  extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
+  is **off**, its default.
+  ⛔ **`devicectl device info processes` showing none of them means nothing is wrong** — the app is
+  simply not open. It is a check to run *after* launching, never a way to ask what is installed.
+  ⭐ **This is where he tests.** ⛔ A `devicectl install` returning
+  `CoreDeviceError 4000, "the device disconnected immediately after connecting"` is the phone, not the
+  build — retry once before believing it. A locked phone refuses `process launch` with
+  `FBSOpenApplicationErrorDomain error 7`; that is the lock, not the build.
 - 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app` is current: arm64, signed team
   `RR5DY39W4Q`, widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it
-  from **Edit Widgets**. It is not running right now, which is the ordinary state and not a fault.
-  Confirm the install with `codesign -dv` and `pluginkit -mAv -p com.apple.widgetkit-extension`,
-  which answer without launching anything. ⛔ **`build/Debug/` is the macOS product.** `build/Debug-iphonesimulator/`
-  also contains an `ACIMDailyMinute.app` and a `find` that is not anchored will hand you the wrong
-  one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q` before believing you installed it.
+  from **Edit Widgets**. Not running is the ordinary state, not a fault. Confirm with `codesign -dv`
+  and `pluginkit -mAv -p com.apple.widgetkit-extension`, which answer without launching anything.
+  iCloud sync is **off**, its default. ⛔ **`build/Debug/` is the macOS product.**
+  `build/Debug-iphonesimulator/` also contains an `ACIMDailyMinute.app`, and a `find` that is not
+  anchored hands you the wrong one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q`.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
@@ -88,13 +80,13 @@ publishes the URLs into the feeds on its own.
   copy `build/Debug/ACIMDailyMinute.app` to `/Applications`, launch once. Verify with
   `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
   ⛔ Quit the running copy first, or `rm -rf /Applications/ACIMDailyMinute.app` fails mid-flight.
-- **Real SwiftData migrations can be proved here without the phone, and now with real annotations.**
-  `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/` holds **three** files since the
-  split: `reader.store` (2 highlights, 2 notes, 0 bookmarks), `cache.store` (the feed caches), and
-  `ACIMDailyMinute.sqlite`, the pre-split file kept untouched as the recovery copy. ⛔ An older note
-  here said the annotation tables were all 0; they are not, which is what let the split's migration be
-  proved rather than merely compiled. Back the directory up, launch the signed build, then read
-  `.tables`, row counts and `sqlite_master` indexes with `sqlite3`.
+- **Real SwiftData migrations can be proved here without the phone, against real annotations.**
+  `~/Library/Group Containers/group.com.larryseyer.acimdailyminute/` holds three files:
+  `reader.store` (2 highlights, 2 notes, 0 bookmarks), `cache.store` (the feed caches), and
+  `ACIMDailyMinute.sqlite`, the pre-split file kept untouched as the recovery copy. Back the directory
+  up first, launch the signed build, then read `.tables`, row counts and `sqlite_master` indexes with
+  `sqlite3`. ⛔ Those two highlights and two notes are the only real annotation data reachable from
+  here — treat them as precious and back them up before any store work.
 
 ⛔ **Ten committed checks now guard this repo. Run all ten first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
@@ -171,10 +163,9 @@ this Mac:
   particular highlight without matching on its quote; and the file records milliseconds while the
   store keeps full precision, so `BackupMerge` compares dates at the format's own resolution rather
   than with `<`.
-- ⛔ **The chapter-opening recovery has NO design document.** It was found by measurement rather
-  than requested, so it went straight from evidence to an approved plan, which is at
-  `~/.claude/plans/iridescent-moseying-engelbart.md` — outside the repo, and the only written
-  record of why it is shaped the way it is besides `tools/chapter_openings.py`'s own docstrings.
+- ⛔ **The chapter-opening recovery has NO design document.** Its only written record besides
+  `tools/chapter_openings.py`'s own docstrings is an approved plan at
+  `~/.claude/plans/iridescent-moseying-engelbart.md`, outside the repo.
   One judgement in it is his and was taken deliberately: the recovered Preface front matter is a
   single section titled `Publisher's Note`, even though the source sets a letter-spaced
   `p u b l i s h e r ’s n o t e` heading part-way through it, which would justify splitting it in
@@ -193,8 +184,7 @@ this Mac:
 ⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the entire confirmation list until every
 outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
-handed over once, whole, at the end. **He is testing the card header himself right now**, which is
-the one exception and was his own call, not a request from here.
+handed over once, whole, at the end.
 
 Verify everything else without him: `swiftc` harnesses against real bundled data, the ten committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
@@ -208,11 +198,11 @@ reach the app, the Today card's **Listen** button and the Listen tab's **Downloa
 with no app change — and the Download action has never been drawn by anyone, so check it at 375pt.
 Do not re-open the hosting decision.
 
-⏸ **The standardized reading layout is PAUSED mid-brainstorm** — the `⏸ PAUSED` block of
-[`todo.md`](todo.md) holds the decisions he made. ⭐ **Piece A has effectively begun**: the card
-header is now one shared `CardHeaderRow` across the three cards, audio-first with the play control
-leftmost, which is what that block asked for. The rest of the scaffold — the title/body/footer bands,
-`Archive` becoming `Video`, structuring the Manual — is still his to resume.
+⏸ **The standardized reading layout is PAUSED and is his to resume** — the `⏸ PAUSED` block of
+[`todo.md`](todo.md) holds the decisions he made. Its first piece is partly standing already: one
+shared `CardHeaderRow` across the three cards, audio-first with the play control leftmost. What is
+left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
+structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
 **⭐ The live agent work is the rest of carrying a reader's work between devices**, the `▶ NEXT`
 block of [`todo.md`](todo.md). The portable file, bookmark uniqueness, the store split **and iCloud
@@ -237,18 +227,16 @@ do not chase it.
 Then **corpus-wide search** (the `▶ THEN` block), then cross-reference links, then the pre-submission
 sweep.
 
-⛔ **Write or delete a `Bookmark` only through `BookmarkStore`, and that is now the ONLY thing
-keeping two rows off one passage** — the unique index is gone. `BookmarkStore.remove(key:in:)` exists
-for the Saved tab, which used to call `modelContext.delete(bookmark)` on the single row it drew.
-Never insert or delete the model directly. `itemKey` is the
-whole identity — there is no `id` — and the six Save controls used to decide whether a row existed by
-searching their own `@Query` snapshot, which is what the view last drew rather than what the store
-holds. When a row was already there and the snapshot had not caught up, the view inserted a second
-one, the unique index rejected the save, and `try?` threw the error away: **the reader tapped Save and
-nothing happened, silently.** ⛔ That index is no longer there to reject anything, so the same mistake
-would now write the duplicate rather than fail loudly. There is an eighth writer besides the six and `DataService` —
-`BackupService.swift:187-192` — already safe, because `BackupMerge` computes its inserts against a
-live fetch, but it is a raw insert and belongs on the list.
+⛔ **Write or delete a `Bookmark` only through `BookmarkStore` — it is the ONLY thing keeping two
+rows off one passage.** `itemKey` is the whole identity; there is no `id`; and `@Attribute(.unique)`
+is gone from it, so the database will no longer reject a duplicate. `BookmarkStore.toggle` and
+`BookmarkStore.remove(key:in:)` are the two ways in, and both decide against a **fetch**, never
+against a view's `@Query` snapshot — a snapshot is what the view last drew, not what the store holds,
+and a row written by the watch or an import in the same tick is not in it yet. A raw insert or delete
+now writes the duplicate silently instead of failing loudly, and the reader's next un-save does
+nothing. ⛔ `BackupService.swift:187-192` is a raw `Bookmark()` insert and is the one exception: it is
+safe because `BackupMerge` computes its inserts against a live fetch, but it belongs on the list
+whenever this invariant moves.
 
 ⛔ **The conflict rule is decided, implemented and proved; do not re-open it.** A merge may never
 make a reader's words fewer. It is in `BackupMerge.swift` with the reasoning attached, and
@@ -404,13 +392,17 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⬜ AGENT-OWNED WORK
 
-From [`todo.md`](todo.md), in order: **the four remaining sync items** (bookmark uniqueness, the
-store split, CloudKit, the reader-chosen folder), then **corpus-wide search**, then cross-reference
-links — which citations unblocked, since `Citation(rawValue:)` parses an address back to a
-`ReadingKey` the app already navigates — then the pre-submission sweep and the smaller open items. The 186 one-paragraph lesson bodies and the eleven
-running heads still sitting inside Chapter 11's prose are the two remaining corpus defects; the lesson
-bodies are the one job that genuinely needs the PDFs. The Manual is the last bundled corpus with no
-reading UI, and structuring it is its own item.
+From [`todo.md`](todo.md), in order:
+
+1. **The reader-chosen folder** — the last of the five sync steps, and the smallest. `▶ NEXT`.
+2. **Corpus-wide search**, the book's index — spec first, then plan, then build. `▶ THEN`.
+3. **Cross-reference links**, which citations unblocked: `Citation(rawValue:)` already parses an
+   address back to a `ReadingKey` the app navigates, so it is a view change, not a format change.
+4. **The pre-submission sweep**, then the smaller open items.
+
+Two corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
+PDFs — and the eleven running heads still inside Chapter 11's prose. The Manual is the last bundled
+corpus with no reading UI, and structuring it is its own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
