@@ -12,4 +12,13 @@ struct TextChapterRef: Hashable {
 struct TextSectionRef: Hashable {
     let chapter: Int
     let section: Int
+    /// Set when the section is opened on a search hit.
+    var spotlight: ReadingSpotlight? = nil
+}
+
+/// A lesson opened on a search hit. Bare `Int` is already the lesson
+/// destination and stays so for deep links; this ref exists to carry the words.
+struct LessonRef: Hashable {
+    let lessonNumber: Int
+    var spotlight: ReadingSpotlight? = nil
 }

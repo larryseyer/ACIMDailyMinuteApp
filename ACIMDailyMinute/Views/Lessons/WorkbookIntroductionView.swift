@@ -4,6 +4,7 @@ import SwiftData
 /// Where an introduction reference points.
 struct IntroductionRef: Hashable {
     let lessonNumber: Int
+    var spotlight: ReadingSpotlight? = nil
 }
 
 /// One of the Workbook's two Part Introductions.
@@ -14,6 +15,7 @@ struct IntroductionRef: Hashable {
 /// annotation key is still `.lesson(0)` / `.lesson(500)`, which already stores.
 struct WorkbookIntroductionView: View {
     let lessonNumber: Int
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Environment(AudioManager.self) private var audio
@@ -43,7 +45,8 @@ struct WorkbookIntroductionView: View {
                             raw: reading.body,
                             key: .lesson(lessonNumber),
                             design: .serif,
-                            lineSpacing: 3
+                            lineSpacing: 3,
+                            spotlight: spotlight
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)

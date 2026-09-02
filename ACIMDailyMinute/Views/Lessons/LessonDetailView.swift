@@ -15,6 +15,7 @@ import SwiftData
 ///    the lesson so the user can watch it directly.
 struct LessonDetailView: View {
     let lessonNumber: Int
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Query private var lessonMatches: [DailyLesson]
@@ -54,8 +55,9 @@ struct LessonDetailView: View {
         bookmarks.contains(where: { $0.itemKey == itemKey })
     }
 
-    init(lessonNumber: Int) {
+    init(lessonNumber: Int, spotlight: ReadingSpotlight? = nil) {
         self.lessonNumber = lessonNumber
+        self.spotlight = spotlight
         _lessonMatches = Query(
             filter: #Predicate<DailyLesson> { $0.lessonNumber == lessonNumber }
         )
@@ -90,11 +92,11 @@ struct LessonDetailView: View {
     var body: some View {
         Group {
             if let lesson = lessonMatches.first {
-                FullLessonView(lesson: lesson)
+                FullLessonView(lesson: lesson, spotlight: spotlight)
             } else if let archive = archiveMatches.first {
-                MetadataOnlyLessonView(lessonNumber: lessonNumber, archive: archive)
+                MetadataOnlyLessonView(lessonNumber: lessonNumber, archive: archive, spotlight: spotlight)
             } else {
-                AbsentLessonView(lessonNumber: lessonNumber, availableOn: availableOn)
+                AbsentLessonView(lessonNumber: lessonNumber, availableOn: availableOn, spotlight: spotlight)
             }
         }
         .navigationTitle("Lesson \(lessonNumber)")
@@ -111,7 +113,9 @@ struct LessonDetailView: View {
             }
         }
         .onAppear {
-            guard !hasAutoPresentedVideo, lessonVideoURL != nil else { return }
+            // Choosing a lesson from the list is a request to watch it; choosing
+            // a sentence from a search is a request to read it.
+            guard !hasAutoPresentedVideo, spotlight == nil, lessonVideoURL != nil else { return }
             hasAutoPresentedVideo = true
             isShowingVideo = true
         }
@@ -129,6 +133,7 @@ struct LessonDetailView: View {
 
 private struct FullLessonView: View {
     let lesson: DailyLesson
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(AudioManager.self) private var audio
 
@@ -144,7 +149,8 @@ private struct FullLessonView: View {
                     raw: lesson.text,
                     key: .lesson(lesson.lessonNumber),
                     design: .serif,
-                    lineSpacing: 3
+                    lineSpacing: 3,
+                    spotlight: spotlight
                 )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
@@ -219,6 +225,7 @@ private struct FullLessonView: View {
 private struct MetadataOnlyLessonView: View {
     let lessonNumber: Int
     let archive: ArchivedReading
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(AudioManager.self) private var audio
 
@@ -242,7 +249,8 @@ private struct MetadataOnlyLessonView: View {
                     AnnotatableReadingText(
                         raw: body,
                         key: .lesson(lessonNumber),
-                        design: .standard
+                        design: .standard,
+                        spotlight: spotlight
                     )
                 } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
@@ -285,6 +293,7 @@ private struct AbsentLessonView: View {
     /// Set when the recording is still to come. The text below is bundled and
     /// readable regardless; this line is what answers the tap on a dimmed row.
     let availableOn: Date?
+    var spotlight: ReadingSpotlight? = nil
 
     @Query(filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" })
     private var cachedLessons: [CachedPodcastEpisode]
@@ -344,7 +353,8 @@ private struct AbsentLessonView: View {
                     AnnotatableReadingText(
                         raw: body,
                         key: .lesson(lessonNumber),
-                        design: .standard
+                        design: .standard,
+                        spotlight: spotlight
                     )
                 }
             }

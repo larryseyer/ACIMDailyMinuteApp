@@ -11,6 +11,7 @@ import SwiftData
 struct TextSectionView: View {
     let chapter: Int
     let section: Int
+    var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
     @Environment(AudioManager.self) private var audio
@@ -81,7 +82,8 @@ struct TextSectionView: View {
                     raw: reading.body,
                     key: .textSection(chapter: chapter, section: section),
                     design: .serif,
-                    lineSpacing: 3
+                    lineSpacing: 3,
+                    spotlight: spotlight
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
