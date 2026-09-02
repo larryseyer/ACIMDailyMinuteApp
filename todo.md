@@ -56,8 +56,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       video full screen first by design; dismissing it lands on the text.
 - [ ] **An unrecorded lesson answers the tap.** Tap Lesson 90 — dimmed, with `Available yyyy-MM-dd`
       under its title. Expected: it opens, and above the text a clock line says `Not recorded yet.
-      Audio and video available <the same date>`. The two dates must agree; both come from one
-      formatter and one anchor. The row used to be inert, so a tap did nothing at all.
+      Audio and video available <the same date>`. The two dates must agree.
 - [ ] **A day with no Daily Minute says when.** Archive tab, calendar. Pick **2026-09-10** — the row
       under the calendar reads "The Daily Minute for this day will be available on 2026-09-10." and
       tapping through shows the same sentence. Pick **2026-05-31** — "No reading was published on this
@@ -76,8 +75,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       card with no save, share or Listen control, because that passage was never published.
 - [ ] **Downloads are live now, and nobody has drawn them.** The feeds carry an archive.org
       `audio_url` on every episode that has an MP3 (158 of 165 minutes, all 85 lessons), so the
-      Today card's **Listen** control and the Listen row's swipe **Download** appeared on the phone
-      with no app change. Swipe a Listen row: expected **Mark listened** and **Download** side by
+      Today card's **Listen** control and the Listen row's swipe **Download** are live. Swipe a Listen row: expected **Mark listened** and **Download** side by
       side, then **Remove download** in its place once fetched, and a downloaded row plays from
       disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
       collapse to icons when narrow, but no one has seen them do it on this phone. The seven
@@ -121,11 +119,8 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       what `Text` did there before, so it is not a regression.
       A harness already proves the *string* is character-for-character what it was, for all 365
       lesson bodies, 1,983 corpus segments and 268 Text sections. Only the drawing is unverified.
-      ⛔ **On macOS this was broken and is now fixed — do not re-litigate it.** Every reading
-      measured zero height there, so cards collapsed and the text drew over `Add note`, the citation
-      and the word count. `tools/verify_text_measurement.sh` now holds it, and the fixed macOS build
-      was screenshotted and compared against the two he sent. **iOS was never affected**, so what is
-      left to check on the phone is unchanged.
+      ⛔ On macOS the drawing is held by `tools/verify_text_measurement.sh` and has been compared
+      against your screenshots; the phone is what is left to check.
 
 - [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
       three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
@@ -257,7 +252,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       Settings > About, because both screens render one view and the words exist in only one place.
       ⛔ Check it at 375pt: the note is long and it is the first thing a new reader meets.
 
-- [ ] **Saving still works after the unique index came off.** Tap Save on a reading, leave, come back,
+- [ ] **Saving, then deleting from the Saved tab.** Tap Save on a reading, leave, come back,
       tap again — it must save then un-save, every time. Then delete a saved row from the Saved tab by
       swiping. Nothing in the database prevents duplicate bookmarks any more; `BookmarkStore` does, and
       the Saved tab's delete was rerouted through it in this change. 381 cases hold the rule, but the

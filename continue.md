@@ -128,11 +128,9 @@ minute and they are how you find out the tree is what this file says it is:**
   words.** 182 measurements over 45 real bodies at four window widths: every reading occupies real
   height, at least one line of it, never shorter as the window narrows, and a body twenty times
   longer is more than twice as tall. **It compiles `ReadingTextMeasurement.swift` and nothing else**,
-  which is what keeps the measurement free of SwiftUI and therefore checkable at all. It exists
-  because the macOS build shipped every reading measuring **zero** — `widthTracksTextView` silently
-  discarded the width `sizeThatFits` assigned — so cards collapsed, `Add note` and the citation were
-  laid out under the header, and the text drew over them until the card's `clipShape` cut it off
-  mid-sentence. Nothing crashed and no other check could see it.
+  which is what keeps the measurement free of SwiftUI and therefore checkable at all. ⛔ A
+  reading measuring zero does not crash and no other check can see it: the card collapses and the
+  text draws over `Add note` and the citation.
 - `./tools/verify_bookmark_identity.sh` — ⛔ **the only check that guards a reader's SAVE.** 381 cases
   over `BookmarkIdentity`, and **it compiles that one file and nothing else**, which is what keeps the
   rule free of SwiftData and therefore checkable. `Bookmark` has no `id` — `itemKey` is its whole
