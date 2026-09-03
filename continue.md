@@ -32,7 +32,8 @@ Manual joins when piece E gives it a structure to resume into.
 answers with a rectangle of zero height — which is the same shape as "not laid out yet", and a retry
 loop cannot tell the two apart. It is why a search hit near the top of a section scrolled and the
 same hit two screens down silently did not. The retry budget is twelve attempts at 100ms, also
-measured: three at 150ms never once caught a freshly pushed reading in time.
+measured: three at 150ms never once caught a freshly pushed reading in time. **This lives on the iOS
+side only** (`laidOutRect(of:in:)` there and nowhere else) — see the asymmetry below.
 
 ⛔ **Every reading in this app has ONE shape, and `Views/ReadingScaffold.swift` owns it.** Four
 bands, always: header, title block (optional), body, footer. All ten render sites pass slots and
@@ -96,8 +97,9 @@ done — `firstRect` returned an empty rectangle there for anything below the fo
 never once fired. Doing it properly means scrolling from the SwiftUI side; it is on the ledger.
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
-  extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
-  is **off**, its default. No folder is chosen, its default.
+  extension is what `fatalError`s on a mismatch. It has run its one-time reader migration.
+  **iCloud sync is ON here now** — he switched it on and proved it carries a highlight both ways with
+  the Mac. No folder is chosen, its default.
   ⛔ **`devicectl device info processes` showing none of them means nothing is wrong** — the app is
   simply not open. It is a check to run *after* launching, never a way to ask what is installed.
   ⭐ **This is where he tests.** ⛔ A `devicectl install` returning
@@ -108,8 +110,13 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   `RR5DY39W4Q`, widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it
   from **Edit Widgets**. Not running is the ordinary state, not a fault. Confirm with `codesign -dv`
   and `pluginkit -mAv -p com.apple.widgetkit-extension`, which answer without launching anything.
-  iCloud sync is **off**, its default. No folder is chosen — `defaults read com.larryseyer.acimdailyminute`
-  shows no `folderCopy` key, checked after the launch. ⛔ **`build/Debug/` is the macOS product.**
+  **iCloud sync is ON here now**, and it is what makes an unentitled copy crash rather than merely
+  lack a widget — see `./build.sh` below. No folder is chosen — `defaults read com.larryseyer.acimdailyminute`
+  shows no `folderCopy` key.
+  ⛔ **A reading position of mine is in this Mac's defaults** (`readingPositions`, the Text ribbon
+  pointing at `text:5.3`) — a test fixture, harmless, and replaced the moment he reads anything in
+  the Text. `defaults delete com.larryseyer.acimdailyminute readingPositions` clears it if the
+  Read tab should start empty. ⛔ **`build/Debug/` is the macOS product.**
   `build/Debug-iphonesimulator/` also contains an `ACIMDailyMinute.app`, and a `find` that is not
   anchored hands you the wrong one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q`.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
@@ -318,39 +325,44 @@ this Mac:
 
 ## ⛔ PICK UP HERE
 
-⛔⛔ **DO NOT ASK HIM TO TEST ANYTHING.** He has parked the entire confirmation list until every
-outstanding item is spec'd, planned and implemented — "otherwise, I will just repeat myself on things
-that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
-handed over once, whole, at the end.
+⛔ **He is testing now, and the `⏸ PARKED` block in [`todo.md`](todo.md) is live rather than held.**
+He asked for it as a list and has begun working through it, so an item there may be surfaced — but
+only from that block, and only as part of the list. **Never invent a new thing for him to check while
+work is still going in.** An item leaves the block when he confirms it; an item he half-confirms is
+**narrowed to what is left**, not closed.
 
 Verify everything else without him: `swiftc` harnesses against real bundled data, the sixteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
 store migration, real feed payloads. **Run the sixteen checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
-⛔ **A screen can also be driven from here, and it is worth the trouble.** The signed Mac build takes
-synthetic clicks — `System Events` for the tab bar and the shelf picker, a small `CGEvent` tool for a
-row inside a SwiftUI `List`, `screencapture -R` for the result. That is how the ribbon was taken end
-to end without him, and it found a defect no harness could: a rectangle that comes back empty.
-⛔ **Copying a fresh bundle into `/Applications` makes macOS ask again for the App Group**, as
-"access data from other apps". **Answer Allow.** Denying it makes `sharedModelContainer` `fatalError`
-at launch, and the crash report blames SwiftData rather than the answer that caused it;
-`tccutil reset SystemPolicyAppData com.larryseyer.acimdailyminute` puts the question back.
+⛔ **A screen can be driven from here, and it earns its keep — but it is not reliable.** The Mac
+build takes synthetic clicks: `System Events` for the tab bar and the shelf picker, a small `CGEvent`
+tool for a row inside a SwiftUI `List`, `screencapture -R` for the result. That is how the ribbon was
+taken end to end without him, and it found a defect no harness could reach. **Its failure mode is
+that this terminal reclaims focus after every command**, so the app window sits behind it and the
+clicks land on the terminal — a capture that shows this transcript means exactly that, not a broken
+screen. `open -a` does not reliably raise it. When it will not come forward, stop and say so rather
+than spending the session on it.
+⛔ **If macOS asks for "access data from other apps", the copy in `/Applications` is the WRONG
+BUILD** — that is the tell, not a question to answer. A properly signed copy owns its App Group and
+never asks. Check `codesign -dv` first; see `./build.sh` below for what goes wrong and how badly.
 
 ⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
 [`todo.md`](todo.md) holds the one thing still moving on its own: two catch-up gaps the nightly run
 fills one per night. Read them off the feed's archive dates; nothing needs a hand. Do not re-open
 the hosting decision.
 
-⏸ **The standardized reading layout is PAUSED and is his to resume** — the `⏸ PAUSED` block of
-[`todo.md`](todo.md) holds the decisions he made. Its first piece is partly standing already: one
-shared `CardHeaderRow` across the three cards, audio-first with the play control leftmost. What is
-left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
-structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
+⏸ **The standardized reading layout is PAUSED and is his to resume.** Piece A — the scaffold — is
+built and guarded. The four that remain are D (`Archive` becomes `Video`), E (structure the Manual),
+B (media index) and C (Listen as activity), in that order, and the `⏸ PAUSED` block of
+[`todo.md`](todo.md) holds the decisions he made about each. ⛔ Do not restart this without him; it
+stopped mid-brainstorm, not mid-build.
 
 **⭐ The ribbon is built.** The Read tab names where he stopped in the Text and in the Workbook,
-above the shelf, and following it puts that passage back at the top of the screen. It travels in the
-backup file, merging per book by the later moment.
+above the shelf; on the phone following it puts that passage back at the top of the screen, and on
+the Mac it opens the right reading at its top. It travels in the backup file, merging per book by
+the later moment.
 
 **The next piece of the reading layout is D — Archive becomes Video** — app-only, the data exists
 today, and it retires the last exemption to the no-publication-dates rule. Its decisions are in the
