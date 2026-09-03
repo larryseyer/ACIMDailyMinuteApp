@@ -2,7 +2,7 @@
 
 Native iOS, iPadOS, macOS, and watchOS app for [ACIM Daily Minute](https://www.acimdailyminute.org) — a contemplative daily reader for *A Course in Miracles*.
 
-A unified Apple-platform surface for reading today's passage, following the 365-day Workbook lessons, listening to the audio episodes, searching the full archive, and keeping your own favorites and study phrases.
+A unified Apple-platform surface for reading today's passage, following the 365-day Workbook lessons, listening to the audio episodes, searching the full archive, and keeping your own favorites, highlights and notes.
 
 ## Features
 
@@ -16,14 +16,14 @@ A unified Apple-platform surface for reading today's passage, following the 365-
 
 **Saved** — Bookmark any passage or lesson for later reading. Swipe-to-delete management.
 
-**Watched Phrases** — Track phrases from the *Course* (up to 10 terms). When a new reading contains one of your phrases, a local notification appears. Useful for study practice — follow a theme like *forgiveness* or *holy instant* across daily passages.
+**Reminders** — Local, on-device notifications only, all off by default, each with its own switch and time:
+- Daily Minute reminder
+- Daily Lesson reminder
+- Practice reminders that follow the Workbook lesson the reader is on — the longer periods morning and evening, a moment every hour, the early lessons' few short practices — laid out inside the reader's own waking hours from every lesson's own instructions (`Resources/WorkbookPractice.json`, one record per lesson with the sentence it rests on). Never more often than every half hour; never above the `.active` interruption level, so Focus and Do Not Disturb are honoured.
 
-**Notifications** — Local, on-device notifications only. Three opt-in categories:
-- Daily reading ready (default 7:00 AM local, customizable)
-- New Daily Lesson posted (Mon–Fri)
-- Watched-phrase match (on every fetch)
+Custom chime sound. A background refresh keeps the practice reminders pointed at the current lesson.
 
-All notifications off by default. Background refresh checks via scenePhase; custom notification sound.
+**Appearance** — System, Light or Dark, from Settings. Dark is the default.
 
 **Live Activities & Dynamic Island** — When today's reading arrives, a Lock Screen banner and Dynamic Island presence show the passage and lesson number. Auto-dismisses after 5 minutes. Opt-in via Settings.
 
@@ -71,7 +71,7 @@ Content is generated daily (2:00 AM local) by a separate Python pipeline that TT
 - Zero tracking. Zero analytics. Zero user data collected.
 - No ads. No in-app purchases. Free.
 - No Firebase, no crash reporting SDKs, no user accounts.
-- All notification and phrase matching is on-device.
+- All reminders are scheduled on-device.
 - App Store Privacy Label: **Data Not Collected**
 
 ## Building
@@ -119,7 +119,7 @@ ACIMDailyMinuteApp/
 │   ├── Services/                     DataService, FeedService, PodcastService,
 │   │                                 ArchiveService, AudioManager,
 │   │                                 NotificationManager, BackgroundRefreshManager,
-│   │                                 ConnectivityManager, PhraseMatcher,
+│   │                                 ConnectivityManager, PracticeReminderService,
 │   │                                 LiveActivityManager, FetchCooldown
 │   ├── Views/
 │   │   ├── Today/                    TodayView (Minute + Lesson cards)
@@ -128,12 +128,12 @@ ACIMDailyMinuteApp/
 │   │   │                             YouTubePlayerView, MiniPlayerView
 │   │   ├── Archive/                  ArchiveView, ArchiveSearchView, MacCalendarView
 │   │   ├── Saved/                    SavedView
-│   │   ├── Settings/                 SettingsView, WatchedPhrasesView,
+│   │   ├── Settings/                 SettingsView, BackupRestoreView,
 │   │   │                             PrivacyPolicyView
 │   │   └── Onboarding/               OnboardingView
-│   ├── Utilities/                    BrandColors, PlatformTypography,
+│   ├── Utilities/                    PracticePlanner, PlatformTypography,
 │   │                                 ShareTextBuilder, HashUtility,
-│   │                                 PhraseStorage
+│   │                                 Appearance
 │   ├── Resources/                    ACIMChime.caf
 │   └── Assets.xcassets
 │
