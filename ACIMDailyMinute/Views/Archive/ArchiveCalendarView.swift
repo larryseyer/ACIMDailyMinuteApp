@@ -35,7 +35,7 @@ struct ArchiveCalendarView: View {
             monthGrid
         }
         .padding(14)
-        .background(Color(white: 0.11).opacity(0.5))
+        .background(Color.acimCard)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .onChange(of: selection) { _, newValue in
             if !calendar.isDate(newValue, equalTo: visibleMonth, toGranularity: .month) {
@@ -178,7 +178,7 @@ struct ArchiveCalendarView: View {
     }
 
     /// Foreground for anything drawn on top of the accent fill.
-    private static let onAccent = Color(white: 0.07)
+    private static let onAccent = Color.acimOnGold
 
     static func dateString(from date: Date) -> String {
         let formatter = DateFormatter()

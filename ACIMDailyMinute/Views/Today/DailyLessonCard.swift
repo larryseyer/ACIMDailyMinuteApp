@@ -50,7 +50,7 @@ struct DailyLessonCard: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(white: 0.11).opacity(0.5))
+        .background(Color.acimCard)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 

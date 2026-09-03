@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
+    @AppStorage(Appearance.key) private var appearance = Appearance.dark.rawValue
     /// The Daily Minute reminder. The keys predate the split into two
     /// reminders and keep their names, so a reader who had the one reminder
     /// on still has one at the same time — about the minute.
@@ -23,6 +24,14 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Appearance") {
+                    Picker("Appearance", selection: $appearance) {
+                        ForEach(Appearance.allCases) { Text($0.label).tag($0.rawValue) }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                }
+
                 Section {
                     Toggle("Daily Minute", isOn: $minuteReminderEnabled)
                     if minuteReminderEnabled {

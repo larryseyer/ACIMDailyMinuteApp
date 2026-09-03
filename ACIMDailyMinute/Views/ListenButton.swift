@@ -29,7 +29,7 @@ struct ListenButton: View {
                 .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .background(Color.white.opacity(0.08), in: Capsule())
+                .background(Color.acimChip, in: Capsule())
         }
         .buttonStyle(.plain)
         // The capsule renders at its natural size; the tap target is padded out

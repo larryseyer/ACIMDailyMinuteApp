@@ -17,7 +17,7 @@ struct LessonRow: View {
     /// dim and inert, so the two states cannot drift apart.
     let availableOn: Date?
 
-    private static let accent = Color(red: 0.83, green: 0.69, blue: 0.22)
+    private static let accent = Color.acimGold
 
     private var isAvailable: Bool { availableOn == nil }
 
@@ -53,7 +53,7 @@ struct LessonRow: View {
         Text("\(lessonNumber)")
             .font(.system(size: 13, weight: .semibold, design: .rounded))
             .monospacedDigit()
-            .foregroundStyle(isAvailable ? .black : .white.opacity(0.55))
+            .foregroundStyle(isAvailable ? Color.acimOnGold : Color.secondary)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(isAvailable ? AnyShapeStyle(Self.accent) : AnyShapeStyle(.tertiary))

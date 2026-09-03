@@ -21,6 +21,9 @@ enum BackupService {
         static let lessonReminderEnabled = "lessonReminderEnabled"
         static let lessonReminderTimeInterval = "lessonReminderTimeInterval"
         static let notifyLiveActivities = "notifyLiveActivities"
+        /// Must equal `Appearance.key`; spelled out here because that type
+        /// imports SwiftUI and this service does not.
+        static let appearance = "appearance"
         static let lessonsLastWatchedIndex = "listen.lessons.lastWatchedIndex"
     }
 
@@ -297,6 +300,7 @@ enum BackupService {
             lessonReminderEnabled: bool(ReaderKey.lessonReminderEnabled),
             lessonReminderTimeInterval: double(ReaderKey.lessonReminderTimeInterval),
             notifyLiveActivities: bool(ReaderKey.notifyLiveActivities),
+            appearance: defaults.string(forKey: ReaderKey.appearance),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
                 == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex),
             readingPositions: positions.isEmpty ? nil : positions
@@ -319,6 +323,9 @@ enum BackupService {
         let defaults = UserDefaults.standard
         if let value = settings.notifyLiveActivities {
             defaults.set(value, forKey: ReaderKey.notifyLiveActivities)
+        }
+        if let value = settings.appearance {
+            defaults.set(value, forKey: ReaderKey.appearance)
         }
         if let value = settings.lessonsLastWatchedIndex {
             defaults.set(value, forKey: ReaderKey.lessonsLastWatchedIndex)
