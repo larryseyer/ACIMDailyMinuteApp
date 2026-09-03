@@ -32,9 +32,8 @@ struct AboutView: View {
                 .padding(12)
         }
         .frame(width: 460, height: 620)
-        .background(Color(white: 0.08))
+        .background(Color.acimCard)
         .background(QuittableSheet())
-        .preferredColorScheme(.dark)
     }
 
     // MARK: - Header
@@ -62,7 +61,7 @@ struct AboutView: View {
                     .interpolation(.high)
             } else {
                 RoundedRectangle(cornerRadius: 22)
-                    .fill(Color(white: 0.15))
+                    .fill(Color.acimChip)
             }
         }
     }
@@ -128,7 +127,7 @@ struct AboutView: View {
             Spacer()
         }
         .padding(12)
-        .background(Color(white: 0.13).opacity(0.7))
+        .background(Color.acimChip)
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 
@@ -150,7 +149,7 @@ struct AboutView: View {
                 .fontWeight(.medium)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 6)
-                .background(Color(white: 0.18))
+                .background(Color.acimChip)
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -183,7 +182,7 @@ struct AboutView: View {
             Image(systemName: "xmark.circle.fill")
                 .font(.system(size: 18))
                 .foregroundStyle(.secondary)
-                .background(Circle().fill(Color(white: 0.08)))
+                .background(Circle().fill(Color.acimCard))
         }
         .buttonStyle(.plain)
         // Escape closes the sheet on its own. Bound to `.cancelAction`, this

@@ -82,7 +82,7 @@ struct OnboardingView: View {
                     .padding(.vertical, 14)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(red: 0.83, green: 0.69, blue: 0.22))
+            .tint(Color.acimGold)
             .padding(.horizontal, 40)
             .padding(.top, 12)
             .padding(.bottom, 28)
@@ -149,7 +149,7 @@ struct OnboardingView: View {
                     ForEach(0..<pages.count, id: \.self) { index in
                         Circle()
                             .fill(index == currentPage
-                                  ? Color(red: 0.83, green: 0.69, blue: 0.22)
+                                  ? Color.acimGold
                                   : .gray.opacity(0.4))
                             .frame(width: 8, height: 8)
                     }
@@ -189,12 +189,12 @@ private struct OnboardingPage: View {
 
             Image(systemName: systemImage)
                 .font(.system(size: 72))
-                .foregroundStyle(Color(red: 0.83, green: 0.69, blue: 0.22)) // #d4af37
+                .foregroundStyle(Color.acimGold)
 
             Text(title)
                 .font(.acimTitle)
                 .fontWeight(.bold)
-                .foregroundStyle(Color(red: 0.83, green: 0.69, blue: 0.22))
+                .foregroundStyle(Color.acimGold)
                 .multilineTextAlignment(.center)
 
             Text(description)
@@ -216,7 +216,7 @@ private struct OnboardingPage: View {
                         .padding(.vertical, 14)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Color(red: 0.83, green: 0.69, blue: 0.22))
+                .tint(Color.acimGold)
                 .padding(.horizontal, 40)
                 .padding(.top, 8)
             }

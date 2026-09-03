@@ -160,7 +160,7 @@ struct ContentView: View {
 private struct MacBottomTabBar: View {
     @Binding var selectedTab: Int
 
-    private static let accent = Color(red: 0.83, green: 0.69, blue: 0.22)
+    private static let accent = Color.acimGold
 
     private struct Item: Identifiable {
         let id: Int

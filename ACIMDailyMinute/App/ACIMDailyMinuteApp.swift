@@ -55,6 +55,7 @@ final class OrientationController: NSObject, UIApplicationDelegate {
 @main
 struct ACIMDailyMinuteApp: App {
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(Appearance.key) private var appearance = Appearance.dark.rawValue
 #if os(iOS)
     @UIApplicationDelegateAdaptor(OrientationController.self) private var orientationController
 #endif
@@ -76,6 +77,7 @@ struct ACIMDailyMinuteApp: App {
     init() {
         let defaultReminderTime = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
         UserDefaults.standard.register(defaults: [
+            Appearance.key: Appearance.dark.rawValue,
             "notifyLiveActivities": false,
             // `dailyReminder*` is the Daily Minute reminder. The keys predate
             // the split and keep their names so a reader who had the one
@@ -95,7 +97,7 @@ struct ACIMDailyMinuteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.dark)
+                .preferredColorScheme((Appearance(rawValue: appearance) ?? .dark).colorScheme)
                 #if os(macOS)
                 .frame(minWidth: 420, minHeight: 640)
                 #endif

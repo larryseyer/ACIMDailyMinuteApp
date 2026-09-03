@@ -126,6 +126,8 @@ struct BackupDocument: Codable, Equatable, Sendable {
         var lessonReminderEnabled: Bool?
         var lessonReminderTimeInterval: Double?
         var notifyLiveActivities: Bool?
+        /// The raw value of the reader's appearance choice.
+        var appearance: String?
         var lessonsLastWatchedIndex: Int?
         /// The reader's ribbons, book → position.
         ///

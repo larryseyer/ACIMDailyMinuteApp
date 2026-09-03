@@ -51,7 +51,7 @@ struct NoteEditorView: View {
                 TextEditor(text: $text)
                     .font(.system(.body, design: .serif))
                     .scrollContentBackground(.hidden)
-                    .background(Color.white.opacity(0.06))
+                    .background(Color.acimChip)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .focused($isFocused)
                     .frame(minHeight: 180)

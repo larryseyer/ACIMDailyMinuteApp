@@ -15,7 +15,7 @@ struct SaveButton: View {
     let isSaved: Bool
     let action: () -> Void
 
-    private static let accent = Color(red: 0.83, green: 0.69, blue: 0.22)
+    private static let accent = Color.acimGold
 
     var body: some View {
         Button(action: action) {
@@ -31,7 +31,7 @@ struct SaveButton: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(
-                    isSaved ? Self.accent.opacity(0.15) : Color.white.opacity(0.08),
+                    isSaved ? Self.accent.opacity(0.15) : Color.acimChip,
                     in: Capsule()
                 )
         }

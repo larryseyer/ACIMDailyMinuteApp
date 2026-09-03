@@ -26,7 +26,7 @@ struct NoteRow: View {
     private var rowContent: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "square.and.pencil")
-                .foregroundStyle(Color(red: 0.83, green: 0.69, blue: 0.22))
+                .foregroundStyle(Color.acimGold)
                 .font(.title3)
                 .frame(width: 28, alignment: .center)
                 .padding(.top, 2)

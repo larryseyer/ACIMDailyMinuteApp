@@ -106,7 +106,7 @@ struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingB
                     .font(.caption2)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color.white.opacity(0.08))
+                    .background(Color.acimChip)
                     .clipShape(Capsule())
                     .foregroundStyle(.secondary)
             }
