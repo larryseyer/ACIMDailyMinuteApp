@@ -118,6 +118,15 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
 ⛔ **A green `./build.sh` proves less than it looks like it does:**
 - `./build.sh` = three targets, **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
   that binary has no entitlements, cannot open the App Group, and its widget is invisible to the system.
+  ⛔⛔ **Now that iCloud sync exists, copying that product into `/Applications` CRASHES the app**, and
+  the crash names CloudKit rather than the mistake: with sync switched on, `NSCloudKitMirroringDelegate`
+  asks for a `CKContainer` the unentitled process may not have, and CloudKit traps on a background
+  queue — `EXC_BREAKPOINT` in `PFCloudKitContainerProvider containerWithIdentifier:options:`. The
+  tell before the crash is macOS asking for **"access data from other apps"**: a properly signed copy
+  owns the App Group and never asks. **Check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q` before
+  copying anything into `/Applications`** — `Signature=adhoc` and `TeamIdentifier=not set` is
+  `build.sh`'s output, and running `./build.sh` after the signed build overwrites `build/Debug/` with
+  it.
 - `./both.sh` = the above **plus install/launch on the sim and the phone**. It drives the sim.
 - `./bu.sh "msg"` is **not a build**: `git add .` + commit + push + Dropbox zip.
 - **Phone only, no sim:** `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination
