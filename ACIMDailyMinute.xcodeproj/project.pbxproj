@@ -115,6 +115,7 @@
 		AA000001615 /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
 		AA000001616 /* ReadingNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002616 /* ReadingNavigation.swift */; };
 		AA000001617 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
+		AA000001618 /* ReadingTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002618 /* ReadingTime.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
@@ -280,6 +281,7 @@
 		AA000002615 /* CrossReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossReference.swift; sourceTree = "<group>"; };
 		AA000002616 /* ReadingNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingNavigation.swift; sourceTree = "<group>"; };
 		AA000002617 /* CitationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationButton.swift; sourceTree = "<group>"; };
+		AA000002618 /* ReadingTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTime.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 				AA000002350 /* PunctuationSpacing.swift */,
 				AA000002360 /* Citation.swift */,
 				AA000002615 /* CrossReference.swift */,
+				AA000002618 /* ReadingTime.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -907,6 +910,7 @@
 				AA000001615 /* CrossReference.swift in Sources */,
 				AA000001616 /* ReadingNavigation.swift in Sources */,
 				AA000001617 /* CitationButton.swift in Sources */,
+				AA000001618 /* ReadingTime.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
