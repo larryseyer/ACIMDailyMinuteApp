@@ -1,5 +1,6 @@
 #!/bin/bash
-# Proves a card's header keeps its words whole and its controls anchored.
+# Proves every reading in this app has one shape: the header keeps its words
+# whole, its controls stay anchored, and no surface assembles its own bands.
 #
 # What this guards is the STRIP ABOVE THE READING, against a failure that looks
 # like nothing at all. When a label and its controls want more width than the
@@ -140,6 +141,25 @@ MainActor.assumeIsolated {
         }
     }
 
+    // ⛔ Every eyebrow the app draws, at the narrowest card it can be drawn in.
+    // The band is lineLimit(1) with fixedSize: given too little width it breaks
+    // the words rather than wrapping or shrinking, and nothing warns. A string
+    // added to a surface without being added here is the failure this catches.
+    let eyebrows = [
+        "Daily Minute", "Lesson 365", "Introduction", "Manual", "Preface",
+        "Chapter 31", "Text", "Workbook for Students", "Manual for Teachers",
+        "A Course in Miracles"
+    ]
+    for eyebrow in eyebrows {
+        let f = layout(label: eyebrow, listen: 80, width: 303)
+        guard let all = f["all"] else {
+            check(false, "eyebrow \(eyebrow.debugDescription) did not lay out")
+            continue
+        }
+        check(abs(all.height - reference) < 2,
+              "eyebrow \(eyebrow.debugDescription) is \(all.height)pt, not \(reference)pt — it wrapped at 303pt")
+    }
+
     if failures == 0 {
         print("\(checks) checks, the header keeps its words and Save stays put")
         print("OK")
@@ -156,3 +176,59 @@ swiftc -O \
     -o "$WORK/verify"
 
 "$WORK/verify"
+
+# ⛔ The band order lives in ONE file. These greps are the half of the check a
+# layout harness cannot do: they prove no surface went back to assembling its
+# own bands, which is how ten render sites drifted apart in the first place.
+VIEWS="$REPO/ACIMDailyMinute/Views"
+
+# 1. Every reading surface draws through the scaffold.
+SURFACES="
+Today/DailyMinuteCard.swift
+Today/DailyLessonCard.swift
+Today/CorpusReadingCard.swift
+Archive/ArchivedReadingCard.swift
+Lessons/LessonDetailView.swift
+Lessons/WorkbookIntroductionView.swift
+Text/TextSectionView.swift
+Manual/ManualSegmentView.swift
+"
+for surface in $SURFACES; do
+    if ! grep -q 'ReadingScaffold(' "$VIEWS/$surface"; then
+        echo "FAIL: $surface draws a reading without ReadingScaffold"
+        exit 1
+    fi
+done
+
+# 2. Only the scaffold names CardHeaderRow. A surface reaching past it to the
+#    header is a surface that can put the other bands anywhere.
+HEADER_USERS="$(grep -rln 'CardHeaderRow(' "$VIEWS" | grep -v 'ReadingScaffold.swift' | grep -v 'CardHeaderRow.swift' || true)"
+if [ -n "$HEADER_USERS" ]; then
+    echo "FAIL: these reach past the scaffold to the header directly:"
+    echo "$HEADER_USERS"
+    exit 1
+fi
+
+# 3. Save belongs in the header, never in a nav toolbar. Four screens used to
+#    put it there, which is why a reader found it in a different place
+#    depending on how they arrived at the same lesson.
+TOOLBAR_SAVE="$(grep -rl 'SaveButton' "$VIEWS" --include='*.swift' \
+    | xargs grep -ln 'ToolbarItem' 2>/dev/null || true)"
+if [ -n "$TOOLBAR_SAVE" ]; then
+    echo "FAIL: Save is back in a nav toolbar in:"
+    echo "$TOOLBAR_SAVE"
+    exit 1
+fi
+
+# 4. Nobody hand-rolls a Listen control. Three surfaces did, at a different
+#    font and padding than the shared one.
+INLINE_LISTEN="$(grep -rln 'Label("Listen", systemImage:' "$VIEWS" \
+    | grep -v 'ListenButton.swift' || true)"
+if [ -n "$INLINE_LISTEN" ]; then
+    echo "FAIL: a Listen control is hand-rolled in:"
+    echo "$INLINE_LISTEN"
+    exit 1
+fi
+
+echo "the scaffold owns the bands: 8 surfaces, one header, no toolbar Save, no hand-rolled Listen"
+echo "OK"
