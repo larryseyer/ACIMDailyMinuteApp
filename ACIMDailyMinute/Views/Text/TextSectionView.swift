@@ -43,12 +43,8 @@ struct TextSectionView: View {
                 }
             }
         }
-        .navigationTitle(chapter == 0 ? "Preface" : "Chapter \(chapter)")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-            }
-        }
+        // The nav bar names the BOOK; the eyebrow names the place inside it.
+        .navigationTitle("Text")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -57,48 +53,48 @@ struct TextSectionView: View {
     private func content(_ reading: CorpusTextSection) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 8) {
-                    Text(reading.chapterTitle)
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                    Spacer(minLength: 8)
-                    if let stem = CitationResolver.stem(
-                        for: .textSection(chapter: chapter, section: section)
-                    ) {
-                        Text(stem)
-                            .font(.caption.monospaced())
-                            .foregroundStyle(.tertiary)
-                            .accessibilityLabel("Citation \(stem)")
+                ReadingScaffold(
+                    eyebrow: chapter == 0 ? "Preface" : "Chapter \(chapter)",
+                    footer: ReadingFooter(
+                        // Printed, never tappable: it names the passage the
+                        // reader is already looking at.
+                        citation: CitationResolver.stem(
+                            for: .textSection(chapter: chapter, section: section)
+                        ),
+                        measure: ReadingTime.describe(wordCount: reading.wordCount)
+                    )
+                ) {
+                } trailing: {
+                    ShareButton(text: ShareTextBuilder.textSectionShareText(reading))
+                    SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                } titleBlock: {
+                    VStack(alignment: .leading, spacing: 4) {
+                        // The chapter's name cannot go in the eyebrow: they
+                        // reach 35 characters and that band breaks its words
+                        // rather than wrapping. Here it wraps freely.
+                        if chapter != 0 {
+                            Text(reading.chapterTitle)
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        Text(reading.sectionTitle)
+                            .font(.system(.title2, design: .serif).weight(.semibold))
+                            .foregroundStyle(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                }
-
-                Text(reading.sectionTitle)
-                    .font(.system(.title2, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                } body: {
+                    AnnotatableReadingText(
+                        raw: reading.body,
+                        key: .textSection(chapter: chapter, section: section),
+                        design: .serif,
+                        lineSpacing: 3,
+                        spotlight: spotlight
+                    )
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
-
-                AnnotatableReadingText(
-                    raw: reading.body,
-                    key: .textSection(chapter: chapter, section: section),
-                    design: .serif,
-                    lineSpacing: 3,
-                    spotlight: spotlight
-                )
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
-
-                HStack {
-                    ShareLink(item: ShareTextBuilder.textSectionShareText(reading)) {
-                        Image(systemName: "square.and.arrow.up")
-                    }
-                    .accessibilityLabel("Share")
-                    Spacer()
                 }
-                .font(.title3)
-                .foregroundStyle(.primary)
-                .buttonStyle(.plain)
-                .padding(.top, 4)
 
                 neighbours
             }
