@@ -171,6 +171,8 @@
 		AA000001703 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
 		AA000001704 /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
 		AA000001705 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
+		AA000001706 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
+		AA000001707 /* PracticeReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002707 /* PracticeReminderService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,6 +347,8 @@
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
 		AA000002704 /* PracticePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlanner.swift; sourceTree = "<group>"; };
 		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
+		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
+		AA000002707 /* PracticeReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeReminderService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -459,6 +463,8 @@
 				AA000002611 /* CorpusSearchService.swift */,
 				AA000002622 /* ReadingPositionStore.swift */,
 				AA000002701 /* PracticeAnchorStore.swift */,
+				AA000002706 /* WorkbookPracticeCatalog.swift */,
+				AA000002707 /* PracticeReminderService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -939,6 +945,8 @@
 				AA000001702 /* Appearance.swift in Sources */,
 				AA000001703 /* ACIMColors.swift in Sources */,
 				AA000001704 /* PracticePlanner.swift in Sources */,
+				AA000001706 /* WorkbookPracticeCatalog.swift in Sources */,
+				AA000001707 /* PracticeReminderService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

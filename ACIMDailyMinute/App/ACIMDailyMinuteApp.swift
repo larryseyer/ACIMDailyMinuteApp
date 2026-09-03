@@ -85,7 +85,12 @@ struct ACIMDailyMinuteApp: App {
             "dailyReminderEnabled": false,
             "dailyReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate,
             "lessonReminderEnabled": false,
-            "lessonReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate
+            "lessonReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate,
+            PracticeReminderService.Key.enabled: false,
+            PracticeReminderService.Key.windowStart: (Calendar.current.date(bySettingHour: 7, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
+            PracticeReminderService.Key.windowEnd: (Calendar.current.date(bySettingHour: 22, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
+            PracticeReminderService.Key.ownStartLesson: 0,
+            PracticeReminderService.Key.ownStartDay: ""
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()
@@ -132,6 +137,13 @@ struct ACIMDailyMinuteApp: App {
                     // reader's folder.
                     if newPhase != .active {
                         FolderCopyService.flush()
+                    }
+                    // The practice reminders are laid out three days ahead
+                    // and go stale as the lesson moves on; every return to
+                    // the foreground lays them out again. On macOS, which has
+                    // no background refresh, this is the only path.
+                    if newPhase == .active {
+                        PracticeReminderService.reschedule(in: sharedModelContainer.mainContext)
                     }
                 }
         }

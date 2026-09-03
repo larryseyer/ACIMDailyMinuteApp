@@ -20,6 +20,14 @@ struct SettingsView: View {
     /// build the reader store with mirroring, named from there so the two
     /// can never drift apart. Written here, acted on at the next launch.
     @AppStorage(SharedModelContainer.syncEnabledKey) private var iCloudSyncEnabled = false
+    @AppStorage(PracticeReminderService.Key.enabled) private var practiceEnabled = false
+    @AppStorage(PracticeReminderService.Key.windowStart) private var practiceStartInterval: Double = Date().timeIntervalSinceReferenceDate
+    @AppStorage(PracticeReminderService.Key.windowEnd) private var practiceEndInterval: Double = Date().timeIntervalSinceReferenceDate
+    @AppStorage(PracticeReminderService.Key.ownStartLesson) private var practiceOwnStartLesson = 0
+    @AppStorage(PracticeReminderService.Key.ownStartDay) private var practiceOwnStartDay = ""
+    @Environment(\.modelContext) private var modelContext
+    /// "Lesson 95 · five minutes every hour" — what the reminders name today.
+    @State private var todayLine = ""
 
     var body: some View {
         NavigationStack {
@@ -49,18 +57,79 @@ struct SettingsView: View {
                             displayedComponents: .hourAndMinute
                         )
                     }
-                    Button("Send test notification") {
-                        Task { await NotificationManager.shared.fireTest() }
-                    }
                 } header: {
                     Text("Reminders")
                 } footer: {
-                    Text("Each arrives at the same time every day. Reminders yield to Focus and Do Not Disturb.")
+                    Text("Each arrives at the same time every day.")
                 }
                 .onChange(of: minuteReminderEnabled) { _, _ in applyMinuteReminder() }
                 .onChange(of: minuteReminderTimeInterval) { _, _ in applyMinuteReminder() }
                 .onChange(of: lessonReminderEnabled) { _, _ in applyLessonReminder() }
                 .onChange(of: lessonReminderTimeInterval) { _, _ in applyLessonReminder() }
+
+                Section {
+                    Toggle("Follow the lesson's practice", isOn: $practiceEnabled)
+                    if practiceEnabled {
+                        DatePicker(
+                            "Day begins",
+                            selection: Self.timeBinding($practiceStartInterval),
+                            displayedComponents: .hourAndMinute
+                        )
+                        DatePicker(
+                            "Day ends",
+                            selection: Self.timeBinding($practiceEndInterval),
+                            displayedComponents: .hourAndMinute
+                        )
+                        LabeledContent("Today") {
+                            Text(todayLine)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        }
+                        Picker("Which lesson", selection: followsOwnPlace) {
+                            Text("Today's published lesson").tag(false)
+                            Text("My own place").tag(true)
+                        }
+                        if practiceOwnStartLesson > 0 {
+                            Stepper(
+                                "I am on lesson \(practiceOwnStartLesson)",
+                                value: $practiceOwnStartLesson,
+                                in: 1...365
+                            )
+                        }
+                    }
+                    Button("Send test notification") {
+                        Task { await NotificationManager.shared.fireTest() }
+                    }
+                } header: {
+                    Text("Practice reminders")
+                } footer: {
+                    // The Workbook sets each lesson's own cadence — twice a day
+                    // at first, every half hour by Lesson 20, the first five
+                    // minutes of every hour from Lesson 93 — and the reminders
+                    // follow it. What the reader chooses here is the day the
+                    // cadence fits inside.
+                    Text("Each Workbook lesson asks for its own practice — a longer period morning and evening, a moment every hour, a few short ones through the day — and these reminders follow the lesson you are on. Hourly reminders fall between the times your day begins and ends.\n\nReminders yield to Focus and Do Not Disturb. They are laid out three days ahead and refreshed whenever you open the app.")
+                }
+                .onChange(of: practiceEnabled) { _, _ in reschedulePractice() }
+                .onChange(of: practiceStartInterval) { _, _ in
+                    keepWindowUsable()
+                    reschedulePractice()
+                }
+                .onChange(of: practiceEndInterval) { _, _ in
+                    keepWindowUsable()
+                    reschedulePractice()
+                }
+                .onChange(of: practiceOwnStartLesson) { _, lesson in
+                    // Saying "I am on lesson N" is said today; the day is the
+                    // other half of the reader's place.
+                    if lesson > 0 {
+                        practiceOwnStartDay = PracticeReminderService.localDayFormatter.string(from: Date())
+                    } else {
+                        practiceOwnStartDay = ""
+                    }
+                    reschedulePractice()
+                }
+                .task { refreshTodayLine() }
 
                 Section("Onboarding") {
                     Button("Replay introduction") {
@@ -164,6 +233,52 @@ struct SettingsView: View {
             get: { Date(timeIntervalSinceReferenceDate: interval.wrappedValue) },
             set: { interval.wrappedValue = $0.timeIntervalSinceReferenceDate }
         )
+    }
+
+    /// "My own place" is on when a start lesson is set. Switching it on
+    /// starts from the lesson the reminders would name anyway, so nothing
+    /// jumps; switching it off returns to the published sequence.
+    private var followsOwnPlace: Binding<Bool> {
+        Binding(
+            get: { practiceOwnStartLesson > 0 },
+            set: { own in
+                practiceOwnStartLesson = own ? (PracticeReminderService.currentLesson() ?? 1) : 0
+            }
+        )
+    }
+
+    /// The end is kept at least an hour after the start, because a window
+    /// shorter than that holds no hourly reminder and the two pickers would
+    /// otherwise look as though they promised one.
+    private func keepWindowUsable() {
+        let calendar = Calendar.current
+        let start = calendar.dateComponents([.hour, .minute], from: Date(timeIntervalSinceReferenceDate: practiceStartInterval))
+        let end = calendar.dateComponents([.hour, .minute], from: Date(timeIntervalSinceReferenceDate: practiceEndInterval))
+        let startMinutes = (start.hour ?? 0) * 60 + (start.minute ?? 0)
+        let endMinutes = (end.hour ?? 0) * 60 + (end.minute ?? 0)
+        guard endMinutes < startMinutes + 60 else { return }
+        let pushed = min(startMinutes + 60, 23 * 60 + 59)
+        if let date = calendar.date(
+            bySettingHour: pushed / 60, minute: pushed % 60, second: 0,
+            of: Date(timeIntervalSinceReferenceDate: practiceEndInterval)
+        ) {
+            practiceEndInterval = date.timeIntervalSinceReferenceDate
+        }
+    }
+
+    private func reschedulePractice() {
+        PracticeReminderService.reschedule(in: modelContext)
+        refreshTodayLine()
+    }
+
+    private func refreshTodayLine() {
+        PracticeReminderService.seedAnchor(from: modelContext)
+        guard let lesson = PracticeReminderService.currentLesson() else {
+            todayLine = "No lesson yet"
+            return
+        }
+        let cadence = WorkbookPracticeCatalog.record(for: lesson).map(PracticePlanner.cadenceSummary) ?? ""
+        todayLine = cadence.isEmpty ? "Lesson \(lesson)" : "Lesson \(lesson) · \(cadence)"
     }
 
     private func applyMinuteReminder() {
