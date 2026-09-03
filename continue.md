@@ -13,8 +13,10 @@ mine is running.
 
 ⛔ **His five findings from the testing pass are built, and the `⏸ PARKED` block's first item is
 what only his eyes can settle about them.** The version reads `1.0`; the five introduction cards carry
-his copy verbatim (three spellings repaired, and "Daily Messages" set as "Daily Minutes", which he can
-veto); Settings > Appearance offers System / Light / Dark with Dark the default and a palette that
+his copy, **broken a sentence to a line with literal `\n`** — the breaks are his, so a wrap he did not
+set is a defect — with three spellings repaired and "Daily Messages" set as "Daily Minutes", which he
+can veto; on the Mac the introduction's chevrons stand at the sides, halfway up and 34pt, with the
+dots at the foot; Settings > Appearance offers System / Light / Dark with Dark the default and a palette that
 resolves per appearance (`Views/ACIMColors.swift`, four colorsets, AccentColor darker in Light); the
 Daily Minute and the Daily Lesson each have a reminder with a switch and a time of their own; the
 watched phrases are gone whole, with the fetch-driven "new minute / new lesson" alerts, which would
@@ -55,7 +57,7 @@ Settings sheet, a new window asking the system, came up dark. `Appearance.apply`
 `nil` there really do return to the system; the App calls it on appear, on change and on every
 return to the foreground. The introduction forces dark for its own subtree with
 `.environment(\.colorScheme, .dark)` for the same reason: a scheme handed to the window would have
-outlived the cover. He confirmed the fix on the Mac; the phone carries it.
+outlived the cover. Both machines carry it.
 
 ⛔ **A reminder tap lands where a URL would.** `NotificationDelegate.didReceive` posts
 `.reminderTapped` with a `DeepLinkRoute`, and `ContentView.follow(_:)` is the one switch both a URL
@@ -134,15 +136,14 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — the phone and the Mac both carry the current commit.** `./build.sh`, the arm64
-device build and the seventeen checks are green. The phone was locked when the build was installed,
-so it has not been launched there since. The Mac copy launched, registered its widget, seeded
-`practiceAnchorLesson = 85` from the store on its first foreground, and — with the practice switch
-on for one terminal-launched run, then off again — handed the notification center **5 reminders for
-Lesson 85: today's evening session, then morning and evening for Friday and for Saturday**, which is
-a Review II lesson (two sessions, no clock) with the morning already past and the weekend repeating
-Friday. That line is `[PracticeReminders] …` on stdout in a Debug build; `open -a` swallows it, so
-launch the binary inside the bundle from a terminal to read it.
+**Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
+arm64 device build and the seventeen checks are green. On the Mac the widget is registered and
+`practiceAnchorLesson` holds the newest lesson from the store. **The plan the app hands the
+notification center is one line, `[PracticeReminders] N planned, <first> … <last>`, on stdout of a
+Debug build**; `open -a` swallows stdout, so launch the binary inside the bundle from a terminal to
+read it, with the practice switch on. For a Review II lesson (two sessions, no clock) in the
+afternoon it reads five: the evening, then morning and evening for each of the next two days, a
+weekend repeating Friday.
 
 ⛔ **A reading is scrolled to on iOS and never on macOS, and the asymmetry is the fix rather than a
 gap.** A `UITextView` has its own scrolling switched off, so asking the enclosing scroller to bring a
