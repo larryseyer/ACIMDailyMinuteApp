@@ -80,6 +80,11 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
       collapse to icons when narrow, but no one has seen them do it on this phone. The seven
       March minutes with no recording show no Download, by design.
+- [ ] ⛔ **First: a resumed reading must not draw over its own title block.** Follow
+      `Continue reading` into a Text section on the Mac and on the phone. The body overlapping
+      `HEALING AND WHOLENESS / The Voice for God` is the failure; it came from setting the scroll
+      position underneath SwiftUI, and the replacement asks the scroller instead. **Nobody has seen
+      the replacement work.**
 - [ ] **The ribbon, on the phone.** Read tab > Text. Open a section, scroll a screen or two in,
       leave it. Expected: `Continue reading` above the chapter list naming that section, and
       tapping it puts the passage you stopped at back at the top of the screen. The same for a

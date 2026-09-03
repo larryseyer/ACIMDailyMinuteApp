@@ -82,9 +82,18 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — the phone and the Mac both carry everything, up to and including the ribbon.**
-`./build.sh`, the arm64 device build and the sixteen checks are green, and the current build is
-installed on both.
+**Build state — `/Applications` on this Mac carries the current commit. The phone is one commit
+behind and owes an install**, the one that fixes a resumed reading drawing its body over its title
+block. `./build.sh`, the arm64 device build and the sixteen checks are green.
+```
+xcrun devicectl device install app --device 00008030-0004299C1410802E build/Debug-iphoneos/ACIMDailyMinute.app
+xcrun devicectl device process launch --device 00008030-0004299C1410802E com.larryseyer.acimdailyminute
+```
+
+⛔ **The macOS ribbon fix has not been seen by an eye — his or mine.** It is reasoned and it compiles;
+the overlap it removes was reproduced, the cause was measured, and the replacement asks the scroller
+rather than moving it. **Open a Text section, scroll in, leave, and follow `Continue reading`: the
+body must not draw over the title block.** That is the first thing to look at, on either platform.
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
