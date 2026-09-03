@@ -169,6 +169,8 @@
 		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		AA000001702 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
 		AA000001703 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		AA000001704 /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
+		AA000001705 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -341,6 +343,8 @@
 		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 		AA000002702 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
+		AA000002704 /* PracticePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlanner.swift; sourceTree = "<group>"; };
+		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -534,6 +538,7 @@
 				AA000002620 /* ReadingPosition.swift */,
 				AA000002621 /* ReadingKeyNaming.swift */,
 				AA000002702 /* Appearance.swift */,
+				AA000002704 /* PracticePlanner.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -631,6 +636,7 @@
 				AA000002308 /* ACIMTextSections.json */,
 				AA000002230 /* ACIMManual.json */,
 				AA000002406 /* WorkbookIntroductions.json */,
+				AA000002705 /* WorkbookPractice.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -789,6 +795,7 @@
 				AA000001308 /* ACIMTextSections.json in Resources */,
 				AA000001406 /* WorkbookIntroductions.json in Resources */,
 				AA000001230 /* ACIMManual.json in Resources */,
+				AA000001705 /* WorkbookPractice.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -931,6 +938,7 @@
 				AA000001701 /* PracticeAnchorStore.swift in Sources */,
 				AA000001702 /* Appearance.swift in Sources */,
 				AA000001703 /* ACIMColors.swift in Sources */,
+				AA000001704 /* PracticePlanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

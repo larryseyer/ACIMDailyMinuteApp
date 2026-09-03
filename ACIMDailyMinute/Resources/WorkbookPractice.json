@@ -1,0 +1,7301 @@
+[
+ {
+  "lesson": 1,
+  "sessions": [],
+  "shortPerDay": 2,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L1",
+  "evidence": "Each of the first three lessons should not be done more than twice a day, preferably morning and evening."
+ },
+ {
+  "lesson": 2,
+  "sessions": [],
+  "shortPerDay": 2,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L1",
+  "evidence": "Each of the first three lessons should not be done more than twice a day, preferably morning and evening."
+ },
+ {
+  "lesson": 3,
+  "sessions": [],
+  "shortPerDay": 2,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L1",
+  "evidence": "Each of the first three lessons should not be done more than twice a day, preferably morning and evening."
+ },
+ {
+  "lesson": 4,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L4",
+  "evidence": "Do not repeat these exercises more than three or four times during the day."
+ },
+ {
+  "lesson": 5,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L5",
+  "evidence": "Three or four times during the day is enough."
+ },
+ {
+  "lesson": 6,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L6",
+  "evidence": "the three or four practice periods which are required should be preceded by a minute or so of mind searching"
+ },
+ {
+  "lesson": 7,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L6",
+  "evidence": "the three or four practice periods which are required should be preceded by a minute or so of mind searching"
+ },
+ {
+  "lesson": 8,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L8",
+  "evidence": "This can be done four or five times during the day, unless you find it irritates you."
+ },
+ {
+  "lesson": 9,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L9",
+  "evidence": "These exercises, for which three or four practice periods are sufficient, involve looking about you"
+ },
+ {
+  "lesson": 10,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L10",
+  "evidence": "In addition, five practice periods are recommended, each involving no more than a minute or so of mind searching."
+ },
+ {
+  "lesson": 11,
+  "sessions": [],
+  "shortPerDay": 3,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L11",
+  "evidence": "Three practice periods today will probably be sufficient."
+ },
+ {
+  "lesson": 12,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L12",
+  "evidence": "Three or four times is enough for practicing the idea for today. Nor should the practice periods exceed a minute."
+ },
+ {
+  "lesson": 13,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L13",
+  "evidence": "The exercises for today, which should be done about three or four times for not more than a minute or so at most each time"
+ },
+ {
+  "lesson": 14,
+  "sessions": [],
+  "shortPerDay": 3,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L14",
+  "evidence": "The mind searching period should be short, a minute at most. Do not have more than three practice periods with today’s idea"
+ },
+ {
+  "lesson": 15,
+  "sessions": [],
+  "shortPerDay": 3,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L15",
+  "evidence": "Do not have more than three application periods for today’s idea unless you feel completely comfortable with it, and do not exceed four."
+ },
+ {
+  "lesson": 16,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L16",
+  "evidence": "Four or five practice periods are recommended, if you find them relatively effortless."
+ },
+ {
+  "lesson": 17,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L17",
+  "evidence": "Three or four specific practice periods are recommended, and no less than three are required for maximum benefit"
+ },
+ {
+  "lesson": 18,
+  "sessions": [],
+  "shortPerDay": 4,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L18",
+  "evidence": "The three or four practice periods which are recommended should be done as follows"
+ },
+ {
+  "lesson": 19,
+  "sessions": [],
+  "shortPerDay": 3,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L19",
+  "evidence": "Apart from the “as needed” application of today’s idea, at least three practice periods are required"
+ },
+ {
+  "lesson": 20,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 2,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L20",
+  "evidence": "Repeat today’s idea slowly and positively at least twice an hour today, attempting to do so every half hour."
+ },
+ {
+  "lesson": 21,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L21",
+  "evidence": "Five practice periods are urged, allowing a full minute for each."
+ },
+ {
+  "lesson": 22,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L22",
+  "evidence": "Look at the world about you at least five times today, for at least a minute each time."
+ },
+ {
+  "lesson": 23,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L23",
+  "evidence": "Besides using it throughout the day as the need arises, five practice periods are required in applying today’s idea."
+ },
+ {
+  "lesson": 24,
+  "sessions": [],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L24",
+  "evidence": "Two minutes are suggested for each of the mind searching periods which the exercises involve."
+ },
+ {
+  "lesson": 25,
+  "sessions": [],
+  "shortPerDay": 6,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L25",
+  "evidence": "Six practice periods, each of two minutes duration, are required."
+ },
+ {
+  "lesson": 26,
+  "sessions": [],
+  "shortPerDay": 6,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L26",
+  "evidence": "Six practice periods are required in applying today’s idea. A full two minutes should be attempted for each of them"
+ },
+ {
+  "lesson": 27,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L27",
+  "evidence": "It should be used at least every half hour, and more often if possible. You might try for every fifteen or twenty minutes."
+ },
+ {
+  "lesson": 28,
+  "sessions": [],
+  "shortPerDay": 6,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L28",
+  "evidence": "We will have six two minute practice periods today"
+ },
+ {
+  "lesson": 29,
+  "sessions": [],
+  "shortPerDay": 6,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L29",
+  "evidence": "In addition to the assigned practice periods, repeat the idea for today at least once an hour"
+ },
+ {
+  "lesson": 30,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L30",
+  "evidence": "Today’s idea should be applied as often as possible throughout the day."
+ },
+ {
+  "lesson": 31,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 5
+   },
+   {
+    "at": "evening",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L31",
+  "evidence": "Two longer periods of practice with the idea for today are needed, one in the morning and one at night. Three to five minutes for each of them is recommended."
+ },
+ {
+  "lesson": 32,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 5
+   },
+   {
+    "at": "evening",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L32",
+  "evidence": "For the two longer practice periods, three to five minutes are recommended, with not less than three required."
+ },
+ {
+  "lesson": 33,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 5
+   },
+   {
+    "at": "evening",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L33",
+  "evidence": "A full five minutes should be devoted to the morning and evening application."
+ },
+ {
+  "lesson": 34,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 5
+   },
+   {
+    "at": "evening",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L34",
+  "evidence": "Three longer practice periods are required for today’s exercises. One in the morning and one in the evening is advised"
+ },
+ {
+  "lesson": 35,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L35",
+  "evidence": "For each of the three five-minute practice periods today, begin by repeating today’s idea to yourself"
+ },
+ {
+  "lesson": 36,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L36",
+  "evidence": "Four three to five minute practice periods are required for today."
+ },
+ {
+  "lesson": 37,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L37",
+  "evidence": "Today’s four longer exercise periods, each to involve three to five minutes of practice"
+ },
+ {
+  "lesson": 38,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L38",
+  "evidence": "In the four longer practice periods, each preferably to last a full five minutes"
+ },
+ {
+  "lesson": 39,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 4,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L39",
+  "evidence": "In the shorter applications, which should be made some three or four times an hour and more if possible"
+ },
+ {
+  "lesson": 40,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "tenMinutes",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L40",
+  "evidence": "No long practice periods are required today, but very frequent short ones are necessary. Once every ten minutes would be highly desirable"
+ },
+ {
+  "lesson": 41,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L41",
+  "evidence": "In the morning, as soon as you get up if possible, sit quietly for some three to five minutes with your eyes closed."
+ },
+ {
+  "lesson": 42,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L42",
+  "evidence": "two three-to-five-minute longer exercise periods today, one as soon as possible after you wake, and another as close as possible to the time you go to sleep"
+ },
+ {
+  "lesson": 43,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L43",
+  "evidence": "Three five-minute practice periods are required today, one as early as possible and another as late as possible."
+ },
+ {
+  "lesson": 44,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L44",
+  "evidence": "Have at least three practice periods today, each lasting three to five minutes."
+ },
+ {
+  "lesson": 45,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L45",
+  "evidence": "Take a minute or two, as you repeat the idea throughout the day, to appreciate your mind’s holiness."
+ },
+ {
+  "lesson": 46,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L46",
+  "evidence": "Today’s exercises require at least three full five-minute practice periods, and as many shorter applications as possible."
+ },
+ {
+  "lesson": 47,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L47",
+  "evidence": "Four five-minute practice periods are necessary today, and longer and more frequent ones are urged."
+ },
+ {
+  "lesson": 48,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L48",
+  "evidence": "Today’s practice periods will be very short, very simple, and very frequent. Merely repeat the idea as often as possible."
+ },
+ {
+  "lesson": 49,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L49",
+  "evidence": "We will need at least four five-minute practice periods today, and more if possible."
+ },
+ {
+  "lesson": 50,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L50",
+  "evidence": "Twice today, morning and evening, let the idea for today sink deep into your consciousness."
+ },
+ {
+  "lesson": 51,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 52,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 53,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 54,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 55,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 56,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 57,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 58,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 59,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 60,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 5,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review I",
+  "evidence": "though each one should be practiced at least once. Devote two minutes or more to each practice period"
+ },
+ {
+  "lesson": 61,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L61",
+  "evidence": "Be sure both to begin and end the day with a practice period."
+ },
+ {
+  "lesson": 62,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L62",
+  "evidence": "Let us be glad to begin and end this day by practicing today’s idea, and to use it as frequently as possible throughout the day."
+ },
+ {
+  "lesson": 63,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 2,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L63",
+  "evidence": "We will begin the day by acknowledging it, and close the day with the thought of it in our awareness."
+ },
+ {
+  "lesson": 64,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L64",
+  "evidence": "At least once devote ten or fifteen minutes to reflecting on this with closed eyes."
+ },
+ {
+  "lesson": 65,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L65",
+  "evidence": "In the shorter practice periods, which should be undertaken at least once an hour, use this form in applying today’s idea"
+ },
+ {
+  "lesson": 66,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 2,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L66",
+  "evidence": "In the shorter practice periods, which would be most helpful today if undertaken twice an hour, this form of the application is suggested"
+ },
+ {
+  "lesson": 67,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 5,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L67",
+  "evidence": "Four or five times an hour, and perhaps even more, it would be most beneficial to remind yourself that Love created you like Itself."
+ },
+ {
+  "lesson": 68,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 3,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L68",
+  "evidence": "In addition, repeat the idea several times an hour in this form"
+ },
+ {
+  "lesson": 69,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L69",
+  "evidence": "In the shorter practice periods, which you will want to do as often as possible in view of the importance of today’s idea to you and your happiness"
+ },
+ {
+  "lesson": 70,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L70",
+  "evidence": "We are ready for two longer practice periods today, each of which should last some ten to fifteen minutes."
+ },
+ {
+  "lesson": 71,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 7,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L71",
+  "evidence": "Try to remember the idea for today some six or seven times an hour."
+ },
+ {
+  "lesson": 72,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 2,
+  "shortMinutes": 1,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L72",
+  "evidence": "One or perhaps two shorter practice periods an hour will be enough for today, since they will be somewhat longer than usual."
+ },
+ {
+  "lesson": 73,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 3,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L73",
+  "evidence": "This should be repeated several times an hour."
+ },
+ {
+  "lesson": 74,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 2,
+  "throughout": false,
+  "source": "L74",
+  "evidence": "A minute or two every half-hour, with eyes closed if possible, would be well spent on this today."
+ },
+ {
+  "lesson": 75,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "quarterHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L75",
+  "evidence": "Remind yourself every quarter of an hour or so that today is a time for special celebration."
+ },
+ {
+  "lesson": 76,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 5,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L76",
+  "evidence": "We will repeat this dedication as often as possible today; at least four or five times an hour"
+ },
+ {
+  "lesson": 77,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L77",
+  "evidence": "Our shorter practice periods will be frequent, and will also be devoted to a reminder of a simple fact."
+ },
+ {
+  "lesson": 78,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L78",
+  "evidence": "We will remember this throughout the day, and take the role assigned to us as part of God’s salvation plan, and not our own."
+ },
+ {
+  "lesson": 79,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L79",
+  "evidence": "The shorter practice periods for today will not be set by time, but by need."
+ },
+ {
+  "lesson": 80,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L80",
+  "evidence": "Repeat the idea with deep conviction as frequently as possible."
+ },
+ {
+  "lesson": 81,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 82,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 83,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 84,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 85,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 86,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 87,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 88,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 89,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 90,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review II",
+  "evidence": "The longer practice periods will follow this general form: Take about fifteen minutes for each of them"
+ },
+ {
+  "lesson": 91,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 6,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L91",
+  "evidence": "Three times today, set aside about ten minutes for a quiet time in which you try to leave your weakness behind."
+ },
+ {
+  "lesson": 92,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 20
+   },
+   {
+    "at": "evening",
+    "minutes": 20
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L92",
+  "evidence": "Let us give twenty minutes twice today to join this meeting."
+ },
+ {
+  "lesson": 93,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L93",
+  "evidence": "In our longer exercise periods today, which would be most profitable if done for the first five minutes of every waking hour"
+ },
+ {
+  "lesson": 94,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L94",
+  "evidence": "Today we will again devote the first five minutes of each waking hour to the attempt to feel the truth in you."
+ },
+ {
+  "lesson": 95,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L95",
+  "evidence": "Using the first five minutes of the hour will be particularly helpful, since it imposes firmer structure."
+ },
+ {
+  "lesson": 96,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L96",
+  "evidence": "Our hourly five minute practicing will be a search for Him within your mind."
+ },
+ {
+  "lesson": 97,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L97",
+  "evidence": "The Holy Spirit will be glad to take five minutes of each hour from your hands, and carry them around this aching world"
+ },
+ {
+  "lesson": 98,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L98",
+  "evidence": "Each hour today give Him your tiny gift of but five minutes."
+ },
+ {
+  "lesson": 99,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L99",
+  "evidence": "Remind yourself of this between the times you give five minutes to be shared with Him Who shares God’s plan with you."
+ },
+ {
+  "lesson": 100,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L100",
+  "evidence": "We will prepare ourselves for this today, in our five minute practice periods by feeling happiness arise in us according to our Father’s Will and ours."
+ },
+ {
+  "lesson": 101,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L101",
+  "evidence": "Give these five minutes gladly, to remove the heavy load you laid upon yourself with the insane belief that sin is real."
+ },
+ {
+  "lesson": 102,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L102",
+  "evidence": "Besides these hourly five minute rests, pause frequently today to tell yourself that you have now accepted happiness as your one function."
+ },
+ {
+  "lesson": 103,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L103",
+  "evidence": "Allow this one correction to be placed within your minds each waking hour today."
+ },
+ {
+  "lesson": 104,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L104",
+  "evidence": "Our longer practice periods today, the hourly five minutes given truth for your salvation, should begin with this"
+ },
+ {
+  "lesson": 105,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L105",
+  "evidence": "At least remember hourly to say the words which call on Him to give you what He wills to give, and wills you to receive."
+ },
+ {
+  "lesson": 106,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L106",
+  "evidence": "For each five minutes spent in listening a thousand minds are opened to the truth."
+ },
+ {
+  "lesson": 107,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L107",
+  "evidence": "They will increase with every gift you give of five small minutes"
+ },
+ {
+  "lesson": 108,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L108",
+  "evidence": "Then close your eyes, and for five minutes think of what you would hold out to everyone to have it yours."
+ },
+ {
+  "lesson": 109,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L109",
+  "evidence": "With each five minutes that you rest today the world is nearer waking."
+ },
+ {
+  "lesson": 110,
+  "sessions": [],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 5,
+  "throughout": true,
+  "source": "L110",
+  "evidence": "For your five minute practice periods, begin with this quotation from the text"
+ },
+ {
+  "lesson": 111,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 112,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 113,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 114,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 115,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 116,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 117,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 118,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 119,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 120,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "halfHour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review III",
+  "evidence": "Devote five minutes twice a day, or longer if you would prefer, to contemplating the ideas assigned."
+ },
+ {
+  "lesson": 121,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 10
+   },
+   {
+    "at": "evening",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L121",
+  "evidence": "We will devote ten minutes in the morning, and at night another ten, to learning how to give forgiveness and receive forgiveness too."
+ },
+ {
+  "lesson": 122,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "quarterHour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L122",
+  "evidence": "hold them firmly in your mind by your attempts to think of them at least a minute as each quarter of an hour passes by."
+ },
+ {
+  "lesson": 123,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L123",
+  "evidence": "Receive His thanks and offer yours to Him for fifteen minutes twice today."
+ },
+ {
+  "lesson": 124,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 30
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L124",
+  "evidence": "Sometime today, whenever it seems best, devote a half an hour to the thought that you are one with God."
+ },
+ {
+  "lesson": 125,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L125",
+  "evidence": "Three times today, at times most suitable for silence, give ten minutes set apart from listening to the world"
+ },
+ {
+  "lesson": 126,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L126",
+  "evidence": "Give fifteen minutes twice today to the attempt to understand today’s idea."
+ },
+ {
+  "lesson": 127,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 3,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L127",
+  "evidence": "At least three times an hour think of one who makes the journey with you, and who came to learn what you must learn."
+ },
+ {
+  "lesson": 128,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L128",
+  "evidence": "Give it ten minutes rest three times today."
+ },
+ {
+  "lesson": 129,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 10
+   },
+   {
+    "at": "evening",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L129",
+  "evidence": "Practice your willingness to make this change ten minutes in the morning and at night, and once more in between."
+ },
+ {
+  "lesson": 130,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   },
+   {
+    "at": "any",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L130",
+  "evidence": "Six times today, in thanks and gratitude, we gladly give five minutes to the thought which ends all compromise and doubt"
+ },
+ {
+  "lesson": 131,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   },
+   {
+    "at": "any",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L131",
+  "evidence": "We will devote ten minutes to this goal three times today"
+ },
+ {
+  "lesson": 132,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L132",
+  "evidence": "Begin the fifteen minute periods in which we practice twice today with this"
+ },
+ {
+  "lesson": 133,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L133",
+  "evidence": "Our two extended practice periods of fifteen minutes will begin with this"
+ },
+ {
+  "lesson": 134,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L134",
+  "evidence": "let us give a quarter of an hour twice today, and spend it with the Guide Who understands the meaning of forgiveness"
+ },
+ {
+  "lesson": 135,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L135",
+  "evidence": "For fifteen minutes twice today we rest from senseless planning, and from every thought which blocks the truth from entering our minds."
+ },
+ {
+  "lesson": 136,
+  "sessions": [
+   {
+    "at": "any",
+    "minutes": 15
+   },
+   {
+    "at": "any",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "none",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L136",
+  "evidence": "And we will give a quarter of an hour twice to ask the truth to come to us and set us free."
+ },
+ {
+  "lesson": 137,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 10
+   },
+   {
+    "at": "sleep",
+    "minutes": 10
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L137",
+  "evidence": "And so we will begin the day with this, and give ten minutes to these thoughts with which we will conclude today at night as well"
+ },
+ {
+  "lesson": 138,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L138",
+  "evidence": "We make the choice for Heaven as we wake, and spend five minutes making sure that we have made the one decision that is sane."
+ },
+ {
+  "lesson": 139,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 5
+   },
+   {
+    "at": "evening",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L139",
+  "evidence": "Five minutes in the morning and at night we will devote to dedicate our minds to our assignment for today."
+ },
+ {
+  "lesson": 140,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 5
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L140",
+  "evidence": "And we will say our prayer for healing hourly, and take a minute as the hour strikes to hear the answer to our prayer be given us"
+ },
+ {
+  "lesson": 141,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 142,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 143,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 144,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 145,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 146,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 147,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 148,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 149,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 150,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "Review IV",
+  "evidence": "Each hour of the day bring to your mind the Thought with which the day began, and spend a quiet moment with It."
+ },
+ {
+  "lesson": 151,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 15
+   },
+   {
+    "at": "sleep",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": false,
+  "source": "L151",
+  "evidence": "Spend fifteen minutes thus when you awake, and gladly give another fifteen more before you go to sleep."
+ },
+ {
+  "lesson": 152,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 5
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L152",
+  "evidence": "We think of truth alone as we arise, and spend five minutes practicing its ways, encouraging our frightened minds with this"
+ },
+ {
+  "lesson": 153,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153",
+  "evidence": "Five minutes now becomes the least we give to preparation for a day in which salvation is the only goal we have."
+ },
+ {
+  "lesson": 154,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "We practice giving Him what He would have that we may recognize His gifts to us."
+ },
+ {
+  "lesson": 155,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "And now He asks but that you think of Him a while each day, that He may speak to you and tell you of His Love"
+ },
+ {
+  "lesson": 156,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153 form",
+  "evidence": "This question should be asked a thousand times a day, till certainty has ended doubting and established peace."
+ },
+ {
+  "lesson": 157,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "He will direct your practicing today, for what you ask for now is what He wills."
+ },
+ {
+  "lesson": 158,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153 form",
+  "evidence": "Each brother whom you meet today provides another chance to let Christ’s vision shine on you, and offer you the peace of God."
+ },
+ {
+  "lesson": 159,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "Let us an instant dream with Him. His dream awakens us to truth."
+ },
+ {
+  "lesson": 160,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "Today we offer thanks that Christ has come to search the world for what belongs to Him."
+ },
+ {
+  "lesson": 161,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153 form",
+  "evidence": "Be sure you use it instantly, should you be tempted to attack a brother and perceive in him the symbol of your fear."
+ },
+ {
+  "lesson": 162,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153 form",
+  "evidence": "arising with them in his mind, recalling them throughout the day, at night bringing them with him as he goes to sleep."
+ },
+ {
+  "lesson": 163,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "This the stand we take today. And it is given us to look past death and see the light beyond."
+ },
+ {
+  "lesson": 164,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "Open the curtain in your practicing by merely letting go all things you think you want."
+ },
+ {
+  "lesson": 165,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "And in His Name we practice as His Word directs we do."
+ },
+ {
+  "lesson": 166,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "Let sorrow not tempt you to be unfaithful to your trust."
+ },
+ {
+  "lesson": 167,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "L153 form",
+  "evidence": "We will not ask for death in any form today. Nor will we let imagined opposites to life abide even an instant"
+ },
+ {
+  "lesson": 168,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "To Him we pray today, returning but the words He gave to us through His Own Voice, His Word, His Love"
+ },
+ {
+  "lesson": 169,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "And now we ask for grace, the final gift salvation can bestow."
+ },
+ {
+  "lesson": 170,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": false,
+  "source": "L153 form",
+  "evidence": "The choice you make today is certain."
+ },
+ {
+  "lesson": 171,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 172,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 173,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 174,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 175,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 176,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 177,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 178,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 179,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 180,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 1,
+  "throughout": true,
+  "source": "Review V (153 form)",
+  "evidence": "And with this thought we sleep, to waken once again with these same words upon our lips to greet another day."
+ },
+ {
+  "lesson": 181,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "And we will also use these thoughts to keep us safe throughout the day."
+ },
+ {
+  "lesson": 182,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Rest with Him frequently today."
+ },
+ {
+  "lesson": 183,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Practice but this today; repeat God’s Name slowly again and still again."
+ },
+ {
+  "lesson": 184,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Thus what you need are intervals each day in which the learning of the world becomes a transitory phase"
+ },
+ {
+  "lesson": 185,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Today devote your practice periods to careful searching of your mind, to find the dreams you cherish still."
+ },
+ {
+  "lesson": 186,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 187,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 188,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "We practice coming nearer to the light in us today."
+ },
+ {
+  "lesson": 189,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "It blesses you throughout the day, and watches through the night as silent guardian of your holy sleep."
+ },
+ {
+  "lesson": 190,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 191,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 192,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Every time you feel a stab of anger, realize you hold a sword above your head."
+ },
+ {
+  "lesson": 193,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L193",
+  "evidence": "Morning and night devote what time you can to serve its proper aim, and do not let the time be less than meets your deepest need."
+ },
+ {
+  "lesson": 194,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "you will not hesitate to give as much consistent effort as you can to make it be a part of you."
+ },
+ {
+  "lesson": 195,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 196,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 197,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "So we now attempt to go past all defenses for a little while each day."
+ },
+ {
+  "lesson": 198,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Today we practice letting freedom come to make its home with you."
+ },
+ {
+  "lesson": 199,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "Cherish today’s idea, and practice it today and every day. Make it a part of every practice period you take."
+ },
+ {
+  "lesson": 200,
+  "sessions": [
+   {
+    "at": "wake",
+    "minutes": 0
+   },
+   {
+    "at": "sleep",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "181-200 intro (153 form)",
+  "evidence": "We are close to home, and draw still nearer every time we say:"
+ },
+ {
+  "lesson": 201,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 202,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 203,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 204,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 205,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 206,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 207,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 208,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 209,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 210,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 211,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 212,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 213,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 214,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 215,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 216,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 217,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 218,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 219,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 220,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 15
+   },
+   {
+    "at": "evening",
+    "minutes": 15
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Review VI",
+  "evidence": "Besides the time you give morning and evening, which should not be less than fifteen minutes, and the hourly remembrances you make throughout the day"
+ },
+ {
+  "lesson": 221,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 222,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 223,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 224,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 225,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 226,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 227,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 228,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 229,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 230,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 231,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 232,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L232",
+  "evidence": "And let me not forget my hourly thanksgiving that You have remained with me, and always will be there to hear my call to You and answer me."
+ },
+ {
+  "lesson": 233,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 234,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 235,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 236,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 237,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "I will arise in glory, and allow the light in me to shine upon the world throughout the day."
+ },
+ {
+  "lesson": 238,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 239,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 240,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 241,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 242,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 243,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 244,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 245,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 246,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 247,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 248,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 249,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 250,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 251,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 252,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 253,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 254,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 255,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 256,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 257,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 258,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 259,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 260,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 261,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 262,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 263,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 264,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 265,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 266,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 267,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 268,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 269,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 270,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 271,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L271",
+  "evidence": "Each day, each hour, every instant, I am choosing what I want to look upon, the sounds I want to hear, the witnesses to what I want to be the truth for me."
+ },
+ {
+  "lesson": 272,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 273,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 274,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 275,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 276,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 277,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 278,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 279,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 280,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 281,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 282,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 283,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 284,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 285,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Today I wake with joy, expecting but the happy things of God to come to me."
+ },
+ {
+  "lesson": 286,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 287,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 288,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 289,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 290,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 291,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 292,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 293,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 294,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 295,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 296,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 297,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 298,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 299,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 300,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 301,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 302,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 303,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 304,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 305,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 306,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 307,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 308,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 309,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 310,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 311,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 312,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 313,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 314,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 315,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "I am blessed with gifts throughout the day, in value far beyond all things of which I can conceive."
+ },
+ {
+  "lesson": 316,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 317,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 318,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 319,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 320,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 321,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 322,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 323,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 324,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 325,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 326,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 327,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 328,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 329,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 330,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 331,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 332,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 333,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 334,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 335,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 336,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 337,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 338,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 339,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 340,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 341,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 342,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 343,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 344,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 345,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 346,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "L346",
+  "evidence": "And when the evening comes today, we will remember nothing but the peace of God."
+ },
+ {
+  "lesson": 347,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 348,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 349,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 350,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 351,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 352,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 353,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 354,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 355,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 356,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 357,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 358,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 359,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 360,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 361,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 362,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 363,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 364,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ },
+ {
+  "lesson": 365,
+  "sessions": [
+   {
+    "at": "morning",
+    "minutes": 0
+   },
+   {
+    "at": "evening",
+    "minutes": 0
+   }
+  ],
+  "shortPerDay": 0,
+  "shortPerHour": 0,
+  "shortMinutes": 0,
+  "clock": "hour",
+  "clockMinutes": 0,
+  "throughout": true,
+  "source": "Part II",
+  "evidence": "Nor will we forget our hourly remembrance, in between calling to God when we have need of Him as we are tempted to forget our goal."
+ }
+]
