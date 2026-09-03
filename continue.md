@@ -82,10 +82,18 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — the phone and the Mac both carry the current commit, and the ribbon is seen working
-on the Mac**: `Continue reading` opens its section with the resumed passage on screen and the title
-block scrolled off under the nav bar, no overlap. `./build.sh`, the arm64 device build and the
-sixteen checks are green.
+**Build state — the phone and the Mac both carry the current commit.** `./build.sh`, the arm64
+device build and the sixteen checks are green.
+
+⛔ **A reading is scrolled to on iOS and never on macOS, and the asymmetry is the fix rather than a
+gap.** A `UITextView` has its own scrolling switched off, so asking the enclosing scroller to bring a
+line into view moves only that scroller. An `NSTextView` is vertically resizable — that is what lets
+SwiftUI size it — and the same request moves **its own bounds inside the frame it was given**: the
+reading then draws forty points above where it was laid out, over the top of its own title, while the
+title stays put. macOS has no `isVerticallyResizable = false` that leaves a reading measurable.
+So a spotlight and a ribbon both open a macOS reading at its **top**, which is what macOS has always
+done — `firstRect` returned an empty rectangle there for anything below the fold, so that scroll had
+never once fired. Doing it properly means scrolling from the SwiftUI side; it is on the ledger.
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync

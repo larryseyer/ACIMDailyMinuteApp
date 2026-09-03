@@ -80,6 +80,14 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
       collapse to icons when narrow, but no one has seen them do it on this phone. The seven
       March minutes with no recording show no Download, by design.
+- [ ] **A reading should scroll to its place on macOS too.** Today it opens at the top there, on
+      purpose: an `NSTextView` asked to bring a line into view moves its own bounds inside its frame
+      and draws the body over its own title. The scroll has to come from the SwiftUI side, where the
+      `ScrollView` itself can be told — SwiftUI has no scroll-to-offset, so it means the representable
+      reporting the target's y and the screen driving a `ScrollViewReader` against an anchor. It
+      costs macOS a convenience and nothing else: the right passage opens, the spotlight still paints.
+      ⛔ The same rule governs a search hit, so both move together.
+
 - [ ] **The ribbon, on the phone.** Read tab > Text. Open a section, scroll a screen or two in,
       leave it. Expected: `Continue reading` above the chapter list naming that section, and
       tapping it puts the passage you stopped at back at the top of the screen. The same for a
