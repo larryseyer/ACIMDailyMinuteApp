@@ -433,6 +433,16 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 272 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
+- [ ] **An empty Archive day should offer a way onward.** His proposal, and the shape is decided:
+      under the sentence that says why a day is empty, list **the nearest few days before it that do
+      have a reading** — a handful, enough to fill the space, not a second archive. Both surfaces
+      show the same emptiness: the row under the calendar and the pushed day screen.
+      Counting back from the **selected** day rather than from today, so browsing April offers April.
+      Nothing when the selected day has a reading — there is no space to fill. The rows the calendar
+      already draws its dots from are the same rows this needs, so no new query.
+      ⛔ The Archive is the one place dates are the index rather than a publication stamp, so a row
+      here names its **date** and its book — that exemption does not extend anywhere else.
+
 - [ ] **"Let it fall open"** — a random passage. A real practice with the physical book. His
       proposal, not yet built: a random *published* Daily Minute from the archive rather than a
       random corpus passage, so it arrives with narration and video; fall back to a random bundled
