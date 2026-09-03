@@ -525,15 +525,20 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 
 ## ▶ OPEN — small, unscheduled
 
-- [ ] **A note should open at its passage, and a Daily Minute note should open at all.** His
-      observation, and it splits in two.
-      **The row already navigates** — `NoteRow` pushes `ReadingKey.savedDestination(media:)`, so a
-      note on a lesson, a Text section, an Introduction or a Manual cut opens its reading today.
-      1. ⛔ **A note on a Daily Minute goes inert.** `.segment(id)` resolves only when a
-         `SegmentMedia` row carries a non-empty `publishedDate` for that id, and most segments have
-         no media row, so the row simply does not push. That is the actual dead end he is seeing.
-         The fix is a destination for a segment that was never published — the passage is bundled and
-         readable either way, so it can open on its own words rather than through the archive day.
+- [ ] ⛔ **A note in Saved does nothing when tapped, on the phone.** Observed by him, and the
+      narrowing is done: `SavedView`'s stack **does** declare `SavedDestination` (line 55) and
+      installs `readingDestinations` (line 71), so the navigation is wired. The row is inert because
+      `ReadingKey.savedDestination(media:)` returned **nil** and `NoteRow` then draws bare content
+      with no `NavigationLink` around it. It splits in two.
+      1. ⛔ **A note on a Daily Minute cannot resolve.** `.segment(id)` returns a destination only
+         when a `SegmentMedia` row carries a non-empty `publishedDate` for that id, and most segments
+         have no media row — so every note made on a Today card is a dead tap. That is almost
+         certainly what he is seeing, because the Today card is where a reader annotates first.
+         The passage is bundled and readable either way, so the fix is a destination that opens the
+         segment on its own words rather than routing through an archive day it may not have.
+         ⛔ **A row that cannot navigate should not look like one that can** — whatever else is done,
+         a dead tap is worse than a row that plainly does not offer one.
+         `HighlightRow` and `BookmarkRow` resolve through the same function and have the same hole.
       2. **It lands at the top of the reading, not at the note.** Now that a stored offset is a
          solved problem, a note attached to a highlight already carries offset, length and quote —
          which is exactly a `ReadingSpotlight`, and every reading screen already takes one. Pushing
