@@ -6,17 +6,26 @@ import SwiftUI
 /// Those all key off a published reading's identity, and this passage has none —
 /// it was never published, is never persisted, and must not be mistaken for the
 /// publisher's choice for today. It says where it came from and nothing more.
+///
+/// It names its book rather than the Course, because it stands in the slot
+/// `DailyMinuteCard` would occupy and the two must not look like different
+/// kinds of card. No read time: this passage carries no word count from a feed,
+/// and every segment is cut to the same budget anyway.
 struct CorpusReadingCard: View {
     let segment: CorpusSegment
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("From A Course in Miracles")
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+        ReadingScaffold(
+            eyebrow: segment.bookName,
+            footer: ReadingFooter(
+                citation: segment.citation,
+                bookName: segment.bookName,
+                opensReading: true
+            )
+        ) {
+        } trailing: {
+        } titleBlock: {
+        } body: {
             AnnotatableReadingText(
                 raw: segment.body,
                 key: .segment(segment.segmentId),
@@ -24,9 +33,6 @@ struct CorpusReadingCard: View {
             )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
-
-            CitationButton(citation: segment.citation, bookName: segment.bookName)
-                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
