@@ -337,9 +337,9 @@ backup file, merging per book by the later moment.
 **The next piece of the reading layout is D — Archive becomes Video** — app-only, the data exists
 today, and it retires the last exemption to the no-publication-dates rule. Its decisions are in the
 `⏸ PAUSED` block; it was his brainstorm, so confirm the recast with him before building it. The next
-agent-owned *build* with no decisions outstanding is **"Let it fall open"** — and that one is his
-proposal too, already decided in the ledger, so it needs no new call: a random *published* Daily
-Minute, falling back to a random bundled segment when the archive cache is empty.
+agent-owned *build* with no decisions outstanding is **an empty Archive day offering a way onward** —
+his proposal, shape decided in the ledger, no new call needed. **"Let it fall open"** is the one
+after it, on the same footing.
 
 These facts were settled by measuring the bundle, not by preference, and they are load-bearing:
 - **The Course never cites itself by address.** Zero `T-`/`W-`/`M-` forms, zero `Lesson N` or

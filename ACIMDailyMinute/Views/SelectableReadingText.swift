@@ -469,15 +469,22 @@ private struct TextViewRepresentable: UIViewRepresentable {
                     converted.insetBy(dx: 0, dy: -scrollView.bounds.height / 3), animated: false
                 )
             case .top:
-                let inset = scrollView.adjustedContentInset
-                let lowest = -inset.top
-                let highest = max(
-                    lowest,
-                    scrollView.contentSize.height + inset.bottom - scrollView.bounds.height
-                )
-                let wanted = converted.minY - inset.top - SelectableReadingText.resumeTopMargin
-                scrollView.setContentOffset(
-                    CGPoint(x: scrollView.contentOffset.x, y: min(max(lowest, wanted), highest)),
+                // A rect a whole viewport tall, hung from the line: it cannot
+                // fit, so the scroller aligns its top edge rather than nudging
+                // the line barely into view at the bottom.
+                //
+                // ⛔ Asked of the scroller, never set as a `contentOffset`. This
+                // scroll view belongs to a SwiftUI `ScrollView`, which keeps its
+                // own idea of where it is, and moving it underneath leaves the
+                // bands laid out at the old offset and the body drawn at the new
+                // one, one on top of the other.
+                scrollView.scrollRectToVisible(
+                    CGRect(
+                        x: converted.minX,
+                        y: converted.minY - SelectableReadingText.resumeTopMargin,
+                        width: converted.width,
+                        height: scrollView.bounds.height
+                    ),
                     animated: false
                 )
             }
@@ -671,18 +678,28 @@ private struct TextViewRepresentable: NSViewRepresentable {
                 }
                 return
             }
-            let clip = scrollView.contentView
+            let viewport = scrollView.contentView.bounds.height
             switch anchor {
             case .spotlight:
-                view.scrollToVisible(local.insetBy(dx: 0, dy: -clip.bounds.height / 3))
+                view.scrollToVisible(local.insetBy(dx: 0, dy: -viewport / 3))
             case .top:
-                // See the iOS half: where reading resumes is set, not requested.
-                guard let document = clip.documentView else { return }
-                let inDocument = view.convert(local, to: document)
-                let highest = max(0, document.frame.height - clip.bounds.height)
-                let wanted = inDocument.minY - SelectableReadingText.resumeTopMargin
-                clip.scroll(to: NSPoint(x: clip.bounds.origin.x, y: min(max(0, wanted), highest)))
-                scrollView.reflectScrolledClipView(clip)
+                // A rect a whole viewport tall, hung from the line: it cannot
+                // fit, so the scroller aligns its top edge instead of nudging
+                // the line barely into view at the bottom.
+                //
+                // ⛔ Asked of the scroller, never set on the clip view. This
+                // `NSScrollView` belongs to a SwiftUI `ScrollView`, which keeps
+                // its own idea of where it is: moving the clip under it leaves
+                // the bands laid out at the old offset and the body drawn at the
+                // new one, one on top of the other.
+                view.scrollToVisible(
+                    CGRect(
+                        x: local.minX,
+                        y: max(0, local.minY - SelectableReadingText.resumeTopMargin),
+                        width: local.width,
+                        height: viewport
+                    )
+                )
             }
         }
     }
