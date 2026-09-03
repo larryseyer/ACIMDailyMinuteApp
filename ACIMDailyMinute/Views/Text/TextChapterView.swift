@@ -53,9 +53,11 @@ struct TextChapterView: View {
                 .foregroundStyle(.primary)
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("\(section.wordCount) words")
-                .font(.acimCaption2)
-                .foregroundStyle(.tertiary)
+            if let readTime = ReadingTime.describe(wordCount: section.wordCount) {
+                Text(readTime)
+                    .font(.acimCaption2)
+                    .foregroundStyle(.tertiary)
+            }
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
