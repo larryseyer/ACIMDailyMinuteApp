@@ -25,4 +25,8 @@ enum WorkbookCatalog {
     static func title(for lessonNumber: Int) -> String? {
         entries[lessonNumber]
     }
+
+    /// Every title, by lesson number — what the practice planner names a
+    /// reminder with.
+    static var all: [Int: String] { entries }
 }

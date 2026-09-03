@@ -146,6 +146,44 @@ actor NotificationManager {
         )
     }
 
+    // MARK: - The practice reminders
+
+    /// Replaces every pending practice reminder with the plan given.
+    ///
+    /// Removal is a scan of what is actually pending for the practice
+    /// prefix, not a remembered list: the pending requests are the truth,
+    /// and a prefix cannot reach the daily reminders or the test.
+    func replacePracticeReminders(with plan: [PracticePlanner.Reminder], calendar: Calendar) async {
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        let stale = pending.map(\.identifier).filter { $0.hasPrefix(PracticePlanner.identifierPrefix) }
+        center.removePendingNotificationRequests(withIdentifiers: stale)
+
+        guard !plan.isEmpty else { return }
+        await requestPermissionIfNeeded()
+
+        for reminder in plan {
+            let content = makeContent(
+                title: reminder.title,
+                body: reminder.body,
+                userInfo: ["type": "practice", "lesson": String(reminder.lesson)]
+            )
+            content.threadIdentifier = "acim.practice"
+            let components = calendar.dateComponents(
+                [.year, .month, .day, .hour, .minute], from: reminder.fireDate
+            )
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            let request = UNNotificationRequest(identifier: reminder.identifier, content: content, trigger: trigger)
+            try? await center.add(request)
+        }
+
+        #if DEBUG
+        // The plan handed over, in one line, so a Debug run can be read for
+        // it: how many, and the first and the last.
+        print("[PracticeReminders] \(plan.count) planned, \(plan.first!.identifier) … \(plan.last!.identifier)")
+        #endif
+    }
+
     // MARK: - The test
 
     func fireTest() async {
@@ -175,6 +213,10 @@ actor NotificationManager {
             guard let raw = userInfo["kind"] as? String,
                   let kind = DailyReminderKind(rawValue: raw) else { return nil }
             return kind.route
+        case "practice":
+            guard let raw = userInfo["lesson"] as? String,
+                  let lesson = Int(raw), (1...365).contains(lesson) else { return nil }
+            return .lesson(lesson)
         default:
             return nil
         }

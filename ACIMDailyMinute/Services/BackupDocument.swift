@@ -125,6 +125,13 @@ struct BackupDocument: Codable, Equatable, Sendable {
         var dailyReminderTimeInterval: Double?
         var lessonReminderEnabled: Bool?
         var lessonReminderTimeInterval: Double?
+        var practiceRemindersEnabled: Bool?
+        var practiceWindowStartInterval: Double?
+        var practiceWindowEndInterval: Double?
+        /// The reader's own place in the Workbook, as a pair: the lesson
+        /// they named and the day they named it, `yyyy-MM-dd`.
+        var practiceOwnStartLesson: Int?
+        var practiceOwnStartDay: String?
         var notifyLiveActivities: Bool?
         /// The raw value of the reader's appearance choice.
         var appearance: String?

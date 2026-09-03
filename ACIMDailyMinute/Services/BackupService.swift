@@ -20,6 +20,11 @@ enum BackupService {
         static let dailyReminderTimeInterval = "dailyReminderTimeInterval"
         static let lessonReminderEnabled = "lessonReminderEnabled"
         static let lessonReminderTimeInterval = "lessonReminderTimeInterval"
+        static let practiceRemindersEnabled = "practiceRemindersEnabled"
+        static let practiceWindowStartInterval = "practiceWindowStartInterval"
+        static let practiceWindowEndInterval = "practiceWindowEndInterval"
+        static let practiceOwnStartLesson = "practiceOwnStartLesson"
+        static let practiceOwnStartDay = "practiceOwnStartDay"
         static let notifyLiveActivities = "notifyLiveActivities"
         /// Must equal `Appearance.key`; spelled out here because that type
         /// imports SwiftUI and this service does not.
@@ -299,6 +304,13 @@ enum BackupService {
             dailyReminderTimeInterval: double(ReaderKey.dailyReminderTimeInterval),
             lessonReminderEnabled: bool(ReaderKey.lessonReminderEnabled),
             lessonReminderTimeInterval: double(ReaderKey.lessonReminderTimeInterval),
+            practiceRemindersEnabled: bool(ReaderKey.practiceRemindersEnabled),
+            practiceWindowStartInterval: double(ReaderKey.practiceWindowStartInterval),
+            practiceWindowEndInterval: double(ReaderKey.practiceWindowEndInterval),
+            practiceOwnStartLesson: defaults.integer(forKey: ReaderKey.practiceOwnStartLesson) > 0
+                ? defaults.integer(forKey: ReaderKey.practiceOwnStartLesson) : nil,
+            practiceOwnStartDay: defaults.integer(forKey: ReaderKey.practiceOwnStartLesson) > 0
+                ? defaults.string(forKey: ReaderKey.practiceOwnStartDay) : nil,
             notifyLiveActivities: bool(ReaderKey.notifyLiveActivities),
             appearance: defaults.string(forKey: ReaderKey.appearance),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
@@ -344,6 +356,22 @@ enum BackupService {
             defaults.set(enabled, forKey: ReaderKey.lessonReminderEnabled)
             rescheduleReminder(.lesson, enabled: enabled, timeIntervalKey: ReaderKey.lessonReminderTimeInterval)
         }
+        if let value = settings.practiceWindowStartInterval {
+            defaults.set(value, forKey: ReaderKey.practiceWindowStartInterval)
+        }
+        if let value = settings.practiceWindowEndInterval {
+            defaults.set(value, forKey: ReaderKey.practiceWindowEndInterval)
+        }
+        // The reader's place travels as a pair; a lesson without its day
+        // would advance from the wrong start.
+        if let lesson = settings.practiceOwnStartLesson, let day = settings.practiceOwnStartDay {
+            defaults.set(lesson, forKey: ReaderKey.practiceOwnStartLesson)
+            defaults.set(day, forKey: ReaderKey.practiceOwnStartDay)
+        }
+        if let enabled = settings.practiceRemindersEnabled {
+            defaults.set(enabled, forKey: ReaderKey.practiceRemindersEnabled)
+        }
+        PracticeReminderService.reschedule(in: nil)
     }
 
     /// A row reads "when you listened", and the most recent listen is the

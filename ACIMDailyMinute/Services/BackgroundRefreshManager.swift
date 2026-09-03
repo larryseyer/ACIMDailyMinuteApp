@@ -60,12 +60,14 @@ enum BackgroundRefreshManager {
         }
     }
 
-    /// Learns the newest published lesson and records it. Nothing is fetched
-    /// when the practice reminders are off: there is nothing to keep current.
+    /// Learns the newest published lesson, records it, and lays the practice
+    /// reminders out again from it. Nothing is fetched when the practice
+    /// reminders are off: there is nothing to keep current.
     private static func performBackgroundCheck() async {
         guard UserDefaults.standard.bool(forKey: PracticeAnchorStore.remindersEnabledKey) else { return }
         guard let lesson = await fetchLessonDTO() else { return }
         PracticeAnchorStore.record(lesson: lesson.lesson_id, day: lesson.date)
+        await MainActor.run { PracticeReminderService.reschedule(in: nil) }
     }
 
     private static func fetchLessonDTO() async -> DailyLessonResponse? {

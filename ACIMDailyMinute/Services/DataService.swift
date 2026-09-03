@@ -285,6 +285,13 @@ struct DataService: Sendable {
         FetchCooldown.markFetched(key: FetchCooldownKey.dailyLesson)
         WidgetCenter.shared.reloadAllTimelines()
 
+        // The moment the app learns a lesson is the moment the practice
+        // reminders may be naming the wrong one.
+        PracticeAnchorStore.record(lesson: lessonNumber, day: dto.date)
+        if isNew {
+            PracticeReminderService.reschedule(in: context)
+        }
+
         #if os(iOS)
         if isNew {
             LiveActivityManager.startOrUpdate(
