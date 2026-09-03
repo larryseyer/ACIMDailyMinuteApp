@@ -346,9 +346,10 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 ## ⏸ PAUSED — the standardized reading layout (piece A built; D is next)
 
 Piece A, the scaffold, is built: `Views/ReadingScaffold.swift` owns the band order and all ten render
-sites pass slots. Its spec and plan are
-`docs/superpowers/specs/2026-09-02-standardized-reading-layout-design.md` and its plan. The remaining
-four pieces are below, and the decisions that govern them are worth keeping:
+sites pass slots. Spec and plan:
+`docs/superpowers/specs/2026-09-02-standardized-reading-layout-design.md` and
+`docs/superpowers/plans/2026-09-02-standardized-reading-layout.md`. The four remaining pieces are
+below, and these decisions of his govern them:
 
 - **`Add note` stays at the bottom.** His call, and it belongs with the citation, not the actions.
 - **One play control, audio-first.** Tap plays narration and the reader keeps reading; video is
