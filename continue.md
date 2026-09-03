@@ -17,26 +17,33 @@ from this Mac cannot see its processes — read `logs/acim.log` **on that machin
 `./start.sh` there, never through the mount.
 
 ⛔ **Every reading in this app has ONE shape, and `Views/ReadingScaffold.swift` owns it.** Four
-bands, always: header (the eyebrow on its own line, then the controls), title block (optional), body,
-footer (the address on the leading edge, the measure on the trailing edge). All ten render sites pass
-slots and position nothing, which is what makes the old drift impossible rather than merely fixed —
-Save had ended up in the nav toolbar on four screens and in the header on three, Share moved below the
-body or vanished, and the play control was hand-rolled three times at a different size.
-**The nav bar names the BOOK** (Text, Workbook, Manual for Teachers) **and the eyebrow names the
-place** (`LESSON 84`, `CHAPTER 17`), so no screen says the same phrase twice. Container chrome — a
-card's padding and background, a screen's `ScrollView` and readable width — stays with the surface.
-`tools/verify_card_header.sh` guards the whole shape now: the layout measurement, every eyebrow
-string measured at 303pt, and four greps proving the eight surfaces draw through the scaffold, that
-only the scaffold names `CardHeaderRow`, that Save is in no nav toolbar, and that no Listen control
-is hand-rolled. ⛔ A footer address is tappable ONLY where it names somewhere else — the Today cards;
-on a pushed screen it names the passage already on screen and is printed plain.
+bands, always: header, title block (optional), body, footer. All ten render sites pass slots and
+position nothing themselves — that is the whole point, because a surface that positions nothing
+cannot disagree with the others. Container chrome — a card's padding and background, a screen's
+`ScrollView` and readable width — stays with the surface. **The scaffold owns the ORDER of the bands
+and nothing inside one**, which is what keeps a layout change from becoming a rewrite of what the
+readings say.
 
-⛔ **The card header is two bands on every card and every screen size** — title centred on its own
-line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow` owns
-it, `ListenButton` and `SaveButton` are the shared controls, and `tools/verify_card_header.sh` is the
-tenth check. **The play control is leftmost on purpose**: most readings have no audio, so it is
-usually absent, and anchoring it there is what stops Share and Save moving between passages. His
-layout decisions — do not undo them without asking.
+⛔ **The header is two bands on every surface and every screen size** — the eyebrow centred on its
+own line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow`
+owns it inside the scaffold; `ListenButton`, `SaveButton` and `ShareButton` are the shared controls
+and nothing hand-rolls its own. **The play control is leftmost on purpose**: most readings have no
+audio, so it is usually absent, and anchoring it there is what stops Share and Save moving between
+passages. **Save belongs in that header, never in a nav toolbar.** His layout decisions — do not
+undo them without asking.
+
+⛔ **The nav bar names the BOOK** (Text, Workbook, Manual for Teachers) **and the eyebrow names the
+place** (`LESSON 84`, `CHAPTER 17`), so no screen says the same phrase twice. A Text section stacks
+its chapter title above its section title, in the title block: chapter titles reach 35 characters and
+the eyebrow band breaks its words rather than wrapping or shrinking. ⛔ A footer address is tappable
+ONLY where it names somewhere else — the Today cards; on a pushed screen it names the passage already
+on screen and is printed plain. The footer's slots are an **address** and a **measure**, named by
+position, which is how the Archive fits with a book name and its date.
+
+⛔ **`tools/verify_card_header.sh`, the tenth check, guards the whole shape**: the layout measurement,
+every eyebrow string measured at 303pt, and four greps — eight surfaces draw through the scaffold,
+only the scaffold names `CardHeaderRow`, Save is in no nav toolbar, no Listen control is hand-rolled.
+Each grep is negative-tested; adding a reading surface means adding it to that list.
 
 ⛔ **His phone gives the app a 375pt canvas, not 414pt.** The Pro Max runs **Display Zoom** — his
 screenshots are 1125x2436 rather than the native 1242x2688, exactly 0.906x — and his Dynamic Type is
