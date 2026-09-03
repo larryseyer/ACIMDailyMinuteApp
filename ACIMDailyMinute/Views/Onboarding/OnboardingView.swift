@@ -119,36 +119,26 @@ struct OnboardingView: View {
         }
         #else
         // macOS: no page-style TabView exists in plain SwiftUI, so
-        // render one page at a time with a dot indicator and a
-        // discreet chevron nav that matches the iOS visual language.
+        // render one page at a time with a dot indicator at the foot and a
+        // chevron at each side, halfway up — where a hand expects them from
+        // every photo viewer. His call; the dots stay at the foot.
         // A sheet hands its first enabled control keyboard focus, and a plain
         // button draws a ring around itself when it has it, so the ring is
         // switched off on both chevrons; Space still turns the page.
-        VStack(spacing: 0) {
-            let page = pages[currentPage]
-            OnboardingPage(
-                systemImage: page.systemImage,
-                title: page.title,
-                description: page.description,
-                showButton: currentPage == pages.count - 1
-            ) {
-                showingNote = true
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .id(currentPage)
-            .transition(.opacity)
-
-            HStack(spacing: 16) {
-                Button {
-                    withAnimation { currentPage -= 1 }
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.title3)
+        ZStack {
+            VStack(spacing: 0) {
+                let page = pages[currentPage]
+                OnboardingPage(
+                    systemImage: page.systemImage,
+                    title: page.title,
+                    description: page.description,
+                    showButton: currentPage == pages.count - 1
+                ) {
+                    showingNote = true
                 }
-                .buttonStyle(.plain)
-                .focusEffectDisabled()
-                .disabled(currentPage == 0)
-                .opacity(currentPage == 0 ? 0.3 : 0.8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .id(currentPage)
+                .transition(.opacity)
 
                 HStack(spacing: 10) {
                     ForEach(0..<pages.count, id: \.self) { index in
@@ -159,24 +149,40 @@ struct OnboardingView: View {
                             .frame(width: 8, height: 8)
                     }
                 }
-                .padding(.horizontal, 8)
-
-                Button {
-                    withAnimation { currentPage += 1 }
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .font(.title3)
-                }
-                .buttonStyle(.plain)
-                .focusEffectDisabled()
-                .disabled(currentPage == pages.count - 1)
-                .opacity(currentPage == pages.count - 1 ? 0.3 : 0.8)
+                .padding(.bottom, 28)
             }
-            .padding(.bottom, 28)
+
+            HStack {
+                pageChevron("chevron.left", enabled: currentPage > 0) {
+                    currentPage -= 1
+                }
+                Spacer()
+                pageChevron("chevron.right", enabled: currentPage < pages.count - 1) {
+                    currentPage += 1
+                }
+            }
+            .padding(.horizontal, 20)
         }
         .animation(.easeInOut(duration: 0.25), value: currentPage)
         #endif
     }
+
+    #if os(macOS)
+    private func pageChevron(_ systemImage: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button {
+            withAnimation { action() }
+        } label: {
+            Image(systemName: systemImage)
+                .font(.system(size: 34, weight: .medium))
+                .frame(width: 56, height: 80)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .focusEffectDisabled()
+        .disabled(!enabled)
+        .opacity(enabled ? 0.8 : 0.3)
+    }
+    #endif
 }
 
 // MARK: - Onboarding Page
