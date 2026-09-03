@@ -364,6 +364,14 @@ above the shelf; on the phone following it puts that passage back at the top of 
 the Mac it opens the right reading at its top. It travels in the backup file, merging per book by
 the later moment.
 
+⛔ **A tap that does nothing is the top of the ledger.** A note in Saved is inert on the phone
+whenever its reading is a Daily Minute: `ReadingKey.savedDestination(media:)` resolves `.segment(id)`
+only through a `SegmentMedia` row carrying a published date, most segments have none, and `NoteRow`
+then draws bare content with no link around it. `HighlightRow` and `BookmarkRow` share that function
+and that hole. The Today card is where a reader annotates first, so this is the most-used path in
+the annotation feature dead-ending. It is the first item in the `▶ OPEN — small, unscheduled` block
+and it is his to see fixed before anything cosmetic.
+
 **The next piece of the reading layout is D — Archive becomes Video** — app-only, the data exists
 today, and it retires the last exemption to the no-publication-dates rule. Its decisions are in the
 `⏸ PAUSED` block; it was his brainstorm, so confirm the recast with him before building it. The next
