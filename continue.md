@@ -11,6 +11,47 @@ says what is true now and what is next. REPLACE the state block below — never 
 Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing of
 mine is running.
 
+⛔ **His five findings from the testing pass are built, and the `⏸ PARKED` block's first item is
+what only his eyes can settle about them.** The version reads `1.0`; the five introduction cards carry
+his copy verbatim (three spellings repaired, and "Daily Messages" set as "Daily Minutes", which he can
+veto); Settings > Appearance offers System / Light / Dark with Dark the default and a palette that
+resolves per appearance (`Views/ACIMColors.swift`, four colorsets, AccentColor darker in Light); the
+Daily Minute and the Daily Lesson each have a reminder with a switch and a time of their own; the
+watched phrases are gone whole, with the fetch-driven "new minute / new lesson" alerts, which would
+have doubled the timed reminders; and **practice reminders follow the Workbook lesson the reader is
+on** — see the ⛔ facts about them below. Card 4 of the introduction says notes and highlights "are
+stored across all devices", which is true only with iCloud sync on; his wording, kept, flagged.
+
+⛔ **The practice reminders keep three promises, and `tools/verify_practice_reminders.sh` holds
+all three.** `Resources/WorkbookPractice.json` is 365 records, one per lesson, authored from every
+lesson's own instructions (or the review introduction that holds them) with the sentence each rests
+on; `Utilities/PracticePlanner.swift` is pure and turns a record, the reader's day window
+(`practiceWindowStart/EndInterval`, default 07:00-22:00) and the current lesson into dated requests
+over a **three-day horizon under a budget of 56** (iOS keeps 64 pending requests and drops the oldest
+silently); `Services/PracticeReminderService.swift` is the thin layer that reads the keys and hands
+the plan to `NotificationManager.replacePracticeReminders`, which replaces by **prefix scan of
+`acim.practice.`** and nothing else. **No reminder is ever planned more often than every half hour** —
+lessons 27, 40, 75 and 122 ask for every ten to twenty minutes and get the half-hour mark with the
+text's own cadence in the body. **Every request is `interruptionLevel = .active`, never
+`.timeSensitive` or `.critical`** — a Course lesson is not an emergency and Focus is the reader's —
+and the harness greps the app tree for it. The current lesson is `PracticeAnchorStore` (device-local
+`practiceAnchorLesson/Day`, fed by `DataService.persistLesson`, the background refresh and a fold over
+the store whenever a `ModelContext` is at hand), overridden by the reader's own place
+(`practiceOwnStartLesson` + `practiceOwnStartDay`, advancing one lesson per calendar day, stopping at
+365). The publisher's sequence advances one per weekday and Saturday and Sunday repeat Friday. A
+publication day is UTC midnight and is carried into the reader's zone **by its name**, never as an
+instant — west of Greenwich that instant is the evening before. Reschedule sites: every return to the
+foreground (both platforms; the macOS path), `BackgroundRefreshManager` (its whole job now),
+`persistLesson` on a new lesson, every Settings change, and a settings restore. Three interpretive
+calls are in the data and are his to veto: 154-170, 171-180 and 181-200 carry the Lesson 153 form
+forward (the text names no other and 193 restates it), and Part II sessions are `minutes: 0` — "as
+long as you can" — rather than an invented number.
+
+⛔ **A reminder tap lands where a URL would.** `NotificationDelegate.didReceive` posts
+`.reminderTapped` with a `DeepLinkRoute`, and `ContentView.follow(_:)` is the one switch both a URL
+and a tap go through; `.lessons` (the Read tab, no number) exists for the Daily Lesson reminder,
+which is repeating and cannot know its number.
+
 **The pipeline scheduler is his, running on MacLive, armed for 02:00 nightly.** Do not start a second
 one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/MacLive`), so `pgrep`
 from this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
@@ -84,7 +125,14 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac both carry the current commit.** `./build.sh`, the arm64
-device build and the sixteen checks are green.
+device build and the seventeen checks are green. The phone was locked when the build was installed,
+so it has not been launched there since. The Mac copy launched, registered its widget, seeded
+`practiceAnchorLesson = 85` from the store on its first foreground, and — with the practice switch
+on for one terminal-launched run, then off again — handed the notification center **5 reminders for
+Lesson 85: today's evening session, then morning and evening for Friday and for Saturday**, which is
+a Review II lesson (two sessions, no clock) with the morning already past and the weekend repeating
+Friday. That line is `[PracticeReminders] …` on stdout in a Debug build; `open -a` swallows it, so
+launch the binary inside the bundle from a terminal to read it.
 
 ⛔ **A reading is scrolled to on iOS and never on macOS, and the asymmetry is the fix rather than a
 gap.** A `UITextView` has its own scrolling switched off, so asking the enclosing scroller to bring a
@@ -157,8 +205,8 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Sixteen committed checks now guard this repo. Run all sixteen first thing — they take about a
-minute and they are how you find out the tree is what this file says it is:**
+⛔ **Seventeen committed checks now guard this repo. Run all seventeen first thing — they take about
+two minutes and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -262,6 +310,16 @@ minute and they are how you find out the tree is what this file says it is:**
   the card above it, and that `ReadingTime.wordCount(of:)` agrees with Python's `str.split()` on
   every body — it splits on newlines as well as spaces, because a space-only split reads
   "end.\n\nBegin" as one word. **It compiles `ReadingTime.swift` and nothing else** — 8,193 checks.
+- `./tools/verify_practice_reminders.sh` — ⛔ **the only check that guards a phone BUZZING at the
+  wrong time.** 544,486 checks: the 365 records decode and are the cadence the text states at
+  twenty spot-checked lessons; every lesson × five windows (including an inverted one and a
+  half-hour one) × three times of day plans without a crash, under budget, strictly ascending, every
+  reminder after now, inside the window, no clock stop on the window's edge, every identifier
+  carrying the prefix and parsing back to its own fire time; the drop order at budget 56, 6 and 0;
+  the weekday walk and the reader's own sequence across a weekend, a DST change and the 365 cap;
+  and the words. **It compiles `PracticePlanner.swift` and `LessonSchedule.swift` and nothing
+  else**, greps the planner for SwiftUI, SwiftData, `UserDefaults`, `Bundle` and `Date()`, and greps
+  the whole app tree for `timeSensitive` and `.critical`.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -331,10 +389,10 @@ only from that block, and only as part of the list. **Never invent a new thing f
 work is still going in.** An item leaves the block when he confirms it; an item he half-confirms is
 **narrowed to what is left**, not closed.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the sixteen committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the seventeen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the sixteen checks first thing in a new session** — about a
-minute, and they are how you find out the tree is what this file says it is.
+store migration, real feed payloads. **Run the seventeen checks first thing in a new session** — about
+two minutes, and they are how you find out the tree is what this file says it is.
 
 ⛔ **A screen can be driven from here, and it earns its keep — but it is not reliable.** The Mac
 build takes synthetic clicks: `System Events` for the tab bar and the shelf picker, a small `CGEvent`
@@ -408,7 +466,7 @@ screen re-anchors with `AnchorResolver`. Its spec and plan are
 picks a folder once (Settings > Your Work > Backup & Restore > Keep a copy in a folder); the app
 holds a security-scoped bookmark to it in `UserDefaults.standard` and writes the backup file there
 **three seconds after the last change to a highlight, note or bookmark**, and at once when the app
-leaves the foreground. Settings, phrases and listened history ride along in the next write; they do
+leaves the foreground. Settings and listened history ride along in the next write; they do
 not trigger one. **Nothing is ever read from the folder**: a folder two machines both write into is
 where an automatic merge would lose words, so restoring stays a thing the reader asks for. Every
 call in is one line, `FolderCopyService.noteChange(in:)`, at the end of each writer in
@@ -513,9 +571,9 @@ line.
 ⛔ **Every reader setting lives in `UserDefaults.standard`, NOT the App Group.** There is not one
 `UserDefaults(suiteName:)` call in the repo; the App Group holds only the SQLite file. Two
 consequences that decide real designs: **the widget and watch targets can see none of these keys**,
-and CloudKit sync of SwiftData will not carry any of them either — the reminder time, the alert
-toggles, the watched phrases and the listened history travel **only** in the backup file. Anything
-that wants a setting on more than one Apple device has to move it deliberately.
+and CloudKit sync of SwiftData will not carry any of them either — the reminder times, the practice
+window and the reader's own place, the appearance and the listened history travel **only** in the
+backup file. Anything that wants a setting on more than one Apple device has to move it deliberately.
 
 ⛔⛔ **NEVER RE-EXTRACT THE CORPUS.** `segments.id` is the identity for every recorded thing in this
 project: `used_date` and `youtube_id` on all 158 published entries, the 239 MP3s, the ElevenLabs
@@ -628,9 +686,11 @@ From [`todo.md`](todo.md), in order:
 2. **"Let it fall open", Workbook completion tracking, structuring the Manual**, then the
    pre-submission sweep and the smaller open items.
 
-Two corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
-PDFs — and the eleven running heads still inside Chapter 11's prose. Structuring the Manual is its
-own item.
+Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
+PDFs — the eleven running heads still inside Chapter 11's prose, **every Workbook introduction glued
+to the foot of the lesson before it** (Review I ends Lesson 50, and so on through the "What is …?"
+sections), and `WorkbookIntroductions.json` entry 500 two paragraphs short. Structuring the Manual is
+its own item.
 
 **Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
 four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.

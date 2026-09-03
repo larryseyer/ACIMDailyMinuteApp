@@ -40,16 +40,22 @@ Everything here is built and on his phone. Verify what can be verified without h
 harnesses against real data, `./build.sh`, the arm64 device build, install + launch, process-alive
 checks, real feed payloads. His eyes are the last resort, not the first.
 
+- [ ] **Light, and the reminders — the two things no harness can see.** Settings > Appearance >
+      **Light**, on the phone at 375pt and on the Mac: every card, chip and gold word reads on the
+      white ground, the number badge on the Read list is legible, the About panel on the Mac follows
+      the setting, and the introduction stays on its black ground by design. Then Settings >
+      Practice reminders > **Follow the lesson's practice**, with the day set to bracket the next
+      hour: the **Today** row names the lesson and its cadence, and one reminder arrives on the
+      phone at that hour — and on the watch, mirrored — naming the lesson, and its tap opens that
+      lesson. The Daily Minute and Daily Lesson reminders each fire at their own time; a tap on the
+      first opens Today and on the second the Read tab. Nothing arrives during a Focus.
 - [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
       `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
       the title. An unlistened row shows no date at all.
 - [ ] **B6 — Saved tab.** Tapping a saved lesson opens that lesson and a saved minute opens its archive
       day. Swiping either direction deletes. ⚠ Both edges full-swipe, so any horizontal flick removes a
       bookmark — say so if the leading edge should require a tap on Delete instead.
-- [ ] **B7 — watched phrases.** The counter reads `1 of 10` immediately after adding a phrase. Then set a
-      phrase to a word in today's minute, force-quit, wait past the 60s debounce, relaunch, and confirm
-      the notification arrives. Permission is requested at launch, so a reader who leaves the daily
-      reminder switched off is still asked — which is what makes a phrase alert reach anyone at all.
+
 - [ ] **Lesson bodies.** Open a lesson the feed has not published yet — anything in 1-80. Expected:
       the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
       All 365 bodies are bundled now. Note that choosing a lesson that *has* a video still opens that
@@ -64,10 +70,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       "The Daily Minute began on 2026-03-20. There is nothing before it." ⛔ The missed-day date rests
       on the publisher's own rule, one catch-up per night oldest first; if the nightly run ever
       changes that, `MinuteSchedule` is where the app's promise lives.
-- [ ] **One notification for a new day, not three.** With New Daily Minute, New Daily Lesson and
-      Watched phrases all on, the morning after a publish should bring ONE notification —
-      "Today's reading is ready" naming the lesson — not "New Daily Minute" followed by "Lesson N".
-      A phrase match rides in the same notification and its tap still opens the phrase editor.
+
 - [ ] **Share on the Mac.** The Share glyph on the Daily Minute, Lesson and Archive cards draws bare,
       like the phone — no bordered well the height of the header beside Save.
 - [ ] **The corpus floor.** Airplane mode, delete and reinstall, cold launch. Expected: Today shows a
@@ -466,6 +469,23 @@ a book.
 
 ## ▶ OPEN — content and pipeline
 
+- [ ] **Every Workbook introduction is glued to the foot of the lesson before it.** In
+      `Workbook365Bodies.json` the Review I introduction ends Lesson 50's body, Review II ends 80,
+      Review III 110, Review IV 140, Review V 170, the "Introduction to Lessons 181-200" ends 180,
+      Review VI ends 200, the Part II introduction and "What is Forgiveness?" end 220, each later
+      "What is …?" ends 230, 240 … 350, and "What am I?" with "Our final lessons" ends 360. A reader
+      opening Lesson 50 reads Review I's instructions at its foot, and the review lessons themselves
+      (51-60, 81-90, 141-150, 171-180, 201-220) are bare ideas with their instructions a lesson
+      away. Found while reading every lesson for its practice cadence; the cadence data was authored
+      from those tails, so it is right, but the reading surface is not. Each belongs as its own
+      reading, keyed like the two Part Introductions, and the segments are the identity so the
+      repair is at export and at render, never a re-extraction.
+- [ ] **`WorkbookIntroductions.json` entry 500 is two paragraphs short.** The Part II Introduction
+      stops at "…safely home, where He would have us be." and lacks the closing paragraphs — the
+      only place the Course says how the "What is …?" sections are to be used ("slowly read and
+      thought about a little while, preceding one of the holy and blessed instants in the day").
+      They are in Lesson 220's body tail and the PDF.
+
 - [ ] ⛔ **`Pref.N` names two paragraphs.** The Preface ships as two sections — `0.1 Publisher's
       Note`, 17 paragraphs, and `0.2 The Use of Terms`, 42 — but the citation format carries no
       section number, so `Pref.10` is paragraph 10 of either, and 21 shipped segments carry the
@@ -580,11 +600,9 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 - [ ] **Today-tab and Archive-tab minute bookmarks do not alias.** Today keys on `DailyMinute.segmentHash`,
       Archive on `ArchivedReading.lineHash`, so the same passage saved from both places lands twice.
       Documented in `ArchivedReadingCard.swift`.
-- [ ] **Three defaults keys are dead.** `useCustomNotificationSound` is registered at
-      `App/ACIMDailyMinuteApp.swift:92` and never read anywhere; `phraseMatchBadge` is written at
-      `Services/BackgroundRefreshManager.swift:174` and never read; `lastArchiveFetch` is declared at
+- [ ] **One defaults key is dead.** `lastArchiveFetch` is declared at
       `Services/FetchCooldown.swift:44` and never used. Found while deciding what a backup carries.
-      None of them travels.
+      It does not travel.
 
 - [ ] **Pre-submission sweep.** Walk Archive, Saved, Lessons, deep links, widget and watch for surfaces
       that display data they do not have. No `TODO`/`FIXME`/stub copy remains in any view, widget or watch

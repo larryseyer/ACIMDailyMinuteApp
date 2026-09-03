@@ -31,7 +31,7 @@ FEATURES
 - Listen: Podcast feeds for daily minutes and lessons, plus embedded YouTube audio
 - Archive: Calendar-based archive of every past daily minute, searchable by date or text
 - Saved: Bookmark any passage for later; swipe to remove
-- Reminders: Schedule a daily notification at your preferred time, with a custom chime sound
+- Reminders: A Daily Minute reminder and a Daily Lesson reminder, each at your own time, and practice reminders that follow the Workbook lesson you are on, inside your own waking hours — with a custom chime sound
 - Widgets: Small, medium, and large Home Screen widgets showing today's minute at a glance
 - Live Activity: Dynamic Island and Lock Screen presence while today's minute is active
 - Apple Watch: Today's minute on your wrist, with three complication styles and automatic phone-to-watch sync
