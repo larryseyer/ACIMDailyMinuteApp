@@ -4,11 +4,12 @@ import SwiftData
 /// Renders a single `ArchivedReading` row inside the Archive tab's per-date detail.
 ///
 /// Dispatches on `reading.channel`:
-///   * `"daily-minute"` — renders the passage body in system serif, italic source
-///     reference, word count chip.
-///   * `"daily-lesson"` — renders "Lesson N" + the title (stored in
-///     `reading.text` per `ArchiveService.persistInlineLessons`). Archive lesson
-///     entries don't ship a body, so there's no passage Text block.
+///   * `"daily-minute"` — the passage body in system serif, with its book name
+///     and the date beneath it.
+///   * `"daily-lesson"` — "Lesson N" and the title (stored in `reading.text`
+///     per `ArchiveService.persistInlineLessons`). Archive lesson entries ship
+///     no body, so the scaffold's body slot is empty and its footer follows the
+///     title directly.
 ///
 /// Bookmark `itemKey` differs between channels:
 ///   * Minute: `"minute:\(reading.lineHash)"` — note this does **not** alias
@@ -55,33 +56,7 @@ struct ArchivedReadingCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            header
-            if isMinute {
-                Text(reading.text)
-                    .font(.system(.body, design: .serif))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                footerMinute
-            } else {
-                Text(reading.text.isEmpty ? headerLabel : reading.text)
-                    .font(.system(.title3, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
-                if !reading.dateString.isEmpty {
-                    Text(reading.dateString)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .padding(16)
-        .background(Color(white: 0.11).opacity(0.5))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var header: some View {
-        CardHeaderRow(headerLabel) {
+        ReadingScaffold(eyebrow: headerLabel, footer: footer) {
             if let audioURL = reading.audioURL, !audioURL.isEmpty {
                 ListenButton(title: listenTitle) {
                     audio.play(url: audioURL, title: listenTitle)
@@ -90,23 +65,37 @@ struct ArchivedReadingCard: View {
         } trailing: {
             ShareButton(text: shareText)
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+        } titleBlock: {
+            if !isMinute {
+                Text(reading.text.isEmpty ? headerLabel : reading.text)
+                    .font(.system(.title3, design: .serif).weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } body: {
+            if isMinute {
+                Text(reading.text)
+                    .font(.system(.body, design: .serif))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
+        .padding(16)
+        .background(Color(white: 0.11).opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private var footerMinute: some View {
-        HStack(spacing: 8) {
-            if !reading.sourceReference.isEmpty {
-                Text(CorpusSegment.bookName(forSourcePDF: reading.sourceReference))
-                    .font(.footnote.italic())
-                    .foregroundStyle(.secondary)
-            }
-            if !reading.dateString.isEmpty {
-                Text(reading.dateString)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-        }
+    /// An archived row carries no word count, so it shows no read time. Its
+    /// date goes in the measure slot instead: on this tab a date is the index a
+    /// reader navigates by, which is the one place the no-publication-dates
+    /// rule does not apply.
+    private var footer: ReadingFooter {
+        ReadingFooter(
+            bookName: isMinute && !reading.sourceReference.isEmpty
+                ? CorpusSegment.bookName(forSourcePDF: reading.sourceReference)
+                : nil,
+            measure: reading.dateString.isEmpty ? nil : reading.dateString
+        )
     }
 
     private func toggleBookmark() {
