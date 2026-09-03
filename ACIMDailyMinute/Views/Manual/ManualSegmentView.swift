@@ -34,12 +34,19 @@ struct ManualSegmentView: View {
         Group {
             if let reading = corpus.manualSegment(id: segmentId) {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Manual for Teachers")
-                            .font(.system(.title2, design: .serif).weight(.semibold))
-                            .foregroundStyle(.primary)
-                            .fixedSize(horizontal: false, vertical: true)
-
+                    ReadingScaffold(
+                        eyebrow: "Manual",
+                        footer: ReadingFooter(
+                            measure: ReadingTime.describe(
+                                wordCount: ReadingTime.wordCount(of: reading.body)
+                            )
+                        )
+                    ) {
+                    } trailing: {
+                        ShareButton(text: ShareTextBuilder.manualShareText(body: reading.body))
+                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                    } titleBlock: {
+                    } body: {
                         AnnotatableReadingText(
                             raw: reading.body,
                             key: .manual(segmentId),
@@ -65,12 +72,10 @@ struct ManualSegmentView: View {
                 }
             }
         }
-        .navigationTitle("Manual")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-            }
-        }
+        // The nav bar names the BOOK, which is why the literal title line this
+        // screen used to print is gone. Piece E gives the eyebrow a real
+        // question number once the Manual has a structure.
+        .navigationTitle("Manual for Teachers")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif

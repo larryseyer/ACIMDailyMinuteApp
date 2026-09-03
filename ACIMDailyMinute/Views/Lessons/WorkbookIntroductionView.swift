@@ -35,12 +35,25 @@ struct WorkbookIntroductionView: View {
         Group {
             if let reading {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    ReadingScaffold(
+                        eyebrow: "Introduction",
+                        footer: ReadingFooter(
+                            measure: ReadingTime.describe(
+                                wordCount: ReadingTime.wordCount(of: reading.body)
+                            )
+                        )
+                    ) {
+                    } trailing: {
+                        ShareButton(text: ShareTextBuilder.introductionShareText(
+                            title: reading.title, body: reading.body
+                        ))
+                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                    } titleBlock: {
                         Text(reading.title)
                             .font(.system(.title2, design: .serif).weight(.semibold))
                             .foregroundStyle(.primary)
                             .fixedSize(horizontal: false, vertical: true)
-
+                    } body: {
                         AnnotatableReadingText(
                             raw: reading.body,
                             key: .lesson(lessonNumber),
@@ -66,12 +79,8 @@ struct WorkbookIntroductionView: View {
                 }
             }
         }
-        .navigationTitle("Introduction")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-            }
-        }
+        // The nav bar names the BOOK; the eyebrow names the place.
+        .navigationTitle("Workbook")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif

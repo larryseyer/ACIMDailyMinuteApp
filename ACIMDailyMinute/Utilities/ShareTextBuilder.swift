@@ -82,4 +82,23 @@ enum ShareTextBuilder {
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
+    /// A Part Introduction shares like a lesson, because that is what it is —
+    /// a Workbook reading that was never published as a numbered day.
+    static func introductionShareText(title: String, body: String) -> String {
+        var parts: [String] = [title, body]
+        parts.append("— A Course in Miracles, Workbook for Students")
+        parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
+
+    /// ⛔ A Manual passage names its book and no address. The Manual ships as
+    /// 105 word-count cuts with no titles and `citation: nil`, so there is
+    /// nothing narrower to cite, and inventing one here would print an address
+    /// into a reader's share sheet that nothing else in the app agrees with.
+    static func manualShareText(body: String) -> String {
+        var parts: [String] = [body]
+        parts.append("— A Course in Miracles, Manual for Teachers")
+        parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
 }
