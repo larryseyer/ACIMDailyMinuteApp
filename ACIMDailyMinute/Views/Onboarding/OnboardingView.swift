@@ -13,16 +13,17 @@ struct OnboardingView: View {
 
     private var pages: [(systemImage: String, title: String, description: String)] {
         [
+            // His wording, verbatim.
             ("sun.max", "A Minute a Day",
-             "A short passage from A Course in Miracles, delivered every day. Nothing added, nothing taken away."),
+             "A short passage from A Course in Miracles, delivered daily."),
             ("book.closed", "Today's Lesson",
-             "The Workbook for Students, one lesson at a time, on the day you're meant to read it."),
+             "The Workbook for Students, one lesson at a time, on the day you choose."),
             ("play.circle", "Listen",
-             "Every passage and lesson, read aloud. Listen while you commute, walk, or sit still."),
+             "Every passage and lesson, read aloud. Listen while you commute, walk, or sit still. Daily Minutes and Daily Lessons are added regularly."),
             ("archivebox", "Archive",
-             "Browse past readings by date. Return to any passage when it calls you back."),
+             "Browse past readings by date. Return to any passage at your choosing. Your notes and highlights are stored across all devices."),
             ("bookmark", "Save Your Favorites",
-             "Keep the passages that speak to you. Return to them anytime, online or off.")
+             "Keep the passages you mark as favorites. Return to them anytime, online or off.")
         ]
     }
 

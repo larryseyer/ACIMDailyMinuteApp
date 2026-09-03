@@ -133,9 +133,10 @@ struct SettingsView: View {
                     } label: {
                         Text("Privacy Policy")
                     }
-                    if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-                       let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                        LabeledContent("Version", value: "\(version) (\(build))")
+                    // The marketing version alone. The build number is the
+                    // store's bookkeeping and means nothing to a reader.
+                    if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                        LabeledContent("Version", value: version)
                     }
                     Text("ACIM Sparkly Edition · Teddy Poppe · CIMS lineage")
                         .font(.footnote)
