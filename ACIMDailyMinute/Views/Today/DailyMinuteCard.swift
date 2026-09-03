@@ -23,11 +23,21 @@ struct DailyMinuteCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            header
-            AnnotatableReadingText(raw: minute.text, key: readingKey, design: .serif)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
-            footer
+            ReadingScaffold(eyebrow: "Daily Minute", footer: footer) {
+                if let audioURL = minute.audioURL, !audioURL.isEmpty {
+                    ListenButton(title: "Daily Minute") {
+                        audio.play(url: audioURL, title: "Daily Minute")
+                    }
+                }
+            } trailing: {
+                ShareButton(text: ShareTextBuilder.minuteShareText(minute))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            } titleBlock: {
+            } body: {
+                AnnotatableReadingText(raw: minute.text, key: readingKey, design: .serif)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if let error = audio.lastError {
                 Text(error)
                     .font(.caption)
@@ -40,38 +50,19 @@ struct DailyMinuteCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private var header: some View {
-        CardHeaderRow("Daily Minute") {
-            if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                ListenButton(title: "Daily Minute") {
-                    audio.play(url: audioURL, title: "Daily Minute")
-                }
-            }
-        } trailing: {
-            ShareButton(text: ShareTextBuilder.minuteShareText(minute))
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-        }
-    }
-
-    private var footer: some View {
-        HStack(spacing: 8) {
-            // The full address, not the stem: this footer names a passage, and
-            // the share text and the plain-text export name the same passage
-            // the same way. Its offline twin, `CorpusReadingCard`, is the same
-            // card in the same place, so the two cannot disagree about how
-            // precisely a Daily Minute is addressed.
-            if let segment = CorpusService.shared.segment(id: minute.segmentId) {
-                CitationButton(citation: segment.citation, bookName: segment.bookName)
-            }
-            Spacer()
-            Text("\(minute.wordCount) words")
-                .font(.caption2)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.white.opacity(0.08))
-                .clipShape(Capsule())
-                .foregroundStyle(.secondary)
-        }
+    /// The full address, not the stem: this footer names a passage, and the
+    /// share text and the plain-text export name the same passage the same way.
+    /// Its offline twin, `CorpusReadingCard`, is the same card in the same
+    /// place, so the two cannot disagree about how precisely a Daily Minute is
+    /// addressed.
+    private var footer: ReadingFooter {
+        let segment = CorpusService.shared.segment(id: minute.segmentId)
+        return ReadingFooter(
+            citation: segment?.citation,
+            bookName: segment?.bookName,
+            opensReading: segment != nil,
+            measure: ReadingTime.describe(wordCount: minute.wordCount)
+        )
     }
 
     private func toggleBookmark() {
