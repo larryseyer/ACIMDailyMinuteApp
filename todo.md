@@ -525,6 +525,23 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 
 ## ▶ OPEN — small, unscheduled
 
+- [ ] **A note should open at its passage, and a Daily Minute note should open at all.** His
+      observation, and it splits in two.
+      **The row already navigates** — `NoteRow` pushes `ReadingKey.savedDestination(media:)`, so a
+      note on a lesson, a Text section, an Introduction or a Manual cut opens its reading today.
+      1. ⛔ **A note on a Daily Minute goes inert.** `.segment(id)` resolves only when a
+         `SegmentMedia` row carries a non-empty `publishedDate` for that id, and most segments have
+         no media row, so the row simply does not push. That is the actual dead end he is seeing.
+         The fix is a destination for a segment that was never published — the passage is bundled and
+         readable either way, so it can open on its own words rather than through the archive day.
+      2. **It lands at the top of the reading, not at the note.** Now that a stored offset is a
+         solved problem, a note attached to a highlight already carries offset, length and quote —
+         which is exactly a `ReadingSpotlight`, and every reading screen already takes one. Pushing
+         it would put the reader on **their own sentence**, which is what "back to what I was
+         reading" means. A standalone note about a whole reading has no passage and correctly opens
+         at the top. ⛔ A highlight row wants the same thing and should move with it.
+      ⛔ On macOS the spotlight paints but does not scroll — see the reading-scroll item above.
+
 - [ ] **The archive minute is the last reading that cannot be marked.** `ArchivedReadingCard`
       draws its minute body as plain `Text`, so it alone offers no selection, no highlight, no
       note and no export. Every other reading goes through `AnnotatableReadingText`. Left out of
