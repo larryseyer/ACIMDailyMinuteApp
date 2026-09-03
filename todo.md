@@ -40,15 +40,15 @@ Everything here is built and on his phone. Verify what can be verified without h
 harnesses against real data, `./build.sh`, the arm64 device build, install + launch, process-alive
 checks, real feed payloads. His eyes are the last resort, not the first.
 
-- [ ] **Light, and the reminders — the two things no harness can see.** Settings > Appearance >
-      **Light**, on the phone at 375pt and on the Mac: every card, chip and gold word reads on the
-      white ground, the number badge on the Read list is legible, the About panel on the Mac follows
-      the setting, and the introduction stays on its black ground by design. Then Settings >
-      Practice reminders > **Follow the lesson's practice**, with the day set to bracket the next
-      hour: the **Today** row names the lesson and its cadence, and one reminder arrives on the
-      phone at that hour — and on the watch, mirrored — naming the lesson, and its tap opens that
-      lesson. The Daily Minute and Daily Lesson reminders each fire at their own time; a tap on the
-      first opens Today and on the second the Read tab. Nothing arrives during a Focus.
+- [ ] **Light on the phone, and the reminders — what no harness can see.** Settings > Appearance >
+      **Light** on the phone at 375pt: every card, chip and gold word reads on the white ground, the
+      number badge on the Read list is legible, the introduction stays on its black ground by
+      design, and the five cards' line breaks land where he set them without a stray wrap. Then
+      Settings > Practice reminders > **Follow the lesson's practice**, with the day set to bracket
+      the next hour: the **Today** row names the lesson and its cadence, and one reminder arrives
+      on the phone at that hour — and on the watch, mirrored — naming the lesson, and its tap opens
+      that lesson. The Daily Minute and Daily Lesson reminders each fire at their own time; a tap on
+      the first opens Today and on the second the Read tab. Nothing arrives during a Focus.
 - [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
       `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
       the title. An unlistened row shows no date at all.
