@@ -117,13 +117,14 @@ struct BackupDocument: Codable, Equatable, Sendable {
     /// later version adds a key, and older versions ignore it. Nothing is ever
     /// written as a placeholder for something that does not exist yet.
     struct Settings: Codable, Equatable, Sendable {
-        var watchedPhrases: [String]?
         var listenedEpisodes: [String: Date]?
+        /// The Daily Minute reminder. The key predates the split into two
+        /// reminders and keeps its name, so a file written before it still
+        /// restores the reminder its reader had.
         var dailyReminderEnabled: Bool?
         var dailyReminderTimeInterval: Double?
-        var notifyNewMinute: Bool?
-        var notifyNewLesson: Bool?
-        var notifyPhraseMatches: Bool?
+        var lessonReminderEnabled: Bool?
+        var lessonReminderTimeInterval: Double?
         var notifyLiveActivities: Bool?
         var lessonsLastWatchedIndex: Int?
         /// The reader's ribbons, book → position.

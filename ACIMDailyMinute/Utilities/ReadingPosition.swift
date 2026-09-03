@@ -144,8 +144,8 @@ struct ReadingPosition: Codable, Equatable, Sendable {
     /// each.
     ///
     /// A merge here has a meaning — the later place is where the reader actually
-    /// got to — which is why the ribbon travels with the phrases and the listened
-    /// history rather than with the scalars, where one value has to displace
+    /// got to — which is why the ribbon travels with the listened history
+    /// rather than with the scalars, where one value has to displace
     /// another and only a reader can say which.
     ///
     /// ⛔ It can never move a book's ribbon backwards, which is the same promise

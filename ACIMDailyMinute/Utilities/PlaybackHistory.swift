@@ -3,8 +3,8 @@ import Foundation
 /// When the reader last opened each Listen episode, keyed by the feed's own
 /// episode id.
 ///
-/// Kept in `UserDefaults` alongside `PhraseStorage` rather than in SwiftData for
-/// two reasons. `CachedPodcastEpisode` is purged on a 30-day TTL, so listened
+/// Kept in `UserDefaults` alongside the reader's other settings rather than in
+/// SwiftData for two reasons. `CachedPodcastEpisode` is purged on a 30-day TTL, so listened
 /// state stored on that row would quietly evaporate for anything older than a
 /// month. And a new `@Model` has to be added to the `Schema` in *both* the app
 /// and the widget's `SharedModelContainer` — a mismatch there fails the shared

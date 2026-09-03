@@ -21,30 +21,15 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequested)) { _ in
                 showSettings = true
             }
-            .onReceive(NotificationCenter.default.publisher(for: .phrasesTapped)) { _ in
-                // Phrases editor lives in Settings as of Phase 2 plan §8;
-                // route notification taps to the Settings sheet until 3.8
-                // wires the editor in-place.
-                showSettings = true
+            // A reminder tap lands where a URL would, through the same switch,
+            // so a notification can never open somewhere a link cannot.
+            .onReceive(NotificationCenter.default.publisher(for: .reminderTapped)) { note in
+                guard let route = note.object as? DeepLinkRoute else { return }
+                follow(route)
             }
             .onOpenURL { url in
                 guard let route = DeepLinkRoute.parse(url) else { return }
-                switch route {
-                case .today:
-                    selectedTab = 0
-                case .lesson(let n):
-                    selectedTab = 1
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .deepLinkLesson, object: n)
-                    }
-                case .archive(let d):
-                    selectedTab = 3
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .deepLinkArchive, object: d)
-                    }
-                case .saved:
-                    selectedTab = 4
-                }
+                follow(route)
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
@@ -66,6 +51,27 @@ struct ContentView: View {
                 AboutView()
             }
             #endif
+    }
+
+    private func follow(_ route: DeepLinkRoute) {
+        switch route {
+        case .today:
+            selectedTab = 0
+        case .lessons:
+            selectedTab = 1
+        case .lesson(let n):
+            selectedTab = 1
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .deepLinkLesson, object: n)
+            }
+        case .archive(let d):
+            selectedTab = 3
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .deepLinkArchive, object: d)
+            }
+        case .saved:
+            selectedTab = 4
+        }
     }
 
     /// Escape closes a macOS sheet by writing `false` through this binding.

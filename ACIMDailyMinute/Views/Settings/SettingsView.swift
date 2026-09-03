@@ -2,8 +2,13 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
-    @AppStorage("dailyReminderEnabled") private var reminderEnabled = false
-    @AppStorage("dailyReminderTimeInterval") private var reminderTimeInterval: Double = Date().timeIntervalSinceReferenceDate
+    /// The Daily Minute reminder. The keys predate the split into two
+    /// reminders and keep their names, so a reader who had the one reminder
+    /// on still has one at the same time — about the minute.
+    @AppStorage("dailyReminderEnabled") private var minuteReminderEnabled = false
+    @AppStorage("dailyReminderTimeInterval") private var minuteReminderTimeInterval: Double = Date().timeIntervalSinceReferenceDate
+    @AppStorage("lessonReminderEnabled") private var lessonReminderEnabled = false
+    @AppStorage("lessonReminderTimeInterval") private var lessonReminderTimeInterval: Double = Date().timeIntervalSinceReferenceDate
     // `false`, matching `ContentView` and `OnboardingView`. An install that has
     // never stored this key has, by definition, not seen the introduction, so
     // `true` was the wrong answer to give — it was inert only because this
@@ -14,72 +19,39 @@ struct SettingsView: View {
     /// build the reader store with mirroring, named from there so the two
     /// can never drift apart. Written here, acted on at the next launch.
     @AppStorage(SharedModelContainer.syncEnabledKey) private var iCloudSyncEnabled = false
-    @AppStorage("notifyNewMinute") private var notifyNewMinute = true
-    @AppStorage("notifyNewLesson") private var notifyNewLesson = true
-    @AppStorage("notifyPhraseMatches") private var notifyPhraseMatches = true
-
-    /// Bound to the defaults key `PhraseStorage` writes. The count used to be
-    /// read straight off `PhraseStorage.phrases`, which is a plain `static`
-    /// accessor — SwiftUI had no dependency on it, so adding a phrase never
-    /// redrew this label and it sat at "0 of 10" forever.
-    @AppStorage("watchedPhrases") private var watchedPhrasesData = Data()
-
-    private var phraseCount: Int {
-        _ = watchedPhrasesData
-        return PhraseStorage.phrases.count
-    }
-
-    private var reminderTime: Date {
-        get { Date(timeIntervalSinceReferenceDate: reminderTimeInterval) }
-        set { reminderTimeInterval = newValue.timeIntervalSinceReferenceDate }
-    }
-
-    private var reminderTimeBinding: Binding<Date> {
-        Binding(
-            get: { Date(timeIntervalSinceReferenceDate: reminderTimeInterval) },
-            set: { reminderTimeInterval = $0.timeIntervalSinceReferenceDate }
-        )
-    }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Notifications") {
-                    Toggle("Daily reminder", isOn: $reminderEnabled)
-                        .onChange(of: reminderEnabled) { _, enabled in
-                            handleReminderToggle(enabled: enabled)
-                        }
-                    DatePicker("Reminder time", selection: reminderTimeBinding, displayedComponents: .hourAndMinute)
-                        .onChange(of: reminderTimeInterval) { _, _ in
-                            let newTime = reminderTime
-                            guard reminderEnabled else { return }
-                            scheduleReminder(at: newTime)
-                        }
+                Section {
+                    Toggle("Daily Minute", isOn: $minuteReminderEnabled)
+                    if minuteReminderEnabled {
+                        DatePicker(
+                            "Time",
+                            selection: Self.timeBinding($minuteReminderTimeInterval),
+                            displayedComponents: .hourAndMinute
+                        )
+                    }
+                    Toggle("Daily Lesson", isOn: $lessonReminderEnabled)
+                    if lessonReminderEnabled {
+                        DatePicker(
+                            "Time",
+                            selection: Self.timeBinding($lessonReminderTimeInterval),
+                            displayedComponents: .hourAndMinute
+                        )
+                    }
                     Button("Send test notification") {
                         Task { await NotificationManager.shared.fireTest() }
                     }
-                }
-
-                Section {
-                    Toggle("New Daily Minute", isOn: $notifyNewMinute)
-                    Toggle("New Daily Lesson", isOn: $notifyNewLesson)
-                    Toggle("Watched phrase matches", isOn: $notifyPhraseMatches)
                 } header: {
-                    Text("Alert me about")
+                    Text("Reminders")
                 } footer: {
-                    Text("Checked when the app opens and, when iOS allows it, in the background.")
+                    Text("Each arrives at the same time every day. Reminders yield to Focus and Do Not Disturb.")
                 }
-
-                Section("Watched Phrases") {
-                    NavigationLink {
-                        PhrasesEditorView()
-                    } label: {
-                        LabeledContent("Manage phrases") {
-                            Text("\(phraseCount) of \(PhraseStorage.maxPhrases)")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
+                .onChange(of: minuteReminderEnabled) { _, _ in applyMinuteReminder() }
+                .onChange(of: minuteReminderTimeInterval) { _, _ in applyMinuteReminder() }
+                .onChange(of: lessonReminderEnabled) { _, _ in applyLessonReminder() }
+                .onChange(of: lessonReminderTimeInterval) { _, _ in applyLessonReminder() }
 
                 Section("Onboarding") {
                     Button("Replay introduction") {
@@ -176,22 +148,25 @@ struct SettingsView: View {
         #endif
     }
 
-    private func handleReminderToggle(enabled: Bool) {
-        if enabled {
-            scheduleReminder(at: reminderTime)
-        } else {
-            Task { await NotificationManager.shared.cancelDailyReminder() }
-        }
+    /// A time-of-day key is stored as a `timeIntervalSinceReferenceDate` so
+    /// `@AppStorage` can hold it; the picker wants a `Date`.
+    static func timeBinding(_ interval: Binding<Double>) -> Binding<Date> {
+        Binding(
+            get: { Date(timeIntervalSinceReferenceDate: interval.wrappedValue) },
+            set: { interval.wrappedValue = $0.timeIntervalSinceReferenceDate }
+        )
     }
 
-    private func scheduleReminder(at time: Date) {
-        let comps = Calendar.current.dateComponents([.hour, .minute], from: time)
-        let h = comps.hour ?? 9
-        let m = comps.minute ?? 0
-        Task {
-            await NotificationManager.shared.requestPermissionIfNeeded()
-            await NotificationManager.shared.scheduleDailyReminder(hour: h, minute: m)
-        }
+    private func applyMinuteReminder() {
+        let enabled = minuteReminderEnabled
+        let interval = minuteReminderTimeInterval
+        Task { await NotificationManager.shared.applyDailyReminder(.minute, enabled: enabled, timeInterval: interval) }
+    }
+
+    private func applyLessonReminder() {
+        let enabled = lessonReminderEnabled
+        let interval = lessonReminderTimeInterval
+        Task { await NotificationManager.shared.applyDailyReminder(.lesson, enabled: enabled, timeInterval: interval) }
     }
 }
 

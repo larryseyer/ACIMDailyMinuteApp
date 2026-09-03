@@ -40,7 +40,6 @@
 		AA000001315 /* CompanionNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002313 /* CompanionNoteView.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
-		AA000001036 /* TermExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002036 /* TermExtractor.swift */; };
 		AA000001041 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002041 /* OnboardingView.swift */; };
 		AA000001042 /* ACIMDailyMinuteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002042 /* ACIMDailyMinuteWidget.swift */; };
 		AA000001043 /* ACIMDailyMinuteTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */; };
@@ -65,7 +64,6 @@
 		AA000001343 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
 		AA000001344 /* HighlightRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002344 /* HighlightRow.swift */; };
 		AA000001345 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
-		AA000001223 /* PhrasesEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002221 /* PhrasesEditorView.swift */; };
 		AA000001224 /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
 		AA000001226 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
 		AA000001059 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
@@ -156,8 +154,6 @@
 		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
 		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
 		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
-		AA000001204 /* PhraseMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002204 /* PhraseMatcher.swift */; };
-		AA000001205 /* PhraseStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002205 /* PhraseStorage.swift */; };
 		AA000001260 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
 		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
 		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
@@ -170,6 +166,7 @@
 		AA000001352 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
 		AA000001360 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
 		AA000001361 /* CitationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002361 /* CitationResolver.swift */; };
+		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,7 +225,6 @@
 		AA000002313 /* CompanionNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionNoteView.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
-		AA000002036 /* TermExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermExtractor.swift; sourceTree = "<group>"; };
 		AA000002041 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		AA000002042 /* ACIMDailyMinuteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWidget.swift; sourceTree = "<group>"; };
 		AA000002043 /* ACIMDailyMinuteTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteTimelineProvider.swift; sourceTree = "<group>"; };
@@ -246,7 +242,6 @@
 		AA000002343 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
 		AA000002344 /* HighlightRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightRow.swift; sourceTree = "<group>"; };
 		AA000002345 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
-		AA000002221 /* PhrasesEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhrasesEditorView.swift; sourceTree = "<group>"; };
 		AA000002222 /* DeepLinkRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRoute.swift; sourceTree = "<group>"; };
 		AA000002226 /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
 		AA000002054 /* ACIMActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMActivityAttributes.swift; sourceTree = "<group>"; };
@@ -328,8 +323,6 @@
 		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
 		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
 		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
-		AA000002204 /* PhraseMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatcher.swift; sourceTree = "<group>"; };
-		AA000002205 /* PhraseStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseStorage.swift; sourceTree = "<group>"; };
 		AA000002260 /* ReadingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKey.swift; sourceTree = "<group>"; };
 		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
 		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
@@ -343,6 +336,7 @@
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,7 +428,6 @@
 				AA000002028 /* NotificationManager.swift */,
 				AA000002029 /* ConnectivityManager.swift */,
 				AA000002034 /* FetchCooldown.swift */,
-				AA000002204 /* PhraseMatcher.swift */,
 				AA000002055 /* LiveActivityManager.swift */,
 				AA000002226 /* PhoneWatchSyncService.swift */,
 				AA000002301 /* WorkbookCatalog.swift */,
@@ -457,6 +450,7 @@
 				AA000002610 /* CorpusSearch.swift */,
 				AA000002611 /* CorpusSearchService.swift */,
 				AA000002622 /* ReadingPositionStore.swift */,
+				AA000002701 /* PracticeAnchorStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -523,8 +517,6 @@
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
-				AA000002036 /* TermExtractor.swift */,
-				AA000002205 /* PhraseStorage.swift */,
 				AA000002260 /* ReadingKey.swift */,
 				AA000002206 /* HashUtility.swift */,
 				AA000002222 /* DeepLinkRoute.swift */,
@@ -555,7 +547,6 @@
 			isa = PBXGroup;
 			children = (
 				AA000002025 /* SettingsView.swift */,
-				AA000002221 /* PhrasesEditorView.swift */,
 				AA000002030 /* PrivacyPolicyView.swift */,
 				AA000002409 /* BackupRestoreView.swift */,
 				AA000002313 /* CompanionNoteView.swift */,
@@ -846,7 +837,6 @@
 				AA000001315 /* CompanionNoteView.swift in Sources */,
 				AA000001034 /* FetchCooldown.swift in Sources */,
 				AA000001035 /* Bookmark.swift in Sources */,
-				AA000001036 /* TermExtractor.swift in Sources */,
 				AA000001041 /* OnboardingView.swift in Sources */,
 				AA000001057 /* ShareTextBuilder.swift in Sources */,
 				AA000001081 /* PlatformTypography.swift in Sources */,
@@ -875,7 +865,6 @@
 				AA000001343 /* NoteEditorView.swift in Sources */,
 				AA000001344 /* HighlightRow.swift in Sources */,
 				AA000001345 /* NoteRow.swift in Sources */,
-				AA000001223 /* PhrasesEditorView.swift in Sources */,
 				AA000001224 /* DeepLinkRoute.swift in Sources */,
 				AA000001051 /* SharedModelContainer.swift in Sources */,
 				AA000001059 /* ACIMActivityAttributes.swift in Sources */,
@@ -891,8 +880,6 @@
 				AA000001212 /* LessonsView.swift in Sources */,
 				AA000001213 /* LessonDetailView.swift in Sources */,
 				AA000001214 /* JumpToLessonSheet.swift in Sources */,
-				AA000001204 /* PhraseMatcher.swift in Sources */,
-				AA000001205 /* PhraseStorage.swift in Sources */,
 				AA000001260 /* ReadingKey.swift in Sources */,
 				AA000001604 /* LiteYouTubeCard.swift in Sources */,
 				AA000001603 /* PlaybackHistory.swift in Sources */,
@@ -935,6 +922,7 @@
 				AA000001621 /* ReadingKeyNaming.swift in Sources */,
 				AA000001622 /* ReadingPositionStore.swift in Sources */,
 				AA000001623 /* ContinueReadingRow.swift in Sources */,
+				AA000001701 /* PracticeAnchorStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -121,12 +121,12 @@ func roundTripCases() -> [BackupDocument] {
                   readingKey: nil),
         ],
         settings: .init(
-            watchedPhrases: ["forgiveness", "holy instant"],
             listenedEpisodes: ["ep-1": date(8), "ep-2": date(9.5)],
             dailyReminderEnabled: true,
             dailyReminderTimeInterval: 780_012_345.5,
-            notifyNewMinute: true, notifyNewLesson: false,
-            notifyPhraseMatches: true, notifyLiveActivities: false,
+            lessonReminderEnabled: false,
+            lessonReminderTimeInterval: 780_015_000,
+            notifyLiveActivities: false,
             lessonsLastWatchedIndex: 12,
             readingPositions: [
                 ReadingPosition.Book.text.rawValue: .init(

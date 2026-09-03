@@ -18,9 +18,8 @@ enum BackupService {
     private enum ReaderKey {
         static let dailyReminderEnabled = "dailyReminderEnabled"
         static let dailyReminderTimeInterval = "dailyReminderTimeInterval"
-        static let notifyNewMinute = "notifyNewMinute"
-        static let notifyNewLesson = "notifyNewLesson"
-        static let notifyPhraseMatches = "notifyPhraseMatches"
+        static let lessonReminderEnabled = "lessonReminderEnabled"
+        static let lessonReminderTimeInterval = "lessonReminderTimeInterval"
         static let notifyLiveActivities = "notifyLiveActivities"
         static let lessonsLastWatchedIndex = "listen.lessons.lastWatchedIndex"
     }
@@ -28,10 +27,9 @@ enum BackupService {
     /// ⛔ Named here so the exclusion is a decision on the page rather than an
     /// omission someone later reads as an oversight. **None of these travels.**
     ///
-    /// - Dedup ledgers and detection baselines — `phraseNotifiedItemKeys`,
-    ///   `lastMinuteSegmentId`, `lastMinuteDate`, `lastLessonId`,
-    ///   `phraseMatchBadge`. Importing one would suppress an alert on a device
-    ///   that never showed it.
+    /// - Detection baselines — `practiceAnchorLesson`, `practiceAnchorDay`.
+    ///   They record what THIS device last fetched from the feed; importing
+    ///   one would tell a device it had learned something it never did.
     /// - Fetch cooldowns — `lastForegroundCheck`, `lastDailyMinuteFetch`,
     ///   `lastDailyLessonFetch`, `lastFeedFetch`, `lastArchiveFetch`. Importing
     ///   one would stop a fetch that never happened here.
@@ -39,7 +37,6 @@ enum BackupService {
     ///   They describe this device's store, not the reader.
     /// - `hasSeenOnboarding` — app state, not the reader's work. A new device
     ///   should still introduce itself.
-    /// - `useCustomNotificationSound` — registered and never read anywhere.
     /// - `iCloudSyncEnabled` — whether a device mirrors the reader's work to
     ///   their iCloud is consent, and consent is given per device. A backup that
     ///   switched sync on for a machine its owner never chose it for would be
@@ -287,19 +284,18 @@ enum BackupService {
         func bool(_ key: String) -> Bool? {
             defaults.object(forKey: key) == nil ? nil : defaults.bool(forKey: key)
         }
-        let phrases = PhraseStorage.phrases
+        func double(_ key: String) -> Double? {
+            defaults.object(forKey: key) == nil ? nil : defaults.double(forKey: key)
+        }
         let listened = PlaybackHistory.entries
         let positions = ReadingPositionStore.entries
 
         return BackupDocument.Settings(
-            watchedPhrases: phrases.isEmpty ? nil : phrases,
             listenedEpisodes: listened.isEmpty ? nil : listened,
             dailyReminderEnabled: bool(ReaderKey.dailyReminderEnabled),
-            dailyReminderTimeInterval: defaults.object(forKey: ReaderKey.dailyReminderTimeInterval)
-                == nil ? nil : defaults.double(forKey: ReaderKey.dailyReminderTimeInterval),
-            notifyNewMinute: bool(ReaderKey.notifyNewMinute),
-            notifyNewLesson: bool(ReaderKey.notifyNewLesson),
-            notifyPhraseMatches: bool(ReaderKey.notifyPhraseMatches),
+            dailyReminderTimeInterval: double(ReaderKey.dailyReminderTimeInterval),
+            lessonReminderEnabled: bool(ReaderKey.lessonReminderEnabled),
+            lessonReminderTimeInterval: double(ReaderKey.lessonReminderTimeInterval),
             notifyLiveActivities: bool(ReaderKey.notifyLiveActivities),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
                 == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex),
@@ -308,12 +304,11 @@ enum BackupService {
     }
 
     /// Lossless settings merge whatever the reader chose, because nothing they
-    /// hold can be discarded: the phrases and the listened history take a union,
-    /// and a ribbon takes the later of two places per book, which no book can
-    /// lose. The scalars — where a merge has no meaning and one value must
-    /// displace another — move only on request.
+    /// hold can be discarded: the listened history takes a union, and a ribbon
+    /// takes the later of two places per book, which no book can lose. The
+    /// scalars — where a merge has no meaning and one value must displace
+    /// another — move only on request.
     private static func applySettings(_ settings: BackupDocument.Settings, restoreScalars: Bool) {
-        if let incoming = settings.watchedPhrases { mergePhrases(incoming) }
         if let incoming = settings.listenedEpisodes { mergeListened(incoming) }
         // A ribbon merges rather than displaces: per book, the later place is
         // where the reader actually got to, and that is an answer neither
@@ -322,11 +317,6 @@ enum BackupService {
 
         guard restoreScalars else { return }
         let defaults = UserDefaults.standard
-        if let value = settings.notifyNewMinute { defaults.set(value, forKey: ReaderKey.notifyNewMinute) }
-        if let value = settings.notifyNewLesson { defaults.set(value, forKey: ReaderKey.notifyNewLesson) }
-        if let value = settings.notifyPhraseMatches {
-            defaults.set(value, forKey: ReaderKey.notifyPhraseMatches)
-        }
         if let value = settings.notifyLiveActivities {
             defaults.set(value, forKey: ReaderKey.notifyLiveActivities)
         }
@@ -338,26 +328,15 @@ enum BackupService {
         }
         if let enabled = settings.dailyReminderEnabled {
             defaults.set(enabled, forKey: ReaderKey.dailyReminderEnabled)
-            rescheduleReminder(
-                enabled: enabled,
-                at: settings.dailyReminderTimeInterval
-                    ?? defaults.double(forKey: ReaderKey.dailyReminderTimeInterval)
-            )
+            rescheduleReminder(.minute, enabled: enabled, timeIntervalKey: ReaderKey.dailyReminderTimeInterval)
         }
-    }
-
-    /// Local phrases keep their places, so a full list is never displaced by an
-    /// import; incoming ones fill whatever room is left.
-    private static func mergePhrases(_ incoming: [String]) {
-        var merged = PhraseStorage.phrases
-        for phrase in incoming {
-            let trimmed = phrase.trimmingCharacters(in: .whitespaces)
-            guard !trimmed.isEmpty, merged.count < PhraseStorage.maxPhrases else { continue }
-            guard !merged.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame })
-            else { continue }
-            merged.append(trimmed)
+        if let value = settings.lessonReminderTimeInterval {
+            defaults.set(value, forKey: ReaderKey.lessonReminderTimeInterval)
         }
-        PhraseStorage.phrases = merged
+        if let enabled = settings.lessonReminderEnabled {
+            defaults.set(enabled, forKey: ReaderKey.lessonReminderEnabled)
+            rescheduleReminder(.lesson, enabled: enabled, timeIntervalKey: ReaderKey.lessonReminderTimeInterval)
+        }
     }
 
     /// A row reads "when you listened", and the most recent listen is the
@@ -375,18 +354,14 @@ enum BackupService {
     /// The scheduled notification is OS-side state rebuilt from the two keys, so
     /// restoring the keys without rebuilding it would leave a reader with a
     /// reminder switch that says one thing and a phone that does another.
-    private static func rescheduleReminder(enabled: Bool, at interval: Double) {
-        let time = Date(timeIntervalSinceReferenceDate: interval)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: time)
-        let hour = components.hour ?? 9
-        let minute = components.minute ?? 0
+    private static func rescheduleReminder(
+        _ kind: NotificationManager.DailyReminderKind,
+        enabled: Bool,
+        timeIntervalKey: String
+    ) {
+        let interval = UserDefaults.standard.double(forKey: timeIntervalKey)
         Task {
-            if enabled {
-                await NotificationManager.shared.requestPermissionIfNeeded()
-                await NotificationManager.shared.scheduleDailyReminder(hour: hour, minute: minute)
-            } else {
-                await NotificationManager.shared.cancelDailyReminder()
-            }
+            await NotificationManager.shared.applyDailyReminder(kind, enabled: enabled, timeInterval: interval)
         }
     }
 }

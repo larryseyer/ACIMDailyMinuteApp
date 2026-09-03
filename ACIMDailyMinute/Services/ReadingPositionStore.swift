@@ -2,8 +2,8 @@ import Foundation
 
 /// Where the reader's ribbons live: one per book, in `UserDefaults.standard`.
 ///
-/// Kept beside `PhraseStorage` and `PlaybackHistory` rather than in SwiftData,
-/// for `PlaybackHistory`'s reasons. A new `@Model` has to be added to the
+/// Kept beside `PlaybackHistory` rather than in SwiftData, for
+/// `PlaybackHistory`'s reasons. A new `@Model` has to be added to the
 /// `Schema` in *both* the app and the widget's `SharedModelContainer`, and a
 /// mismatch there fails the shared container at launch — the widget has no use
 /// for a ribbon, and no reason to carry the risk of one.
@@ -11,7 +11,7 @@ import Foundation
 /// ⛔ `UserDefaults.standard`, not the App Group: every reader setting in this
 /// app lives there, so the widget and the watch can see none of them and
 /// CloudKit carries none of them either. The ribbon travels **only** in the
-/// backup file, like the reminder time and the watched phrases.
+/// backup file, like the reminder times.
 ///
 /// This file and `AnnotatableReadingText` are the only two that touch a ribbon.
 /// The value, the book, the merge and the re-anchoring are all in
