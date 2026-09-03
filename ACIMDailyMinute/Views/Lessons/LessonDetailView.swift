@@ -96,19 +96,33 @@ struct LessonDetailView: View {
     var body: some View {
         Group {
             if let lesson = lessonMatches.first {
-                FullLessonView(lesson: lesson, spotlight: spotlight)
+                FullLessonView(
+                    lesson: lesson,
+                    spotlight: spotlight,
+                    isBookmarked: isBookmarked,
+                    toggleBookmark: toggleBookmark
+                )
             } else if let archive = archiveMatches.first {
-                MetadataOnlyLessonView(lessonNumber: lessonNumber, archive: archive, spotlight: spotlight)
+                MetadataOnlyLessonView(
+                    lessonNumber: lessonNumber,
+                    archive: archive,
+                    spotlight: spotlight,
+                    isBookmarked: isBookmarked,
+                    toggleBookmark: toggleBookmark
+                )
             } else {
-                AbsentLessonView(lessonNumber: lessonNumber, availableOn: availableOn, spotlight: spotlight)
+                AbsentLessonView(
+                    lessonNumber: lessonNumber,
+                    availableOn: availableOn,
+                    spotlight: spotlight,
+                    isBookmarked: isBookmarked,
+                    toggleBookmark: toggleBookmark
+                )
             }
         }
-        .navigationTitle("Lesson \(lessonNumber)")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-            }
-        }
+        // The nav bar names the BOOK; the scaffold's eyebrow names the place.
+        // Saying "Lesson 84" in both put the same phrase twice within 40 points.
+        .navigationTitle("Workbook")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $isShowingVideo) {
@@ -125,6 +139,7 @@ struct LessonDetailView: View {
         }
         #endif
     }
+
     private func toggleBookmark() {
         BookmarkStore.toggle(key: itemKey, channel: "daily-lesson", in: modelContext)
     }
@@ -138,17 +153,31 @@ struct LessonDetailView: View {
 private struct FullLessonView: View {
     let lesson: DailyLesson
     var spotlight: ReadingSpotlight? = nil
+    let isBookmarked: Bool
+    let toggleBookmark: () -> Void
 
     @Environment(AudioManager.self) private var audio
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                header
+            ReadingScaffold(
+                eyebrow: "Lesson \(lesson.lessonNumber)",
+                footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
+            ) {
+                if let audioURL = lesson.audioURL, !audioURL.isEmpty {
+                    ListenButton(title: "Lesson \(lesson.lessonNumber)") {
+                        audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
+                    }
+                }
+            } trailing: {
+                ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            } titleBlock: {
                 Text(lesson.lessonTitle)
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
+            } body: {
                 AnnotatableReadingText(
                     raw: lesson.text,
                     key: .lesson(lesson.lessonNumber),
@@ -158,8 +187,6 @@ private struct FullLessonView: View {
                 )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
-                wordCountChip
-                actionRow
             }
             .padding(20)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -169,59 +196,6 @@ private struct FullLessonView: View {
             Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
     }
-
-    private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text("Lesson \(lesson.lessonNumber)")
-                .font(.caption.weight(.semibold))
-                .textCase(.uppercase)
-                .foregroundStyle(.secondary)
-            Spacer()
-        }
-    }
-
-    private var wordCountChip: some View {
-        HStack {
-            Spacer()
-            Text("\(lesson.wordCount) words")
-                .font(.caption2)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.white.opacity(0.08))
-                .clipShape(Capsule())
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    private var actionRow: some View {
-        HStack(spacing: 16) {
-            ShareLink(item: ShareTextBuilder.lessonShareText(lesson)) {
-                Image(systemName: "square.and.arrow.up")
-            }
-            .accessibilityLabel("Share")
-
-            Spacer()
-
-            if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                Button {
-                    audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                } label: {
-                    Label("Listen", systemImage: "play.fill")
-                        .font(.callout.weight(.medium))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.08))
-                        .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Listen to Lesson")
-            }
-        }
-        .font(.title3)
-        .foregroundStyle(.primary)
-        .buttonStyle(.plain)
-        .padding(.top, 4)
-    }
 }
 
 // MARK: - Metadata-only state
@@ -230,6 +204,8 @@ private struct MetadataOnlyLessonView: View {
     let lessonNumber: Int
     let archive: ArchivedReading
     var spotlight: ReadingSpotlight? = nil
+    let isBookmarked: Bool
+    let toggleBookmark: () -> Void
 
     @Environment(AudioManager.self) private var audio
 
@@ -242,16 +218,37 @@ private struct MetadataOnlyLessonView: View {
         return "https://www.youtube.com/embed/\(videoID)"
     }
 
+    /// The bundled body, when there is one. A lesson the feed has not published
+    /// still has all 365 bodies behind it.
+    private var bundledBody: String? {
+        WorkbookBodiesCatalog.body(for: lessonNumber)
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            ReadingScaffold(
+                eyebrow: "Lesson \(lessonNumber)",
+                footer: ReadingFooter(
+                    measure: bundledBody.flatMap {
+                        ReadingTime.describe(wordCount: ReadingTime.wordCount(of: $0))
+                    }
+                )
+            ) {
+                if let audioURL = archive.audioURL, !audioURL.isEmpty {
+                    ListenButton(title: "Lesson \(lessonNumber)") {
+                        audio.play(url: audioURL, title: "Lesson \(lessonNumber)")
+                    }
+                }
+            } trailing: {
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            } titleBlock: {
                 Text(title)
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
-
-                if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
+            } body: {
+                if let bundledBody {
                     AnnotatableReadingText(
-                        raw: body,
+                        raw: bundledBody,
                         key: .lesson(lessonNumber),
                         design: .standard,
                         spotlight: spotlight
@@ -259,25 +256,6 @@ private struct MetadataOnlyLessonView: View {
                 } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
                         .aspectRatio(16.0/9.0, contentMode: .fit)
-                }
-
-                if let audioURL = archive.audioURL, !audioURL.isEmpty {
-                    HStack {
-                        Spacer()
-                        Button {
-                            audio.play(url: audioURL, title: "Lesson \(lessonNumber)")
-                        } label: {
-                            Label("Listen", systemImage: "play.fill")
-                                .font(.callout.weight(.medium))
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.08))
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Listen to Lesson")
-                    }
-                    .padding(.top, 4)
                 }
             }
             .padding(.horizontal, 20)
@@ -298,6 +276,8 @@ private struct AbsentLessonView: View {
     /// readable regardless; this line is what answers the tap on a dimmed row.
     let availableOn: Date?
     var spotlight: ReadingSpotlight? = nil
+    let isBookmarked: Bool
+    let toggleBookmark: () -> Void
 
     @Query(filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" })
     private var cachedLessons: [CachedPodcastEpisode]
@@ -314,52 +294,52 @@ private struct AbsentLessonView: View {
         WorkbookCatalog.title(for: lessonNumber) ?? "Lesson \(lessonNumber)"
     }
 
+    private var bundledBody: String? {
+        lessonNumber == 0 ? nil : WorkbookBodiesCatalog.body(for: lessonNumber)
+    }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            ReadingScaffold(
+                eyebrow: "Lesson \(lessonNumber)",
+                footer: ReadingFooter(
+                    measure: bundledBody.flatMap {
+                        ReadingTime.describe(wordCount: ReadingTime.wordCount(of: $0))
+                    }
+                )
+            ) {
+                if lessonNumber == 0, let audioURL = introAudioURL, !audioURL.isEmpty {
+                    ListenButton(title: "Introduction") {
+                        audio.play(url: audioURL, title: "Introduction")
+                    }
+                }
+            } trailing: {
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            } titleBlock: {
                 Text(title)
                     .font(.system(.title2, design: .serif).weight(.semibold))
                     .frame(maxWidth: .infinity, alignment: .leading)
-
-                if let availableOn {
-                    Label(
-                        "Not recorded yet. Audio and video available \(LessonSchedule.formatted(availableOn)).",
-                        systemImage: "clock"
-                    )
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(12)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                if lessonNumber == 0 {
-                    if let audioURL = introAudioURL, !audioURL.isEmpty {
-                        HStack {
-                            Spacer()
-                            Button {
-                                audio.play(url: audioURL, title: "Introduction")
-                            } label: {
-                                Label("Listen", systemImage: "play.fill")
-                                    .font(.callout.weight(.medium))
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(Color.white.opacity(0.08))
-                                    .clipShape(Capsule())
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityLabel("Listen to Introduction")
-                        }
-                        .padding(.top, 4)
+            } body: {
+                VStack(alignment: .leading, spacing: 16) {
+                    if let availableOn {
+                        Label(
+                            "Not recorded yet. Audio and video available \(LessonSchedule.formatted(availableOn)).",
+                            systemImage: "clock"
+                        )
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
                     }
-                } else if let body = WorkbookBodiesCatalog.body(for: lessonNumber) {
-                    AnnotatableReadingText(
-                        raw: body,
-                        key: .lesson(lessonNumber),
-                        design: .standard,
-                        spotlight: spotlight
-                    )
+                    if let bundledBody {
+                        AnnotatableReadingText(
+                            raw: bundledBody,
+                            key: .lesson(lessonNumber),
+                            design: .standard,
+                            spotlight: spotlight
+                        )
+                    }
                 }
             }
             .padding(.horizontal, 20)
