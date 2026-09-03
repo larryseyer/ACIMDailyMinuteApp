@@ -39,7 +39,10 @@ struct OnboardingView: View {
 
             skipButton
         }
-        .preferredColorScheme(.dark)
+        // Forced dark for this subtree only. `preferredColorScheme` would
+        // reach the window, and a scheme given to the window is not taken
+        // back when the cover comes down — the reader's own choice is.
+        .environment(\.colorScheme, .dark)
         #if os(macOS)
         .background(QuittableSheet())
         #endif

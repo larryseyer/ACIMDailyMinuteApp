@@ -102,11 +102,15 @@ struct ACIMDailyMinuteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme((Appearance(rawValue: appearance) ?? .dark).colorScheme)
                 #if os(macOS)
                 .frame(minWidth: 420, minHeight: 640)
                 #endif
+                // The appearance is applied to the window, not preferred
+                // through SwiftUI — see `Appearance.apply`. Every window
+                // applies it as it appears, and a change applies to all.
+                .onChange(of: appearance) { _, raw in Appearance.apply(raw) }
                 .onAppear {
+                    Appearance.apply(appearance)
                     #if os(iOS)
                     BackgroundRefreshManager.scheduleRefresh()
                     #endif
@@ -144,6 +148,9 @@ struct ACIMDailyMinuteApp: App {
                     // no background refresh, this is the only path.
                     if newPhase == .active {
                         PracticeReminderService.reschedule(in: sharedModelContainer.mainContext)
+                        // A window connected after the first appearance
+                        // (iPad, a second scene) is caught here.
+                        Appearance.apply(appearance)
                     }
                 }
         }
