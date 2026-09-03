@@ -5,11 +5,11 @@ import AppKit
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
 
+    /// The marketing version alone; the build number is the store's
+    /// bookkeeping and means nothing to a reader.
     private let versionString: String = {
-        let bundle = Bundle.main
-        let short = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        return "Version \(short) (\(build))"
+        let short = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        return "Version \(short)"
     }()
 
     var body: some View {
