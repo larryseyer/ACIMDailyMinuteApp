@@ -129,6 +129,7 @@
 		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
 		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
 		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
+		AA000001501 /* QuittableSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002501 /* QuittableSheet.swift */; };
 		AA000001082 /* ArchiveCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* ArchiveCalendarView.swift */; };
 		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
 		AA000001251 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
@@ -300,6 +301,7 @@
 		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
 		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
+		AA000002501 /* QuittableSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuittableSheet.swift; sourceTree = "<group>"; };
 		AA000002069 /* ArchiveCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendarView.swift; sourceTree = "<group>"; };
 		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		AA000002251 /* FullScreenVideoCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoCover.swift; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 				AA000002206 /* HashUtility.swift */,
 				AA000002222 /* DeepLinkRoute.swift */,
 				AA000002500 /* ReadableContentWidth.swift */,
+				AA000002501 /* QuittableSheet.swift */,
 				AA000002350 /* PunctuationSpacing.swift */,
 				AA000002360 /* Citation.swift */,
 				AA000002615 /* CrossReference.swift */,
@@ -848,6 +851,7 @@
 				AA000001057 /* ShareTextBuilder.swift in Sources */,
 				AA000001081 /* PlatformTypography.swift in Sources */,
 				AA000001500 /* ReadableContentWidth.swift in Sources */,
+				AA000001501 /* QuittableSheet.swift in Sources */,
 				AA000001082 /* ArchiveCalendarView.swift in Sources */,
 				AA000001217 /* ArchiveDateDetailView.swift in Sources */,
 				AA000001218 /* ArchivedReadingCard.swift in Sources */,

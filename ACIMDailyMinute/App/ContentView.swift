@@ -50,11 +50,11 @@ struct ContentView: View {
                 SettingsView()
             }
             #if os(iOS)
-            .fullScreenCover(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
+            .fullScreenCover(isPresented: introductionPresented) {
                 OnboardingView()
             }
             #else
-            .sheet(isPresented: Binding(get: { !hasSeenOnboarding }, set: { _ in })) {
+            .sheet(isPresented: introductionPresented) {
                 OnboardingView()
             }
             #endif
@@ -66,6 +66,19 @@ struct ContentView: View {
                 AboutView()
             }
             #endif
+    }
+
+    /// Escape closes a macOS sheet by writing `false` through this binding.
+    /// A setter that discarded the value left the introduction with no way
+    /// out but its last page, so the write is honoured: leaving the
+    /// introduction is the same as having seen it. The iOS cover has no
+    /// interactive dismissal, so there the setter is never reached; **Skip**
+    /// and **Get Started** write the flag themselves on both platforms.
+    private var introductionPresented: Binding<Bool> {
+        Binding(
+            get: { !hasSeenOnboarding },
+            set: { if !$0 { hasSeenOnboarding = true } }
+        )
     }
 
     // MARK: - Tab container

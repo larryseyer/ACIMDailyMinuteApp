@@ -140,6 +140,9 @@ struct BackupRestoreView: View {
             }
         }
         .readableContentWidth()
+        #if os(macOS)
+        .formStyle(.grouped)
+        #endif
         .navigationTitle("Backup & Restore")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
