@@ -16,19 +16,32 @@ struct DailyLessonCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            header
-            Text(lesson.lessonTitle)
-                .font(.system(.title3, design: .serif).weight(.semibold))
-                .foregroundStyle(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-            AnnotatableReadingText(
-                raw: lesson.text,
-                key: .lesson(lesson.lessonNumber),
-                design: .serif
-            )
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
-            footer
+            ReadingScaffold(
+                eyebrow: "Lesson \(lesson.lessonNumber)",
+                footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
+            ) {
+                if let audioURL = lesson.audioURL, !audioURL.isEmpty {
+                    ListenButton(title: "Lesson \(lesson.lessonNumber)") {
+                        audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
+                    }
+                }
+            } trailing: {
+                ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            } titleBlock: {
+                Text(lesson.lessonTitle)
+                    .font(.system(.title3, design: .serif).weight(.semibold))
+                    .foregroundStyle(.primary)
+                    .fixedSize(horizontal: false, vertical: true)
+            } body: {
+                AnnotatableReadingText(
+                    raw: lesson.text,
+                    key: .lesson(lesson.lessonNumber),
+                    design: .serif
+                )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             if let error = audio.lastError {
                 Text(error)
                     .font(.caption)
@@ -39,32 +52,6 @@ struct DailyLessonCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(white: 0.11).opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var header: some View {
-        CardHeaderRow("Lesson \(lesson.lessonNumber)") {
-            if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                ListenButton(title: "Lesson \(lesson.lessonNumber)") {
-                    audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                }
-            }
-        } trailing: {
-            ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
-        }
-    }
-
-    private var footer: some View {
-        HStack {
-            Spacer()
-            Text("\(lesson.wordCount) words")
-                .font(.caption2)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .background(Color.white.opacity(0.08))
-                .clipShape(Capsule())
-                .foregroundStyle(.secondary)
-        }
     }
 
     private func toggleBookmark() {
