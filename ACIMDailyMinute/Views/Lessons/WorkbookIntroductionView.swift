@@ -59,7 +59,8 @@ struct WorkbookIntroductionView: View {
                             key: .lesson(lessonNumber),
                             design: .serif,
                             lineSpacing: 3,
-                            spotlight: spotlight
+                            spotlight: spotlight,
+                            recordsPosition: true
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)

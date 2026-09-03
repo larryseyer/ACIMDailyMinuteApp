@@ -289,6 +289,7 @@ enum BackupService {
         }
         let phrases = PhraseStorage.phrases
         let listened = PlaybackHistory.entries
+        let positions = ReadingPositionStore.entries
 
         return BackupDocument.Settings(
             watchedPhrases: phrases.isEmpty ? nil : phrases,
@@ -301,16 +302,23 @@ enum BackupService {
             notifyPhraseMatches: bool(ReaderKey.notifyPhraseMatches),
             notifyLiveActivities: bool(ReaderKey.notifyLiveActivities),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
-                == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex)
+                == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex),
+            readingPositions: positions.isEmpty ? nil : positions
         )
     }
 
-    /// Lossless settings merge whatever the reader chose, because a union of
-    /// them cannot discard anything. The scalars — where a merge has no meaning
-    /// and one value must displace another — move only on request.
+    /// Lossless settings merge whatever the reader chose, because nothing they
+    /// hold can be discarded: the phrases and the listened history take a union,
+    /// and a ribbon takes the later of two places per book, which no book can
+    /// lose. The scalars — where a merge has no meaning and one value must
+    /// displace another — move only on request.
     private static func applySettings(_ settings: BackupDocument.Settings, restoreScalars: Bool) {
         if let incoming = settings.watchedPhrases { mergePhrases(incoming) }
         if let incoming = settings.listenedEpisodes { mergeListened(incoming) }
+        // A ribbon merges rather than displaces: per book, the later place is
+        // where the reader actually got to, and that is an answer neither
+        // device has to be asked for.
+        if let incoming = settings.readingPositions { ReadingPositionStore.merge(incoming) }
 
         guard restoreScalars else { return }
         let defaults = UserDefaults.standard

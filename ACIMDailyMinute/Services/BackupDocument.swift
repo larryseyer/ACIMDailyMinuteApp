@@ -126,6 +126,14 @@ struct BackupDocument: Codable, Equatable, Sendable {
         var notifyPhraseMatches: Bool?
         var notifyLiveActivities: Bool?
         var lessonsLastWatchedIndex: Int?
+        /// The reader's ribbons, book → position.
+        ///
+        /// Where a reader got to is theirs and nothing can recompute it, which
+        /// is the whole test for what belongs in this file. It is also the one
+        /// key here that **merges**: two devices' ribbons for one book resolve
+        /// to the later of them, so it moves on an ordinary import rather than
+        /// waiting for the reader to ask for their settings back.
+        var readingPositions: [String: ReadingPosition]?
 
         static let empty = Settings()
     }

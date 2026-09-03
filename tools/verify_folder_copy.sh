@@ -10,10 +10,12 @@
 # copy with it — each of these is found months later by someone opening the
 # folder on the other machine and finding nothing they can use.
 #
-# ⛔ The compile line names TWO source files and no others. That is half the
-# check: the folder code must stay free of SwiftData, SwiftUI, UserDefaults and
-# Date(), or the only way to exercise a folder that has moved or a volume that
-# refuses a write is by hand, on a machine set up to fail in exactly that way.
+# ⛔ The folder code must stay free of SwiftData, SwiftUI, UserDefaults and
+# CorpusService, or the only way to exercise a folder that has moved or a volume
+# that refuses a write is by hand, on a machine set up to fail in exactly that
+# way. That is half the check, and the grep below is what asserts it: the compile
+# line also carries the four pure files `BackupDocument`'s reading-position key
+# needs, each of which `tools/verify_reading_position.sh` compiles alone.
 #
 # It runs against a real directory on this Mac — real bookmarks, a real rename, a
 # real chmod — because the behaviour under test is the file system's, and a
@@ -253,9 +255,25 @@ if failures == 0 {
 exit(failures == 0 ? 0 : 1)
 SWIFT
 
+# The two files whose purity IS the promise; the four below them are pulled in
+# only because `Settings.readingPositions` is typed as `ReadingPosition`.
+for file in Services/FolderCopy Services/BackupDocument; do
+  stripped="$(sed -e 's://.*::' "$REPO/ACIMDailyMinute/$file.swift")"
+  for banned in SwiftUI SwiftData CorpusService UserDefaults; do
+    if grep -q "$banned" <<<"$stripped"; then
+      echo "FAIL: $(basename "$file").swift reaches $banned — the folder tier must not depend on it" >&2
+      exit 1
+    fi
+  done
+done
+
 swiftc -O \
     "$REPO/ACIMDailyMinute/Services/FolderCopy.swift" \
     "$REPO/ACIMDailyMinute/Services/BackupDocument.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/ReadingPosition.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/ReadingKey.swift" \
+    "$REPO/ACIMDailyMinute/Services/AnchorResolver.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/PunctuationSpacing.swift" \
     "$WORK/main.swift" \
     -o "$WORK/verify"
 

@@ -16,24 +16,43 @@ struct AnnotatableReadingText: View {
     /// Passed straight through: a reading opened from a search hit re-anchors
     /// and paints it, every other caller leaves it nil.
     var spotlight: ReadingSpotlight? = nil
+    /// Whether leaving this reading moves its book's ribbon.
+    ///
+    /// ⛔ True on the three reading SCREENS and false everywhere else, and that
+    /// is a decision rather than an oversight. A Today card sits inside another
+    /// scroll view alongside a second card, so the character at the top of its
+    /// text view is not where the reader is — it is wherever that card happens
+    /// to have been pushed to. **A new reading screen owes this line**; a new
+    /// card owes nothing.
+    var recordsPosition: Bool = false
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var storedHighlights: [Highlight]
     @Query private var storedNotes: [Note]
     @State private var draft: NoteDraft?
+    /// Read once, when this reading is first built. Re-reading it while the
+    /// reader is here would scroll them back to where they came in.
+    @State private var resume: ReadingPosition?
+    @State private var reporter = SelectableReadingText.PositionReporter()
 
     init(
         raw: String,
         key: ReadingKey,
         design: SelectableReadingText.Design = .serif,
         lineSpacing: CGFloat = 0,
-        spotlight: ReadingSpotlight? = nil
+        spotlight: ReadingSpotlight? = nil,
+        recordsPosition: Bool = false
     ) {
         self.raw = raw
         self.key = key
         self.design = design
         self.lineSpacing = lineSpacing
         self.spotlight = spotlight
+        self.recordsPosition = recordsPosition
+        _resume = State(
+            initialValue: recordsPosition ? ReadingPositionStore.position(matching: key) : nil
+        )
         let rawKey = key.rawValue
         _storedHighlights = Query(
             filter: #Predicate<Highlight> { $0.readingKey == rawKey },
@@ -53,7 +72,9 @@ struct AnnotatableReadingText: View {
                 lineSpacing: lineSpacing,
                 highlights: storedHighlights,
                 menuActions: menuActions,
-                spotlight: spotlight
+                spotlight: spotlight,
+                resume: resume,
+                positionReporter: recordsPosition ? reporter : nil
             )
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -90,6 +111,15 @@ struct AnnotatableReadingText: View {
                 in: modelContext
             )
         }
+        // Where the reader stopped is asked for when they stop: leaving the
+        // reading, and putting the app down. Watching the scroll instead would
+        // mean a delegate on a scroll view this app does not own and a write on
+        // every frame of a drag.
+        .onDisappear { recordPosition() }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase != .active else { return }
+            recordPosition()
+        }
         .sheet(item: $draft) { draft in
             NoteEditorView(
                 readingName: key.displayName(),
@@ -108,6 +138,29 @@ struct AnnotatableReadingText: View {
                 }
             }
         }
+    }
+
+    /// Moves this book's ribbon to where the reader is.
+    ///
+    /// ⛔ A reporter that cannot answer records the reading at its top rather
+    /// than recording nothing. The text view may not be inside its scroller yet,
+    /// or the reading may never have been laid out — neither is a reason to lose
+    /// the reader's book. **The reading is the durable part; the offset is the
+    /// refinement**, and the worst this can do is what the app did before there
+    /// was a ribbon at all.
+    ///
+    /// `ReadingPosition.make` returns nil for a reading no ribbon can name, so
+    /// a Daily Minute card that ever reached this line still could not set one.
+    private func recordPosition() {
+        guard recordsPosition else { return }
+        let offset = reporter.currentOffset() ?? 0
+        guard let position = ReadingPosition.make(
+            key: key,
+            startOffset: offset,
+            in: ReadingText.displayString(from: raw),
+            at: Date()
+        ) else { return }
+        ReadingPositionStore.record(position)
     }
 
     /// This reading's marks and notes, as text. Nothing can re-send a reader

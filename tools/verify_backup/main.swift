@@ -127,7 +127,18 @@ func roundTripCases() -> [BackupDocument] {
             dailyReminderTimeInterval: 780_012_345.5,
             notifyNewMinute: true, notifyNewLesson: false,
             notifyPhraseMatches: true, notifyLiveActivities: false,
-            lessonsLastWatchedIndex: 12
+            lessonsLastWatchedIndex: 12,
+            readingPositions: [
+                ReadingPosition.Book.text.rawValue: .init(
+                    readingKey: "text:5.3", startOffset: 1_204,
+                    quote: "a passage of the Course the reader had reached",
+                    updatedAt: date(10)
+                ),
+                ReadingPosition.Book.workbook.rawValue: .init(
+                    readingKey: "lesson:84", startOffset: 0,
+                    quote: "another passage entirely", updatedAt: date(11)
+                ),
+            ]
         )
     )
 

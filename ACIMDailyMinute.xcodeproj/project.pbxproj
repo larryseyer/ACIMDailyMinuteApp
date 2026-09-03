@@ -117,6 +117,10 @@
 		AA000001617 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
 		AA000001618 /* ReadingTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002618 /* ReadingTime.swift */; };
 		AA000001619 /* ReadingScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002619 /* ReadingScaffold.swift */; };
+		AA000001620 /* ReadingPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002620 /* ReadingPosition.swift */; };
+		AA000001621 /* ReadingKeyNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002621 /* ReadingKeyNaming.swift */; };
+		AA000001622 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
+		AA000001623 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
 		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
 		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
@@ -284,6 +288,10 @@
 		AA000002617 /* CitationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationButton.swift; sourceTree = "<group>"; };
 		AA000002618 /* ReadingTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTime.swift; sourceTree = "<group>"; };
 		AA000002619 /* ReadingScaffold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingScaffold.swift; sourceTree = "<group>"; };
+		AA000002620 /* ReadingPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPosition.swift; sourceTree = "<group>"; };
+		AA000002621 /* ReadingKeyNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKeyNaming.swift; sourceTree = "<group>"; };
+		AA000002622 /* ReadingPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPositionStore.swift; sourceTree = "<group>"; };
+		AA000002623 /* ContinueReadingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueReadingRow.swift; sourceTree = "<group>"; };
 		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
 		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
@@ -446,6 +454,7 @@
 				AA000002312 /* AudioDownloadStore.swift */,
 				AA000002610 /* CorpusSearch.swift */,
 				AA000002611 /* CorpusSearchService.swift */,
+				AA000002622 /* ReadingPositionStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -474,6 +483,7 @@
 				AA000002616 /* ReadingNavigation.swift */,
 				AA000002617 /* CitationButton.swift */,
 				AA000002619 /* ReadingScaffold.swift */,
+				AA000002623 /* ContinueReadingRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -521,6 +531,8 @@
 				AA000002360 /* Citation.swift */,
 				AA000002615 /* CrossReference.swift */,
 				AA000002618 /* ReadingTime.swift */,
+				AA000002620 /* ReadingPosition.swift */,
+				AA000002621 /* ReadingKeyNaming.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -915,6 +927,10 @@
 				AA000001617 /* CitationButton.swift in Sources */,
 				AA000001618 /* ReadingTime.swift in Sources */,
 				AA000001619 /* ReadingScaffold.swift in Sources */,
+				AA000001620 /* ReadingPosition.swift in Sources */,
+				AA000001621 /* ReadingKeyNaming.swift in Sources */,
+				AA000001622 /* ReadingPositionStore.swift in Sources */,
+				AA000001623 /* ContinueReadingRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

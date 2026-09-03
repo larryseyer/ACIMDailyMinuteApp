@@ -183,7 +183,8 @@ private struct FullLessonView: View {
                     key: .lesson(lesson.lessonNumber),
                     design: .serif,
                     lineSpacing: 3,
-                    spotlight: spotlight
+                    spotlight: spotlight,
+                    recordsPosition: true
                 )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
@@ -251,7 +252,8 @@ private struct MetadataOnlyLessonView: View {
                         raw: bundledBody,
                         key: .lesson(lessonNumber),
                         design: .standard,
-                        spotlight: spotlight
+                        spotlight: spotlight,
+                        recordsPosition: true
                     )
                 } else if lessonNumber > 0, let embedURL {
                     YouTubePlayerView(videoURL: embedURL)
@@ -337,7 +339,8 @@ private struct AbsentLessonView: View {
                             raw: bundledBody,
                             key: .lesson(lessonNumber),
                             design: .standard,
-                            spotlight: spotlight
+                            spotlight: spotlight,
+                            recordsPosition: true
                         )
                     }
                 }

@@ -60,6 +60,20 @@ struct LessonsView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
 
+                // ⛔ Above the list rather than inside it. The Workbook spine
+                // scrolls itself to the lesson in play the moment it appears,
+                // which carried a row at the top of that list straight off the
+                // screen — a ribbon nobody can see is worse than none. Here it
+                // belongs to the shelf, not to the scroll.
+                //
+                // Hidden while a query is typed: the results list replaces the
+                // shelf, and where the reader stopped is not an answer to what
+                // they are searching for.
+                if trimmedQuery.isEmpty {
+                    ContinueReadingRow(book: shelf == .workbook ? .workbook : .text)
+                        .padding(.horizontal, 16)
+                }
+
                 Group {
                     if trimmedQuery.isEmpty {
                         switch shelf {

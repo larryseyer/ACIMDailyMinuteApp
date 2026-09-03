@@ -80,6 +80,18 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
       collapse to icons when narrow, but no one has seen them do it on this phone. The seven
       March minutes with no recording show no Download, by design.
+- [ ] **The ribbon, on the phone.** Read tab > Text. Open a section, scroll a screen or two in,
+      leave it. Expected: `Continue reading` above the chapter list naming that section, and
+      tapping it puts the passage you stopped at back at the top of the screen. The same for a
+      Workbook lesson. ⛔ **The reading is the durable part and the offset is the refinement**: if
+      the sample ever fails the row still names the right reading and opens it at its top, which
+      is what the app did before there was a ribbon — so what to watch for is a row naming the
+      *wrong* reading, not a scroll that lands high.
+      It runs correctly end to end on the Mac; nobody has seen it at 375pt.
+- [ ] **A search hit two screens down.** Search the Course, then open a hit that is deep in a long
+      Text section rather than near its start. Expected: the blue words are on screen when it
+      opens. They were not before — TextKit 2 lays out only what is visible, so the rectangle for a
+      passage below the fold came back empty and the scroll silently did nothing.
 - [ ] **The companion note.** Settings > About > "A note about using this app". Three places depart
       from the wording he supplied, each to keep it in harmony with the Course, and each is his to
       veto: the prescribed order of study is gone (the Manual says some should read the Manual first,
@@ -421,11 +433,6 @@ blocks "this replaces my book". The content is now bundled and reachable through
 1,983 segments, 272 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
 a book.
 
-- [ ] **Resume where you stopped** — the ribbon. Unblocked now that the Text is readable, and it is
-      what a 669-page book needs most: `ReadingKey.textSection` already names the place. There is no
-      reading position anywhere in the app today — no `@SceneStorage`, no scroll offset. When one
-      exists it is one more key in the backup file; older versions ignore what they do not
-      recognise, and nothing is written as a placeholder for it now.
 - [ ] **"Let it fall open"** — a random passage. A real practice with the physical book. His
       proposal, not yet built: a random *published* Daily Minute from the archive rather than a
       random corpus passage, so it arrives with narration and video; fall back to a random bundled

@@ -90,7 +90,8 @@ struct TextSectionView: View {
                         key: .textSection(chapter: chapter, section: section),
                         design: .serif,
                         lineSpacing: 3,
-                        spotlight: spotlight
+                        spotlight: spotlight,
+                        recordsPosition: true
                     )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)

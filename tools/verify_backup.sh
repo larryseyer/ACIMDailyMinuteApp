@@ -7,10 +7,12 @@
 # here does not crash and does not warn — it is discovered years later by
 # someone looking for something they know they wrote down.
 #
-# ⛔ The compile line names TWO source files and no others. That is half the
-# check: the format and the merge must stay free of SwiftData, SwiftUI, Bundle
-# and CorpusService, or the file a reader keeps starts depending on the app it
-# is meant to outlive.
+# ⛔ The format and the merge must stay free of SwiftData, SwiftUI, Bundle,
+# CorpusService and UserDefaults, or the file a reader keeps starts depending on
+# the app it is meant to outlive. That is half the check, and the grep below is
+# what asserts it: the compile line also carries the four pure files
+# `BackupDocument`'s reading-position key needs, and a compile line alone can no
+# longer say what those two files depend on.
 #
 #   ./tools/verify_backup.sh
 set -e
@@ -72,10 +74,28 @@ out.write_text(json.dumps(cases, ensure_ascii=False), encoding="utf-8")
 print("%d highlights cut from the shipped corpus" % len(cases))
 CASES
 
+# The two files whose purity IS the promise. The four below them are pulled in
+# only because `Settings.readingPositions` is typed as `ReadingPosition`, and
+# each is itself compiled alone by `tools/verify_reading_position.sh`, so
+# widening the compile line adds no dependency this repo is not already pinning.
+for file in BackupDocument BackupMerge; do
+  stripped="$(sed -e 's://.*::' "$REPO/ACIMDailyMinute/Services/$file.swift")"
+  for banned in SwiftUI SwiftData CorpusService UserDefaults Bundle; do
+    if grep -q "$banned" <<<"$stripped"; then
+      echo "FAIL: $file.swift reaches $banned — a reader's backup must not depend on it" >&2
+      exit 1
+    fi
+  done
+done
+
 swiftc -O \
     "$REPO/tools/verify_backup/main.swift" \
     "$REPO/ACIMDailyMinute/Services/BackupDocument.swift" \
     "$REPO/ACIMDailyMinute/Services/BackupMerge.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/ReadingPosition.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/ReadingKey.swift" \
+    "$REPO/ACIMDailyMinute/Services/AnchorResolver.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/PunctuationSpacing.swift" \
     -o "$WORK/verify"
 
 "$WORK/verify" "$WORK/real.json"
