@@ -15,7 +15,9 @@ struct OnboardingView: View {
         [
             // His wording, verbatim.
             ("sun.max", "A Minute a Day",
-             "A short passage from A Course in Miracles, delivered daily."),
+             // Three lines, broken where he set them, so the title of the
+             // book stands on its own line.
+             "A short passage from\nA Course in Miracles,\ndelivered daily."),
             ("book.closed", "Today's Lesson",
              "The Workbook for Students, one lesson at a time, on the day you choose."),
             ("play.circle", "Listen",
