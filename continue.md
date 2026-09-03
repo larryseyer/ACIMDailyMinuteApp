@@ -16,6 +16,21 @@ one. MacLive is an SMB mount of another machine (`//...@Chat._smb._tcp.local/Mac
 from this Mac cannot see its processes — read `logs/acim.log` **on that machine** instead, and run
 `./start.sh` there, never through the mount.
 
+⛔ **Every reading in this app has ONE shape, and `Views/ReadingScaffold.swift` owns it.** Four
+bands, always: header (the eyebrow on its own line, then the controls), title block (optional), body,
+footer (the address on the leading edge, the measure on the trailing edge). All ten render sites pass
+slots and position nothing, which is what makes the old drift impossible rather than merely fixed —
+Save had ended up in the nav toolbar on four screens and in the header on three, Share moved below the
+body or vanished, and the play control was hand-rolled three times at a different size.
+**The nav bar names the BOOK** (Text, Workbook, Manual for Teachers) **and the eyebrow names the
+place** (`LESSON 84`, `CHAPTER 17`), so no screen says the same phrase twice. Container chrome — a
+card's padding and background, a screen's `ScrollView` and readable width — stays with the surface.
+`tools/verify_card_header.sh` guards the whole shape now: the layout measurement, every eyebrow
+string measured at 303pt, and four greps proving the eight surfaces draw through the scaffold, that
+only the scaffold names `CardHeaderRow`, that Save is in no nav toolbar, and that no Listen control
+is hand-rolled. ⛔ A footer address is tappable ONLY where it names somewhere else — the Today cards;
+on a pushed screen it names the passage already on screen and is printed plain.
+
 ⛔ **The card header is two bands on every card and every screen size** — title centred on its own
 line, then **Listen on the leading edge, Share and Save on the trailing edge**. `CardHeaderRow` owns
 it, `ListenButton` and `SaveButton` are the shared controls, and `tools/verify_card_header.sh` is the
@@ -43,10 +58,11 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac carry Backup & Restore, the store split, iCloud sync and the
-reader-chosen folder, and NOT search and NOT cross-reference links: nothing has been installed
-since search landed. The next install on each is what puts the Read-tab search, the spotlight, the
-Manual screen and the tappable citations and `[N]` links in front of him; `./build.sh` and the
-fourteen checks are green at the link commits.**
+reader-chosen folder, and NOT search, NOT cross-reference links and NOT the reading scaffold:
+nothing has been installed since search landed. The next install on each is what puts the Read-tab
+search, the spotlight, the Manual screen, the tappable citations and `[N]` links, and one reading
+shape across every surface in front of him; `./build.sh` and the fifteen checks are green at the
+scaffold commits.**
 - 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
   and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration. iCloud sync
@@ -94,7 +110,7 @@ fourteen checks are green at the link commits.**
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Fourteen committed checks now guard this repo. Run all fourteen first thing — they take about a
+⛔ **Fifteen committed checks now guard this repo. Run all fifteen first thing — they take about a
 minute and they are how you find out the tree is what this file says it is:**
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
@@ -183,6 +199,12 @@ minute and they are how you find out the tree is what this file says it is:**
   and nothing else**, and a `grep` pins the frameworks a lone-file `swiftc` would link without
   complaint. That `grep` strips comments first: what must stay out of the file is a dependency,
   and the doc comment names `CorpusService` and `ReadingKey` precisely to say it uses neither.
+- `./tools/verify_reading_time.sh` — ⛔ **the only check that guards a number the app states with
+  confidence.** Over all 2,727 bundled records it proves no reading reads "about 0 min", that the
+  wording changes at exactly 200 words, that the longest Daily Minute never contradicts the name on
+  the card above it, and that `ReadingTime.wordCount(of:)` agrees with Python's `str.split()` on
+  every body — it splits on newlines as well as spaces, because a space-only split reads
+  "end.\n\nBegin" as one word. **It compiles `ReadingTime.swift` and nothing else** — 8,193 checks.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -224,6 +246,13 @@ this Mac:
   nonisolated static under complete strict concurrency; and the harness accepts `[5][` as the
   reference `[5]` followed by a stray bracket, because Python's `\[(\d+)\]` — the oracle for all
   2,727 records — reads it that way and the two must not disagree.
+- `docs/superpowers/specs/2026-09-02-standardized-reading-layout-design.md` + its plan —
+  implemented, piece A of five. The other four (D Archive to Video, E structure the Manual, B media
+  index, C Listen as activity) are `⏸ PAUSED` in todo.md and are his to resume; **D is next.**
+  Two places where the code is ahead of the plan's text, both deliberate: `ReadingTime.wordCount(of:)`
+  exists because a space-only split undercounts every newline-joined body, and the Archive's footer
+  carries a book name and its date rather than a citation and a read time, which is why the footer's
+  slots are named by position — an address and a measure.
 - `docs/superpowers/specs/2026-08-30-punctuation-spacing-repair-design.md` — implemented. Two places
   where the code is ahead of the spec's text, both deliberate: `PunctuationSpacing.swift` lives in
   `Utilities/` rather than `Views/`, because the widget and watch targets compile it too; and the
@@ -240,9 +269,9 @@ outstanding item is spec'd, planned and implemented — "otherwise, I will just 
 that simply have not been done yet." The `⏸ PARKED` block in [`todo.md`](todo.md) only grows and is
 handed over once, whole, at the end.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the fourteen committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the fifteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the fourteen checks first thing in a new session** — about a
+store migration, real feed payloads. **Run the fifteen checks first thing in a new session** — about a
 minute, and they are how you find out the tree is what this file says it is.
 
 ⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
@@ -256,11 +285,13 @@ shared `CardHeaderRow` across the three cards, audio-first with the play control
 left is the rest of the scaffold — the title/body/footer bands, `Archive` becoming `Video`, and
 structuring the Manual. ⛔ Do not restart this without him; it stopped mid-brainstorm, not mid-build.
 
-**⭐ Cross-reference links are built.** A citation printed on a Today card and a bracketed lesson
-number inside a review lesson both answer a tap and open the passage they name with the words in
-view. **The next item is the standardized reading layout, which is `⏸ PAUSED` and his to resume as
-a brainstorm, not mine to start** — it stopped mid-brainstorm. The next agent-owned *build* is
-"Resume where you stopped", the reading ribbon.
+**⭐ Cross-reference links and the reading scaffold are both built.** A citation on a Today card
+and a bracketed lesson number in a review lesson both answer a tap; and every reading in the app now
+draws through `ReadingScaffold`, so Save, Share and the play control sit in the same place on all ten
+surfaces. **The next piece of the reading layout is D — Archive becomes Video** — app-only, the data
+exists today, and it retires the last exemption to the no-publication-dates rule. Its decisions are
+in the `⏸ PAUSED` block; it was his brainstorm, so confirm the recast with him before building it.
+The next agent-owned *build* with no decisions outstanding is "Resume where you stopped", the ribbon.
 
 These facts were settled by measuring the bundle, not by preference, and they are load-bearing:
 - **The Course never cites itself by address.** Zero `T-`/`W-`/`M-` forms, zero `Lesson N` or
@@ -505,8 +536,9 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-1. **The standardized reading layout** — `⏸ PAUSED`, and its decisions are recorded there.
-   Resume it as a brainstorm with him, not as a build.
+1. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+   app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
+   call to confirm before it is built.
 2. **Resume where you stopped, Workbook completion tracking, structuring the Manual**, then the
    pre-submission sweep and the smaller open items.
 

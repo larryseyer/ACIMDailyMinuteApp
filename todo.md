@@ -329,18 +329,28 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       by design. The offline corpus card's footer does the same. On the Mac all of it is a click.
       ⛔ Check `[67]` at 375pt and xxLarge: the tint must not make the number look like a button
       the words around it are not.
+- [ ] **One reading shape everywhere.** Open a lesson from the Read list, a Text section, the
+      Workbook Introduction, a Manual passage, the Today cards and an Archive day. On every one:
+      the eyebrow is centred above the controls, the play control is on the leading edge when it
+      exists at all, and **Share and Save are together on the trailing edge and in the same place
+      on all of them**. Save must be gone from the nav bar on all four pushed screens. The nav bar
+      now names the BOOK — Text, Workbook, Manual for Teachers — and the eyebrow names the place.
+      A Text section shows its chapter title above its section title, and its address at the foot
+      where it is printed but not tappable; the Today footers stay tappable. Read time reads
+      sensibly at both ends: Lesson 1 says "less than a minute", the longest Text section says
+      "about 29 min", and no reading anywhere says "about 0 min". The Introduction and the Manual
+      offer Share for the first time.
+      ⛔ Check the eyebrow at 375pt and xxLarge on every screen — `WORKBOOK FOR STUDENTS` is the
+      longest string and the band breaks its words rather than wrapping.
 
-## ⏸ PAUSED — the standardized reading layout (design, not started)
+## ⏸ PAUSED — the standardized reading layout (piece A built; D is next)
 
-He asked to standardize how the Text, Lessons and Manual are presented, then had to leave. **Nothing
-is written down as a spec yet and no code exists.** The decisions he made are worth keeping:
+Piece A, the scaffold, is built: `Views/ReadingScaffold.swift` owns the band order and all ten render
+sites pass slots. Its spec and plan are
+`docs/superpowers/specs/2026-09-02-standardized-reading-layout-design.md` and its plan. The remaining
+four pieces are below, and the decisions that govern them are worth keeping:
 
-- **One scaffold, three bands, for every reading surface:** header (`LABEL` + play + Save + Share) →
-  title → body → `Add note` / Export → footer (citation + word count). Controls above, the reader's
-  response below, the reading itself untouched between them.
 - **`Add note` stays at the bottom.** His call, and it belongs with the citation, not the actions.
-- **Save moves out of the nav toolbar into the header row on pushed screens**, so all surfaces are
-  identical rather than each being locally idiomatic.
 - **One play control, audio-first.** Tap plays narration and the reader keeps reading; video is
   deliberate (long-press / menu), because video takes the screen and is the most perishable tier.
   It sits leftmost so Save and Share never shift position between passages.
@@ -350,9 +360,8 @@ is written down as a spec yet and no code exists.** The decisions he made are wo
 - **Listen becomes activity, not a catalogue** — now playing, part-finished, downloaded, finished.
   The Course stays organized exactly once, in Read.
 
-**The work decomposes into five pieces, in this order: A → D → E → B → C.**
-- **A — the scaffold** across the five surfaces that already exist. App-only, no new data. Next.
-- **D — Archive → Video.** App-only; the data exists today.
+**Four pieces remain, in this order: D → E → B → C.**
+- **D — Archive → Video.** App-only; the data exists today. **Next.**
 - **E — structure the Manual.** ⛔ **The Manual is NOT free.** Its 105 bundled rows are arbitrary
   ~1,300-character word-count cuts that begin mid-thought, with no titles and `citation: nil`. Its
   real Introduction / 29 questions / Clarification of Terms exist only in `4_ACIM_Manual.pdf`, so it
@@ -486,6 +495,18 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 - [ ] **macOS** — needs the signed build, not `./build.sh`. See platform expansion above.
 
 ## ▶ OPEN — small, unscheduled
+
+- [ ] **The archive minute is the last reading that cannot be marked.** `ArchivedReadingCard`
+      draws its minute body as plain `Text`, so it alone offers no selection, no highlight, no
+      note and no export. Every other reading goes through `AnnotatableReadingText`. Left out of
+      the scaffold work deliberately — it is a renderer change, not a layout one — and it lands on
+      a surface whose bookmark key already does not alias with Today's.
+
+- [ ] **The eyebrow cannot hold at accessibility text sizes.** `CardHeaderRow`'s label is
+      `lineLimit(1)` with `fixedSize`, so at AX sizes it breaks its words rather than wrapping or
+      shrinking. True before the scaffold and unchanged by it. Fixing it means letting the eyebrow
+      wrap, which changes the header's height on every reading — his layout call, not a defect to
+      quietly patch.
 
 - [ ] **`ACIMChime.caf` is duplicated and nothing syncs it.** `assets/ACIMChime.caf` is the source;
       `ACIMDailyMinute/Resources/ACIMChime.caf` is what the app bundles and the only one
