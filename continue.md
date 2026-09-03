@@ -47,6 +47,16 @@ calls are in the data and are his to veto: 154-170, 171-180 and 181-200 carry th
 forward (the text names no other and 193 restates it), and Part II sessions are `minutes: 0` — "as
 long as you can" — rather than an invented number.
 
+⛔ **The appearance is applied to the WINDOW, never through `preferredColorScheme`.** Passing that
+modifier `nil` after an explicit scheme does not take the scheme back — the window keeps the last
+one it was given — so Dark → Light → System left the reading card light on his Mac while the
+Settings sheet, a new window asking the system, came up dark. `Appearance.apply` sets
+`UIWindow.overrideUserInterfaceStyle` on iOS and `NSApp.appearance` on the Mac, and `.unspecified` /
+`nil` there really do return to the system; the App calls it on appear, on change and on every
+return to the foreground. The introduction forces dark for its own subtree with
+`.environment(\.colorScheme, .dark)` for the same reason: a scheme handed to the window would have
+outlived the cover. He confirmed the fix on the Mac; the phone carries it.
+
 ⛔ **A reminder tap lands where a URL would.** `NotificationDelegate.didReceive` posts
 `.reminderTapped` with a `DeepLinkRoute`, and `ContentView.follow(_:)` is the one switch both a URL
 and a tap go through; `.lessons` (the Read tab, no number) exists for the Daily Lesson reminder,
