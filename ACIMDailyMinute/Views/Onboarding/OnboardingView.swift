@@ -27,7 +27,7 @@ struct OnboardingView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topTrailing) {
             Color.black.ignoresSafeArea()
 
             if showingNote {
@@ -35,8 +35,30 @@ struct OnboardingView: View {
             } else {
                 carousel
             }
+
+            skipButton
         }
         .preferredColorScheme(.dark)
+        #if os(macOS)
+        .background(QuittableSheet())
+        #endif
+    }
+
+    /// The introduction can be left at any point, from either stage. On
+    /// macOS, Escape already closes the sheet by writing `false` through the
+    /// presentation binding in `ContentView`, so this button carries no
+    /// `.cancelAction` shortcut: a sheet holding one answers a quit request
+    /// as "cancelled", and Cmd-Q stops working for as long as it is up.
+    private var skipButton: some View {
+        Button("Skip") {
+            hasSeenOnboarding = true
+        }
+        .buttonStyle(.plain)
+        .focusEffectDisabled()
+        .font(.acimSubheadline)
+        .foregroundStyle(.secondary)
+        .padding(.top, 20)
+        .padding(.trailing, 24)
     }
 
     // MARK: - The companion note, as the introduction's last word
@@ -93,6 +115,9 @@ struct OnboardingView: View {
         // macOS: no page-style TabView exists in plain SwiftUI, so
         // render one page at a time with a dot indicator and a
         // discreet chevron nav that matches the iOS visual language.
+        // A sheet hands its first enabled control keyboard focus, and a plain
+        // button draws a ring around itself when it has it, so the ring is
+        // switched off on both chevrons; Space still turns the page.
         VStack(spacing: 0) {
             let page = pages[currentPage]
             OnboardingPage(
@@ -115,6 +140,7 @@ struct OnboardingView: View {
                         .font(.title3)
                 }
                 .buttonStyle(.plain)
+                .focusEffectDisabled()
                 .disabled(currentPage == 0)
                 .opacity(currentPage == 0 ? 0.3 : 0.8)
 
@@ -136,6 +162,7 @@ struct OnboardingView: View {
                         .font(.title3)
                 }
                 .buttonStyle(.plain)
+                .focusEffectDisabled()
                 .disabled(currentPage == pages.count - 1)
                 .opacity(currentPage == pages.count - 1 ? 0.3 : 0.8)
             }

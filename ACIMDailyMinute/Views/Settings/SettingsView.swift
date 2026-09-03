@@ -143,6 +143,13 @@ struct SettingsView: View {
                 }
             }
             .readableContentWidth()
+            #if os(macOS)
+            // The default macOS form is the columns style: it sizes to the
+            // ideal single-line width of its content, so every footer ran
+            // off the sheet's edge and every label was pushed into a column
+            // of its own. Grouped wraps and stacks as the iOS form does.
+            .formStyle(.grouped)
+            #endif
             .navigationTitle("Settings")
             .toolbar {
                 #if os(iOS)
@@ -156,6 +163,16 @@ struct SettingsView: View {
                 #endif
             }
         }
+        #if os(macOS)
+        // A sheet takes its content's ideal size. A grouped form has none
+        // worth having, and the sheet would otherwise change size at every
+        // push, so the size is stated once for the whole stack and the
+        // window's 420-point minimum is what the ideal width fits inside.
+        .frame(
+            minWidth: 380, idealWidth: 400, maxWidth: 720,
+            minHeight: 440, idealHeight: 560, maxHeight: 900
+        )
+        #endif
     }
 
     private func handleReminderToggle(enabled: Bool) {

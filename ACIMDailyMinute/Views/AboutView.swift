@@ -33,6 +33,7 @@ struct AboutView: View {
         }
         .frame(width: 460, height: 620)
         .background(Color(white: 0.08))
+        .background(QuittableSheet())
         .preferredColorScheme(.dark)
     }
 
@@ -185,7 +186,9 @@ struct AboutView: View {
                 .background(Circle().fill(Color(white: 0.08)))
         }
         .buttonStyle(.plain)
-        .keyboardShortcut(.cancelAction)
+        // Escape closes the sheet on its own. Bound to `.cancelAction`, this
+        // button also answered every quit request as "cancelled", so the app
+        // could not be quit while About was open.
     }
 }
 
