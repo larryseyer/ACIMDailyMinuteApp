@@ -21,11 +21,11 @@ struct OnboardingView: View {
             ("book.closed", "Today's Lesson",
              "The Workbook for Students\none lesson at a time,\non the day you choose."),
             ("play.circle", "Listen",
-             "Every passage and lesson, read aloud. Listen while you commute, walk, or sit still. Daily Minutes and Daily Lessons are added regularly."),
+             "Every passage and lesson, read aloud.\nListen while you commute, walk, or sit still.\nDaily Minutes and Daily Lessons are added regularly."),
             ("archivebox", "Archive",
-             "Browse past readings by date. Return to any passage at your choosing. Your notes and highlights are stored across all devices."),
+             "Browse past readings by date.\nReturn to any passage at your choosing.\nYour notes and highlights are stored across all devices."),
             ("bookmark", "Save Your Favorites",
-             "Keep the passages you mark as favorites. Return to them anytime, online or off.")
+             "Keep the passages you mark as favorites.\nReturn to them anytime, online or off.")
         ]
     }
 
