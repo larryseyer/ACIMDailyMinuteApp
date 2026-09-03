@@ -19,7 +19,7 @@ struct OnboardingView: View {
              // book stands on its own line.
              "A short passage from\nA Course in Miracles,\ndelivered daily."),
             ("book.closed", "Today's Lesson",
-             "The Workbook for Students, one lesson at a time, on the day you choose."),
+             "The Workbook for Students\none lesson at a time,\non the day you choose."),
             ("play.circle", "Listen",
              "Every passage and lesson, read aloud. Listen while you commute, walk, or sit still. Daily Minutes and Daily Lessons are added regularly."),
             ("archivebox", "Archive",
