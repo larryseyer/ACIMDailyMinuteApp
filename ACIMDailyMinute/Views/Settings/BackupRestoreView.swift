@@ -65,7 +65,7 @@ struct BackupRestoreView: View {
             } footer: {
                 Text(
                     "Writes everything you have made — your highlights, notes, bookmarks, "
-                    + "watched phrases, listened history and notification settings — into one "
+                    + "listened history and reminder settings — into one "
                     + "plain file you can keep anywhere and open on any computer."
                 )
             }
@@ -83,8 +83,8 @@ struct BackupRestoreView: View {
                     + "anything new is added, and a note you wrote on two devices ends up "
                     + "holding both versions rather than losing one.\n\n"
                     + "Leave “Restore settings too” off to bring across only your highlights, "
-                    + "notes and bookmarks. Watched phrases and listened history are always "
-                    + "merged, because merging them cannot lose anything."
+                    + "notes and bookmarks. Listened history is always "
+                    + "merged, because merging it cannot lose anything."
                 )
             }
 

@@ -76,13 +76,14 @@ struct ACIMDailyMinuteApp: App {
     init() {
         let defaultReminderTime = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
         UserDefaults.standard.register(defaults: [
-            "useCustomNotificationSound": true,
-            "notifyNewMinute": true,
-            "notifyNewLesson": true,
-            "notifyPhraseMatches": true,
             "notifyLiveActivities": false,
+            // `dailyReminder*` is the Daily Minute reminder. The keys predate
+            // the split and keep their names so a reader who had the one
+            // reminder on still has one, at the same time, about the minute.
             "dailyReminderEnabled": false,
-            "dailyReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate
+            "dailyReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate,
+            "lessonReminderEnabled": false,
+            "lessonReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()
@@ -102,11 +103,9 @@ struct ACIMDailyMinuteApp: App {
                     #if os(iOS)
                     BackgroundRefreshManager.scheduleRefresh()
                     #endif
-                    // Ask once, at launch. This used to be reached only by
-                    // switching on the daily reminder, so anyone who left that
-                    // off was never prompted — and every new-minute, new-lesson
-                    // and watched-phrase notification was silently discarded
-                    // for want of authorisation.
+                    // Ask once, at launch, so the answer is already known when
+                    // a reminder is switched on rather than asked for in the
+                    // middle of that gesture.
                     Task { await NotificationManager.shared.requestPermissionIfNeeded() }
                     // An annotation made on an archived minute knows only its
                     // date. Once the feed names the segment behind that date,
@@ -117,10 +116,9 @@ struct ACIMDailyMinuteApp: App {
                 #if os(iOS)
                 .onChange(of: scenePhase) { _, newPhase in
                     // Foreground catch-up: BGAppRefreshTask is opportunistic
-                    // on iOS and may never fire on older devices. Running the
-                    // notification checks when the app becomes active is the
-                    // only way to guarantee the user sees new facts/
-                    // corrections they missed while the app was closed.
+                    // on iOS and may never fire on older devices, so coming
+                    // to the foreground is the primary moment the app learns
+                    // which lesson the practice reminders should name.
                     if newPhase == .active {
                         BackgroundRefreshManager.performForegroundCheck()
                     }
