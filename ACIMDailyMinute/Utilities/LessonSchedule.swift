@@ -90,6 +90,29 @@ enum LessonSchedule {
         return result
     }
 
+    /// How many publishing days (Mon–Fri) fall after `after` and up to and
+    /// including `through`, both read as calendar days in `calendar`. Zero
+    /// when `through` is not later than `after`.
+    ///
+    /// This is how many lessons the publisher has moved on by: the newest
+    /// recorded lesson plus this count is the lesson for `through`, and a
+    /// weekend adds nothing, so Saturday and Sunday repeat Friday's lesson.
+    static func publishingDays(
+        after: Date,
+        through: Date,
+        calendar: Calendar = publicationCalendar
+    ) -> Int {
+        var cursor = calendar.startOfDay(for: after)
+        let last = calendar.startOfDay(for: through)
+        var count = 0
+        while cursor < last {
+            guard let next = calendar.date(byAdding: .day, value: 1, to: cursor) else { break }
+            cursor = next
+            if !calendar.isDateInWeekend(cursor) { count += 1 }
+        }
+        return count
+    }
+
     /// The date lesson `lessonNumber` becomes available, or `nil` when it has
     /// already been recorded (`lessonNumber <= latestRecorded`).
     ///
