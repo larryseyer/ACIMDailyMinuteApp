@@ -89,7 +89,7 @@ measured: three at 150ms never once caught a freshly pushed reading in time. **T
 side only** (`laidOutRect(of:in:)` there and nowhere else) — see the asymmetry below.
 
 ⛔ **Every reading in this app has ONE shape, and `Views/ReadingScaffold.swift` owns it.** Four
-bands, always: header, title block (optional), body, footer. All ten render sites pass slots and
+bands, always: header, title block (optional), body, footer. All eleven render sites pass slots and
 position nothing themselves — that is the whole point, because a surface that positions nothing
 cannot disagree with the others. Container chrome — a card's padding and background, a screen's
 `ScrollView` and readable width — stays with the surface. **The scaffold owns the ORDER of the bands
@@ -113,7 +113,7 @@ on screen and is printed plain. The footer's slots are an **address** and a **me
 position, which is how the Archive fits with a book name and its date.
 
 ⛔ **`tools/verify_card_header.sh`, the tenth check, guards the whole shape**: the layout measurement,
-every eyebrow string measured at 303pt, and four greps — eight surfaces draw through the scaffold,
+every eyebrow string measured at 303pt, and four greps — nine surfaces draw through the scaffold,
 only the scaffold names `CardHeaderRow`, Save is in no nav toolbar, no Listen control is hand-rolled.
 Each grep is negative-tested; adding a reading surface means adding it to that list.
 
@@ -433,13 +433,25 @@ above the shelf; on the phone following it puts that passage back at the top of 
 the Mac it opens the right reading at its top. It travels in the backup file, merging per book by
 the later moment.
 
-⛔ **A tap that does nothing is the top of the ledger.** A note in Saved is inert on the phone
-whenever its reading is a Daily Minute: `ReadingKey.savedDestination(media:)` resolves `.segment(id)`
-only through a `SegmentMedia` row carrying a published date, most segments have none, and `NoteRow`
-then draws bare content with no link around it. `HighlightRow` and `BookmarkRow` share that function
-and that hole. The Today card is where a reader annotates first, so this is the most-used path in
-the annotation feature dead-ending. It is the first item in the `▶ OPEN — small, unscheduled` block
-and it is his to see fixed before anything cosmetic.
+⛔ **A saved row opens the passage itself, and `Views/Segment/SegmentReadingView.swift` is where a
+`segment:` key lands.** `ReadingKey.savedDestination(spotlight:)` is gated on the **bundle** — no
+`SegmentMedia` row, no feed, no network — so every one of the 1,983 segments resolves. It takes a
+`ReadingSpotlight` and every case but `.archiveDate` carries the ref that can hold one, which is how
+a note lands on the reader's own sentence: `HighlightRow` builds one from the mark, `NoteRow` from
+the `Highlight` its `highlightID` names, and a standalone note correctly has none. `.minuteDate` is
+the one key that still names an archive day, because it exists only for an archived minute whose
+segment is unknown — that day is in the archive by construction. `BookmarkRow` parses its channel
+separately and now prefers the same passage screen wherever its `DailyMinute` row names a segment;
+an `ArchivedReading` carries no segment id and keeps the day.
+
+⛔ **Two calls on that screen are his to veto and are in the parked block.** It offers **Share and
+not Save** — Today keys a minute bookmark `minute:<segmentHash>` and the Archive keys it
+`minute:<lineHash>`, and a third address for one passage is the duplicate-row bug this project keeps
+rediscovering. And its footer address **is tappable**, the only pushed reading where that is true:
+everywhere else the address names the passage already on screen, and here it names where the passage
+begins in the book. ⛔ **That tap is the one thing in this work no eye has seen** — the Mac's screen
+was taken by another app mid-check — though it is the same `CitationButton` path the Today card
+uses, on a stack that declares `.readingDestinations(path:)`.
 
 **The next piece of the reading layout is D — Archive becomes Video** — app-only, the data exists
 today, and it retires the last exemption to the no-publication-dates rule. Its decisions are in the

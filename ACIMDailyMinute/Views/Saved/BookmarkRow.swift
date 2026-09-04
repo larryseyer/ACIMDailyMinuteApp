@@ -77,22 +77,33 @@ struct BookmarkRow: View {
     }
 
     /// Where tapping this row goes. A lesson opens that lesson, a Text section
-    /// opens that section, a Manual passage opens that passage, and a minute
-    /// opens the archive entry for the day it ran. `nil` when the underlying
-    /// reading is no longer in the store — the row still renders, it just has
-    /// nowhere to go, which is honest about what it can offer.
+    /// opens that section, and a Manual passage opens that passage. `nil` when
+    /// the underlying reading is no longer in the store — the row still renders,
+    /// it just has nowhere to go, which is honest about what it can offer.
+    ///
+    /// ⛔ A minute opens **its own words** wherever the row names a segment, and
+    /// only falls back to the archive day when it does not. A minute saved from
+    /// the Today card names a segment and its day is not in the archive yet —
+    /// today has not been archived — so the day route opened an archive screen
+    /// with nothing on it. An `ArchivedReading` carries no segment id, and its
+    /// day is in the archive by construction, so a row saved there keeps the
+    /// day. A bookmark carries no passage, so no row here opens on a spotlight.
     private var destination: SavedDestination? {
         if parsedChannel == "lesson" {
             // No store check: `LessonDetailView` renders from `WorkbookCatalog`
             // for any valid number, so a lesson bookmark always has somewhere
             // to go even when its text has not been fetched on this device.
             guard let n = Int(parsedToken) else { return nil }
-            if n == 0 || n == 500 { return .introduction(n) }
+            if n == 0 || n == 500 { return .introduction(IntroductionRef(lessonNumber: n)) }
             guard (1...365).contains(n) else { return nil }
-            return .lesson(n)
+            return .lesson(LessonRef(lessonNumber: n, presentsVideo: false))
         }
 
         if parsedChannel == "minute" {
+            if let m = minutes.first, m.segmentId > 0,
+               CorpusService.shared.segment(id: m.segmentId) != nil {
+                return .segment(SegmentReadingRef(segmentId: m.segmentId))
+            }
             if let m = minutes.first, !m.date.isEmpty { return .archiveDate(m.date) }
             if let r = archiveMinutes.first, !r.dateString.isEmpty { return .archiveDate(r.dateString) }
             return nil
@@ -100,12 +111,12 @@ struct BookmarkRow: View {
 
         if parsedChannel == "text" {
             guard let address = textAddress, textSection != nil else { return nil }
-            return .textSection(chapter: address.chapter, section: address.section)
+            return .textSection(TextSectionRef(chapter: address.chapter, section: address.section))
         }
 
         if parsedChannel == "manual" {
             guard let id = Int(parsedToken), CorpusService.shared.manualSegment(id: id) != nil else { return nil }
-            return .manual(id)
+            return .manual(ManualSegmentRef(segmentId: id))
         }
 
         return nil

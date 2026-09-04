@@ -8,18 +8,28 @@ import SwiftData
 struct HighlightRow: View {
     let highlight: Highlight
 
-    @Query private var media: [SegmentMedia]
-
     private let key: ReadingKey?
 
     init(highlight: Highlight) {
         self.highlight = highlight
         self.key = ReadingKey(rawValue: highlight.readingKey)
-        _media = Query(filter: #Predicate<SegmentMedia> { $0.segmentId > 0 })
+    }
+
+    /// The mark itself, handed to the screen so it opens on the reader's own
+    /// sentence rather than at the top. `AnchorResolver` repairs it on arrival,
+    /// which is what makes it survive a published reading drawing the feed's
+    /// text instead of the bundle's.
+    private var spotlight: ReadingSpotlight? {
+        guard highlight.length > 0, !highlight.quote.isEmpty else { return nil }
+        return ReadingSpotlight(
+            startOffset: highlight.startOffset,
+            length: highlight.length,
+            quote: highlight.quote
+        )
     }
 
     var body: some View {
-        if let destination = key?.savedDestination(media: media) {
+        if let destination = key?.savedDestination(spotlight: spotlight) {
             NavigationLink(value: destination) { rowContent }
         } else {
             rowContent
