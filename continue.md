@@ -144,13 +144,12 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — both machines carry the current commit; the Mac is launched and the phone is not.**
-`./build.sh`, the arm64 device build and the seventeen checks are green. `/Applications` holds the
-signed macOS copy, running, with the widget registered as `com.larryseyer.acimdailyminute.widget`
-and `practiceAnchorLesson` holding the newest lesson from the store. ⛔ **The phone's install is
-current and unlaunched** — it is locked and `process launch` is refused for that reason — so
-**launching it, and seeing both the app and `ACIMDailyMinuteWidgetExtension` alive, is owed**; that
-pair alive is the proof the schema is clean, since the extension is what `fatalError`s on a mismatch. **The plan the app hands the
+**Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
+arm64 device build and the seventeen checks are green. `/Applications` holds the signed macOS copy,
+running, with the widget registered as `com.larryseyer.acimdailyminute.widget` and
+`practiceAnchorLesson` holding the newest lesson from the store. On the phone
+`ACIMDailyMinuteWidgetExtension` is alive, which is the proof the schema is clean since the extension
+is what `fatalError`s on a mismatch, and **he is using the build.** **The plan the app hands the
 notification center is one line, `[PracticeReminders] N planned, <first> … <last>`, on stdout of a
 Debug build**; `open -a` swallows stdout, so launch the binary inside the bundle from a terminal to
 read it, with the practice switch on. For a Review II lesson (two sessions, no clock) in the
@@ -166,10 +165,9 @@ title stays put. macOS has no `isVerticallyResizable = false` that leaves a read
 So a spotlight and a ribbon both open a macOS reading at its **top**, which is what macOS has always
 done — `firstRect` returned an empty rectangle there for anything below the fold, so that scroll had
 never once fired. Doing it properly means scrolling from the SwiftUI side; it is on the ledger.
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, **not
-  launched since that install**: the phone is locked. Launch it and confirm the app and
-  `ACIMDailyMinuteWidgetExtension` are both alive, which is the proof the schema is clean since the
-  extension is what `fatalError`s on a mismatch. It has run its one-time reader migration.
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, launched,
+  `ACIMDailyMinuteWidgetExtension` alive, which is the proof the schema is clean since the extension
+  is what `fatalError`s on a mismatch. It has run its one-time reader migration.
   **iCloud sync is ON here now** — he switched it on and proved it carries a highlight both ways with
   the Mac. No folder is chosen, its default.
   ⛔ **`devicectl device info processes` showing none of them means nothing is wrong** — the app is
@@ -463,8 +461,8 @@ segment is unknown — that day is in the archive by construction. `BookmarkRow`
 separately and now prefers the same passage screen wherever its `DailyMinute` row names a segment;
 an `ArchivedReading` carries no segment id and keeps the day.
 
-⛔ **Two calls on that screen are his to veto and are in the parked block.** It offers **Share and
-not Save** — Today keys a minute bookmark `minute:<segmentHash>` and the Archive keys it
+⛔ **He is using the build and the Saved rows answer him. Two calls on that screen are still his to
+veto and are in the parked block.** It offers **Share and not Save** — Today keys a minute bookmark `minute:<segmentHash>` and the Archive keys it
 `minute:<lineHash>`, and a third address for one passage is the duplicate-row bug this project keeps
 rediscovering. And its footer address **is tappable**, the only pushed reading where that is true:
 everywhere else the address names the passage already on screen, and here it names where the passage
@@ -720,11 +718,6 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
-0. ⛔ **Launch the phone.** Its install is current and unlaunched because the phone is locked. Once
-   it is unlocked, `xcrun devicectl device process launch --device 00008030-0004299C1410802E
-   com.larryseyer.acimdailyminute` and then `devicectl device info processes`: the app **and**
-   `ACIMDailyMinuteWidgetExtension` alive is the schema proof, and it is the one deployment step
-   still owed.
 1. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
    call to confirm before it is built. ⛔ **It needs him, so it is not the next build.**
