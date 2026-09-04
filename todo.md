@@ -433,24 +433,136 @@ without one are 2026-03-20 … 03-26, which have no recording at all.
 
 Ranked by his instruction, and the ranking is a resource decision, not a design one: get it right on
 the common Apple environment first, then expand. Do not let a non-Apple consideration shape an
-Apple-platform design.
+Apple-platform design. Two of his calls are already made: **tvOS is a player — listen and watch
+first, reading secondary**, and **Windows and Linux are reached by one web reader over the same
+JSON**, not by porting Swift.
 
-- [ ] **Apple TV (tvOS)** — a target he wants; **no tvOS target exists in the Xcode project yet**, so
-      there is nothing to run and the simulator is not the blocker. Four tvOS runtimes are already
-      installed (18.2, 18.4, 26.2, 26.5) with Apple TV 4K (3rd gen) devices ready, e.g.
-      `FE7B1792-F47B-4271-AB54-8081D162EC55` on tvOS 26.2. The bundled corpus makes tvOS far more
-      tractable: a TV has no paired phone to lean on, so it needs content that stands alone.
-      ⛔ Real design work before any code: tvOS is a focus-engine, 10-foot, no-touch UI, and reading
-      long passages on a television is a genuine question, not a port. It also has no `WCSession` and
-      no home-screen widgets — Top Shelf is the nearest equivalent.
-- [ ] **Windows**, then **Linux** — explicitly LAST. Nothing is to start here while any Apple
-      platform is unfinished.
-- ⛔ **`./build.sh` builds macOS with `CODE_SIGNING_ALLOWED=NO`**, so that binary carries no
-      entitlements, cannot open the App Group, and its widget is invisible to the system. Testing
-      the macOS widget needs a signed build:
-      `xcodebuild -scheme ACIMDailyMinute -configuration Debug -destination "platform=macOS" -allowProvisioningUpdates DEVELOPMENT_TEAM=RR5DY39W4Q build`,
-      then copy the app to `/Applications` and launch it once. Confirm with
-      `pluginkit -mAv -p com.apple.widgetkit-extension | grep -i acim`.
+⛔ **The durability rule decides more of this than any platform API.** The app must be wholly usable
+on bundled content alone. That is what makes tvOS tractable and it is what the watch fails today.
+
+### Phase 1 — iOS and iPadOS certification, first
+
+- [ ] **Widen the build matrix.** `build.sh` compiles `{iPad 10th-gen sim, macOS, Watch sim}` and
+      `both.sh` adds the physical phone. **There is no iPhone simulator leg at all**, no iPad Pro, no
+      SE-class device. Add an SE-class 375pt phone, a Pro Max and an iPad Pro 13-inch, compile-only —
+      a regression net, not a UI test. ⛔ There are **zero test targets**; the shared scheme's
+      `TestAction` has no testables, so `xcodebuild test` tests nothing. The 17 `swiftc` harnesses
+      are the suite.
+- [ ] **`App/ContentView.swift:121` hard-codes the tab-bar height** — `.padding(.bottom, 49)` under
+      the mini-player. Wrong on iPad under iOS 18's floating tab bar and wrong at large Dynamic Type.
+      Ten other views already use `safeAreaInset` with `MiniPlayerView.height`; this is the one that
+      does not.
+- [ ] **iPad multitasking is permitted and never tested.** `UIRequiresFullScreen` appears nowhere, so
+      Split View, Slide Over and Stage Manager all run at arbitrary widths. `ReadableContentWidth`
+      deliberately stops clamping in a compact slice, and horizontal padding disagrees across
+      surfaces there — 20pt on Today and the lesson, 16pt on Saved and the Read shelf, 40pt in the
+      introduction. Settle on one and prove it at a Slide Over width.
+- [ ] **`tools/verify_card_header.sh` sweeps width but never text size.** Three labels are
+      `lineLimit(1)` + `fixedSize(horizontal: true)` — the eyebrow, `ListenButton`, `SaveButton` —
+      which can neither wrap nor shrink, and nothing in the repo reads `dynamicTypeSize` or sets
+      `minimumScaleFactor`. The sweep also asserts positions only at widths ≥240pt. Sweep Dynamic
+      Type to the accessibility sizes; this is where the open eyebrow item lands.
+- [ ] ⛔ **HIS CALL — does the iPad get a sidebar?** `NavigationSplitView` is used **zero** times;
+      every root is a `NavigationStack`, so a 13-inch iPad draws a phone. `APP_STORE_LISTING.md:75`
+      promises a "Lessons spine with sidebar" screenshot the code cannot produce. Build the sidebar,
+      or correct the listing. Do not pick one silently.
+- [ ] ⛔ **HIS CALL — visionOS, which is excluded by a build setting rather than a decision.**
+      `SUPPORTED_PLATFORMS` is pinned to `"iphoneos iphonesimulator macosx"` at project level. Vision
+      Pro runs iPad apps unmodified and three visionOS runtimes are installed here, so lifting that
+      and adding device family `7` is close to free. A fifth Apple platform for almost nothing.
+
+### Phase 2 — Apple Watch, which is a build and not a fix
+
+⛔ **The watch does not work today, and the first item is why nothing else about it matters.**
+
+- [ ] ⛔ **The watch app is not embedded in the iOS app and therefore cannot reach a wrist.** The one
+      `PBXCopyFilesBuildPhase` in the project embeds the widget extension; the iOS target declares no
+      dependency on the watch target and has no "Embed Watch Content" phase. Add both. Also check in
+      the watch scheme — `build.sh:133` drives a scheme that is not shared.
+- [ ] ⛔ **The watch carries none of the bundled corpus**, so it is not usable on bundled content
+      alone and breaks the durability rule outright. Its Resources phase holds only
+      `Assets.xcassets`; its entire content is a **four-key `WCSession` payload** — text, publishedAt,
+      date, segmentHash. Add the corpus JSON and `CorpusService`. That also retires the dead
+      `WatchDataService.fetchDailyContent()` and the "Lesson N" caption, which can never populate
+      because nothing on the watch writes a `DailyLesson`.
+- [ ] **The complications cannot appear on a watch face.** `ACIMDailyMinuteWatchWidget` compiles into
+      the watch app but there is **no watchOS widget-extension target** and the struct is in no
+      `WidgetBundle`. Add the target. ⛔ `PARITY.md` marks this "Pass" — **that document is dated
+      2026-04-14 and is wrong here; re-derive it or delete it, do not trust it.**
+- [ ] **Smaller watch truths, all in `WatchDataService.swift`.** `fetchTodaysMinute()` sorts by
+      `publishedAt` and takes the newest row, so a week-old minute renders under "Today"; the
+      receiver inserts and never updates; and nothing redraws when a payload lands — no `@Query`, no
+      observation.
+- [ ] ⛔ **`WCSession` has never been proved end to end.** The watch simulator `build.sh` drives is
+      unpaired, and a session cannot activate unpaired. A paired phone+watch simulator pair is the
+      only way to see the transport work.
+
+### Phase 3 — Apple TV, as a player
+
+His call: listen and watch first. That is what buys the hard part — **text selection does not exist
+on tvOS at all** (no pointer, no `isSelectable`, no edit menu, no `.textSelection`), so the
+selection→highlight→note pipeline cannot be ported and does not have to be faked.
+
+- [ ] **The target, and a root of its own.** No tvOS product exists; `SUPPORTED_PLATFORMS` must gain
+      `appletvos appletvsimulator` and `TARGETED_DEVICE_FAMILY` a `3`, with a fourth entitlements
+      file. `ContentView` branches `#if os(iOS)` / `#else → macOS`, an exhaustive pair, and tvOS
+      falls into the AppKit branch. **79 conditional directives across 43 sites assume that same
+      pair.**
+- [ ] ⛔ **Fifteen classes of compile error break the moment an `appletvos` destination is added.**
+      Unguarded: `import WebKit` (`YouTubePlayerView.swift:2` — **tvOS has no WebKit**),
+      `import WidgetKit` (`DataService.swift:3`, which takes down the service everything fetches
+      through), the whole of `NotificationManager.swift`, `ShareLink` ×3, `.swipeActions` ×7,
+      `.refreshable` ×3, `DatePicker` ×4, `Stepper`, `TextEditor`, `.pickerStyle(.segmented)`,
+      `fileImporter`/`fileExporter` ×3. Mis-partitioned: `MacBottomTabBar` and `pageChevron`
+      undefined, `PlatformFont`/`PlatformColor`/`TextViewRepresentable` undefined, and
+      `Host.current()` in `FolderCopyService.swift:145`.
+- [ ] **Three things are nearly free.** `ReadingTextMeasurement.swift` needs only
+      `#if canImport(UIKit)` — every TextKit API it uses exists on tvOS. `Appearance.apply` can work
+      on tvOS, where `overrideUserInterfaceStyle` exists. `AudioManager` is `AVFoundation` +
+      `MediaPlayer`, both present; its one guard is `#if os(iOS) || os(watchOS)` around the session
+      category and wants `|| os(tvOS)`. ⛔ `ReadableContentWidth.swift` is the **one file already
+      written tvOS-correctly** — it uses `#if !os(macOS)` rather than the exhaustive pair, and it is
+      the pattern the other 42 sites should follow.
+- [ ] ⛔ **HIS CALL — video on the TV.** `YouTubePlayerView` is a `WKWebView` and tvOS has no WebKit;
+      the feed carries `youtube_url` and `audio_url` and **no direct video URL an `AVPlayer` could
+      open**. Three ways: hand off to the YouTube tvOS app, have the pipeline record an MP4 URL
+      beside the MP3s it already publishes, or ship audio only. **Audio only is the recommendation
+      for v1** — the archive.org MP3s stream to an Apple TV exactly as they do to a phone, and the
+      MP4 question is the pipeline's, separately, not blocking.
+- [ ] ⛔ **On tvOS the iCloud mirror stops being optional.** A tvOS app has no guaranteed persistent
+      local storage — the container, App Group included, is purgeable — and `UserDefaults` there is
+      capped and not durable either. `reader.store` holds the highlights and notes that nothing
+      anywhere can re-send. So on the TV the bundle and the feed are the only sources that may be
+      depended on, no SwiftData store may be load-bearing, and CloudKit is the only durable copy of a
+      reader's own words. ⛔ `SharedModelContainer.swift:51-54` **force-unwraps** the App Group
+      container URL: a tvOS target not provisioned with that group crashes at launch.
+- [ ] **If reading on the TV should ever hold a mark**, the shape is paragraph-granular focus, not
+      selection: `ReadingText.paragraphs(from:)` already splits the display string, so a focused
+      paragraph yields a real offset and length and stays compatible with every backup and every
+      other device. Coarser than a sentence, and it needs no selection API. Not for v1.
+- [ ] **What tvOS simply does not have**, so nothing may assume it: home-screen widgets as the phone
+      knows them (Top Shelf is the nearest thing), Live Activities, `WCSession`, deliverable local
+      notifications (badging only), pull-to-refresh, swipe actions, and any document picker — which
+      means the security-scoped folder-copy backup tier can never be configured there.
+
+### Phase 4 — Windows and Linux: one web reader over the same JSON
+
+Explicitly last. Nothing starts here while any Apple platform is unfinished.
+
+- [ ] **A static reader served from acimdailyminute.org**, over the **same** bundled JSON the app
+      ships — `ACIMSegments.json`, `ACIMTextSections.json`, `Workbook365Bodies.json`,
+      `ACIMManual.json`, `WorkbookIntroductions.json`, about 5.6 MB — which the site already
+      publishes. Installable as a PWA, so Windows, Linux, Android and ChromeOS are all reached by one
+      codebase with no store, no signing and no review.
+- [ ] ⛔ **It must read and write the same backup `.json`.** That file was designed for exactly this:
+      plain UTF-8, no private extension, no private UTI, with a human name and citation on every mark
+      so it reads as a document. Import stays strictly additive there as it is in the app — a
+      snapshot carries no deletions, and `MergePlan` has no field that can express one.
+- [ ] **The rules are ported, never re-invented.** The punctuation-spacing repair, the citation
+      format and its paragraph rule, the anchor and quote re-resolution and the merge algebra are
+      already written as portable specifications, and several have Python twins in `tools/` that the
+      Swift harnesses are proved against. Those twins are the reference implementation for a web
+      port — a second implementation that disagrees is the bug this whole project is built to avoid.
 
 ## ▶ OPEN — physical-book parity gaps
 

@@ -716,15 +716,26 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 ## ⬜ AGENT-OWNED WORK
 
+⛔ **Platform expansion is the arc he has asked for next, and it is planned in four phases in
+[`todo.md`](todo.md).** Two of his calls are already made: **tvOS is a player** — listen and watch
+first, reading secondary — and **Windows and Linux are one web reader over the same bundled JSON**,
+served from acimdailyminute.org, not a Swift port. Three decisions inside it are still his and are
+marked `HIS CALL` there: the iPad sidebar, video on the TV, and whether visionOS is taken.
+
 From [`todo.md`](todo.md), in order:
 
-1. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+1. **Platform expansion, Phase 1 — iOS and iPadOS certification.** The shipping platform, so it
+   comes first. ⛔ It contains two of his decisions; the rest is agent-owned.
+2. **Phase 2 — the Watch**, which is a build rather than a fix: it cannot reach a wrist, carries no
+   bundled corpus, and its complications cannot appear on a face.
+3. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+4. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
-   call to confirm before it is built. ⛔ **It needs him, so it is not the next build.**
-2. **The next build with no decision outstanding is an empty Archive day offering a way onward** —
-   his proposal, shape already decided in the ledger. **"Let it fall open"** is the one after it, on
-   the same footing.
-3. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+   call to confirm before it is built. ⛔ **It needs him, so it is not a build to start alone.**
+5. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
+   with their shape already decided, and the two builds with no decision outstanding if the platform
+   work is not what a session should pick up.
+6. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
    smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
@@ -733,8 +744,16 @@ to the foot of the lesson before it** (Review I ends Lesson 50, and so on throug
 sections), and `WorkbookIntroductions.json` entry 500 two paragraphs short. Structuring the Manual is
 its own item.
 
-**Apple TV is on the list** and is the only unbuilt Apple platform — no tvOS target exists yet, though
-four tvOS runtimes are installed here. Windows and Linux come after every Apple target, never before.
+⛔ **Three platform facts are load-bearing and were measured, not assumed.** **The watch app is not
+embedded in the iOS app** — the project's one copy-files phase embeds the widget extension, and the
+iOS target declares no dependency on the watch — so it cannot reach a wrist, and it carries no
+bundled corpus besides. **tvOS has no WebKit and no text selection**, so the YouTube player and the
+whole selection→highlight→note pipeline have no port; 79 conditional directives across 43 sites treat
+`os(iOS)` and `os(macOS)` as an exhaustive pair and send tvOS into the AppKit branch.
+`Views/ReadableContentWidth.swift` is the one file already written correctly, with `#if !os(macOS)`,
+and it is the pattern the rest should follow. **SwiftUI does not exist on Windows or Linux**, so
+those are a second front end whatever else is decided — which is why they are one web reader over the
+same JSON, and why they are last.
 
 ⛔ **The durability principle governs everything.** ACIM is timeless; YouTube, archive.org and every
 feed are rented and will end. Bundled content is permanent, the feed lasts decades with maintenance,
