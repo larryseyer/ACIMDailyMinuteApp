@@ -52,9 +52,10 @@ checks, real feed payloads. His eyes are the last resort, not the first.
 - [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
       `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
       the title. An unlistened row shows no date at all.
-- [ ] **B6 — Saved tab.** Tapping a saved lesson opens that lesson and a saved minute opens its archive
-      day. Swiping either direction deletes. ⚠ Both edges full-swipe, so any horizontal flick removes a
-      bookmark — say so if the leading edge should require a tap on Delete instead.
+- [ ] **B6 — Saved tab.** Tapping a saved lesson opens that lesson and a saved minute opens **the
+      passage itself** — see the Saved-tap item below. Swiping either direction deletes. ⚠ Both edges
+      full-swipe, so any horizontal flick removes a bookmark — say so if the leading edge should
+      require a tap on Delete instead.
 
 - [ ] **Lesson bodies.** Open a lesson the feed has not published yet — anything in 1-80. Expected:
       the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
@@ -369,6 +370,27 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       ⛔ Check the eyebrow at 375pt and xxLarge on every screen — `WORKBOOK FOR STUDENTS` is the
       longest string and the band breaks its words rather than wrapping.
 
+- [ ] ⛔ **Every row in Saved is a live tap now, and it lands on your own sentence.** Saved > Notes,
+      Saved > Highlights, and the shelf: tap any row. A note or highlight made on the Today card
+      used to do nothing at all — it now opens the passage on a screen whose nav bar names the book
+      (`Workbook for Students`, `Text`, `Manual for Teachers`) with `DAILY MINUTE` as the eyebrow,
+      your highlights painted yellow and your notes listed under the reading. A note written about a
+      highlight opens with **that** sentence tinted blue; a note about the whole reading opens at the
+      top, which is right. A saved lesson opens the lesson on its own paragraph, and no video takes
+      the screen first — following a mark is a request to read. ⛔ On the Mac the tint paints without
+      scrolling to it, which is the known macOS scroll gap and not this work.
+      **Two calls in it are yours to veto:**
+      1. **That screen offers Share and NOT Save.** A minute saved from Today keys one way and the
+         same minute saved from the Archive keys another — two addresses for one passage already —
+         and a Save there would make a third. Say the word if you want it anyway and the third key
+         gets designed properly first.
+      2. **Its address at the foot — `W-290.3` — is tappable**, and it is the only pushed reading
+         where that is true. Everywhere else the address names the passage already on screen and a
+         link there would teach you links are broken; here it names where the passage begins in the
+         book, with the pages around it. ⛔ **This tap is the one thing in this work no eye has
+         seen** — another app kept taking the Mac's screen — so check it lands in the Workbook at
+         that paragraph and Back returns you to the passage.
+
 ## ⏸ PAUSED — the standardized reading layout (piece A built; D is next)
 
 Piece A, the scaffold, is built: `Views/ReadingScaffold.swift` owns the band order and all ten render
@@ -544,28 +566,6 @@ Both simulators he asked about are **already installed on this Mac**; neither is
 - [ ] **macOS** — needs the signed build, not `./build.sh`. See platform expansion above.
 
 ## ▶ OPEN — small, unscheduled
-
-- [ ] ⛔ **A note in Saved does nothing when tapped, on the phone.** Observed by him, and the
-      narrowing is done: `SavedView`'s stack **does** declare `SavedDestination` (line 55) and
-      installs `readingDestinations` (line 71), so the navigation is wired. The row is inert because
-      `ReadingKey.savedDestination(media:)` returned **nil** and `NoteRow` then draws bare content
-      with no `NavigationLink` around it. It splits in two.
-      1. ⛔ **A note on a Daily Minute cannot resolve.** `.segment(id)` returns a destination only
-         when a `SegmentMedia` row carries a non-empty `publishedDate` for that id, and most segments
-         have no media row — so every note made on a Today card is a dead tap. That is almost
-         certainly what he is seeing, because the Today card is where a reader annotates first.
-         The passage is bundled and readable either way, so the fix is a destination that opens the
-         segment on its own words rather than routing through an archive day it may not have.
-         ⛔ **A row that cannot navigate should not look like one that can** — whatever else is done,
-         a dead tap is worse than a row that plainly does not offer one.
-         `HighlightRow` and `BookmarkRow` resolve through the same function and have the same hole.
-      2. **It lands at the top of the reading, not at the note.** Now that a stored offset is a
-         solved problem, a note attached to a highlight already carries offset, length and quote —
-         which is exactly a `ReadingSpotlight`, and every reading screen already takes one. Pushing
-         it would put the reader on **their own sentence**, which is what "back to what I was
-         reading" means. A standalone note about a whole reading has no passage and correctly opens
-         at the top. ⛔ A highlight row wants the same thing and should move with it.
-      ⛔ On macOS the spotlight paints but does not scroll — see the reading-scroll item above.
 
 - [ ] **The archive minute is the last reading that cannot be marked.** `ArchivedReadingCard`
       draws its minute body as plain `Text`, so it alone offers no selection, no highlight, no

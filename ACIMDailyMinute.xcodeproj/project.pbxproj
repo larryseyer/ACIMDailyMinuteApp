@@ -110,6 +110,7 @@
 		AA000001612 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
 		AA000001613 /* ReadSearchResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002613 /* ReadSearchResultsList.swift */; };
 		AA000001614 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
+		AA000001720 /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
 		AA000001615 /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
 		AA000001616 /* ReadingNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002616 /* ReadingNavigation.swift */; };
 		AA000001617 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
@@ -285,6 +286,7 @@
 		AA000002612 /* ReadingSpotlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpotlight.swift; sourceTree = "<group>"; };
 		AA000002613 /* ReadSearchResultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadSearchResultsList.swift; sourceTree = "<group>"; };
 		AA000002614 /* ManualSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSegmentView.swift; sourceTree = "<group>"; };
+		AA000002720 /* SegmentReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentReadingView.swift; sourceTree = "<group>"; };
 		AA000002615 /* CrossReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossReference.swift; sourceTree = "<group>"; };
 		AA000002616 /* ReadingNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingNavigation.swift; sourceTree = "<group>"; };
 		AA000002617 /* CitationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationButton.swift; sourceTree = "<group>"; };
@@ -476,6 +478,7 @@
 				AA000005022 /* Lessons */,
 				AA000005023 /* Text */,
 				AA000005024 /* Manual */,
+				AA000005025 /* Segment */,
 				AA000005008 /* Listen */,
 				AA000005011 /* Archive */,
 				AA000005012 /* Settings */,
@@ -675,6 +678,14 @@
 				AA000002614 /* ManualSegmentView.swift */,
 			);
 			path = Manual;
+			sourceTree = "<group>";
+		};
+		AA000005025 /* Segment */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002720 /* SegmentReadingView.swift */,
+			);
+			path = Segment;
 			sourceTree = "<group>";
 		};
 		AA000005022 /* Lessons */ = {
@@ -932,6 +943,7 @@
 				AA000001612 /* ReadingSpotlight.swift in Sources */,
 				AA000001613 /* ReadSearchResultsList.swift in Sources */,
 				AA000001614 /* ManualSegmentView.swift in Sources */,
+				AA000001720 /* SegmentReadingView.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
 				AA000001616 /* ReadingNavigation.swift in Sources */,
 				AA000001617 /* CitationButton.swift in Sources */,

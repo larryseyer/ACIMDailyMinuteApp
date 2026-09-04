@@ -101,4 +101,16 @@ enum ShareTextBuilder {
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }
+
+    /// The same passage `minuteShareText` shares, from the bundle rather than
+    /// from a published row. `SegmentReadingView` reaches a segment the feed may
+    /// never have carried, so the attribution comes from the corpus — which is
+    /// where `minuteShareText` gets its own, so the two cannot disagree about
+    /// how a Daily Minute names its source.
+    static func segmentShareText(_ segment: CorpusSegment) -> String {
+        var parts: [String] = [segment.body]
+        parts.append("— \(attribution(segmentId: segment.segmentId))")
+        parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
 }

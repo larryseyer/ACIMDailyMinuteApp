@@ -54,18 +54,24 @@ struct SavedView: View {
             }
             .navigationDestination(for: SavedDestination.self) { destination in
                 switch destination {
-                case .lesson(let number):
-                    LessonDetailView(lessonNumber: number)
+                case .lesson(let ref):
+                    LessonDetailView(
+                        lessonNumber: ref.lessonNumber,
+                        spotlight: ref.spotlight,
+                        presentsVideo: ref.presentsVideo
+                    )
                 case .archiveDate(let dateString):
                     // A saved minute was saved from an archived row, so its day
                     // has a reading to show and no sentence to explain.
                     ArchiveDateDetailView(dateString: dateString, availability: .archived)
-                case .textSection(let chapter, let section):
-                    TextSectionView(chapter: chapter, section: section)
-                case .introduction(let lessonNumber):
-                    WorkbookIntroductionView(lessonNumber: lessonNumber)
-                case .manual(let segmentId):
-                    ManualSegmentView(segmentId: segmentId)
+                case .textSection(let ref):
+                    TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
+                case .introduction(let ref):
+                    WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+                case .manual(let ref):
+                    ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
+                case .segment(let ref):
+                    SegmentReadingView(segmentId: ref.segmentId, spotlight: ref.spotlight)
                 }
             }
             .readingDestinations(path: $path)
@@ -172,46 +178,66 @@ struct SavedView: View {
     }
 }
 
-/// Where a saved row leads: back to the reading it was saved from. Hashable so
-/// it can ride the `NavigationStack` path.
+/// Where a saved row leads: back to the reading it was saved from, and to the
+/// passage inside it wherever the row knows one. Hashable so it can ride the
+/// `NavigationStack` path.
+///
+/// Every case but `archiveDate` carries the same ref the search results and the
+/// citation links push, which is what lets a spotlight travel: a note hanging on
+/// a highlight already holds an offset, a length and a quote, and that is
+/// exactly a `ReadingSpotlight`. An archive day is a day rather than a reading
+/// and has no passage to point at.
 enum SavedDestination: Hashable {
-    case lesson(Int)
+    case lesson(LessonRef)
     case archiveDate(String)
-    case textSection(chapter: Int, section: Int)
-    case introduction(Int)
-    case manual(Int)
+    case textSection(TextSectionRef)
+    case introduction(IntroductionRef)
+    case manual(ManualSegmentRef)
+    case segment(SegmentReadingRef)
 }
 
 extension ReadingKey {
-    /// Where a row for this reading leads in the Saved tab.
+    /// Where a row for this reading leads in the Saved tab, opened on
+    /// `spotlight` where the row knows which passage the reader marked.
     ///
-    /// A lesson opens that lesson, a Text section opens that section, and a
-    /// minute opens the archive day it ran on — found by segment where the
-    /// mapping is recorded, and by the stored date otherwise. A Manual passage
-    /// opens `ManualSegmentView`, gated on the segment being in the bundle
-    /// exactly as a Text section is.
-    func savedDestination(media: [SegmentMedia]) -> SavedDestination? {
+    /// A lesson opens that lesson and a Text section opens that section. A
+    /// Manual passage and a **Daily Minute passage** each open their own words,
+    /// gated on the segment being in the bundle exactly as a Text section is —
+    /// so the destination needs no feed, no media row and no network, and still
+    /// answers after every service this app uses has ended.
+    ///
+    /// ⛔ A minute is NOT routed through the archive day it ran on. That day is
+    /// known only where a `SegmentMedia` row records it, most segments have no
+    /// such row, and the result was a note the reader could tap and tap with
+    /// nothing happening. `.minuteDate` is the one case that still names a day,
+    /// because that key exists only for an archived minute whose segment is
+    /// unknown — so its day is in the archive by construction.
+    func savedDestination(spotlight: ReadingSpotlight? = nil) -> SavedDestination? {
         switch self {
         case .lesson(let n):
             // 0 and 500 are the two Part Introductions, which have their own
             // screen because they have no lesson number to be titled with.
-            if n == 0 || n == 500 { return .introduction(n) }
+            if n == 0 || n == 500 {
+                return .introduction(IntroductionRef(lessonNumber: n, spotlight: spotlight))
+            }
             guard (1...365).contains(n) else { return nil }
-            return .lesson(n)
+            // Following a mark is a request to read, so the video does not take
+            // the screen — the same call a cross-reference makes.
+            return .lesson(LessonRef(lessonNumber: n, spotlight: spotlight, presentsVideo: false))
         case .textSection(let chapter, let section):
             guard CorpusService.shared.textSection(chapter: chapter, section: section) != nil
             else { return nil }
-            return .textSection(chapter: chapter, section: section)
+            return .textSection(
+                TextSectionRef(chapter: chapter, section: section, spotlight: spotlight)
+            )
         case .segment(let id):
-            guard let row = media.first(where: { $0.segmentId == id }),
-                  !row.publishedDate.isEmpty
-            else { return nil }
-            return .archiveDate(row.publishedDate)
+            guard CorpusService.shared.segment(id: id) != nil else { return nil }
+            return .segment(SegmentReadingRef(segmentId: id, spotlight: spotlight))
         case .minuteDate(let date):
             return date.isEmpty ? nil : .archiveDate(date)
         case .manual(let id):
             guard CorpusService.shared.manualSegment(id: id) != nil else { return nil }
-            return .manual(id)
+            return .manual(ManualSegmentRef(segmentId: id, spotlight: spotlight))
         }
     }
 }

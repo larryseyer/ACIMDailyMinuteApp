@@ -192,6 +192,7 @@ Lessons/LessonDetailView.swift
 Lessons/WorkbookIntroductionView.swift
 Text/TextSectionView.swift
 Manual/ManualSegmentView.swift
+Segment/SegmentReadingView.swift
 "
 for surface in $SURFACES; do
     if ! grep -q 'ReadingScaffold(' "$VIEWS/$surface"; then
@@ -230,5 +231,5 @@ if [ -n "$INLINE_LISTEN" ]; then
     exit 1
 fi
 
-echo "the scaffold owns the bands: 8 surfaces, one header, no toolbar Save, no hand-rolled Listen"
+echo "the scaffold owns the bands: 9 surfaces, one header, no toolbar Save, no hand-rolled Listen"
 echo "OK"
