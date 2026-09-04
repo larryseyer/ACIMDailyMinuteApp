@@ -11,6 +11,14 @@ says what is true now and what is next. REPLACE the state block below — never 
 Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
 of mine is running.
 
+⛔ **Platform expansion Phase 1 is built and the eighteen checks are green.** The header keeps every
+word at every text size, on a third band where it needs one; the mini player clears a tab bar it now
+measures rather than assumes; the Archive and Saved tabs reserve room for it as the other thirteen
+surfaces already did; and every `ScrollView` screen edge is 20pt. Two things `todo.md` asserted about
+that phase were measured and were wrong — the redundant simulator legs and "visionOS is close to
+free" — and both are corrected in place there rather than carried out. **One item of Phase 1 is left
+and it needs an iPad**: the settled edge at a Slide Over width.
+
 ⛔ **The Archive stack declares `.readingDestinations(path:)` ahead of need, and that is deliberate.**
 `ArchiveView` is the fourth stack to carry it. Nothing beneath it emits a link **yet** —
 `ArchivedReadingCard` draws its body as plain `Text`, so no cross-reference is detected, and its
@@ -120,10 +128,34 @@ ONLY where it names somewhere else — the Today cards; on a pushed screen it na
 on screen and is printed plain. The footer's slots are an **address** and a **measure**, named by
 position, which is how the Archive fits with a book name and its date.
 
+⛔ **The header grows a THIRD band at the accessibility text sizes, and that is the design rather
+than a fallback.** Three controls cannot share a line once `Listen` is 182pt wide, so `ViewThatFits`
+gives the play control a band of its own and leaves Share and Save on the trailing edge of the next —
+the block grows downward and nothing reorders, which is the same trade the title band already makes.
+Below the accessibility sizes the one-band form is used and nothing moved. ⛔ **`lineLimit(1)` +
+`fixedSize(horizontal: true)` does NOT prevent a squeeze** — that was the belief this rested on and it
+is false. Under real constraint SwiftUI compresses the label anyway, and for the eyebrow, which cannot
+be compressed, it overflows the card instead: `WORKBOOK FOR STUDENTS` drew 569.5pt wide inside a 303pt
+card and dragged the whole block's width with it, which is what pushed Save outside the card. So the
+eyebrow **wraps** at the accessibility sizes only. Wrapping is not the `DAILY MINU…` that was
+rejected — that was truncation, and every word survives here.
+
 ⛔ **`tools/verify_card_header.sh`, the tenth check, guards the whole shape**: the layout measurement,
 every eyebrow string measured at 303pt, and four greps — nine surfaces draw through the scaffold,
 only the scaffold names `CardHeaderRow`, Save is in no nav toolbar, no Listen control is hand-rolled.
-Each grep is negative-tested; adding a reading surface means adding it to that list.
+Each grep is negative-tested; adding a reading surface means adding it to that list. It runs on macOS
+and therefore sees **no** text size at all; `verify_card_header_dynamic_type.sh` is the other half.
+
+⛔ **Every `ScrollView` screen edge is 20pt, and that is now one number rather than three.** Today,
+the three lesson-detail states, the Workbook Introduction, the Manual, the Segment reading, the
+companion note, the Archive calendar, the Archive date detail and the Read and Saved shelf headers all
+use it. ⛔ **The `List`-based surfaces are NOT in that set and must not be dragged into it** — the
+Workbook spine, the Read search results, Listen, the Archive search results and all three Saved lists
+take system row insets, which are not a literal anyone can match. ⛔ A 16pt `.padding(16)` inside
+`DailyMinuteCard`, `DailyLessonCard`, `CorpusReadingCard`, `ArchivedReadingCard`, the Listen YouTube
+card and the companion note's closing callout is **inside-card** padding — the card's background hugs
+its own content — and so are `ReadingScaffold`'s 8pt chip and `LessonRow`'s 10pt badge. Leave all of
+them alone. The padding is applied outside `.readableContentWidth()` at every site.
 
 ⛔ **His phone gives the app a 375pt canvas, not 414pt.** The Pro Max runs **Display Zoom** — his
 screenshots are 1125x2436 rather than the native 1242x2688, exactly 0.906x — and his Dynamic Type is
@@ -145,7 +177,7 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
-arm64 device build and the seventeen checks are green. `/Applications` holds the signed macOS copy,
+arm64 device build and the eighteen checks are green. `/Applications` holds the signed macOS copy,
 running, with the widget registered as `com.larryseyer.acimdailyminute.widget` and
 `practiceAnchorLesson` holding the newest lesson from the store. On the phone
 `ACIMDailyMinuteWidgetExtension` is alive, which is the proof the schema is clean since the extension
@@ -229,8 +261,9 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Seventeen committed checks now guard this repo. Run all seventeen first thing — they take about
-two minutes and they are how you find out the tree is what this file says it is:**
+⛔ **Eighteen committed checks now guard this repo. Run all eighteen first thing — they take about
+three minutes and they are how you find out the tree is what this file says it is.** Seventeen are
+`swiftc` harnesses that run anywhere; the eighteenth boots a simulator, for a reason it records:
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -278,12 +311,27 @@ two minutes and they are how you find out the tree is what this file says it is:
   on the order a fetch returned rows in. All three failures it guards are silent: a half-deleted
   duplicate makes un-save do nothing, and a collision throws today's minute out of `persistMinute`.
 - `./tools/verify_card_header.sh` — ⛔ **the only check that guards the STRIP ABOVE a reading.**
-  401 cases, and **it compiles `CardHeaderRow.swift` and nothing else**. When a title and its controls
+  371 cases, and **it compiles `CardHeaderRow.swift` and nothing else**. When a title and its controls
   want more width than the card has, SwiftUI drops nothing and warns about nothing — it squeezes the
   only squeezable things, which are the words. It proves the block is two bands at every width from
   90pt to 672pt with no word ever broken, that Share precedes Save on the trailing edge, and that
   **neither moves when the play control appears** — which is what the leading play control buys, since
-  most readings have no audio and that button is usually absent.
+  most readings have no audio and that button is usually absent. ⛔ Its height check now runs only at
+  240pt and above: the control band deliberately becomes TWO bands on a narrow card at a large text
+  size, and height alone cannot tell that apart from a wrap. Below that line the eighteenth check
+  carries it, by measuring width instead.
+- `./tools/verify_card_header_dynamic_type.sh` — ⛔ **the only check that guards the header at a
+  reader's TEXT SIZE, and the only one that does not run on this Mac.** 1,285 checks over 12 Dynamic
+  Type sizes and 10 widths. **`dynamicTypeSize` does nothing on macOS** — `Text.font(.caption)`
+  measures 30.5x13.0pt at every size from xSmall to accessibility5 under `ImageRenderer` there — so a
+  sweep written like the other seventeen would pass without measuring anything. This one compiles for
+  `iphonesimulator` and runs under `simctl spawn`, where the same text is 35.5pt at `large` and
+  115.0pt at `accessibility5`. It compiles `CardHeaderRow`, `ListenButton`, `SaveButton`,
+  `ShareButton` and `ACIMColors` — **the real controls, because a `Color.clear` placeholder cannot
+  grow with text size and would hide the whole defect** — and greps all four for a store, a service
+  or a session. It boots an iPhone SE (3rd gen) headlessly and shuts down only a device it booted.
+  ⛔ It never drives the iPad sim. What it caught: `Save` drawn 99.5pt against a natural 150.5pt on
+  his 303pt card, and the eyebrow `WORKBOOK FOR STUDENTS` drawn **569.5pt wide inside 303pt**.
 - `./tools/verify_folder_copy.sh` — ⛔ **the only check that guards the FOLDER a reader chose.**
   27 cases against a real directory on this Mac, and **it compiles `FolderCopy.swift` and
   `BackupDocument.swift` and nothing else**. A real encoded backup lands, reads back byte for byte,
@@ -413,10 +461,10 @@ only from that block, and only as part of the list. **Never invent a new thing f
 work is still going in.** An item leaves the block when he confirms it; an item he half-confirms is
 **narrowed to what is left**, not closed.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the seventeen committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the eighteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the seventeen checks first thing in a new session** — about
-two minutes, and they are how you find out the tree is what this file says it is.
+store migration, real feed payloads. **Run the eighteen checks first thing in a new session** — about
+three minutes, and they are how you find out the tree is what this file says it is.
 
 ⛔ **A screen can be driven from here, and it earns its keep — but it is not reliable.** The Mac
 build takes synthetic clicks: `System Events` for the tab bar and the shelf picker, a small `CGEvent`
@@ -717,25 +765,29 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 ## ⬜ AGENT-OWNED WORK
 
 ⛔ **Platform expansion is the arc he has asked for next, and it is planned in four phases in
-[`todo.md`](todo.md).** Two of his calls are already made: **tvOS is a player** — listen and watch
-first, reading secondary — and **Windows and Linux are one web reader over the same bundled JSON**,
-served from acimdailyminute.org, not a Swift port. Three decisions inside it are still his and are
-marked `HIS CALL` there: the iPad sidebar, video on the TV, and whether visionOS is taken.
+[`todo.md`](todo.md).** Four of his calls are made: **tvOS is a player** — listen and watch first,
+reading secondary — **Windows and Linux are one web reader over the same bundled JSON**, served from
+acimdailyminute.org, not a Swift port, **the iPad gets no sidebar** and the listing was corrected to
+match the full-width spine the code actually draws, and **visionOS is taken in compatible mode**, which
+is an App Store Connect availability toggle at submission and no build change at all. One decision
+inside it is still his and is marked `HIS CALL` there: video on the TV.
+
+⛔ **Phase 1 is built. What is left of it needs an iPad**, and it is the only item still in that
+block besides the submission-time toggle: the settled 20pt edge has not been seen in a Slide Over
+slice, where `ReadableContentWidth` stops clamping by design.
 
 From [`todo.md`](todo.md), in order:
 
-1. **Platform expansion, Phase 1 — iOS and iPadOS certification.** The shipping platform, so it
-   comes first. ⛔ It contains two of his decisions; the rest is agent-owned.
-2. **Phase 2 — the Watch**, which is a build rather than a fix: it cannot reach a wrist, carries no
+1. **Phase 2 — the Watch**, which is a build rather than a fix: it cannot reach a wrist, carries no
    bundled corpus, and its complications cannot appear on a face.
-3. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
-4. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+2. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+3. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
    call to confirm before it is built. ⛔ **It needs him, so it is not a build to start alone.**
-5. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
+4. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
    with their shape already decided, and the two builds with no decision outstanding if the platform
    work is not what a session should pick up.
-6. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+5. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
    smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
@@ -744,14 +796,20 @@ to the foot of the lesson before it** (Review I ends Lesson 50, and so on throug
 sections), and `WorkbookIntroductions.json` entry 500 two paragraphs short. Structuring the Manual is
 its own item.
 
-⛔ **Three platform facts are load-bearing and were measured, not assumed.** **The watch app is not
+⛔ **Four platform facts are load-bearing and were measured, not assumed.** **The watch app is not
 embedded in the iOS app** — the project's one copy-files phase embeds the widget extension, and the
 iOS target declares no dependency on the watch — so it cannot reach a wrist, and it carries no
 bundled corpus besides. **tvOS has no WebKit and no text selection**, so the YouTube player and the
 whole selection→highlight→note pipeline have no port; 79 conditional directives across 43 sites treat
 `os(iOS)` and `os(macOS)` as an exhaustive pair and send tvOS into the AppKit branch.
-`Views/ReadableContentWidth.swift` is the one file already written correctly, with `#if !os(macOS)`,
-and it is the pattern the rest should follow. **SwiftUI does not exist on Windows or Linux**, so
+`Utilities/ReadableContentWidth.swift` is the one file already written correctly, with
+`#if !os(macOS)`, and it is the pattern the rest should follow. **A NATIVE visionOS target is that
+same job, and "lifting `SUPPORTED_PLATFORMS` is close to free" was wrong**: measured on a visionOS
+26.5 simulator, `os(iOS)` is **false** there, `os(visionOS)` is true and `canImport(AppKit)` is
+**false**, so the app's 48 `#if os(iOS)` / `#elseif os(macOS)` sites match neither branch and
+`PlatformFont`, `PlatformColor`, `TextViewRepresentable`, `MacBottomTabBar` and `pageChevron` are all
+undefined. Compatible mode — the unmodified iPad binary in a Vision Pro window — needs none of that
+and is a store toggle. **SwiftUI does not exist on Windows or Linux**, so
 those are a second front end whatever else is decided — which is why they are one web reader over the
 same JSON, and why they are last.
 

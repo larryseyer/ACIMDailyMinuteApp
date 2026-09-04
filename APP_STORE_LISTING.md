@@ -72,7 +72,7 @@ Screenshots are a manual step — capture these scenes on each required device s
 |---|---|---|---|---|---|---|
 | 6.7-inch iPhone (iPhone 15 Pro Max / 16 Pro Max) | Yes | Today tab with daily minute card | Lessons spine with search | Lesson detail view | Archive calendar with date selected | Settings with reminder toggle |
 | 5.5-inch iPhone (iPhone 8 Plus — legacy) | If still required by Apple 2026 guidelines | Same 5 scenes as above | | | | |
-| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Lessons spine with sidebar | Lesson detail (full width) | Archive calendar | Saved bookmarks list |
+| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Lessons spine (full width, readable column) | Lesson detail (full width) | Archive calendar | Saved bookmarks list |
 | Apple Watch (Series 10) | Yes | Today view with minute card | Circular complication on watch face | Rectangular complication on watch face | | |
 
 ### Caption Ideas

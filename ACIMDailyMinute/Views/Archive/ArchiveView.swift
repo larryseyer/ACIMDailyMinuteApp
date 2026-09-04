@@ -24,6 +24,7 @@ import SwiftData
 struct ArchiveView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(ConnectivityManager.self) private var connectivity
+    @Environment(AudioManager.self) private var audio
 
     @Query(sort: \ArchivedReading.dateString, order: .reverse)
     private var allReadings: [ArchivedReading]
@@ -36,6 +37,12 @@ struct ArchiveView: View {
     var body: some View {
         NavigationStack(path: $path) {
             content
+                // ⛔ The mini player floats over this screen, so the last row
+                // owes it room. Thirteen surfaces reserved it and this one did
+                // not, which covered the bottom entry whenever audio was playing.
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+                }
                 .navigationTitle("Archive")
                 .searchable(text: $searchText, prompt: "Search the archive")
                 .refreshable {
@@ -113,7 +120,7 @@ struct ArchiveView: View {
 
                 selectedDateRow
             }
-            .padding(16)
+            .padding(20)
             .readableContentWidth()
         }
     }

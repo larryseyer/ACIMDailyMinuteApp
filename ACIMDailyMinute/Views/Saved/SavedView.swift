@@ -14,6 +14,7 @@ struct SavedView: View {
     }
 
     @Environment(\.modelContext) private var modelContext
+    @Environment(AudioManager.self) private var audio
     @Query(sort: \Bookmark.createdAt, order: .reverse) private var bookmarks: [Bookmark]
     @Query(sort: \Highlight.createdAt, order: .reverse) private var highlights: [Highlight]
     @Query(sort: \Note.createdAt, order: .reverse) private var notes: [Note]
@@ -27,7 +28,7 @@ struct SavedView: View {
                     ForEach(Segment.allCases) { Text($0.rawValue).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
                 Group {
@@ -38,6 +39,12 @@ struct SavedView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            // ⛔ The mini player floats over this screen, so the last row owes
+            // it room. Thirteen surfaces reserved it and this one did not, which
+            // covered the bottom entry whenever audio was playing.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
             .navigationTitle("Saved")
             .toolbar {

@@ -102,12 +102,6 @@ MainActor.assumeIsolated {
                     continue
                 }
 
-                // ⛔ The words stay whole, at EVERY width. A wrapped title or a
-                // hyphenated button makes the block taller; nothing else here can.
-                check(abs(all.height - reference) < 2,
-                      "\(label)/\(Int(width))pt listen=\(listen.map { String(Int($0)) } ?? "none"): "
-                      + "\(all.height)pt, not \(reference)pt — a word wrapped")
-
                 // ⛔ Everything below is asserted only where the control band
                 // actually fits. A play control plus Share plus Save wants about
                 // 198pt; below that the row is over-constrained and positions
@@ -115,6 +109,20 @@ MainActor.assumeIsolated {
                 // narrowest real card is 303pt — his phone, in Display Zoom — so
                 // 240pt is already narrower than anything that can occur.
                 guard width >= 240 else { continue }
+
+                // ⛔ The words stay whole. A wrapped title or a hyphenated button
+                // makes the block taller — but so, deliberately, does the control
+                // band splitting in two, which is how the header buys width when
+                // three controls cannot share a line. Height alone can no longer
+                // tell those apart, so this is asserted only above the width
+                // where one band is still expected. Below it, and at every text
+                // size, `verify_card_header_dynamic_type.sh` carries the check
+                // that can tell them apart: it measures the block's WIDTH against
+                // the card, which is what a squeezed or overflowing word actually
+                // shows up as.
+                check(abs(all.height - reference) < 2,
+                      "\(label)/\(Int(width))pt listen=\(listen.map { String(Int($0)) } ?? "none"): "
+                      + "\(all.height)pt, not \(reference)pt — a word wrapped")
 
                 // Share sits before Save, both on the trailing edge.
                 check(share.maxX <= save.minX + 0.5,
