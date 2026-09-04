@@ -49,6 +49,7 @@ struct ArchiveView: View {
                         availability: availability(of: dateString)
                     )
                 }
+                .readingDestinations(path: $path)
                 .toolbar {
                     #if os(iOS)
                     ToolbarItem(placement: .topBarTrailing) {

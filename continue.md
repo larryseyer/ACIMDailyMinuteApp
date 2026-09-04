@@ -8,16 +8,16 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ WHAT IS TRUE RIGHT NOW
 
-On branch `ralph/acim-3.9-to-5-finish-2026-04-14`, pushed. Nothing of mine is running.
+Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
+of mine is running.
 
-⛔ **One uncommitted line is in the tree and it is NOT mine.** `Views/Archive/ArchiveView.swift`
-gained `.readingDestinations(path: $path)` on the Archive stack, from outside this session — another
-Claude session, an editor, or his own hand. It is **correct**: the Archive draws readings, an
-`ArchivedReadingCard` footer citation is a link, and a stack that draws a reading and does not
-declare that modifier asserts in Debug and does nothing in Release. All three targets compile with
-it. It is left uncommitted deliberately, because committing someone else's work under this session's
-name is not this session's call — **ask him, then commit it or drop it**, and until then this is the
-one thing standing between the tree and clean.
+⛔ **The Archive stack declares `.readingDestinations(path:)` ahead of need, and that is deliberate.**
+`ArchiveView` is the fourth stack to carry it. Nothing beneath it emits a link **yet** —
+`ArchivedReadingCard` draws its body as plain `Text`, so no cross-reference is detected, and its
+footer carries a book name and a date rather than a citation, so `CitationButton` never appears. The
+line costs nothing and is owed the moment that card renders through `AnnotatableReadingText`, which
+is an open item: a stack that draws a reading without it asserts in Debug and does nothing in
+Release, and that failure is invisible until a reader taps.
 
 ⛔ **His five findings from the testing pass are built, and the `⏸ PARKED` block's first item is
 what only his eyes can settle about them.** The version reads `1.0`; the five introduction cards carry
