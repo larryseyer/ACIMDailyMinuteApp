@@ -370,26 +370,16 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       ⛔ Check the eyebrow at 375pt and xxLarge on every screen — `WORKBOOK FOR STUDENTS` is the
       longest string and the band breaks its words rather than wrapping.
 
-- [ ] ⛔ **Every row in Saved is a live tap, and it lands on your own sentence.** Saved > Notes,
-      Saved > Highlights, and the shelf: tap every row, and none of them may do nothing. A note or
-      highlight made on the Today card opens the passage on a screen whose nav bar names the book
-      (`Workbook for Students`, `Text`, `Manual for Teachers`) with `DAILY MINUTE` as the eyebrow,
-      your highlights painted yellow and your notes listed under the reading. A note written about a
-      highlight opens with **that** sentence tinted blue; a note about the whole reading opens at the
-      top, which is right. A saved lesson opens the lesson on its own paragraph, and no video takes
-      the screen first — following a mark is a request to read. ⛔ On the Mac the tint paints without
-      scrolling to it, which is the known macOS scroll gap and not this work.
-      **Two calls in it are yours to veto:**
-      1. **That screen offers Share and NOT Save.** A minute saved from Today keys one way and the
-         same minute saved from the Archive keys another — two addresses for one passage already —
-         and a Save there would make a third. Say the word if you want it anyway and the third key
-         gets designed properly first.
+- [ ] **Two calls on the Daily Minute passage screen — the one a Saved row opens.**
+      1. **It offers Share and NOT Save.** A minute saved from Today keys one way and the same
+         minute saved from the Archive keys another — two addresses for one passage already — and a
+         Save there would make a third. Say the word if you want it anyway and the third key gets
+         designed properly first.
       2. **Its address at the foot — `W-290.3` — is tappable**, and it is the only pushed reading
          where that is true. Everywhere else the address names the passage already on screen and a
          link there would teach you links are broken; here it names where the passage begins in the
-         book, with the pages around it. ⛔ **This tap is the one thing in this work no eye has
-         seen** — another app kept taking the Mac's screen — so check it lands in the Workbook at
-         that paragraph and Back returns you to the passage.
+         book, with the pages around it. ⛔ **No eye has seen this tap** — check it lands in the
+         Workbook at that paragraph and that Back returns you to the passage.
 
 ## ⏸ PAUSED — the standardized reading layout (piece A built; D is next)
 
