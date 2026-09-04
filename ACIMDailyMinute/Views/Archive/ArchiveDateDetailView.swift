@@ -39,7 +39,7 @@ struct ArchiveDateDetailView: View {
                             ArchivedReadingCard(reading: reading)
                         }
                     }
-                    .padding(16)
+                    .padding(20)
                     .readableContentWidth()
                 }
             }

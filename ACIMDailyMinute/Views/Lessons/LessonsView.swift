@@ -57,7 +57,7 @@ struct LessonsView: View {
                     ForEach(Shelf.allCases) { Text($0.rawValue).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
                 // ⛔ Above the list rather than inside it. The Workbook spine
@@ -71,7 +71,7 @@ struct LessonsView: View {
                 // they are searching for.
                 if trimmedQuery.isEmpty {
                     ContinueReadingRow(book: shelf == .workbook ? .workbook : .text)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                 }
 
                 Group {

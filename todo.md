@@ -442,34 +442,32 @@ on bundled content alone. That is what makes tvOS tractable and it is what the w
 
 ### Phase 1 — iOS and iPadOS certification, first
 
-- [ ] **Widen the build matrix.** `build.sh` compiles `{iPad 10th-gen sim, macOS, Watch sim}` and
-      `both.sh` adds the physical phone. **There is no iPhone simulator leg at all**, no iPad Pro, no
-      SE-class device. Add an SE-class 375pt phone, a Pro Max and an iPad Pro 13-inch, compile-only —
-      a regression net, not a UI test. ⛔ There are **zero test targets**; the shared scheme's
-      `TestAction` has no testables, so `xcodebuild test` tests nothing. The 17 `swiftc` harnesses
-      are the suite.
-- [ ] **`App/ContentView.swift:121` hard-codes the tab-bar height** — `.padding(.bottom, 49)` under
-      the mini-player. Wrong on iPad under iOS 18's floating tab bar and wrong at large Dynamic Type.
-      Ten other views already use `safeAreaInset` with `MiniPlayerView.height`; this is the one that
-      does not.
-- [ ] **iPad multitasking is permitted and never tested.** `UIRequiresFullScreen` appears nowhere, so
-      Split View, Slide Over and Stage Manager all run at arbitrary widths. `ReadableContentWidth`
-      deliberately stops clamping in a compact slice, and horizontal padding disagrees across
-      surfaces there — 20pt on Today and the lesson, 16pt on Saved and the Read shelf, 40pt in the
-      introduction. Settle on one and prove it at a Slide Over width.
-- [ ] **`tools/verify_card_header.sh` sweeps width but never text size.** Three labels are
-      `lineLimit(1)` + `fixedSize(horizontal: true)` — the eyebrow, `ListenButton`, `SaveButton` —
-      which can neither wrap nor shrink, and nothing in the repo reads `dynamicTypeSize` or sets
-      `minimumScaleFactor`. The sweep also asserts positions only at widths ≥240pt. Sweep Dynamic
-      Type to the accessibility sizes; this is where the open eyebrow item lands.
-- [ ] ⛔ **HIS CALL — does the iPad get a sidebar?** `NavigationSplitView` is used **zero** times;
-      every root is a `NavigationStack`, so a 13-inch iPad draws a phone. `APP_STORE_LISTING.md:75`
-      promises a "Lessons spine with sidebar" screenshot the code cannot produce. Build the sidebar,
-      or correct the listing. Do not pick one silently.
-- [ ] ⛔ **HIS CALL — visionOS, which is excluded by a build setting rather than a decision.**
-      `SUPPORTED_PLATFORMS` is pinned to `"iphoneos iphonesimulator macosx"` at project level. Vision
-      Pro runs iPad apps unmodified and three visionOS runtimes are installed here, so lifting that
-      and adding device family `7` is close to free. A fifth Apple platform for almost nothing.
+⛔ **Do NOT add SE / Pro Max / iPad Pro simulator legs to `build.sh`.** It was measured:
+`xcodebuild -showBuildSettings` is byte-identical across simulator device models — same `ARCHS`,
+same `SDK_NAME`, same deployment target, same device family. A simulator destination's device model
+never reaches the compiler, so those legs would compile the same binary three more times and catch
+nothing. The layout regression net is `tools/verify_card_header_dynamic_type.sh`, which measures
+real iOS metrics; the only compile that genuinely differs is the arm64 `iphoneos` device build,
+which `both.sh` already drives. ⛔ There are still **zero test targets** — the shared scheme's
+`TestAction` has no testables, so `xcodebuild test` tests nothing. The eighteen `swiftc`/`simctl`
+harnesses are the suite.
+
+- [ ] **Prove the settled padding at a real Slide Over width.** Every `ScrollView` screen edge is
+      20pt now and the `List`-based surfaces keep system row insets, which are not comparable and
+      were deliberately left alone. What has not been seen is an iPad running a compact slice, where
+      `ReadableContentWidth` stops clamping by design. Needs an iPad simulator or his iPad — ⛔ not
+      the iPad sim `58B7D31D-…`, which he has asked not be driven.
+- [ ] ⛔ **At submission, switch visionOS availability on in App Store Connect.** The app already
+      qualifies for "Designed for iPad" on Vision Pro unchanged: device family `1,2`, all four iPad
+      orientations, and no `UIRequiredDeviceCapabilities`. It is an availability toggle on the
+      existing iPad build and needs no code, no target and no build setting.
+      ⛔ **It is NOT done by lifting `SUPPORTED_PLATFORMS`, and that claim was wrong.** Measured on a
+      visionOS 26.5 simulator: `os(iOS)` is **false** there, `os(visionOS)` is true, and
+      `canImport(AppKit)` is **false**. The app's 48 `#if os(iOS)` sites pair with `#elseif
+      os(macOS)`, so visionOS falls through both branches and `PlatformFont`, `PlatformColor`,
+      `TextViewRepresentable`, `MacBottomTabBar` and `pageChevron` are all undefined. A **native**
+      visionOS target is the same porting job tvOS is — see Phase 3 — and belongs beside it, not
+      here.
 
 ### Phase 2 — Apple Watch, which is a build and not a fix
 

@@ -8,6 +8,20 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    #if os(iOS)
+    /// The real height of the tab bar the mini player has to clear.
+    ///
+    /// ⛔ **This used to be the literal `49`, and 49 is only ever right on an
+    /// iPhone at an ordinary text size.** iOS 18 draws iPad a floating tab bar
+    /// of a different height entirely, and on both platforms the bar grows with
+    /// Dynamic Type. A mini player padded by a guess either floats above the bar
+    /// with a gap under it or sits behind it, and neither is visible to any
+    /// check that does not run on the device the guess is wrong for.
+    /// `MiniPlayerView.height` is a different number for a different job — what
+    /// the thirteen reading surfaces reserve so their last line is not covered —
+    /// and the two must not be confused.
+    @State private var tabBarHeight: CGFloat = 49
+    #endif
     #if os(macOS)
     @State private var showAbout = false
     #endif
@@ -118,10 +132,11 @@ struct ContentView: View {
             if audioManager.hasActiveAudio && selectedTab != 2 {
                 MiniPlayerView()
                     .onTapGesture { selectedTab = 2 }
-                    .padding(.bottom, 49) // tab bar height
+                    .padding(.bottom, tabBarHeight)
                     .transition(.move(edge: .bottom))
             }
         }
+        .background(TabBarHeightReader { tabBarHeight = $0 })
         #else
         // macOS: skip SwiftUI's TabView (which renders a top segmented
         // control that looks nothing like iOS) and build the content +
@@ -212,6 +227,78 @@ private struct MacBottomTabBar: View {
         .buttonStyle(.plain)
         .accessibilityLabel(item.title)
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+}
+#endif
+
+#if os(iOS)
+/// Reports the height of the tab bar the view it backs is sitting in.
+///
+/// ⛔ **There is no SwiftUI way to ask this, and the number cannot be assumed.**
+/// A `TabView`'s bar is drawn inside the `TabView`'s own bounds, so the `ZStack`
+/// overlaying the mini player sees only the screen's safe area, never the bar.
+/// The bar's height is 49pt on an iPhone at an ordinary text size and something
+/// else on an iPad under iOS 18's floating bar, at large Dynamic Type, or in a
+/// Slide Over slice.
+///
+/// ⛔ **The mini player must NOT be moved into a `safeAreaInset` on the `TabView`
+/// instead.** SwiftUI would propagate that inset into all thirteen surfaces that
+/// already reserve `MiniPlayerView.height` for themselves, and each would then
+/// add its own reservation on top of the propagated one — every one of the
+/// thirteen would leave a double gap. Reading the bar and padding by it keeps
+/// the reservation exactly where it already is.
+///
+/// It draws nothing. `UIViewRepresentable` is used the way the repo's other
+/// three representables are not — as a probe rather than a content host — so it
+/// reports through a closure and holds no state of its own.
+private struct TabBarHeightReader: UIViewRepresentable {
+    let onChange: (CGFloat) -> Void
+
+    func makeUIView(context: Context) -> ProbeView {
+        let view = ProbeView()
+        view.onChange = onChange
+        return view
+    }
+
+    func updateUIView(_ view: ProbeView, context: Context) {
+        view.onChange = onChange
+        view.report()
+    }
+
+    final class ProbeView: UIView {
+        var onChange: ((CGFloat) -> Void)?
+        private var last: CGFloat = 0
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            report()
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            report()
+        }
+
+        /// Walks the responder chain to the enclosing tab bar controller. The
+        /// responder chain rather than `superview`: SwiftUI hosts this view
+        /// several container views below the controller, and the chain crosses
+        /// those without caring how many there are.
+        func report() {
+            var responder: UIResponder? = self
+            while let current = responder {
+                if let tabs = current as? UITabBarController {
+                    let height = tabs.tabBar.frame.height
+                    // A bar mid-transition measures zero. Reporting that would
+                    // drop the mini player behind the bar for a frame.
+                    if height > 0, abs(height - last) > 0.5 {
+                        last = height
+                        onChange?(height)
+                    }
+                    return
+                }
+                responder = current.next
+            }
+        }
     }
 }
 #endif
