@@ -8,8 +8,16 @@ says what is true now and what is next. REPLACE the state block below — never 
 
 ## ✅ WHAT IS TRUE RIGHT NOW
 
-Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing of
-mine is running.
+On branch `ralph/acim-3.9-to-5-finish-2026-04-14`, pushed. Nothing of mine is running.
+
+⛔ **One uncommitted line is in the tree and it is NOT mine.** `Views/Archive/ArchiveView.swift`
+gained `.readingDestinations(path: $path)` on the Archive stack, from outside this session — another
+Claude session, an editor, or his own hand. It is **correct**: the Archive draws readings, an
+`ArchivedReadingCard` footer citation is a link, and a stack that draws a reading and does not
+declare that modifier asserts in Debug and does nothing in Release. All three targets compile with
+it. It is left uncommitted deliberately, because committing someone else's work under this session's
+name is not this session's call — **ask him, then commit it or drop it**, and until then this is the
+one thing standing between the tree and clean.
 
 ⛔ **His five findings from the testing pass are built, and the `⏸ PARKED` block's first item is
 what only his eyes can settle about them.** The version reads `1.0`; the five introduction cards carry
@@ -136,9 +144,13 @@ nightly run fills one per night. ⛔ SQLite has never been opened read-write acr
 be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
-**Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
-arm64 device build and the seventeen checks are green. On the Mac the widget is registered and
-`practiceAnchorLesson` holds the newest lesson from the store. **The plan the app hands the
+**Build state — both machines carry the current commit; the Mac is launched and the phone is not.**
+`./build.sh`, the arm64 device build and the seventeen checks are green. `/Applications` holds the
+signed macOS copy, running, with the widget registered as `com.larryseyer.acimdailyminute.widget`
+and `practiceAnchorLesson` holding the newest lesson from the store. ⛔ **The phone's install is
+current and unlaunched** — it is locked and `process launch` is refused for that reason — so
+**launching it, and seeing both the app and `ACIMDailyMinuteWidgetExtension` alive, is owed**; that
+pair alive is the proof the schema is clean, since the extension is what `fatalError`s on a mismatch. **The plan the app hands the
 notification center is one line, `[PracticeReminders] N planned, <first> … <last>`, on stdout of a
 Debug build**; `open -a` swallows stdout, so launch the binary inside the bundle from a terminal to
 read it, with the practice switch on. For a Review II lesson (two sessions, no clock) in the
@@ -154,8 +166,9 @@ title stays put. macOS has no `isVerticallyResizable = false` that leaves a read
 So a spotlight and a ribbon both open a macOS reading at its **top**, which is what macOS has always
 done — `firstRect` returned an empty rectangle there for anything below the fold, so that scroll had
 never once fired. Doing it properly means scrolling from the SwiftUI side; it is on the ledger.
-- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, both the app
-  and `ACIMDailyMinuteWidgetExtension` seen alive, which is the proof the schema is clean since the
+- 📱 **iPhone 11 Pro Max** (UDID `00008030-0004299C1410802E`) — Debug, install current, **not
+  launched since that install**: the phone is locked. Launch it and confirm the app and
+  `ACIMDailyMinuteWidgetExtension` are both alive, which is the proof the schema is clean since the
   extension is what `fatalError`s on a mismatch. It has run its one-time reader migration.
   **iCloud sync is ON here now** — he switched it on and proved it carries a highlight both ways with
   the Mac. No folder is chosen, its default.
@@ -164,7 +177,9 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   ⭐ **This is where he tests.** ⛔ A `devicectl install` returning
   `CoreDeviceError 4000, "the device disconnected immediately after connecting"` is the phone, not the
   build — retry once before believing it. A locked phone refuses `process launch` with
-  `FBSOpenApplicationErrorDomain error 7`; that is the lock, not the build.
+  `FBSOpenApplicationErrorDomain error 7` — and, from a `devicectl` on this Mac, with
+  `CoreDeviceError 10002` / `FBSOpenApplicationServiceErrorDomain error 1` naming `Locked` in the
+  failure reason. That is the lock, not the build; the install still lands while it is locked.
 - 💻 **This M4 MacBook Pro** — `/Applications/ACIMDailyMinute.app` is current: arm64, signed team
   `RR5DY39W4Q`, widget extension registered as `com.larryseyer.acimdailyminute.widget`; he adds it
   from **Edit Widgets**. Not running is the ordinary state, not a fault. Confirm with `codesign -dv`
@@ -411,8 +426,12 @@ tool for a row inside a SwiftUI `List`, `screencapture -R` for the result. That 
 taken end to end without him, and it found a defect no harness could reach. **Its failure mode is
 that this terminal reclaims focus after every command**, so the app window sits behind it and the
 clicks land on the terminal — a capture that shows this transcript means exactly that, not a broken
-screen. `open -a` does not reliably raise it. When it will not come forward, stop and say so rather
-than spending the session on it.
+screen. `open -a` does not reliably raise it; **`osascript -e 'tell application "System Events" to
+set frontmost of process "ACIMDailyMinute" to true'` does**, and asking System Events for the name of
+the frontmost process is how to prove it before clicking. ⛔ **The second failure mode is another
+app taking the screen mid-sequence** — other apps drive this computer — so raise the window before
+**every** click rather than once at the start, and read the capture before believing the click
+landed. When it will not come forward, stop and say so rather than spending the session on it.
 ⛔ **If macOS asks for "access data from other apps", the copy in `/Applications` is the WRONG
 BUILD** — that is the tell, not a question to answer. A properly signed copy owns its App Group and
 never asks. Check `codesign -dv` first; see `./build.sh` below for what goes wrong and how badly.
@@ -453,12 +472,10 @@ begins in the book. ⛔ **That tap is the one thing in this work no eye has seen
 was taken by another app mid-check — though it is the same `CitationButton` path the Today card
 uses, on a stack that declares `.readingDestinations(path:)`.
 
-**The next piece of the reading layout is D — Archive becomes Video** — app-only, the data exists
-today, and it retires the last exemption to the no-publication-dates rule. Its decisions are in the
-`⏸ PAUSED` block; it was his brainstorm, so confirm the recast with him before building it. The next
-agent-owned *build* with no decisions outstanding is **an empty Archive day offering a way onward** —
-his proposal, shape decided in the ledger, no new call needed. **"Let it fall open"** is the one
-after it, on the same footing.
+**Piece D — Archive becomes Video** is app-only, the data exists today, and it retires the last
+exemption to the no-publication-dates rule. Its decisions are in the `⏸ PAUSED` block; it was his
+brainstorm, so confirm the recast with him before building it. What to build meanwhile is in
+`⬜ AGENT-OWNED WORK` below.
 
 These facts were settled by measuring the bundle, not by preference, and they are load-bearing:
 - **The Course never cites itself by address.** Zero `T-`/`W-`/`M-` forms, zero `Lesson N` or
@@ -703,11 +720,19 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 
 From [`todo.md`](todo.md), in order:
 
+0. ⛔ **Launch the phone.** Its install is current and unlaunched because the phone is locked. Once
+   it is unlocked, `xcrun devicectl device process launch --device 00008030-0004299C1410802E
+   com.larryseyer.acimdailyminute` and then `devicectl device info processes`: the app **and**
+   `ACIMDailyMinuteWidgetExtension` alive is the schema proof, and it is the one deployment step
+   still owed.
 1. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
-   call to confirm before it is built.
-2. **"Let it fall open", Workbook completion tracking, structuring the Manual**, then the
-   pre-submission sweep and the smaller open items.
+   call to confirm before it is built. ⛔ **It needs him, so it is not the next build.**
+2. **The next build with no decision outstanding is an empty Archive day offering a way onward** —
+   his proposal, shape already decided in the ledger. **"Let it fall open"** is the one after it, on
+   the same footing.
+3. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+   smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
 PDFs — the eleven running heads still inside Chapter 11's prose, **every Workbook introduction glued

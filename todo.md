@@ -370,9 +370,9 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       ⛔ Check the eyebrow at 375pt and xxLarge on every screen — `WORKBOOK FOR STUDENTS` is the
       longest string and the band breaks its words rather than wrapping.
 
-- [ ] ⛔ **Every row in Saved is a live tap now, and it lands on your own sentence.** Saved > Notes,
-      Saved > Highlights, and the shelf: tap any row. A note or highlight made on the Today card
-      used to do nothing at all — it now opens the passage on a screen whose nav bar names the book
+- [ ] ⛔ **Every row in Saved is a live tap, and it lands on your own sentence.** Saved > Notes,
+      Saved > Highlights, and the shelf: tap every row, and none of them may do nothing. A note or
+      highlight made on the Today card opens the passage on a screen whose nav bar names the book
       (`Workbook for Students`, `Text`, `Manual for Teachers`) with `DAILY MINUTE` as the eyebrow,
       your highlights painted yellow and your notes listed under the reading. A note written about a
       highlight opens with **that** sentence tinted blue; a note about the whole reading opens at the
