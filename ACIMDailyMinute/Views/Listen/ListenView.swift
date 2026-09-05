@@ -36,7 +36,7 @@ struct ListenView: View {
     @State private var downloadRevision = 0
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     @State private var videoRequest: VideoRequest?
     #endif
 
@@ -97,15 +97,19 @@ struct ListenView: View {
     var body: some View {
         NavigationStack {
             List {
+                #if os(iOS)
                 if let url = embedURL {
                     Section {
                         youtubeCard(url: url.absoluteString)
                             .id(url)
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            #if !os(tvOS)
                             .listRowSeparator(.hidden)
+                            #endif
                             .listRowBackground(Color.clear)
                     }
                 }
+                #endif
 
                 Section {
                     content
@@ -119,14 +123,17 @@ struct ListenView: View {
                 Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
             .navigationTitle("Listen")
+            // ⛔ iOS only: the cover presents a WKWebView and tvOS has no WebKit.
             #if os(iOS)
             .fullScreenCover(item: $videoRequest) { request in
                 FullScreenVideoCover(videoURL: request.url)
             }
             #endif
+            #if !os(tvOS)
             .refreshable {
                 await reload(force: true)
             }
+            #endif
             .task(id: selectedFeed) {
                 await reload(force: false)
             }
@@ -148,6 +155,8 @@ struct ListenView: View {
 
     // MARK: - YouTube
 
+    // ⛔ iOS only, with its row above: the card is a WebKit embed.
+    #if os(iOS)
     private func youtubeCard(url: String) -> some View {
         let title = selectedFeed == .minute ? "Daily Minute Playlist" : "Daily Lessons Playlist"
         return VStack(alignment: .leading, spacing: 8) {
@@ -166,6 +175,7 @@ struct ListenView: View {
         .background(Color.acimCard)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
+    #endif
 
     /// The video the playlist embed will open on, whose thumbnail therefore
     /// stands in for the playlist. A `videoseries` URL carries no video id of
@@ -195,7 +205,9 @@ struct ListenView: View {
                 Text(feed.label).tag(feed)
             }
         }
-        .pickerStyle(.segmented)
+        #if !os(tvOS)
+                .pickerStyle(.segmented)
+                #endif
         .padding(.vertical, 8)
         .textCase(nil)
         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -214,7 +226,9 @@ struct ListenView: View {
                     .padding(.vertical, 24)
                 Spacer()
             }
+            #if !os(tvOS)
             .listRowSeparator(.hidden)
+            #endif
             .listRowBackground(Color.clear)
 
         case .failed:
@@ -223,7 +237,9 @@ struct ListenView: View {
             } description: {
                 Text("Pull to retry.")
             }
+            #if !os(tvOS)
             .listRowSeparator(.hidden)
+            #endif
             .listRowBackground(Color.clear)
 
         case .loaded:
@@ -234,7 +250,9 @@ struct ListenView: View {
                 } description: {
                     Text("The \(selectedFeed.label) feed has not published any episodes.")
                 }
+                #if !os(tvOS)
                 .listRowSeparator(.hidden)
+                #endif
                 .listRowBackground(Color.clear)
             } else {
                 ForEach(Array(list.enumerated()), id: \.element.id) { offset, episode in
@@ -251,7 +269,10 @@ struct ListenView: View {
                             play(episode)
                         }
                     )
+                    #if !os(tvOS)
                     .listRowSeparator(.visible)
+                    #endif
+                    #if !os(tvOS)
                     .swipeActions(edge: .trailing) {
                         Button {
                             PlaybackHistory.toggle(episode.id)
@@ -293,6 +314,7 @@ struct ListenView: View {
                             }
                         }
                     }
+                    #endif
                     .id("\(episode.id)-\(downloadRevision)")
                 }
             }
@@ -318,7 +340,7 @@ struct ListenView: View {
             audio.play(url: episode.audioURL, title: episode.title)
             return
         }
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         if !episode.youtubeURL.isEmpty {
             videoRequest = VideoRequest(id: episode.youtubeURL)
         }
@@ -397,7 +419,7 @@ private enum LoadState: Equatable {
 }
 
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 /// Wraps the URL so `fullScreenCover(item:)` has something `Identifiable` to
 /// key on, without conforming `String` app-wide.
 private struct VideoRequest: Identifiable {

@@ -1,6 +1,16 @@
+// ⛔ The YouTube embed is a WKWebView, and tvOS has NO WebKit at all — the one
+// capability gap on the TV that no fence can paper over. The guard is on the
+// FRAMEWORK and wraps the whole file, imports included: fencing only the two
+// platform structs left the shared `extension YouTubePlayerView` at the tail
+// referring to a type that no longer existed, and the error named the extension
+// rather than the cause.
+//
+// Video on the TV needs either a direct MP4 URL the pipeline does not yet
+// publish, or a hand-off to the YouTube tvOS app. Audio is the tvOS path: the
+// archive.org MP3s stream there exactly as they do to a phone.
+#if canImport(WebKit)
 import SwiftUI
 import WebKit
-
 #if os(iOS)
 struct YouTubePlayerView: UIViewRepresentable {
     let videoURL: String
@@ -180,7 +190,7 @@ extension YouTubePlayerView {
 
             // Open all other URLs (Watch on YouTube, etc.) in default browser
             _ = await MainActor.run {
-                #if os(iOS)
+                #if os(iOS) || os(tvOS)
                 UIApplication.shared.open(url)
                 #elseif os(macOS)
                 NSWorkspace.shared.open(url)
@@ -190,3 +200,4 @@ extension YouTubePlayerView {
         }
     }
 }
+#endif

@@ -27,7 +27,9 @@ struct SavedView: View {
                 Picker("Shelf", selection: $segment) {
                     ForEach(Segment.allCases) { Text($0.rawValue).tag($0) }
                 }
+                #if !os(tvOS)
                 .pickerStyle(.segmented)
+                #endif
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
@@ -53,9 +55,11 @@ struct SavedView: View {
                     // a reader's own words ever leave the app. It is offered on
                     // every segment because it exports all of them.
                     if !highlights.isEmpty || !notes.isEmpty {
+                        #if !os(tvOS)
                         ShareLink(item: exportText) {
                             Label("Export", systemImage: "square.and.arrow.up")
                         }
+                        #endif
                     }
                 }
             }
@@ -104,12 +108,16 @@ struct SavedView: View {
                         // `itemKey` no longer carries a unique index, so a
                         // passage can be held by more than one row and only the
                         // store removes all of them.
+                        #if !os(tvOS)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
                         }
+                        #endif
+                        #if !os(tvOS)
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
                         }
+                        #endif
                 }
             }
             .listStyle(.plain)
@@ -129,12 +137,16 @@ struct SavedView: View {
             List {
                 ForEach(highlights) { highlight in
                     HighlightRow(highlight: highlight)
+                        #if !os(tvOS)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             deleteButton { AnnotationStore.delete(highlight, in: modelContext) }
                         }
+                        #endif
+                        #if !os(tvOS)
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             deleteButton { AnnotationStore.delete(highlight, in: modelContext) }
                         }
+                        #endif
                 }
             }
             .listStyle(.plain)
@@ -154,12 +166,16 @@ struct SavedView: View {
             List {
                 ForEach(notes) { note in
                     NoteRow(note: note)
+                        #if !os(tvOS)
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             deleteButton { AnnotationStore.delete(note, in: modelContext) }
                         }
+                        #endif
+                        #if !os(tvOS)
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             deleteButton { AnnotationStore.delete(note, in: modelContext) }
                         }
+                        #endif
                 }
             }
             .listStyle(.plain)

@@ -256,8 +256,16 @@ private struct MetadataOnlyLessonView: View {
                         recordsPosition: true
                     )
                 } else if lessonNumber > 0, let embedURL {
+                    // ⛔ The video stand-in is iOS only — tvOS has no WebKit. The
+                    // fence is INSIDE the branch, not around it: a `#if` between
+                    // `}` and `else` severs the if-else chain and the compiler
+                    // reports only "expected expression". All 365 lesson bodies
+                    // are bundled, so this branch is a fallback a reader is not
+                    // expected to reach.
+                    #if os(iOS)
                     YouTubePlayerView(videoURL: embedURL)
                         .aspectRatio(16.0/9.0, contentMode: .fit)
+                    #endif
                 }
             }
             .padding(.horizontal, 20)

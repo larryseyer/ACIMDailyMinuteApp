@@ -35,7 +35,9 @@ struct ReadSearchResultsList: View {
                 if results.hits.isEmpty && headings.isEmpty {
                     if SearchFold.normalizedQuery(query) != nil {
                         ContentUnavailableView.search(text: query)
+                            #if !os(tvOS)
                             .listRowSeparator(.hidden)
+                            #endif
                             .listRowBackground(Color.clear)
                     } else {
                         EmptyView()
@@ -56,14 +58,18 @@ struct ReadSearchResultsList: View {
                         Text("Showing the first \(SearchIndex.hitCap.formatted()) matches. Add a word to narrow it.")
                             .font(.acimCaption)
                             .foregroundStyle(.secondary)
+                            #if !os(tvOS)
                             .listRowSeparator(.hidden)
+                            #endif
                             .listRowBackground(Color.clear)
                     }
                 }
             } else {
                 ProgressView()
                     .frame(maxWidth: .infinity)
+                    #if !os(tvOS)
                     .listRowSeparator(.hidden)
+                    #endif
                     .listRowBackground(Color.clear)
             }
         }

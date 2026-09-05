@@ -1,6 +1,8 @@
 import Foundation
 import SwiftData
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 /// Two-phase service: network I/O returns DTOs; persistence is `@MainActor`
 /// and writes into a caller-supplied `ModelContext`. Writing through the
@@ -234,7 +236,9 @@ struct DataService: Sendable {
 
         try context.save()
         FetchCooldown.markFetched(key: FetchCooldownKey.dailyMinute)
+        #if canImport(WidgetKit)
         WidgetCenter.shared.reloadAllTimelines()
+        #endif
 
         #if os(iOS)
         if isNew {
@@ -283,14 +287,21 @@ struct DataService: Sendable {
 
         try context.save()
         FetchCooldown.markFetched(key: FetchCooldownKey.dailyLesson)
+        #if canImport(WidgetKit)
         WidgetCenter.shared.reloadAllTimelines()
+        #endif
 
         // The moment the app learns a lesson is the moment the practice
         // reminders may be naming the wrong one.
+        // ⛔ The ANCHOR is recorded on every platform — it is device-local state
+        // about which lesson the reader is on, and it is what the reminders read
+        // rather than something they own. Only the reschedule is fenced.
         PracticeAnchorStore.record(lesson: lessonNumber, day: dto.date)
+        #if !os(tvOS)
         if isNew {
             PracticeReminderService.reschedule(in: context)
         }
+        #endif
 
         #if os(iOS)
         if isNew {

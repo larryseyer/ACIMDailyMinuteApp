@@ -1,5 +1,5 @@
 import SwiftUI
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #elseif os(macOS)
 import AppKit
@@ -34,7 +34,7 @@ enum Appearance: String, CaseIterable, Identifiable {
     @MainActor
     static func apply(_ raw: String) {
         let choice = Appearance(rawValue: raw) ?? .dark
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         let style: UIUserInterfaceStyle = switch choice {
         case .system: .unspecified
         case .light: .light

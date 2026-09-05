@@ -98,7 +98,7 @@ struct OnboardingView: View {
 
     @ViewBuilder
     private var carousel: some View {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         VStack(spacing: 0) {
             TabView(selection: $currentPage) {
                 ForEach(Array(pages.enumerated()), id: \.offset) { index, page in

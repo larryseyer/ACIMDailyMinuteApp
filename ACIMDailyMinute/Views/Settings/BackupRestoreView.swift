@@ -1,3 +1,12 @@
+// ⛔ tvOS has no document picker of any kind — no fileImporter, no
+// fileExporter, no FileDocument — so neither tier of the backup can be
+// operated there: not the Save/Restore file and not the folder a reader
+// chooses. This screen therefore does not exist on the TV.
+//
+// ⛔ That is also WHY a tvOS reader must not be invited to create
+// annotations: the container is purgeable there and the one route that
+// could carry their words off the device is unavailable.
+#if !os(tvOS)
 import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
@@ -270,3 +279,4 @@ private extension String {
     }
     .preferredColorScheme(.dark)
 }
+#endif

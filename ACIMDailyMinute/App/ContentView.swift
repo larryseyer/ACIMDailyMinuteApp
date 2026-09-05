@@ -8,7 +8,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     /// The real height of the tab bar the mini player has to clear.
     ///
     /// ⛔ **This used to be the literal `49`, and 49 is only ever right on an
@@ -48,7 +48,7 @@ struct ContentView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
             }
-            #if os(iOS)
+            #if os(iOS) || os(tvOS)
             .fullScreenCover(isPresented: introductionPresented) {
                 OnboardingView()
             }
@@ -105,7 +105,7 @@ struct ContentView: View {
 
     @ViewBuilder
     private var tabContainer: some View {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedTab) {
                 TodayView()
@@ -231,7 +231,7 @@ private struct MacBottomTabBar: View {
 }
 #endif
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 /// Reports the height of the tab bar the view it backs is sitting in.
 ///
 /// ⛔ **There is no SwiftUI way to ask this, and the number cannot be assumed.**

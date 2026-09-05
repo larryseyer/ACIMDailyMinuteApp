@@ -1,6 +1,11 @@
+// ⛔ WatchConnectivity does not exist on tvOS — there is no wrist to reach
+// from a television — so the whole file is fenced on the framework.
+#if canImport(WatchConnectivity)
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
+#if canImport(WatchConnectivity)
 import WatchConnectivity
+#endif
 
 final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Sendable {
     static let shared = PhoneWatchSyncService()
@@ -37,4 +42,5 @@ final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Senda
         session.activate()
     }
 }
+#endif
 #endif

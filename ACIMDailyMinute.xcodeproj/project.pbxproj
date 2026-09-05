@@ -7,15 +7,101 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00D41811AAA4D849DDA89F39 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
+		00DB89897C46AD26D5F02642 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
+		04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
+		04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
+		05DAEA537206B7647F1337E3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
+		06496C1352191AA792B96A0C /* FolderCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002414 /* FolderCopy.swift */; };
+		070C4665BFADE319997EF23A /* WorkbookCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002301 /* WorkbookCatalog.swift */; };
+		0916EF2E1AD313182B38E0E4 /* GetTodaysReadingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002057 /* GetTodaysReadingIntent.swift */; };
+		09F7D48D2E7F34D99602D7EA /* AnnotationExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002346 /* AnnotationExport.swift */; };
+		0E44DBAE56509220F98C8A25 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
+		10E15B2FBF3553B0BD532DA1 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
+		11B500A1905078648C3FD933 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
+		12010653E7E440A0DB51F8F8 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		123C18AA4BE39AFD89EE31D2 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
+		127724A97F6B565A5C3DFD6C /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
+		13FA11A3E611C27FF6B1EBC9 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
+		14932A1F2D20151299AA46B7 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
+		1944E8E82B1E072F571D01C8 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
+		200235292F43BB852320FC60 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
+		20DB6170AD64F2FA8FFA9D12 /* BookmarkIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002410 /* BookmarkIdentity.swift */; };
+		2522ECF2CF2024A38188DECC /* PracticeReminderKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */; };
+		2B4E321136A7AB621C2B5CFD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002041 /* OnboardingView.swift */; };
+		2EE2D33E133F9FD25CC09A53 /* ArchiveCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* ArchiveCalendarView.swift */; };
+		334BA79AD0ACE5426CE0BA65 /* QuittableSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002501 /* QuittableSheet.swift */; };
+		35BBF18D6DA4A1612E897F47 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
+		36D4DF1D0A1E08B1C2D27EE6 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
+		37C827CB2E78E0D330F51602 /* ReadingTextMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002399 /* ReadingTextMeasurement.swift */; };
+		3A7D59BB2B47A2A29616F342 /* CardHeaderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002412 /* CardHeaderRow.swift */; };
+		3CA2C2FEF904B9A87EDC9EDE /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
+		3F3F1E6DC5174E2F7DBF95DB /* ACIMChime.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA000002066 /* ACIMChime.caf */; };
+		433FF4172190752790CBAA02 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
+		43597287505A1BEE50355796 /* WorkbookBodiesCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002304 /* WorkbookBodiesCatalog.swift */; };
+		45AA507C72E171DA6EED5618 /* ReadingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002250 /* ReadingTextView.swift */; };
+		461C7D6D16C7513BEAF0EE36 /* CorpusReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002311 /* CorpusReadingCard.swift */; };
+		48762C843F450E5770BBFA75 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
+		4CB077B047D6391CEAD04177 /* ReadSearchResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002613 /* ReadSearchResultsList.swift */; };
+		4E049CE211CC77A5C91681D8 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
+		4E843D519E9D45033F1A1379 /* CompanionNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002313 /* CompanionNoteView.swift */; };
+		51411320B2460A9D01D694DE /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
+		52FB1002AC226AF16482FE21 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
+		56FCFEB1E0D81FBEF7DE01F8 /* FolderCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002415 /* FolderCopyService.swift */; };
+		57FC46ECA6E1A9B16396C029 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
+		5A9E970DF59E50820CCBE992 /* ReadingPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002620 /* ReadingPosition.swift */; };
+		5ECA908CFC68510F2D5B19CE /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
+		5ED569BBC87E74C5DB7DE0C2 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
+		66AAECF42CA912EC45F0AA20 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		67EC5EE3E5595CC3BA36FAF8 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002416 /* ShareButton.swift */; };
+		69A37287F782E66802C33C1D /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
+		6A1D23150B036A8F0DAB0FA7 /* SelectableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002340 /* SelectableReadingText.swift */; };
+		6A317AB3A8F7C34B78A66A04 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
+		6BF36E0F5084D09D2ACE3140 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002016 /* YouTubePlayerView.swift */; };
+		6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
+		70C64140C976D1B6BF01B97A /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
+		70F6B618090B15E757551A37 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
+		713FA83FC00F90B32FA9A13C /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
+		71A8BB33786DB49CE02E2542 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
+		737388F7818BC8CEABDB5F6E /* BackupRestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002409 /* BackupRestoreView.swift */; };
+		738248A25EF9F3C7A7EE2E4A /* ReadingScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002619 /* ReadingScaffold.swift */; };
+		739FA3EC8449547330463BC6 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
+		74D17369D02542AE9F41B755 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
+		7BB77B54BEF61504D2D5FF99 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
+		7DC168BF6E4E1CC0D617F8A4 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
+		7F8C0AE74B56A986256144F0 /* CorpusSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002610 /* CorpusSearch.swift */; };
+		80FAE54A5AA1B51D2347B019 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
+		816217340D292C35BE723810 /* CitationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002361 /* CitationResolver.swift */; };
+		81D475D3B411E616189618E1 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
+		845AE2A00491471B4FF95822 /* ReadingTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002618 /* ReadingTime.swift */; };
+		849092876F974290EF99C25F /* ReadingKeyNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002621 /* ReadingKeyNaming.swift */; };
+		8628C399075BCEE178ACB4D6 /* TextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002403 /* TextChapterView.swift */; };
+		88BC33248D93784DA89F0E1D /* AnnotationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002342 /* AnnotationStore.swift */; };
+		8A05FC639868B96AF3B12B3A /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
+		8B76EA757D750EB98479B559 /* MinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002417 /* MinuteSchedule.swift */; };
+		8B8645B01B8DF6E82366F9AD /* HighlightRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002344 /* HighlightRow.swift */; };
+		8C15AC007D8A0D82AB3EB325 /* CorpusSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002611 /* CorpusSearchService.swift */; };
+		8D900963DF800BE9243D1B35 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
+		8D9BE00154BBE85B7BC6FCC0 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
+		8FC808A4792C964B5F26A22B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
+		92C603BB97F15FE6E14D14A9 /* ACIMDailyMinuteShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002058 /* ACIMDailyMinuteShortcuts.swift */; };
+		95A9DEA4BF789F568FBF8A75 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
+		95F04C7093469EB14C80C9FC /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
+		9608388FEBFF171EA2854DC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
+		96EC8F7C5C54011A6A4F68D5 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
+		9745A63C14416AF0A848B477 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
+		985B548C17D9A648246BAD84 /* PracticeReminderKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */; };
+		9923F552EE496B083F507AE7 /* Workbook365.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002300 /* Workbook365.json */; };
+		995B06F9863BB659B6262DB2 /* AnnotatableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002341 /* AnnotatableReadingText.swift */; };
+		9A019E8B2553148215B68DEF /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
+		9B58E46D84E5A4CC8A82513F /* ACIMTextSections.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002308 /* ACIMTextSections.json */; };
+		9D536BFD7367CB31DF5317B9 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
+		9DEFA29DD5E981B9D8E91272 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
+		A05A3DDF2978D9956855AD60 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+		A4C885040911B61DA3B5B2AC /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
 		AA000001001 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
 		AA000001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
 		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
-		AA000001100 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
-		AA000001103 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
-		AA000001106 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
-		AA000001309 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
-		AA000001320 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
-		AA000001323 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
 		AA000001009 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
@@ -24,20 +110,12 @@
 		AA000001016 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002016 /* YouTubePlayerView.swift */; };
 		AA000001018 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002018 /* AudioManager.swift */; };
 		AA000001019 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
-		AA000001215 /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
-		AA000001216 /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
-		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
-		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
-		AA000001219 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
-		AA000001220 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
-		AA000001221 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
 		AA000001020 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
 		AA000001025 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
 		AA000001027 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
 		AA000001028 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002028 /* NotificationManager.swift */; };
 		AA000001029 /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		AA000001030 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002030 /* PrivacyPolicyView.swift */; };
-		AA000001315 /* CompanionNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002313 /* CompanionNoteView.swift */; };
 		AA000001034 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		AA000001035 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001041 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002041 /* OnboardingView.swift */; };
@@ -48,24 +126,12 @@
 		AA000001046 /* MediumWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002046 /* MediumWidgetView.swift */; };
 		AA000001047 /* LargeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002047 /* LargeWidgetView.swift */; };
 		AA000001048 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
-		AA000001101 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
-		AA000001104 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
 		AA000001051 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		AA000001107 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
-		AA000001310 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
-		AA000001321 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
-		AA000001324 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
 		AA000001054 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
 		AA000001058 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
-		AA000001222 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
-		AA000001343 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
-		AA000001344 /* HighlightRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002344 /* HighlightRow.swift */; };
-		AA000001345 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
-		AA000001224 /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
-		AA000001226 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
 		AA000001059 /* ACIMActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002054 /* ACIMActivityAttributes.swift */; };
 		AA000001060 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002055 /* LiveActivityManager.swift */; };
 		AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002056 /* ACIMDailyMinuteLiveActivity.swift */; };
@@ -76,41 +142,112 @@
 		AA000001066 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002060 /* WatchContentView.swift */; };
 		AA000001067 /* WatchStoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002061 /* WatchStoryRow.swift */; };
 		AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
-		AA000001102 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
-		AA000001105 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
-		AA000001108 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
-		AA000001311 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
-		AA000001322 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
-		AA000001325 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
 		AA000001072 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001074 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001075 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001076 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002064 /* Assets.xcassets */; };
 		AA000001078 /* WatchDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002065 /* WatchDataService.swift */; };
 		AA000001079 /* ACIMChime.caf in Resources */ = {isa = PBXBuildFile; fileRef = AA000002066 /* ACIMChime.caf */; };
+		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
+		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
+		AA000001082 /* ArchiveCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* ArchiveCalendarView.swift */; };
+		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
+		AA000001100 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001101 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001102 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001103 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001104 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001105 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001106 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001107 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001108 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
+		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
+		AA000001202 /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
+		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
+		AA000001210 /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
+		AA000001211 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
+		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
+		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
+		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
+		AA000001215 /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
+		AA000001216 /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
+		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
+		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
+		AA000001219 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001220 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001221 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001222 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002220 /* BookmarkRow.swift */; };
+		AA000001224 /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
+		AA000001226 /* PhoneWatchSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002226 /* PhoneWatchSyncService.swift */; };
+		AA000001230 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
+		AA000001250 /* ReadingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002250 /* ReadingTextView.swift */; };
+		AA000001251 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
+		AA000001260 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
 		AA000001300 /* Workbook365.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002300 /* Workbook365.json */; };
 		AA000001301 /* WorkbookCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002301 /* WorkbookCatalog.swift */; };
 		AA000001302 /* YouTubePlaylists.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002302 /* YouTubePlaylists.swift */; };
 		AA000001304 /* WorkbookBodiesCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002304 /* WorkbookBodiesCatalog.swift */; };
+		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
 		AA000001306 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
+		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
+		AA000001308 /* ACIMTextSections.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002308 /* ACIMTextSections.json */; };
+		AA000001309 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
+		AA000001310 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
+		AA000001311 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
+		AA000001312 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
+		AA000001313 /* CorpusReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002311 /* CorpusReadingCard.swift */; };
+		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
+		AA000001315 /* CompanionNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002313 /* CompanionNoteView.swift */; };
+		AA000001320 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
+		AA000001321 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
+		AA000001322 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
+		AA000001323 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
+		AA000001324 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
+		AA000001325 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
 		AA000001330 /* AnchorResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002330 /* AnchorResolver.swift */; };
+		AA000001340 /* SelectableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002340 /* SelectableReadingText.swift */; };
+		AA000001341 /* AnnotatableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002341 /* AnnotatableReadingText.swift */; };
 		AA000001342 /* AnnotationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002342 /* AnnotationStore.swift */; };
+		AA000001343 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002343 /* NoteEditorView.swift */; };
+		AA000001344 /* HighlightRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002344 /* HighlightRow.swift */; };
+		AA000001345 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
 		AA000001346 /* AnnotationExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002346 /* AnnotationExport.swift */; };
+		AA000001350 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		AA000001351 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		AA000001352 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		AA000001360 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
+		AA000001361 /* CitationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002361 /* CitationResolver.swift */; };
+		AA000001399 /* ReadingTextMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002399 /* ReadingTextMeasurement.swift */; };
 		AA000001400 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
+		AA000001401 /* TextNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002401 /* TextNavigation.swift */; };
+		AA000001402 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
+		AA000001403 /* TextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002403 /* TextChapterView.swift */; };
+		AA000001404 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
+		AA000001405 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
+		AA000001406 /* WorkbookIntroductions.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002406 /* WorkbookIntroductions.json */; };
 		AA000001407 /* BackupMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002407 /* BackupMerge.swift */; };
 		AA000001408 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002408 /* BackupService.swift */; };
-		AA000001414 /* FolderCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002414 /* FolderCopy.swift */; };
-		AA000001415 /* FolderCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002415 /* FolderCopyService.swift */; };
+		AA000001409 /* BackupRestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002409 /* BackupRestoreView.swift */; };
 		AA000001410 /* BookmarkIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002410 /* BookmarkIdentity.swift */; };
 		AA000001411 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002411 /* BookmarkStore.swift */; };
-		AA000001409 /* BackupRestoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002409 /* BackupRestoreView.swift */; };
-		AA000001312 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
+		AA000001412 /* CardHeaderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002412 /* CardHeaderRow.swift */; };
+		AA000001413 /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002413 /* ListenButton.swift */; };
+		AA000001414 /* FolderCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002414 /* FolderCopy.swift */; };
+		AA000001415 /* FolderCopyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002415 /* FolderCopyService.swift */; };
+		AA000001416 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002416 /* ShareButton.swift */; };
+		AA000001417 /* MinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002417 /* MinuteSchedule.swift */; };
+		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
+		AA000001501 /* QuittableSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002501 /* QuittableSheet.swift */; };
+		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
+		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
+		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
+		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
 		AA000001610 /* CorpusSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002610 /* CorpusSearch.swift */; };
 		AA000001611 /* CorpusSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002611 /* CorpusSearchService.swift */; };
 		AA000001612 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
 		AA000001613 /* ReadSearchResultsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002613 /* ReadSearchResultsList.swift */; };
 		AA000001614 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
-		AA000001720 /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
 		AA000001615 /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
 		AA000001616 /* ReadingNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002616 /* ReadingNavigation.swift */; };
 		AA000001617 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
@@ -120,53 +257,6 @@
 		AA000001621 /* ReadingKeyNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002621 /* ReadingKeyNaming.swift */; };
 		AA000001622 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
 		AA000001623 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
-		AA000001314 /* AudioDownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002312 /* AudioDownloadStore.swift */; };
-		AA000001305 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
-		AA000001307 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
-		AA000001308 /* ACIMTextSections.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002308 /* ACIMTextSections.json */; };
-		AA000001230 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
-		AA000001080 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002067 /* Assets.xcassets */; };
-		AA000001081 /* PlatformTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002068 /* PlatformTypography.swift */; };
-		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
-		AA000001501 /* QuittableSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002501 /* QuittableSheet.swift */; };
-		AA000001082 /* ArchiveCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002069 /* ArchiveCalendarView.swift */; };
-		AA000001083 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
-		AA000001251 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
-		AA000001250 /* ReadingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002250 /* ReadingTextView.swift */; };
-		AA000001340 /* SelectableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002340 /* SelectableReadingText.swift */; };
-		AA000001399 /* ReadingTextMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002399 /* ReadingTextMeasurement.swift */; };
-		AA000001341 /* AnnotatableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002341 /* AnnotatableReadingText.swift */; };
-		AA000001401 /* TextNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002401 /* TextNavigation.swift */; };
-		AA000001402 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
-		AA000001403 /* TextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002403 /* TextChapterView.swift */; };
-		AA000001404 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
-		AA000001405 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
-		AA000001406 /* WorkbookIntroductions.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002406 /* WorkbookIntroductions.json */; };
-		AA000001999 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
-		AA000001416 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002416 /* ShareButton.swift */; };
-		AA000001412 /* CardHeaderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002412 /* CardHeaderRow.swift */; };
-		AA000001413 /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002413 /* ListenButton.swift */; };
-		AA000001200 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002200 /* TodayView.swift */; };
-		AA000001201 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
-		AA000001313 /* CorpusReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002311 /* CorpusReadingCard.swift */; };
-		AA000001202 /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
-		AA000001210 /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
-		AA000001211 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
-		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
-		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
-		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
-		AA000001260 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
-		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
-		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
-		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
-		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
-		AA000001417 /* MinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002417 /* MinuteSchedule.swift */; };
-		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
-		AA000001350 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
-		AA000001351 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
-		AA000001352 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
-		AA000001360 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
-		AA000001361 /* CitationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002361 /* CitationResolver.swift */; };
 		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		AA000001702 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
 		AA000001703 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
@@ -174,6 +264,50 @@
 		AA000001705 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
 		AA000001706 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
 		AA000001707 /* PracticeReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002707 /* PracticeReminderService.swift */; };
+		AA000001720 /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
+		AA000001999 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
+		AA90AE2EBF10DAF1A9864B1E /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
+		ABF27FA2BEED9F34CFB2861E /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
+		ACCEF3854DE87F2863E6298B /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
+		B16FB1B18A0560706DEEA3A7 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
+		B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
+		B579FDB9F261CC5F958EE305 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002411 /* BookmarkStore.swift */; };
+		B5E711DEAA4BCE9A6CD549F1 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
+		B8F4C3D789C48924B38D5408 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		B945972B3985628674BA5F21 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
+		B9CC7F36F91D5D2742C73167 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
+		BB5E039943D9D50BE8163500 /* TextNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002401 /* TextNavigation.swift */; };
+		BE825B05E3C3D7202C07CFC7 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
+		BF60EA925091CBE25F226D68 /* YouTubePlaylists.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002302 /* YouTubePlaylists.swift */; };
+		C10C226A3DB3D705651C9B6B /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
+		C3012B487039BFCD870DF2FE /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
+		C3AAA7E0C80909A4F5990620 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		C92B95EE7F1B54E1B9F2CC90 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
+		CECB16E77047DCBDA7BED5B6 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
+		CF7DFD1938957DA28DB2F6D1 /* WorkbookIntroductions.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002406 /* WorkbookIntroductions.json */; };
+		D14B1B295BEE215D89B581FF /* DailyLessonCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002202 /* DailyLessonCard.swift */; };
+		D446FF62BB92D46FADC81165 /* ManualSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002614 /* ManualSegmentView.swift */; };
+		D876A45F4C4A438F5F2E5C1D /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002055 /* LiveActivityManager.swift */; };
+		DBC69AF82BE814936B9810F7 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002018 /* AudioManager.swift */; };
+		DBF1E493A2FBD2405900034B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CDFC301C7300FDDF3A05542 /* Foundation.framework */; };
+		DEA387EF3E6A4864DA8A2D7D /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC2D377E570A3382CB13A1A /* NotificationNames.swift */; };
+		E01D81AFF75DE4CECD830551 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		E480B27D2C45AFAB31CBF47A /* PracticeReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002707 /* PracticeReminderService.swift */; };
+		E54888C532E308CD05E4A2C0 /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC2D377E570A3382CB13A1A /* NotificationNames.swift */; };
+		E8BDBBDBE685E353D220DD84 /* ArchiveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002020 /* ArchiveService.swift */; };
+		E92D7EF630242CBF2EC42562 /* AnchorResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002330 /* AnchorResolver.swift */; };
+		E9B98D692A8FE8ECCEBD4590 /* BackupMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002407 /* BackupMerge.swift */; };
+		E9F8261B56B8AC8E1886ABF7 /* BackgroundRefreshManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002027 /* BackgroundRefreshManager.swift */; };
+		F078A1DC00F174F921A7BB5D /* ListenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002413 /* ListenButton.swift */; };
+		F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002615 /* CrossReference.swift */; };
+		F49A219ED0FD25EE8D11715B /* ReadingNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002616 /* ReadingNavigation.swift */; };
+		F4A5D1329B0CCECA553BD00C /* FeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002013 /* FeedService.swift */; };
+		F4EE3D77B7C11EBFDE4ECEBB /* DeepLinkRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002222 /* DeepLinkRoute.swift */; };
+		F87F69D0C6619833846A3B45 /* PodcastService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002015 /* PodcastService.swift */; };
+		F9967E38BBC2D787D311CEB3 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
+		FB8960069600678956D13E1D /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002408 /* BackupService.swift */; };
+		FCF93B82DD9F6532861D2690 /* DailyMinuteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002201 /* DailyMinuteCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,15 +335,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0CDFC301C7300FDDF3A05542 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PracticeReminderKeys.swift; sourceTree = "<group>"; };
+		5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinuteTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EC2D377E570A3382CB13A1A /* NotificationNames.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		AA000002001 /* ACIMDailyMinuteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteApp.swift; sourceTree = "<group>"; };
 		AA000002002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AA000002005 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
-		AA000002100 /* DailyMinute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinute.swift; sourceTree = "<group>"; };
-		AA000002101 /* DailyLesson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLesson.swift; sourceTree = "<group>"; };
-		AA000002102 /* ArchivedReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReading.swift; sourceTree = "<group>"; };
-		AA000002309 /* SegmentMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentMedia.swift; sourceTree = "<group>"; };
-		AA000002320 /* Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlight.swift; sourceTree = "<group>"; };
-		AA000002321 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		AA000002009 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -218,18 +350,12 @@
 		AA000002016 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
 		AA000002018 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		AA000002019 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
-		AA000002215 /* ListenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenView.swift; sourceTree = "<group>"; };
-		AA000002216 /* PodcastEpisodeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeRow.swift; sourceTree = "<group>"; };
-		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
-		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
-		AA000002219 /* CachedPodcastEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPodcastEpisode.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
 		AA000002028 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		AA000002029 /* ConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityManager.swift; sourceTree = "<group>"; };
 		AA000002030 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
-		AA000002313 /* CompanionNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionNoteView.swift; sourceTree = "<group>"; };
 		AA000002034 /* FetchCooldown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCooldown.swift; sourceTree = "<group>"; };
 		AA000002035 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		AA000002041 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -245,12 +371,6 @@
 		AA000002051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
 		AA000002053 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
-		AA000002220 /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
-		AA000002343 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
-		AA000002344 /* HighlightRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightRow.swift; sourceTree = "<group>"; };
-		AA000002345 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
-		AA000002222 /* DeepLinkRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRoute.swift; sourceTree = "<group>"; };
-		AA000002226 /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
 		AA000002054 /* ACIMActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMActivityAttributes.swift; sourceTree = "<group>"; };
 		AA000002055 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		AA000002056 /* ACIMDailyMinuteLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteLiveActivity.swift; sourceTree = "<group>"; };
@@ -264,29 +384,90 @@
 		AA000002064 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002065 /* WatchDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDataService.swift; sourceTree = "<group>"; };
 		AA000002066 /* ACIMChime.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = ACIMChime.caf; sourceTree = "<group>"; };
+		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
+		AA000002069 /* ArchiveCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendarView.swift; sourceTree = "<group>"; };
+		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		AA000002100 /* DailyMinute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinute.swift; sourceTree = "<group>"; };
+		AA000002101 /* DailyLesson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLesson.swift; sourceTree = "<group>"; };
+		AA000002102 /* ArchivedReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReading.swift; sourceTree = "<group>"; };
+		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
+		AA000002202 /* DailyLessonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLessonCard.swift; sourceTree = "<group>"; };
+		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
+		AA000002210 /* LessonMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonMeta.swift; sourceTree = "<group>"; };
+		AA000002211 /* LessonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonRow.swift; sourceTree = "<group>"; };
+		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
+		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
+		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
+		AA000002215 /* ListenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenView.swift; sourceTree = "<group>"; };
+		AA000002216 /* PodcastEpisodeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeRow.swift; sourceTree = "<group>"; };
+		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
+		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
+		AA000002219 /* CachedPodcastEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPodcastEpisode.swift; sourceTree = "<group>"; };
+		AA000002220 /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
+		AA000002222 /* DeepLinkRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRoute.swift; sourceTree = "<group>"; };
+		AA000002226 /* PhoneWatchSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneWatchSyncService.swift; sourceTree = "<group>"; };
+		AA000002230 /* ACIMManual.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMManual.json; sourceTree = "<group>"; };
+		AA000002250 /* ReadingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextView.swift; sourceTree = "<group>"; };
+		AA000002251 /* FullScreenVideoCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoCover.swift; sourceTree = "<group>"; };
+		AA000002260 /* ReadingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKey.swift; sourceTree = "<group>"; };
 		AA000002300 /* Workbook365.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365.json; sourceTree = "<group>"; };
 		AA000002301 /* WorkbookCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookCatalog.swift; sourceTree = "<group>"; };
 		AA000002302 /* YouTubePlaylists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlaylists.swift; sourceTree = "<group>"; };
 		AA000002304 /* WorkbookBodiesCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookBodiesCatalog.swift; sourceTree = "<group>"; };
+		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
 		AA000002306 /* CorpusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusService.swift; sourceTree = "<group>"; };
+		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
+		AA000002308 /* ACIMTextSections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMTextSections.json; sourceTree = "<group>"; };
+		AA000002309 /* SegmentMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentMedia.swift; sourceTree = "<group>"; };
+		AA000002310 /* CorpusFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusFallback.swift; sourceTree = "<group>"; };
+		AA000002311 /* CorpusReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusReadingCard.swift; sourceTree = "<group>"; };
+		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
+		AA000002313 /* CompanionNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionNoteView.swift; sourceTree = "<group>"; };
+		AA000002320 /* Highlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Highlight.swift; sourceTree = "<group>"; };
+		AA000002321 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		AA000002330 /* AnchorResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnchorResolver.swift; sourceTree = "<group>"; };
+		AA000002340 /* SelectableReadingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableReadingText.swift; sourceTree = "<group>"; };
+		AA000002341 /* AnnotatableReadingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotatableReadingText.swift; sourceTree = "<group>"; };
 		AA000002342 /* AnnotationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationStore.swift; sourceTree = "<group>"; };
+		AA000002343 /* NoteEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorView.swift; sourceTree = "<group>"; };
+		AA000002344 /* HighlightRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightRow.swift; sourceTree = "<group>"; };
+		AA000002345 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
 		AA000002346 /* AnnotationExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationExport.swift; sourceTree = "<group>"; };
+		AA000002350 /* PunctuationSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunctuationSpacing.swift; sourceTree = "<group>"; };
+		AA000002360 /* Citation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Citation.swift; sourceTree = "<group>"; };
+		AA000002361 /* CitationResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationResolver.swift; sourceTree = "<group>"; };
+		AA000002399 /* ReadingTextMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextMeasurement.swift; sourceTree = "<group>"; };
 		AA000002400 /* BackupDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDocument.swift; sourceTree = "<group>"; };
+		AA000002401 /* TextNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNavigation.swift; sourceTree = "<group>"; };
+		AA000002402 /* TextChaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChaptersView.swift; sourceTree = "<group>"; };
+		AA000002403 /* TextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChapterView.swift; sourceTree = "<group>"; };
+		AA000002404 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
+		AA000002405 /* WorkbookIntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookIntroductionView.swift; sourceTree = "<group>"; };
+		AA000002406 /* WorkbookIntroductions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookIntroductions.json; sourceTree = "<group>"; };
 		AA000002407 /* BackupMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupMerge.swift; sourceTree = "<group>"; };
 		AA000002408 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
-		AA000002414 /* FolderCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopy.swift; sourceTree = "<group>"; };
-		AA000002415 /* FolderCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopyService.swift; sourceTree = "<group>"; };
+		AA000002409 /* BackupRestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestoreView.swift; sourceTree = "<group>"; };
 		AA000002410 /* BookmarkIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkIdentity.swift; sourceTree = "<group>"; };
 		AA000002411 /* BookmarkStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStore.swift; sourceTree = "<group>"; };
-		AA000002409 /* BackupRestoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestoreView.swift; sourceTree = "<group>"; };
-		AA000002310 /* CorpusFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusFallback.swift; sourceTree = "<group>"; };
+		AA000002412 /* CardHeaderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHeaderRow.swift; sourceTree = "<group>"; };
+		AA000002413 /* ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenButton.swift; sourceTree = "<group>"; };
+		AA000002414 /* FolderCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopy.swift; sourceTree = "<group>"; };
+		AA000002415 /* FolderCopyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCopyService.swift; sourceTree = "<group>"; };
+		AA000002416 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
+		AA000002417 /* MinuteSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteSchedule.swift; sourceTree = "<group>"; };
+		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
+		AA000002501 /* QuittableSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuittableSheet.swift; sourceTree = "<group>"; };
+		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
+		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
+		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
+		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
 		AA000002610 /* CorpusSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearch.swift; sourceTree = "<group>"; };
 		AA000002611 /* CorpusSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearchService.swift; sourceTree = "<group>"; };
 		AA000002612 /* ReadingSpotlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpotlight.swift; sourceTree = "<group>"; };
 		AA000002613 /* ReadSearchResultsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadSearchResultsList.swift; sourceTree = "<group>"; };
 		AA000002614 /* ManualSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSegmentView.swift; sourceTree = "<group>"; };
-		AA000002720 /* SegmentReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentReadingView.swift; sourceTree = "<group>"; };
 		AA000002615 /* CrossReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossReference.swift; sourceTree = "<group>"; };
 		AA000002616 /* ReadingNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingNavigation.swift; sourceTree = "<group>"; };
 		AA000002617 /* CitationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationButton.swift; sourceTree = "<group>"; };
@@ -296,54 +477,6 @@
 		AA000002621 /* ReadingKeyNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKeyNaming.swift; sourceTree = "<group>"; };
 		AA000002622 /* ReadingPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPositionStore.swift; sourceTree = "<group>"; };
 		AA000002623 /* ContinueReadingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueReadingRow.swift; sourceTree = "<group>"; };
-		AA000002312 /* AudioDownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDownloadStore.swift; sourceTree = "<group>"; };
-		AA000002305 /* Workbook365Bodies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Workbook365Bodies.json; sourceTree = "<group>"; };
-		AA000002307 /* ACIMSegments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMSegments.json; sourceTree = "<group>"; };
-		AA000002308 /* ACIMTextSections.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMTextSections.json; sourceTree = "<group>"; };
-		AA000002230 /* ACIMManual.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ACIMManual.json; sourceTree = "<group>"; };
-		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
-		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
-		AA000002501 /* QuittableSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuittableSheet.swift; sourceTree = "<group>"; };
-		AA000002069 /* ArchiveCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendarView.swift; sourceTree = "<group>"; };
-		AA000002070 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		AA000002251 /* FullScreenVideoCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoCover.swift; sourceTree = "<group>"; };
-		AA000002250 /* ReadingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextView.swift; sourceTree = "<group>"; };
-		AA000002340 /* SelectableReadingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableReadingText.swift; sourceTree = "<group>"; };
-		AA000002399 /* ReadingTextMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextMeasurement.swift; sourceTree = "<group>"; };
-		AA000002341 /* AnnotatableReadingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotatableReadingText.swift; sourceTree = "<group>"; };
-		AA000002401 /* TextNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNavigation.swift; sourceTree = "<group>"; };
-		AA000002402 /* TextChaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChaptersView.swift; sourceTree = "<group>"; };
-		AA000002403 /* TextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChapterView.swift; sourceTree = "<group>"; };
-		AA000002404 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
-		AA000002405 /* WorkbookIntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookIntroductionView.swift; sourceTree = "<group>"; };
-		AA000002406 /* WorkbookIntroductions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookIntroductions.json; sourceTree = "<group>"; };
-		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
-		AA000002416 /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
-		AA000002412 /* CardHeaderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHeaderRow.swift; sourceTree = "<group>"; };
-		AA000002413 /* ListenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenButton.swift; sourceTree = "<group>"; };
-		AA000002200 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
-		AA000002201 /* DailyMinuteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteCard.swift; sourceTree = "<group>"; };
-		AA000002311 /* CorpusReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusReadingCard.swift; sourceTree = "<group>"; };
-		AA000002202 /* DailyLessonCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyLessonCard.swift; sourceTree = "<group>"; };
-		AA000002210 /* LessonMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonMeta.swift; sourceTree = "<group>"; };
-		AA000002211 /* LessonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonRow.swift; sourceTree = "<group>"; };
-		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
-		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
-		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
-		AA000002260 /* ReadingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKey.swift; sourceTree = "<group>"; };
-		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
-		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
-		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
-		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
-		AA000002417 /* MinuteSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteSchedule.swift; sourceTree = "<group>"; };
-		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
-		AA000002350 /* PunctuationSpacing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunctuationSpacing.swift; sourceTree = "<group>"; };
-		AA000002360 /* Citation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Citation.swift; sourceTree = "<group>"; };
-		AA000002361 /* CitationResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationResolver.swift; sourceTree = "<group>"; };
-		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 		AA000002702 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
@@ -351,9 +484,22 @@
 		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
 		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
 		AA000002707 /* PracticeReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeReminderService.swift; sourceTree = "<group>"; };
+		AA000002720 /* SegmentReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentReadingView.swift; sourceTree = "<group>"; };
+		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
+		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		96EDACCD8114F6C10BFCFA8C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBF1E493A2FBD2405900034B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AA000004001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -378,6 +524,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1CE45C1A29E09A4473DF8253 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9C1C0B33F4E71E3931967978 /* tvOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9C1C0B33F4E71E3931967978 /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				0CDFC301C7300FDDF3A05542 /* Foundation.framework */,
+			);
+			name = tvOS;
+			sourceTree = "<group>";
+		};
 		AA000005001 = {
 			isa = PBXGroup;
 			children = (
@@ -386,6 +548,7 @@
 				AA000005018 /* ACIMDailyMinuteWatch */,
 				AA000005009 /* Products */,
 				AA000002049 /* ACIMDailyMinute.entitlements */,
+				1CE45C1A29E09A4473DF8253 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -467,6 +630,8 @@
 				AA000002701 /* PracticeAnchorStore.swift */,
 				AA000002706 /* WorkbookPracticeCatalog.swift */,
 				AA000002707 /* PracticeReminderService.swift */,
+				8EC2D377E570A3382CB13A1A /* NotificationNames.swift */,
+				2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -521,6 +686,7 @@
 				AA000003001 /* ACIMDailyMinute.app */,
 				AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */,
 				AA000003003 /* ACIMDailyMinuteWatch Watch App.app */,
+				5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -661,6 +827,20 @@
 			path = Today;
 			sourceTree = "<group>";
 		};
+		AA000005022 /* Lessons */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002210 /* LessonMeta.swift */,
+				AA000002211 /* LessonRow.swift */,
+				AA000002212 /* LessonsView.swift */,
+				AA000002213 /* LessonDetailView.swift */,
+				AA000002214 /* JumpToLessonSheet.swift */,
+				AA000002405 /* WorkbookIntroductionView.swift */,
+				AA000002613 /* ReadSearchResultsList.swift */,
+			);
+			path = Lessons;
+			sourceTree = "<group>";
+		};
 		AA000005023 /* Text */ = {
 			isa = PBXGroup;
 			children = (
@@ -688,23 +868,26 @@
 			path = Segment;
 			sourceTree = "<group>";
 		};
-		AA000005022 /* Lessons */ = {
-			isa = PBXGroup;
-			children = (
-				AA000002210 /* LessonMeta.swift */,
-				AA000002211 /* LessonRow.swift */,
-				AA000002212 /* LessonsView.swift */,
-				AA000002213 /* LessonDetailView.swift */,
-				AA000002214 /* JumpToLessonSheet.swift */,
-				AA000002405 /* WorkbookIntroductionView.swift */,
-				AA000002613 /* ReadSearchResultsList.swift */,
-			);
-			path = Lessons;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3C68D88D0C6BE2F640417FE3 /* ACIMDailyMinuteTV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F7E156F509E55819EFE99E4 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteTV" */;
+			buildPhases = (
+				C96F83C9A678E4BAE201AF8B /* Sources */,
+				96EDACCD8114F6C10BFCFA8C /* Frameworks */,
+				A768EBEE26C8A95765D604C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ACIMDailyMinuteTV;
+			productName = ACIMDailyMinuteTV;
+			productReference = 5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */;
+			productType = "com.apple.product-type.application";
+		};
 		AA000006001 /* ACIMDailyMinute */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA000008003 /* Build configuration list for PBXNativeTarget "ACIMDailyMinute" */;
@@ -795,11 +978,28 @@
 				AA000006001 /* ACIMDailyMinute */,
 				AA000006002 /* ACIMDailyMinuteWidgetExtension */,
 				AA000006003 /* ACIMDailyMinuteWatch Watch App */,
+				3C68D88D0C6BE2F640417FE3 /* ACIMDailyMinuteTV */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A768EBEE26C8A95765D604C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9608388FEBFF171EA2854DC7 /* Assets.xcassets in Resources */,
+				3F3F1E6DC5174E2F7DBF95DB /* ACIMChime.caf in Resources */,
+				9923F552EE496B083F507AE7 /* Workbook365.json in Resources */,
+				71A8BB33786DB49CE02E2542 /* Workbook365Bodies.json in Resources */,
+				C10C226A3DB3D705651C9B6B /* ACIMSegments.json in Resources */,
+				9B58E46D84E5A4CC8A82513F /* ACIMTextSections.json in Resources */,
+				CF7DFD1938957DA28DB2F6D1 /* WorkbookIntroductions.json in Resources */,
+				00D41811AAA4D849DDA89F39 /* ACIMManual.json in Resources */,
+				739FA3EC8449547330463BC6 /* WorkbookPractice.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AA000007002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -959,6 +1159,8 @@
 				AA000001704 /* PracticePlanner.swift in Sources */,
 				AA000001706 /* WorkbookPracticeCatalog.swift in Sources */,
 				AA000001707 /* PracticeReminderService.swift in Sources */,
+				E54888C532E308CD05E4A2C0 /* NotificationNames.swift in Sources */,
+				2522ECF2CF2024A38188DECC /* PracticeReminderKeys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1011,6 +1213,135 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C96F83C9A678E4BAE201AF8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CECB16E77047DCBDA7BED5B6 /* ACIMDailyMinuteApp.swift in Sources */,
+				9745A63C14416AF0A848B477 /* ContentView.swift in Sources */,
+				B16FB1B18A0560706DEEA3A7 /* ArchiveView.swift in Sources */,
+				E01D81AFF75DE4CECD830551 /* DailyMinute.swift in Sources */,
+				12010653E7E440A0DB51F8F8 /* DailyLesson.swift in Sources */,
+				B8F4C3D789C48924B38D5408 /* ArchivedReading.swift in Sources */,
+				51411320B2460A9D01D694DE /* SegmentMedia.swift in Sources */,
+				3CA2C2FEF904B9A87EDC9EDE /* Highlight.swift in Sources */,
+				74D17369D02542AE9F41B755 /* Note.swift in Sources */,
+				6A317AB3A8F7C34B78A66A04 /* Channel.swift in Sources */,
+				AA90AE2EBF10DAF1A9864B1E /* CachedPodcastEpisode.swift in Sources */,
+				C92B95EE7F1B54E1B9F2CC90 /* DataService.swift in Sources */,
+				F4A5D1329B0CCECA553BD00C /* FeedService.swift in Sources */,
+				F87F69D0C6619833846A3B45 /* PodcastService.swift in Sources */,
+				6BF36E0F5084D09D2ACE3140 /* YouTubePlayerView.swift in Sources */,
+				DBC69AF82BE814936B9810F7 /* AudioManager.swift in Sources */,
+				96EC8F7C5C54011A6A4F68D5 /* MiniPlayerView.swift in Sources */,
+				95F04C7093469EB14C80C9FC /* ListenView.swift in Sources */,
+				ACCEF3854DE87F2863E6298B /* PodcastEpisodeRow.swift in Sources */,
+				E8BDBBDBE685E353D220DD84 /* ArchiveService.swift in Sources */,
+				05DAEA537206B7647F1337E3 /* SettingsView.swift in Sources */,
+				E9F8261B56B8AC8E1886ABF7 /* BackgroundRefreshManager.swift in Sources */,
+				52FB1002AC226AF16482FE21 /* NotificationManager.swift in Sources */,
+				8FC808A4792C964B5F26A22B /* ConnectivityManager.swift in Sources */,
+				11B500A1905078648C3FD933 /* PrivacyPolicyView.swift in Sources */,
+				4E843D519E9D45033F1A1379 /* CompanionNoteView.swift in Sources */,
+				14932A1F2D20151299AA46B7 /* FetchCooldown.swift in Sources */,
+				81D475D3B411E616189618E1 /* Bookmark.swift in Sources */,
+				2B4E321136A7AB621C2B5CFD /* OnboardingView.swift in Sources */,
+				0E44DBAE56509220F98C8A25 /* ShareTextBuilder.swift in Sources */,
+				48762C843F450E5770BBFA75 /* PlatformTypography.swift in Sources */,
+				13FA11A3E611C27FF6B1EBC9 /* ReadableContentWidth.swift in Sources */,
+				334BA79AD0ACE5426CE0BA65 /* QuittableSheet.swift in Sources */,
+				2EE2D33E133F9FD25CC09A53 /* ArchiveCalendarView.swift in Sources */,
+				35BBF18D6DA4A1612E897F47 /* ArchiveDateDetailView.swift in Sources */,
+				36D4DF1D0A1E08B1C2D27EE6 /* ArchivedReadingCard.swift in Sources */,
+				A05A3DDF2978D9956855AD60 /* AboutView.swift in Sources */,
+				B5E711DEAA4BCE9A6CD549F1 /* FullScreenVideoCover.swift in Sources */,
+				45AA507C72E171DA6EED5618 /* ReadingTextView.swift in Sources */,
+				6A1D23150B036A8F0DAB0FA7 /* SelectableReadingText.swift in Sources */,
+				37C827CB2E78E0D330F51602 /* ReadingTextMeasurement.swift in Sources */,
+				995B06F9863BB659B6262DB2 /* AnnotatableReadingText.swift in Sources */,
+				BB5E039943D9D50BE8163500 /* TextNavigation.swift in Sources */,
+				80FAE54A5AA1B51D2347B019 /* TextChaptersView.swift in Sources */,
+				8628C399075BCEE178ACB4D6 /* TextChapterView.swift in Sources */,
+				7DC168BF6E4E1CC0D617F8A4 /* TextSectionView.swift in Sources */,
+				F9967E38BBC2D787D311CEB3 /* WorkbookIntroductionView.swift in Sources */,
+				95A9DEA4BF789F568FBF8A75 /* SaveButton.swift in Sources */,
+				67EC5EE3E5595CC3BA36FAF8 /* ShareButton.swift in Sources */,
+				3A7D59BB2B47A2A29616F342 /* CardHeaderRow.swift in Sources */,
+				F078A1DC00F174F921A7BB5D /* ListenButton.swift in Sources */,
+				00DB89897C46AD26D5F02642 /* SavedView.swift in Sources */,
+				8D900963DF800BE9243D1B35 /* BookmarkRow.swift in Sources */,
+				9A019E8B2553148215B68DEF /* NoteEditorView.swift in Sources */,
+				8B8645B01B8DF6E82366F9AD /* HighlightRow.swift in Sources */,
+				1944E8E82B1E072F571D01C8 /* NoteRow.swift in Sources */,
+				F4EE3D77B7C11EBFDE4ECEBB /* DeepLinkRoute.swift in Sources */,
+				123C18AA4BE39AFD89EE31D2 /* SharedModelContainer.swift in Sources */,
+				127724A97F6B565A5C3DFD6C /* ACIMActivityAttributes.swift in Sources */,
+				D876A45F4C4A438F5F2E5C1D /* LiveActivityManager.swift in Sources */,
+				0916EF2E1AD313182B38E0E4 /* GetTodaysReadingIntent.swift in Sources */,
+				92C603BB97F15FE6E14D14A9 /* ACIMDailyMinuteShortcuts.swift in Sources */,
+				8A05FC639868B96AF3B12B3A /* TodayView.swift in Sources */,
+				FCF93B82DD9F6532861D2690 /* DailyMinuteCard.swift in Sources */,
+				461C7D6D16C7513BEAF0EE36 /* CorpusReadingCard.swift in Sources */,
+				D14B1B295BEE215D89B581FF /* DailyLessonCard.swift in Sources */,
+				B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */,
+				04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */,
+				04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */,
+				BE825B05E3C3D7202C07CFC7 /* LessonDetailView.swift in Sources */,
+				10E15B2FBF3553B0BD532DA1 /* JumpToLessonSheet.swift in Sources */,
+				5ED569BBC87E74C5DB7DE0C2 /* ReadingKey.swift in Sources */,
+				70C64140C976D1B6BF01B97A /* LiteYouTubeCard.swift in Sources */,
+				9D536BFD7367CB31DF5317B9 /* PlaybackHistory.swift in Sources */,
+				69A37287F782E66802C33C1D /* YouTubeID.swift in Sources */,
+				5ECA908CFC68510F2D5B19CE /* LessonSchedule.swift in Sources */,
+				8B76EA757D750EB98479B559 /* MinuteSchedule.swift in Sources */,
+				9DEFA29DD5E981B9D8E91272 /* HashUtility.swift in Sources */,
+				C3AAA7E0C80909A4F5990620 /* PunctuationSpacing.swift in Sources */,
+				4E049CE211CC77A5C91681D8 /* Citation.swift in Sources */,
+				816217340D292C35BE723810 /* CitationResolver.swift in Sources */,
+				8D9BE00154BBE85B7BC6FCC0 /* PhoneWatchSyncService.swift in Sources */,
+				070C4665BFADE319997EF23A /* WorkbookCatalog.swift in Sources */,
+				BF60EA925091CBE25F226D68 /* YouTubePlaylists.swift in Sources */,
+				43597287505A1BEE50355796 /* WorkbookBodiesCatalog.swift in Sources */,
+				B945972B3985628674BA5F21 /* CorpusService.swift in Sources */,
+				E92D7EF630242CBF2EC42562 /* AnchorResolver.swift in Sources */,
+				88BC33248D93784DA89F0E1D /* AnnotationStore.swift in Sources */,
+				09F7D48D2E7F34D99602D7EA /* AnnotationExport.swift in Sources */,
+				200235292F43BB852320FC60 /* BackupDocument.swift in Sources */,
+				E9B98D692A8FE8ECCEBD4590 /* BackupMerge.swift in Sources */,
+				FB8960069600678956D13E1D /* BackupService.swift in Sources */,
+				06496C1352191AA792B96A0C /* FolderCopy.swift in Sources */,
+				56FCFEB1E0D81FBEF7DE01F8 /* FolderCopyService.swift in Sources */,
+				20DB6170AD64F2FA8FFA9D12 /* BookmarkIdentity.swift in Sources */,
+				B579FDB9F261CC5F958EE305 /* BookmarkStore.swift in Sources */,
+				737388F7818BC8CEABDB5F6E /* BackupRestoreView.swift in Sources */,
+				B9CC7F36F91D5D2742C73167 /* CorpusFallback.swift in Sources */,
+				433FF4172190752790CBAA02 /* AudioDownloadStore.swift in Sources */,
+				7F8C0AE74B56A986256144F0 /* CorpusSearch.swift in Sources */,
+				8C15AC007D8A0D82AB3EB325 /* CorpusSearchService.swift in Sources */,
+				57FC46ECA6E1A9B16396C029 /* ReadingSpotlight.swift in Sources */,
+				4CB077B047D6391CEAD04177 /* ReadSearchResultsList.swift in Sources */,
+				D446FF62BB92D46FADC81165 /* ManualSegmentView.swift in Sources */,
+				A4C885040911B61DA3B5B2AC /* SegmentReadingView.swift in Sources */,
+				F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */,
+				F49A219ED0FD25EE8D11715B /* ReadingNavigation.swift in Sources */,
+				6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */,
+				845AE2A00491471B4FF95822 /* ReadingTime.swift in Sources */,
+				738248A25EF9F3C7A7EE2E4A /* ReadingScaffold.swift in Sources */,
+				5A9E970DF59E50820CCBE992 /* ReadingPosition.swift in Sources */,
+				849092876F974290EF99C25F /* ReadingKeyNaming.swift in Sources */,
+				AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */,
+				7BB77B54BEF61504D2D5FF99 /* ContinueReadingRow.swift in Sources */,
+				713FA83FC00F90B32FA9A13C /* PracticeAnchorStore.swift in Sources */,
+				70F6B618090B15E757551A37 /* Appearance.swift in Sources */,
+				66AAECF42CA912EC45F0AA20 /* ACIMColors.swift in Sources */,
+				ABF27FA2BEED9F34CFB2861E /* PracticePlanner.swift in Sources */,
+				C3012B487039BFCD870DF2FE /* WorkbookPracticeCatalog.swift in Sources */,
+				E480B27D2C45AFAB31CBF47A /* PracticeReminderService.swift in Sources */,
+				DEA387EF3E6A4864DA8A2D7D /* NotificationNames.swift in Sources */,
+				985B548C17D9A648246BAD84 /* PracticeReminderKeys.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1022,6 +1353,31 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		286B20B887B0C5BB916206F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteTV.entitlements;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Debug;
+		};
 		AA00000A001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1365,9 +1721,44 @@
 			};
 			name = Release;
 		};
+		C1B4AA97E889EF8959A6C822 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteTV.entitlements;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 17.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8F7E156F509E55819EFE99E4 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteTV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1B4AA97E889EF8959A6C822 /* Release */,
+				286B20B887B0C5BB916206F8 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AA000008001 /* Build configuration list for PBXProject "ACIMDailyMinute" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

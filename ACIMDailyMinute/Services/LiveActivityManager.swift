@@ -1,7 +1,14 @@
+// ⛔ Live Activities do not exist on tvOS, so this whole file is fenced on
+// the framework rather than on a platform list: `canImport` states the
+// actual dependency, and a future platform without ActivityKit needs no
+// edit here.
+#if canImport(ActivityKit)
 import Foundation
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
+#if canImport(ActivityKit)
 import ActivityKit
+#endif
 
 enum LiveActivityManager {
     private static let dismissInterval: TimeInterval = 5 * 60
@@ -80,4 +87,5 @@ enum LiveActivityManager {
         }
     }
 }
+#endif
 #endif

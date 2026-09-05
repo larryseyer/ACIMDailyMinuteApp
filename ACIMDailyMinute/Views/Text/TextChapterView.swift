@@ -15,7 +15,9 @@ struct TextChapterView: View {
                     Text(subtitle)
                         .font(.acimCaption)
                         .foregroundStyle(.secondary)
+                        #if !os(tvOS)
                         .listRowSeparator(.hidden)
+                        #endif
                         .listRowBackground(Color.clear)
                 }
                 ForEach(found.sections, id: \.sectionNumber) { section in
@@ -31,7 +33,9 @@ struct TextChapterView: View {
                 } description: {
                     Text("This chapter is not in the bundled Text.")
                 }
+                #if !os(tvOS)
                 .listRowSeparator(.hidden)
+                #endif
                 .listRowBackground(Color.clear)
             }
         }

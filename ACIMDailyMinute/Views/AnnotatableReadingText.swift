@@ -91,6 +91,7 @@ struct AnnotatableReadingText: View {
                 }
                 .buttonStyle(.plain)
 
+                #if !os(tvOS)
                 if !storedHighlights.isEmpty || !storedNotes.isEmpty {
                     ShareLink(item: exportText) {
                         Label("Export", systemImage: "square.and.arrow.up")
@@ -98,6 +99,7 @@ struct AnnotatableReadingText: View {
                     }
                     .buttonStyle(.plain)
                 }
+                #endif
             }
             .foregroundStyle(.secondary)
         }
@@ -120,6 +122,7 @@ struct AnnotatableReadingText: View {
             guard newPhase != .active else { return }
             recordPosition()
         }
+        #if !os(tvOS)
         .sheet(item: $draft) { draft in
             NoteEditorView(
                 readingName: key.displayName(),
@@ -138,6 +141,7 @@ struct AnnotatableReadingText: View {
                 }
             }
         }
+        #endif
     }
 
     /// Moves this book's ribbon to where the reader is.

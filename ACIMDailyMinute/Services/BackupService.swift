@@ -347,14 +347,18 @@ enum BackupService {
         }
         if let enabled = settings.dailyReminderEnabled {
             defaults.set(enabled, forKey: ReaderKey.dailyReminderEnabled)
+            #if !os(tvOS)
             rescheduleReminder(.minute, enabled: enabled, timeIntervalKey: ReaderKey.dailyReminderTimeInterval)
+            #endif
         }
         if let value = settings.lessonReminderTimeInterval {
             defaults.set(value, forKey: ReaderKey.lessonReminderTimeInterval)
         }
         if let enabled = settings.lessonReminderEnabled {
             defaults.set(enabled, forKey: ReaderKey.lessonReminderEnabled)
+            #if !os(tvOS)
             rescheduleReminder(.lesson, enabled: enabled, timeIntervalKey: ReaderKey.lessonReminderTimeInterval)
+            #endif
         }
         if let value = settings.practiceWindowStartInterval {
             defaults.set(value, forKey: ReaderKey.practiceWindowStartInterval)
@@ -371,7 +375,13 @@ enum BackupService {
         if let enabled = settings.practiceRemindersEnabled {
             defaults.set(enabled, forKey: ReaderKey.practiceRemindersEnabled)
         }
+        // The keys above are restored on every platform — a backup carries the
+        // reader's settings between devices and dropping them would lose their
+        // work. Only the OS-side reschedule is fenced: on tvOS there is nothing
+        // scheduled to bring back into line.
+        #if !os(tvOS)
         PracticeReminderService.reschedule(in: nil)
+        #endif
     }
 
     /// A row reads "when you listened", and the most recent listen is the
@@ -389,6 +399,7 @@ enum BackupService {
     /// The scheduled notification is OS-side state rebuilt from the two keys, so
     /// restoring the keys without rebuilding it would leave a reader with a
     /// reminder switch that says one thing and a phone that does another.
+    #if !os(tvOS)
     private static func rescheduleReminder(
         _ kind: NotificationManager.DailyReminderKind,
         enabled: Bool,
@@ -399,4 +410,5 @@ enum BackupService {
             await NotificationManager.shared.applyDailyReminder(kind, enabled: enabled, timeInterval: interval)
         }
     }
+    #endif
 }

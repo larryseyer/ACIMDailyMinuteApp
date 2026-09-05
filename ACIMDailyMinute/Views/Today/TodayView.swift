@@ -57,6 +57,7 @@ struct TodayView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
+            #if !os(tvOS)
             .refreshable {
                 if connectivity.isConnected {
                     await refresh(force: true)
@@ -64,6 +65,7 @@ struct TodayView: View {
                     showOfflineToast = true
                 }
             }
+            #endif
             .task {
                 if !hasLoadedOnce {
                     await refresh(force: true)

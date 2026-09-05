@@ -1,3 +1,8 @@
+// ⛔ Practice reminders are notifications, and tvOS cannot deliver one. The
+// planner behind this service (`Utilities/PracticePlanner.swift`) stays
+// unfenced and pure — it is the thing 544,486 checks are written against.
+// Only the layer that hands a plan to the notification centre is fenced.
+#if !os(tvOS)
 import Foundation
 import SwiftData
 
@@ -12,15 +17,7 @@ import SwiftData
 /// overridden by the reader's own place when they have set one.
 @MainActor
 enum PracticeReminderService {
-    enum Key {
-        static let enabled = PracticeAnchorStore.remindersEnabledKey
-        static let windowStart = "practiceWindowStartInterval"
-        static let windowEnd = "practiceWindowEndInterval"
-        /// 0 means the reader follows the published lesson.
-        static let ownStartLesson = "practiceOwnStartLesson"
-        /// The reader's own `yyyy-MM-dd`, in their own zone.
-        static let ownStartDay = "practiceOwnStartDay"
-    }
+    typealias Key = PracticeReminderKey
 
     /// Picker scrubbing calls `reschedule` many times a second; one plan
     /// half a second after the last call is enough.
@@ -123,3 +120,4 @@ enum PracticeReminderService {
             ?? Calendar.current.startOfDay(for: publicationDay)
     }
 }
+#endif
