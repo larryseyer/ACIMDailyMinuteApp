@@ -1,6 +1,6 @@
 # ACIM Daily Minute — open items
 
-> **Role:** open-items ledger — what is open, blocked, or next. · **Status:** authoritative · **Verified:** 2026-09-02
+> **Role:** open-items ledger — what is open, blocked, or next. · **Status:** authoritative · **Verified:** 2026-09-05
 > **Forward state:** [continue.md](continue.md)
 >
 > ⛔⛔ **FORWARD-ONLY, AND THAT IS AN OPERATOR RULE, NOT A STYLE.** Nothing here records what was done,
@@ -479,8 +479,9 @@ harnesses are the suite.
 
 ### Phase 2 — Apple Watch: the plumbing is done, the shape is his
 
-⛔ **The watch reaches a wrist, carries the Course, and its complication has a target.** What is left
-here is not a build: it is two decisions about what a watch is *for* in this app, and they are his.
+⛔ **The watch reaches a wrist, carries the Course, and its complication draws today's passage in the
+Smart Stack.** What is left here is not a build: it is three decisions about what a watch is *for* in
+this app, and they are his — plus two families of complication that only a real wrist can place.
 
 ⛔ **The measurement that governs any further watch work.** A whole-module `swiftc -typecheck` of all
 126 app + widget sources against the watchOS SDK gives **45 errors in 16 files, 43 of them in
@@ -494,29 +495,37 @@ cost of anything on the watch is a *view* cost, never a porting cost. ⛔ **Use 
       shows the minute alone. The phone pushes one payload and the watch keeps one row; adding the
       lesson is two more keys and a second row, not a port. It is a question about what a glance is
       for, which is why it is not being guessed.
-- [ ] ⛔ **HIS CALL — the complication's three families have never been seen on a face.** They are
-      honest now and they are plain: circular is the app's mark, rectangular and inline are the
-      opening of today's passage. ⛔ **What they used to show was a lie** — a lesson number read from
-      a `DailyLesson` nothing on the watch ever writes, so every face read `L —` and `No lesson`
-      forever. Whether plain-and-true is the right answer, or whether a complication should say
-      something else entirely, is a design call.
-- [ ] ⭐ NEXT — **drive the watch SIMULATOR, which this Mac has plenty of.** ⛔ Read what is already
-      proved before re-proving it: the app **launches and draws on a booted watch simulator**, in both
-      of its content states, and `WCSession` was carried end to end on the paired pair
-      `E56C7939-…` (`iPhone 17 Pro Max` ↔ `Apple Watch Series 11 (46mm)`, watchOS 26.5) — both stores
-      ended holding segment `12568` for the same date. That is done; it is not the item.
-      **What no eye has seen on a simulator is everything a screenshot of one screen cannot show:**
-      - the **complication on a watch face**, in all three families — add it from the face gallery in
-        the watch simulator. It has a real extension target now and has never been placed;
-      - a **long passage scrolling** on the watch, and where the six-line cap cuts it;
-      - the app at the **watch's own larger text sizes**, which are not iOS Dynamic Type;
-      - the **transition** — open the watch app with a stale store, watch the phone push, and confirm
-        the `@Query` redraws the row from `From the Course` to `Today` **without relaunching**. That
-        redraw is the whole point of the `@Query` and it has only been proved by launch order.
-      ⛔ Boot headlessly and shut down only what the session booted; other apps drive this computer,
-      and the iPad sim `58B7D31D-…` is never to be driven.
-- [ ] **The watch app icon is a single 1024pt PNG.** It builds and it installs; whether it reads at
-      complication and Dock size on a real wrist has not been looked at.
+- [ ] ⛔ **HIS CALL — whether plain-and-true is what a complication should say.** They are honest now
+      and they are plain: circular is the app's mark, rectangular and inline are the opening of
+      today's passage. **The rectangular one has been seen** — it is in the Smart Stack, it names the
+      app on one line and gives three lines of the passage, and `Text` truncates it with its own
+      ellipsis at whatever the wrist and the text size allow. ⛔ **What they used to show was a lie** —
+      a lesson number read from a `DailyLesson` nothing on the watch ever writes, so every face read
+      `L —` and `No lesson` forever. Whether plain-and-true is the right answer, or whether a
+      complication should say something else entirely, is a design call.
+- [ ] ⛔ **HIS CALL — the wrist shows six lines of a reading and offers no way to reach the rest.**
+      `WatchStoryRow` sets `lineLimit(6)`; the list holds that one row and nothing beneath it, so
+      scrolling reaches the end at once. Measured on today's minute: **1,335 characters, 254 words,
+      of which about 150 characters are readable** — the other 89% is on the phone or nowhere. Either
+      answer is defensible and neither is a bug: a glance is allowed to be a glance, and a wrist is a
+      poor place for 254 words. What is not defensible is the middle, which is what ships now — an
+      ellipsis that promises more and leads nowhere. If it should open, the row becomes a
+      `NavigationLink` to a scrolling passage; if it should not, the cap wants a sentence saying so.
+- [ ] ⛔ **`.accessoryCircular` and `.accessoryInline` have still never been placed, and a SIMULATOR
+      CANNOT PLACE THEM.** `.accessoryRectangular` is proved — it is live in the Smart Stack and draws
+      today's passage. The other two need a watch FACE, and every watch simulator on this Mac ships
+      exactly one face, **Numerals Duo**, whose edit pages are STYLE and COLOR and which has no
+      complication slot at all. Three routes were measured and all three fail: the watch's own face
+      gallery lists every face but its **GET** button does nothing under a synthetic tap; the Ultra 3
+      simulator defaults to the same lone face rather than a Modular one; and **GET** in the paired
+      phone simulator's Watch app *does* work and adds the face to the phone's list, but it never
+      reaches the watch — simulator pairing carries `WCSession` payloads and not faces. So this waits
+      on a real wrist and joins the item below it.
+- [ ] **The watch app icon is a single 1024pt PNG, and at grid size it is a photograph.** Seen on the
+      simulator's app grid beside twelve system icons: it reads as a warm image where the others read
+      as one flat mark, and its two lines of script lettering are present but not legible at that
+      size. Whether that is wrong is his call — it is recognisable, which may be all an icon owes —
+      but it is the one icon on that screen a reader identifies by colour rather than by shape.
 - [ ] **No Apple Watch is paired to this Mac.** `xcrun devicectl list devices` knows two devices, the
       Lyrics iPad and the iPhone 11 Pro Max. ⛔ **The signing side is already finished** — both watch
       App IDs are registered with App Groups and both signed a real arm64 device build today — so
@@ -618,20 +627,14 @@ from the code, and is open to correction; the two sentences above are not.
       Window > Devices and Simulators, with the television sitting on Settings > Remotes and Devices >
       Remote App and Devices) and the next `-allowProvisioningUpdates` build issues the profile.
       The simulator needs none of this.
-- [ ] ⭐ NEXT — **turn `SWIFT_STRICT_CONCURRENCY = complete` ON for the tvOS target. His call, made.**
-      It is the only one of the five without it: the app, both widget extensions and the watch app all
-      set it, and the TV target sets neither it nor `CODE_SIGN_STYLE`. That matters because **the TV
-      compiles the SAME SOURCE LIST as the app** — so today the television checks shared code under
-      looser rules than the phone does, and code can pass the tvOS leg and fail the iOS one.
-      Both configs are in `project.pbxproj`: `286B20B887B0C5BB916206F8` (Debug) and
-      `C1B4AA97E889EF8959A6C822` (Release). ⛔ Set it on **both**, and note the TV's list puts Release
-      first — the one place in this file where the pair is not in the usual order.
-      ⛔ **Expect it to surface real errors rather than none** — that is the reason for doing it, not a
-      sign it went wrong. ⛔ **A fix must never be made only for tvOS**: the offending code is shared,
-      so every repair has to leave `./build.sh`'s other three legs and the arm64 device build green,
-      and the nineteen checks with them. If a repair starts wanting a `#if os(tvOS)`, that is the
-      signal to stop and look again — the two idioms are `#if !os(tvOS)` and `#if os(iOS) || os(tvOS)`,
-      and a concurrency error is almost never a platform difference.
+- [ ] ⛔ **`SWIFT_STRICT_CONCURRENCY = complete` is set on all five targets, and on the TV it buys
+      documentation rather than checking. Do not re-open it looking for hidden errors.** Every target
+      also sets `SWIFT_VERSION = 6.0`, and **the Swift 6 language mode already IS complete
+      data-race checking** — measured: a clean tvOS build passes `-swift-version 6` to `swiftc` and
+      passes no `-strict-concurrency` flag at all, at any of its 160 compile steps. So the television
+      was never checking shared code under looser rules than the phone, and turning the setting on
+      surfaced zero errors because there were none to surface. The setting earns its place only as
+      the guard for a future `SWIFT_VERSION` of 5, where it would start mattering again.
 - [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
       tvOS layered icon and a Top Shelf image before it could ship.
 - [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
