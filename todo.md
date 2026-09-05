@@ -552,6 +552,42 @@ from the code, and is open to correction; the two sentences above are not.
       ⛔ `SharedModelContainer.groupURL` no longer force-unwraps, so a missing App Group no longer
       crashes at launch — **but not crashing is not the same as being durable**, and that fix is not
       a licence to store a reader's words on a television.
+- [ ] ⛔⛔ **A DEAD TAP IS SHIPPING ON tvOS RIGHT NOW, and it is the first thing to fix.**
+      `AnnotatableReadingText.swift:86-91` draws the **"Add note" button unconditionally**, while the
+      sheet it opens (`:125-144`) is fenced `#if !os(tvOS)`. On the television that button renders,
+      takes focus, and does nothing at all when pressed. The same asymmetry sits one line up:
+      `menuActions` (`:183-203`), which is what turns a selection into a highlight or a note, is
+      **unfenced** and still handed to `SelectableReadingText` at `:74-78`.
+      ⛔ And `SelectableReadingText.swift:322-326` sets `isEditable = false` inside `#if !os(tvOS)`
+      but **never sets `isSelectable` on tvOS** — the comment says "tvOS has no editing and no
+      selection", and the code does not actually enforce the second half.
+- [ ] **Take Save out in ONE place, not nine.** `SaveButton` has **9 real call sites** — the two
+      Today cards, the Archive card, Manual, Workbook Introduction, three blocks in `LessonDetailView`
+      and `TextSectionView` — every one of them the identical shape
+      `} trailing: { ShareButton(...); SaveButton(...) }`. ⛔ **Put the `#if os(tvOS) → EmptyView()`
+      branch inside `SaveButton.swift`, exactly as `ShareButton.swift:18-22` already does it**, and
+      all nine surfaces follow with no edit. `CardHeaderRow` is agnostic to how many controls a slot
+      holds — `SegmentReadingView` already passes one and `CorpusReadingCard` already passes none —
+      so nothing in the scaffold or the header changes.
+- [ ] **The Saved tab is three permanent empty states on tvOS** once nothing writes:
+      `SavedView.swift:94-99`, `:130-135`, `:159-164` each fall to a `ContentUnavailableView` telling
+      the reader to do something the television cannot do. That is the argument for dropping the tab
+      there rather than fencing its contents.
+- [ ] ⛔ **The ribbon question, with what the CODE says rather than a preference.**
+      `ReadingPositionStore.swift:11-14` keeps a reading position in `UserDefaults.standard`
+      **alongside the reminder times and the appearance**, not in SwiftData with the marks, and
+      `SelectableReadingText.swift:47-51` says outright: *"A reader's place is not a reader's mark: a
+      wash here would read as a highlight they did not make."* It is never painted, never exported
+      and never listed in the Saved tab. So the code's own position is that a ribbon is **not** an
+      annotation — which is the strongest argument for the TV keeping it. Only three screens write
+      one (`recordsPosition: true`: `WorkbookIntroductionView.swift:63`, `LessonDetailView.swift:187,
+      256, 351`, `TextSectionView.swift:94`), and `ContinueReadingRow` already renders `EmptyView`
+      when there is no ribbon, so either answer is inert rather than broken.
+- [ ] **The read-only rendering path already exists — do not build one.**
+      `SelectableReadingText` with `menuActions: []` and `positionReporter: nil` is inert **by
+      design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
+      `AnnotatableReadingText` and uses that directly; `CorpusReadingCard` is the existing example of
+      a deliberately thinner surface.
 - [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
       tvOS layered icon and a Top Shelf image before it could ship.
 - [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
