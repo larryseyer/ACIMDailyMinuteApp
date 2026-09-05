@@ -40,6 +40,14 @@ Everything here is built and on his phone. Verify what can be verified without h
 harnesses against real data, `./build.sh`, the arm64 device build, install + launch, process-alive
 checks, real feed payloads. His eyes are the last resort, not the first.
 
+- [ ] **A reading now reaches its own last sentence — confirm it on the phone.** Open
+      `Read > Text > Chapter 1 > Distortions of Miracle Impulses` and scroll to the foot: it must end
+      *"…as the wholly satisfying nature of reality becomes apparent to both."* just above `Add note`.
+      Seen at 375pt and at full width on the iPad simulator; the phone is what is left. Then a
+      Workbook lesson, the Workbook introduction and a Manual segment, which are the other screens
+      that had the same clipped box — each should end on a full stop rather than mid-sentence.
+      ⛔ Then **Chapter 1 > Principles of Miracles**, the 29-minute section: it is taller now than it
+      used to be, so say whether it still scrolls without stutter on the phone.
 - [ ] **Light on the phone, and the reminders — what no harness can see.** Settings > Appearance >
       **Light** on the phone at 375pt: every card, chip and gold word reads on the white ground, the
       number badge on the Read list is legible, the introduction stays on its black ground by
@@ -172,7 +180,7 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       "Principles of Miracles" is the section to check first — it should be 53 numbered paragraphs,
       1 through 53, with nothing between them.
 
-- [ ] **The longest section on the phone.** Chapter 1.2 is 37,222 characters in one non-scrolling
+- [ ] **The longest section on the phone.** Chapter 1.2 is 34,385 characters in one non-scrolling
       text view. Every other section is a fifth of that or less. Confirm it scrolls without stutter.
 
 - [ ] **Reading straight through.** Previous and Next at the foot of a section cross chapter
@@ -457,14 +465,18 @@ never reaches the compiler, so those legs would compile the same binary three mo
 nothing. The layout regression net is `tools/verify_card_header_dynamic_type.sh`, which measures
 real iOS metrics; the only compile that genuinely differs is the arm64 `iphoneos` device build,
 which `both.sh` already drives. ⛔ There are still **zero test targets** — the shared scheme's
-`TestAction` has no testables, so `xcodebuild test` tests nothing. The eighteen `swiftc`/`simctl`
+`TestAction` has no testables, so `xcodebuild test` tests nothing. The nineteen `swiftc`/`simctl`
 harnesses are the suite.
 
-- [ ] **Prove the settled padding at a real Slide Over width.** Every `ScrollView` screen edge is
-      20pt now and the `List`-based surfaces keep system row insets, which are not comparable and
-      were deliberately left alone. What has not been seen is an iPad running a compact slice, where
-      `ReadableContentWidth` stops clamping by design. Needs an iPad simulator or his iPad — ⛔ not
-      the iPad sim `58B7D31D-…`, which he has asked not be driven.
+⛔ **The compact slice is measured and Phase 1's padding question is answered.** On the iPad Pro
+11-inch (M5) simulator `24B47A3C-…` at a 375pt window: 20.0pt leading and 20.0pt trailing on a Today
+card and on a pushed reading, `ReadableContentWidth` correctly not clamping, and every tab, the
+Archive calendar, the mini player and a reading's footer laying out whole. ⛔ **iPadOS 26 has no
+Slide Over — it has windows.** The compact slice is reached by dragging the app window's own
+bottom-right grab handle inward, with Settings > Multitasking & Gestures set to **Windowed Apps**;
+there is no Slide Over gesture left to drive. ⛔ Do not drive the iPad sim `58B7D31D-…`, which he has
+asked be left alone.
+
 - [ ] ⛔ **At submission, switch visionOS availability on in App Store Connect.** The app already
       qualifies for "Designed for iPad" on Vision Pro unchanged: device family `1,2`, all four iPad
       orientations, and no `UIRequiredDeviceCapabilities`. It is an availability toggle on the

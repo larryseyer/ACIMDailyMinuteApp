@@ -128,8 +128,18 @@ word at every text size, on a third band where it needs one; the mini player cle
 measures rather than assumes; the Archive and Saved tabs reserve room for it as the other thirteen
 surfaces already did; and every `ScrollView` screen edge is 20pt. Two things `todo.md` asserted about
 that phase were measured and were wrong — the redundant simulator legs and "visionOS is close to
-free" — and both are corrected in place there rather than carried out. **One item of Phase 1 is left
-and it needs an iPad**: the settled edge at a Slide Over width.
+free" — and both are corrected in place there rather than carried out. **The only thing left in
+Phase 1 is the submission-time visionOS toggle**, which is an App Store Connect switch and not a
+build.
+
+⛔ **The compact slice is measured and it holds.** On the iPad Pro 11-inch (M5) simulator
+`24B47A3C-…` in a 375pt window, the screen edge is **20.0pt leading and 20.0pt trailing** on a Today
+card and on a pushed reading, `ReadableContentWidth` correctly stops clamping, and Today, Read,
+Listen, Archive, Saved, the Archive calendar, the mini player, the floating tab bar and a reading's
+footer all lay out with nothing broken and nothing cut off by width. ⛔ **iPadOS 26 has no Slide
+Over — it has windows**, so the compact slice is reached by dragging the app window's own
+bottom-right grab handle inward, and Settings > Multitasking & Gestures must be on **Windowed Apps**
+for that handle to exist.
 
 ⛔ **The Archive stack declares `.readingDestinations(path:)` ahead of need, and that is deliberate.**
 `ArchiveView` is the fourth stack to carry it. Nothing beneath it emits a link **yet** —
@@ -215,6 +225,22 @@ loop cannot tell the two apart. It is why a search hit near the top of a section
 same hit two screens down silently did not. The retry budget is twelve attempts at 100ms, also
 measured: three at 150ms never once caught a freshly pushed reading in time. **This lives on the iOS
 side only** (`laidOutRect(of:in:)` there and nowhere else) — see the asymmetry below.
+
+⛔ **A READING IS MEASURED WITH THE ENGINE IT IS DRAWN WITH, AND `lineSpacing` IS WHERE THE TWO PART
+COMPANY.** Both text views come up on **TextKit 2** — a `UITextView` and an `NSTextView` from their
+plain initialisers — so `ReadingTextMeasurement` is `NSTextLayoutManager` +
+`usageBoundsForTextContainer`, and never `NSLayoutManager.usedRect`. The two engines agree to the
+point at `lineSpacing: 0`, which is what the Today cards pass, and disagree at every non-zero value:
+at the **`lineSpacing: 3` all five reading SCREENS pass** — Text section, lesson detail, Workbook
+introduction, Manual segment, Segment reading — TextKit 1 measured about **7% short on iOS and 2.5%
+on macOS**, and the text view clipped the tail of the passage into a box too small for it. On T-1.3
+that was **290 characters, four sentences, gone off the end with `Add note` and the citation drawn
+tidily beneath them and nothing to scroll to.** ⛔ **Nothing about it looked like a failure** — no
+crash, no log, no warning, and the cards read whole. ⛔ **Reading `view.layoutManager` anywhere
+downgrades an `NSTextView` to TextKit 1**; `textLayoutManager` is the only accessor that keeps the
+measurement and the drawing on one engine. TextKit 2 is not the slower choice either: on the largest
+body in the bundle, 34,385 characters, it measures in 9.2ms against TextKit 1's 9.9ms at 335pt, so
+no cache is owed and none exists.
 
 ⛔ **Every reading in this app has ONE shape, and `Views/ReadingScaffold.swift` owns it.** Four
 bands, always: header, title block (optional), body, footer. All eleven render sites pass slots and
@@ -418,12 +444,17 @@ three minutes and they are how you find out the tree is what this file says it i
   free of SwiftData, SwiftUI, `Bundle` and `CorpusService`, or a reader's backup starts depending on
   the app it exists to outlive.
 - `./tools/verify_text_measurement.sh` — ⛔ **the only check that guards the BOX rather than the
-  words.** 182 measurements over 45 real bodies at four window widths: every reading occupies real
-  height, at least one line of it, never shorter as the window narrows, and a body twenty times
-  longer is more than twice as tall. **It compiles `ReadingTextMeasurement.swift` and nothing else**,
-  which is what keeps the measurement free of SwiftUI and therefore checkable at all. ⛔ A
-  reading measuring zero does not crash and no other check can see it: the card collapses and the
-  text draws over `Add note` and the citation.
+  words.** 902 measurements over 45 real bodies at five window widths and both line spacings: every
+  reading occupies real height, at least one line of it, never shorter as the window narrows, a body
+  twenty times longer is more than twice as tall, and — the rule that matters most — **the measured
+  height equals what a real text view lays out, to the point.** **It compiles
+  `ReadingTextMeasurement.swift` and nothing else**, which is what keeps the measurement free of
+  SwiftUI and therefore checkable at all. ⛔ A reading measuring zero does not crash and no other
+  check can see it: the card collapses and the text draws over `Add note` and the citation. ⛔ A
+  reading measuring a few percent SHORT is worse, because it looks like nothing at all — see the
+  TextKit rule below. The agreement rule builds an `NSTextView` set up exactly as
+  `SelectableReadingText.makeNSView` sets one up, and ⛔ **it must never read `view.layoutManager`**:
+  that property downgrades the view to TextKit 1, and the check would then agree with the defect.
 - `./tools/verify_bookmark_identity.sh` — ⛔ **the only check that guards a reader's SAVE.** 381 cases
   over `BookmarkIdentity`, and **it compiles that one file and nothing else**, which is what keeps the
   rule free of SwiftData and therefore checkable. `Bookmark` has no `id` — `itemKey` is its whole
@@ -907,7 +938,7 @@ character shifts every stored offset after it if that boundary is crossed anywhe
 - **Anything needing eyes on a device**, which is now everything in the parked block. Three entries
   there are the ones no harness can reach: whether the Text's recovered paragraphing reads correctly
   to someone who knows the book, whether the 6,221 restored spaces read as the book does, and whether
-  Chapter 1.2 — 37,222 characters in one non-scrolling text view — scrolls without stutter on the
+  Chapter 1.2 — 34,385 characters in one non-scrolling text view — scrolls without stutter on the
   phone.
 
 ---
@@ -922,9 +953,8 @@ match the full-width spine the code actually draws, and **visionOS is taken in c
 is an App Store Connect availability toggle at submission and no build change at all. One decision
 inside it is still his and is marked `HIS CALL` there: video on the TV.
 
-⛔ **Phase 1 is built. What is left of it needs an iPad**, and it is the only item still in that
-block besides the submission-time toggle: the settled 20pt edge has not been seen in a Slide Over
-slice, where `ReadableContentWidth` stops clamping by design.
+⛔ **Phase 1 is built and its compact slice is measured.** The one thing still in that block is the
+submission-time visionOS availability toggle in App Store Connect, which is not a build.
 
 ⛔ **The tvOS PLAYER is what is open, and it is the next thing** — both of his calls about the
 television are settled (see the top of this file). The annotation removal is done and seen. What is
@@ -934,11 +964,8 @@ From [`todo.md`](todo.md), in order:
 
 1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
    ⛔ Its first item is the reading that will not scroll, and that one needs him.
-   ⭐ **The one thing left that is purely agent work and was set up but not finished: the iPad
-   Slide Over check**, the last open item of Phase 1. The app is **already built for the iPad Pro
-   11-inch (M5) simulator** `24B47A3C-E5AC-417E-AEB6-6303684193FC` (iOS 26.5, booted) — install
-   `build/Debug-iphonesimulator/ACIMDailyMinute.app` and put it in a narrow slice. ⛔ Do not drive
-   the iPad sim `58B7D31D-…`; he has asked that that one be left alone.
+   ⛔ Do not drive the iPad sim `58B7D31D-…`; he has asked that that one be left alone. The iPad
+   Pro 11-inch (M5) sim `24B47A3C-E5AC-417E-AEB6-6303684193FC` (iOS 26.5) is the one to use.
    ⛔ Phase 2, the Watch, is finished apart from three design calls that are his and are marked
    `HIS CALL` there, and two complication families that need a real wrist; do not treat either as
    work to pick up.
