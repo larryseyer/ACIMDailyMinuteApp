@@ -35,13 +35,33 @@ a fence inside a file, so there is no second membership list to drift — with i
 the phone's five-tab layout, not the player he asked for**; the layout is a design pass and it is
 his to shape.
 
-⛔ **TWO THINGS ARE READY TO PICK UP AND THE CHOICE IS NOT MINE TO GUESS.** He cued the **WATCH**
-explicitly, and then unblocked the **tvOS player** by settling the two calls above. Both are open;
-ask him which, or take the Watch, since that is the one he named. ⛔ **Neither is a compile problem
-any more** — the watch already builds and so does the TV — so a green build is not progress on
-either.
+⛔ **THE WATCH IS BUILT AND THE tvOS PLAYER IS WHAT IS OPEN.** Phase 2 is done: the watch app is
+embedded in the iOS app and installs with it, it carries `ACIMSegments.json` and the corpus layer so
+it reads with no phone and no network, its complication has a real widget-extension target, and
+`WCSession` has been proved end to end for the first time. What is left of the watch is two design
+calls that are his and are in [`todo.md`](todo.md). ⛔ **Neither the watch nor the TV is a compile
+problem** — both build — so a green build is not progress on either.
 
-⛔ **Platform expansion Phase 1 is built and the eighteen checks are green.** The header keeps every
+⛔ **The project is FIVE targets now, and three facts about the watch's wiring are load-bearing.**
+The iOS target embeds the watch app through `Embed Watch Content` (`dstSubfolderSpec = 16`,
+`dstPath = $(CONTENTS_FOLDER_PATH)/Watch`), and **both that build file and the target dependency carry
+`platformFilters = (ios, )`** — without them the **macOS** leg of `build.sh` dies with *"This target is
+built for macOS but contains embedded content built for watchOS"*, because the one app target builds
+for both. The complication lives in its own target, `ACIMDailyMinuteWatchWidgetExtension`, embedded in
+the **watch app**'s `PlugIns/`, and ⛔ **its bundle id is `…watchkitapp.widget` because
+`…watchkitapp.complication` is NOT AVAILABLE to this team** — automatic signing fails to register it
+and then reports three misleading provisioning errors about App Groups. That is a portal fact, not a
+build setting to fiddle with.
+
+⛔ **The whole app already compiles for watchOS, and that measurement decides the cost of anything
+proposed for the watch.** A whole-module `swiftc -typecheck` of all 126 app + widget sources against
+the watchOS SDK gives **45 errors in 16 files, 43 of them in `Views/`**; outside `Views/` there are
+exactly two lines, `NotificationManager.swift:227` and `FolderCopyService.swift:144`. Every model,
+every utility and every service compiles unchanged. So a watch feature costs a **view**, never a port.
+⛔ **`-wmo` is not optional in that measurement**: plain batch `-typecheck` stops after the first
+failing file and answers "1 error" where there are forty-five.
+
+⛔ **Platform expansion Phase 1 is built and the nineteen checks are green.** The header keeps every
 word at every text size, on a third band where it needs one; the mini player clears a tab bar it now
 measures rather than assumes; the Archive and Saved tabs reserve room for it as the other thirteen
 surfaces already did; and every `ScrollView` screen edge is 20pt. Two things `todo.md` asserted about
@@ -207,8 +227,9 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
-arm64 device build and the eighteen checks are green. ⛔ `./build.sh` is now FOUR targets — iOS,
-macOS, watchOS and tvOS — and "all 3 targets" anywhere is stale. `/Applications` holds the signed macOS copy,
+arm64 device build and the nineteen checks are green. ⛔ `./build.sh` is FOUR LEGS building FIVE
+TARGETS — iOS, macOS, watchOS and tvOS, and the watch leg now builds the complication extension
+beside the watch app — and "all 3 targets" anywhere is stale. `/Applications` holds the signed macOS copy,
 running, with the widget registered as `com.larryseyer.acimdailyminute.widget` and
 `practiceAnchorLesson` holding the newest lesson from the store. On the phone
 `ACIMDailyMinuteWidgetExtension` is alive, which is the proof the schema is clean since the extension
@@ -265,7 +286,8 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
 ⛔ **A green `./build.sh` proves less than it looks like it does:**
-- `./build.sh` = **four** targets — iOS sim, macOS, watchOS sim, tvOS sim — **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
+- `./build.sh` = **four legs over five targets** — iOS sim, macOS, watchOS sim, tvOS sim, and the
+  watch leg builds the complication extension beside the watch app — **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
   that binary has no entitlements, cannot open the App Group, and its widget is invisible to the system.
   ⛔⛔ **Now that iCloud sync exists, copying that product into `/Applications` CRASHES the app**, and
   the crash names CloudKit rather than the mistake: with sync switched on, `NSCloudKitMirroringDelegate`
@@ -299,9 +321,9 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   here — treat them as precious and back them up before any store work. The most recent copy is
   `untracked/group-container-backup-<stamp>/`, taken before the current build was launched.
 
-⛔ **Eighteen committed checks now guard this repo. Run all eighteen first thing — they take about
+⛔ **Nineteen committed checks now guard this repo. Run all nineteen first thing — they take about
 three minutes and they are how you find out the tree is what this file says it is.** Seventeen are
-`swiftc` harnesses that run anywhere; the eighteenth boots a simulator, for a reason it records:
+`swiftc` harnesses that run anywhere; two boot or target another platform, for reasons they record:
 - `python3 tools/text_paragraphs.py` — the Text is display form, no page furniture, no mid-sentence
   paragraph break, no letter-spaced heading left inline. **272 sections, 2,949 paragraphs.**
 - `python3 tools/punctuation_spacing.py` — no run-together punctuation survives in any of the five
@@ -356,7 +378,7 @@ three minutes and they are how you find out the tree is what this file says it i
   **neither moves when the play control appears** — which is what the leading play control buys, since
   most readings have no audio and that button is usually absent. ⛔ Its height check now runs only at
   240pt and above: the control band deliberately becomes TWO bands on a narrow card at a large text
-  size, and height alone cannot tell that apart from a wrap. Below that line the eighteenth check
+  size, and height alone cannot tell that apart from a wrap. Below that line the Dynamic Type check
   carries it, by measuring width instead.
 - `./tools/verify_card_header_dynamic_type.sh` — ⛔ **the only check that guards the header at a
   reader's TEXT SIZE, and the only one that does not run on this Mac.** 1,285 checks over 12 Dynamic
@@ -430,6 +452,19 @@ three minutes and they are how you find out the tree is what this file says it i
   and the words. **It compiles `PracticePlanner.swift` and `LessonSchedule.swift` and nothing
   else**, greps the planner for SwiftUI, SwiftData, `UserDefaults`, `Bundle` and `Date()`, and greps
   the whole app tree for `timeSensitive` and `.critical`.
+- `./tools/verify_watch_offline.sh` — ⛔ **the only check that guards what the WATCH can say with no
+  phone and no network**, and the only one that reads the project file rather than the source tree.
+  It parses the watch target's own Sources and Resources phases out of `project.pbxproj`, typechecks
+  that exact source list against the **watchOS SDK** with `-wmo`, then builds a directory holding
+  **exactly the JSON the watch's Resources phase names** and asks `CorpusFallback` to answer out of
+  that and nothing else — 1,501 checks over 400 days: always a passage, the same passage for the same
+  day, always an address or a book name, and the staleness rule the phone's Today tab shares.
+  ⛔ **The defect it exists for is silent.** `CorpusService.load()` returns `[]` for a file missing
+  from the bundle — no crash, no log — so a corpus JSON dropped from the watch's Resources phase
+  compiles green, ships, and shows a blank wrist. Every other check reads
+  `ACIMDailyMinute/Resources/` directly and therefore cannot see it. It also pins two rules that were
+  comments until now: the watch asks for `includeReader: false` and never `true`, and its
+  entitlements carry no iCloud key. All three failure paths are negative-tested.
 
 ⛔ **Design documents are NOT in git.** `.gitignore:54` ignores `docs/` on purpose. They live only on
 this Mac:
@@ -499,9 +534,9 @@ only from that block, and only as part of the list. **Never invent a new thing f
 work is still going in.** An item leaves the block when he confirms it; an item he half-confirms is
 **narrowed to what is left**, not closed.
 
-Verify everything else without him: `swiftc` harnesses against real bundled data, the eighteen committed
+Verify everything else without him: `swiftc` harnesses against real bundled data, the nineteen committed
 checks above, `./build.sh`, the arm64 device build, install + launch, process-alive checks, the macOS
-store migration, real feed payloads. **Run the eighteen checks first thing in a new session** — about
+store migration, real feed payloads. **Run the nineteen checks first thing in a new session** — about
 three minutes, and they are how you find out the tree is what this file says it is.
 
 ⛔ **A screen can be driven from here, and it earns its keep — but it is not reliable.** The Mac
@@ -814,29 +849,22 @@ inside it is still his and is marked `HIS CALL` there: video on the TV.
 block besides the submission-time toggle: the settled 20pt edge has not been seen in a Slide Over
 slice, where `ReadableContentWidth` stops clamping by design.
 
-⭐ **He has cued the WATCH, so it is next.** ⛔ It already compiles — `build.sh` has driven a watch
-leg all along — so a green build says nothing about it. The gap is that the app is not embedded and
-cannot reach a wrist, carries none of the corpus, and has no complication target. ⛔ **Drive
-`swiftc -typecheck` against the watchOS SDK over the whole source list before planning**: that is how
-the tvOS surface was measured, it took minutes, and it proved `todo.md`'s tvOS estimate wrong by a
-wide margin. The watch estimate in that file deserves the same scepticism.
-
-⛔ **The tvOS PLAYER is unblocked too** — both of his calls about the television are settled (see
-the top of this file) — so it sits beside the Watch rather than behind it. What is left there is a
-layout he should shape and the annotation removal, which is mechanical.
+⛔ **The tvOS PLAYER is what is open** — both of his calls about the television are settled (see the
+top of this file). What is left there is a layout he should shape, the dead "Add note" tap, and the
+annotation removal, which is mechanical.
 
 From [`todo.md`](todo.md), in order:
 
-1. **Phase 2 — the Watch**, which is a build rather than a fix: it cannot reach a wrist, carries no
-   bundled corpus, and its complications cannot appear on a face.
-2. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
-3. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+   ⛔ Phase 2, the Watch, is finished apart from two design calls that are his and are marked
+   `HIS CALL` there; do not treat them as work to pick up.
+2. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
    call to confirm before it is built. ⛔ **It needs him, so it is not a build to start alone.**
-4. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
+3. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
    with their shape already decided, and the two builds with no decision outstanding if the platform
    work is not what a session should pick up.
-5. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+4. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
    smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
@@ -845,10 +873,8 @@ to the foot of the lesson before it** (Review I ends Lesson 50, and so on throug
 sections), and `WorkbookIntroductions.json` entry 500 two paragraphs short. Structuring the Manual is
 its own item.
 
-⛔ **Four platform facts are load-bearing and were measured, not assumed.** **The watch app is not
-embedded in the iOS app** — the project's one copy-files phase embeds the widget extension, and the
-iOS target declares no dependency on the watch — so it cannot reach a wrist, and it carries no
-bundled corpus besides. **tvOS has no WebKit and no text selection**, so the YouTube player and the
+⛔ **Three platform facts are load-bearing and were measured, not assumed.**
+**tvOS has no WebKit and no text selection**, so the YouTube player and the
 whole selection→highlight→note pipeline have no port; 79 conditional directives across 43 sites treat
 `os(iOS)` and `os(macOS)` as an exhaustive pair and send tvOS into the AppKit branch.
 `Utilities/ReadableContentWidth.swift` is the one file already written correctly, with

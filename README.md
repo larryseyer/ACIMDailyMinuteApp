@@ -1,6 +1,6 @@
 # ACIM Daily Minute
 
-Native iOS, iPadOS, macOS, and watchOS app for [ACIM Daily Minute](https://www.acimdailyminute.org) — a contemplative daily reader for *A Course in Miracles*.
+Native iOS, iPadOS, macOS, watchOS and tvOS app for [ACIM Daily Minute](https://www.acimdailyminute.org) — a contemplative daily reader for *A Course in Miracles*.
 
 A unified Apple-platform surface for reading today's passage, following the 365-day Workbook lessons, listening to the audio episodes, searching the full archive, and keeping your own favorites, highlights and notes.
 
@@ -31,10 +31,12 @@ Custom chime sound. A background refresh keeps the practice reminders pointed at
 
 **Share Sheet** — Polished share text with the passage, lesson reference, and a link to acimdailyminute.org. Context menu on every card.
 
-**Apple Watch** — Companion watchOS app reading from the shared App Group store. Today's Minute + today's Lesson stacked on the wrist. Complications for watch faces:
-- Circular — lesson number ("L47")
-- Rectangular — lesson title + 2-line passage preview
-- Inline — "Lesson 47 · Daily Minute ready"
+**Apple Watch** — Companion watchOS app, embedded in the iOS app and installed with it. Today's Daily Minute on the wrist, with the passage's address above it. The phone pushes today's reading over `WCSession`; when there is nothing fresh the watch reads from its own bundled copy of the Course, so it is never blank and never needs a network. Complications for watch faces, in a separate widget extension:
+- Circular — the app's mark
+- Rectangular — the opening of today's passage
+- Inline — the first words of it
+
+**Apple TV** — A separate tvOS target sharing the app's whole source list. Reading works; the player-first interface it is meant to become is still to be shaped.
 
 **Offline First** — All content cached locally in the App Group SwiftData store. Works fully offline once today's readings have been fetched. No account, no login, no server dependency.
 
@@ -55,8 +57,8 @@ Content is generated daily (2:00 AM local) by a separate Python pipeline that TT
 ## Tech Stack
 
 - **Language:** Swift 6 (strict concurrency)
-- **UI:** SwiftUI (iOS 17+, iPadOS 17+, macOS 14+, watchOS 10+)
-- **Persistence:** SwiftData (shared App Group SQLite store)
+- **UI:** SwiftUI (iOS 17+, iPadOS 17+, macOS 14+, watchOS 10+, tvOS 17+)
+- **Persistence:** SwiftData, two stores in one App Group container — `reader.store` for the reader's own highlights, notes and saves, `cache.store` for everything re-derivable from the feed
 - **Search:** SwiftData `@Query` with `#Predicate` full-text matching
 - **Networking:** URLSession with per-endpoint cooldowns (15 min live, 24 h near-static)
 - **Audio:** AVFoundation + MPNowPlayingInfoCenter
@@ -64,7 +66,7 @@ Content is generated daily (2:00 AM local) by a separate Python pipeline that TT
 - **Widgets:** WidgetKit (iOS home screen + macOS + watchOS complications)
 - **Live Activities:** ActivityKit (iOS Lock Screen + Dynamic Island)
 - **Dependencies:** Zero third-party SDKs — native Apple frameworks only
-- **Minimum targets:** iOS 17 / iPadOS 17 / macOS 14 / watchOS 10
+- **Minimum targets:** iOS 17 / iPadOS 17 / macOS 14 / watchOS 10 / tvOS 17
 
 ## Privacy
 
@@ -77,7 +79,7 @@ Content is generated daily (2:00 AM local) by a separate Python pipeline that TT
 ## Building
 
 ```bash
-# Fast Debug verification across all 3 targets (iOS, macOS, watchOS simulators)
+# Fast Debug verification across all 4 targets (iOS, macOS, watchOS, tvOS simulators)
 ./build.sh
 
 # Clean build artifacts + DerivedData
@@ -141,12 +143,17 @@ ACIMDailyMinuteApp/
 │   ACIMDailyMinuteWidget, ACIMDailyMinuteTimelineProvider,
 │   ACIMDailyMinuteLiveActivity, SharedModelContainer (read-only)
 │
-└── ACIMDailyMinuteWatch/             (watchOS 10+ companion)
-    ACIMDailyMinuteWatchApp, WatchContentView,
-    ACIMDailyMinuteWatchWidget (complications)
+├── ACIMDailyMinuteWatch/             (watchOS 10+ companion, embedded in the iOS app)
+│   ACIMDailyMinuteWatchApp, WatchContentView, WatchStoryRow,
+│   WatchDataService, plus the corpus layer and ACIMSegments.json
+│
+└── ACIMDailyMinuteWatchWidget/       (watchOS complication extension)
+    ACIMDailyMinuteWatchWidgetBundle, ACIMDailyMinuteWatchWidget
 ```
 
-Three targets, one App Group (`group.com.larryseyer.acimdailyminute`), one shared SwiftData store (`ACIMDailyMinute.sqlite`).
+The tvOS target has no directory of its own: it compiles the same source list as the app, with every platform difference written as a fence inside a file, so there is no second membership list to drift. Only `ACIMDailyMinuteTV.entitlements` sits at the root.
+
+Five targets — app, widget extension, watch app, watch complication extension, tvOS app — one App Group (`group.com.larryseyer.acimdailyminute`) holding two SwiftData stores, `reader.store` and `cache.store`.
 
 ## Design Language
 
