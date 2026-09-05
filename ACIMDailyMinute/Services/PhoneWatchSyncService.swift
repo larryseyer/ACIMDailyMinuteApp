@@ -1,11 +1,10 @@
 // ⛔ WatchConnectivity does not exist on tvOS — there is no wrist to reach
-// from a television — so the whole file is fenced on the framework.
-#if canImport(WatchConnectivity)
+// from a television — so the whole file is fenced on the framework. One fence,
+// not the three this file used to carry: `canImport` states the real dependency
+// and `os(iOS)` narrows it to the platform that actually pairs with a watch.
+#if os(iOS) && canImport(WatchConnectivity)
 import Foundation
-#if os(iOS) || os(tvOS)
-#if canImport(WatchConnectivity)
 import WatchConnectivity
-#endif
 
 final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Sendable {
     static let shared = PhoneWatchSyncService()
@@ -22,11 +21,18 @@ final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Senda
         let session = WCSession.default
         guard session.activationState == .activated else { return }
 
+        // ⛔ `segmentId` is the passage's ADDRESS and `segmentHash` is the row's
+        // IDENTITY. The watch needs both and they do different jobs: the hash
+        // says whether this is a reading it already holds, the id is what lets
+        // it name where the passage sits in the book through the same bundled
+        // corpus lookup `DailyMinuteCard` uses. Without the id the watch can
+        // draw the words and say nothing true about them.
         let payload: [String: Any] = [
             "text": minute.text,
             "publishedAt": minute.publishedAt.timeIntervalSince1970,
             "date": minute.date,
-            "segmentHash": minute.segmentHash
+            "segmentHash": minute.segmentHash,
+            "segmentId": minute.segmentId
         ]
 
         if session.isReachable {
@@ -42,5 +48,4 @@ final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Senda
         session.activate()
     }
 }
-#endif
 #endif
