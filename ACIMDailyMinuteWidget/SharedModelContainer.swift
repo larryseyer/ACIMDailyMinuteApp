@@ -48,9 +48,27 @@ enum SharedModelContainer {
         SegmentMedia.self
     ]
 
+    /// ⛔ **Not a force-unwrap any more, and the reason is tvOS.** A television's
+    /// container — the App Group included — is *purgeable*: the system may
+    /// reclaim it, and a target not provisioned with the group gets `nil` here.
+    /// Force-unwrapping meant the app died at launch with a crash that named a
+    /// URL rather than a missing entitlement.
+    ///
+    /// ⛔ **The fallback is not a second home for a reader's words.** On every
+    /// platform that HAS the group this returns exactly what it always did, so
+    /// nothing moves. Where the group is missing the app still opens and still
+    /// reads — the bundle is permanent and the feed is re-fetchable — but nothing
+    /// there may be treated as durable. That is the durability rule, not a
+    /// convenience: on the TV the bundle and the feed are the only dependable
+    /// sources, and a reader's own marks belong to CloudKit or to nothing.
     static var groupURL: URL {
-        FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
+        if let shared = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) {
+            return shared
+        }
+        let fallback = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: fallback, withIntermediateDirectories: true)
+        return fallback
     }
 
     static var readerStoreURL: URL { groupURL.appending(path: "reader.store") }

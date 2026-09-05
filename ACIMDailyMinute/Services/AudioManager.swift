@@ -22,7 +22,7 @@ final class AudioManager {
 
         guard let audioURL = URL(string: Self.resolve(url)) else { return }
 
-        #if os(iOS) || os(watchOS)
+        #if os(iOS) || os(watchOS) || os(tvOS)
         do {
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .spokenAudio, options: [])

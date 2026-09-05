@@ -17,7 +17,9 @@ struct TextChaptersView: View {
                 } description: {
                     Text("The bundled Text could not be read from this build.")
                 }
+                #if !os(tvOS)
                 .listRowSeparator(.hidden)
+                #endif
                 .listRowBackground(Color.clear)
             } else {
                 ForEach(corpus.textChapters) { chapter in

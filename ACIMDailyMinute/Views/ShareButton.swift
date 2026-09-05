@@ -15,6 +15,12 @@ struct ShareButton: View {
     let text: String
 
     var body: some View {
+        #if os(tvOS)
+        // ⛔ tvOS has no share sheet, so the control is absent rather than
+        // disabled — the same rule ListenButton follows for a reading with no
+        // audio. CardHeaderRow's trailing edge simply carries one fewer item.
+        EmptyView()
+        #else
         ShareLink(item: text) {
             Image(systemName: "square.and.arrow.up")
                 .font(.caption)
@@ -24,6 +30,7 @@ struct ShareButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Share")
+        #endif
     }
 }
 

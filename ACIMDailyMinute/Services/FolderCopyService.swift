@@ -1,6 +1,6 @@
 import Foundation
 import SwiftData
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #endif
 
@@ -138,7 +138,7 @@ enum FolderCopyService {
     /// own file. iOS has answered with the model name rather than the reader's
     /// own name since iOS 16, which still tells an iPhone from an iPad.
     private static var deviceName: String {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         UIDevice.current.name
         #else
         Host.current().localizedName ?? "Mac"

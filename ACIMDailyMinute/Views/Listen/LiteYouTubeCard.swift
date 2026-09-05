@@ -1,3 +1,7 @@
+// ⛔ A YouTube embed is a WKWebView and tvOS has no WebKit, so this whole
+// card is iOS only. On the TV the Listen tab is audio: the archive.org
+// MP3s stream there exactly as they do to a phone.
+#if os(iOS)
 import SwiftUI
 
 /// A YouTube embed that shows *our* thumbnail until it is played.
@@ -101,3 +105,4 @@ struct LiteYouTubeCard: View {
             .shadow(color: .black.opacity(0.35), radius: 8, y: 2)
     }
 }
+#endif

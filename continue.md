@@ -11,6 +11,16 @@ says what is true now and what is next. REPLACE the state block below — never 
 Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
 of mine is running.
 
+⛔ **The Apple TV target is built, runs, and `build.sh` is FOUR legs now.**
+`ACIMDailyMinuteTV` compiles, installs and launches on the Apple TV simulator, drawing the Daily
+Minute from the feed. It compiles the **same source list as the app** — every platform difference is
+a fence inside a file, so there is no second membership list to drift — with its own entitlements
+(App Group, **no iCloud**) and device family `3`. Its scheme is **shared**. ⛔ **What runs there is
+the phone's five-tab layout, not the player-first interface he asked for**; that is a design pass and
+it is his. See Phase 3 in [`todo.md`](todo.md).
+
+⭐ **He has cued the WATCH as what comes next.**
+
 ⛔ **Platform expansion Phase 1 is built and the eighteen checks are green.** The header keeps every
 word at every text size, on a third band where it needs one; the mini player clears a tab bar it now
 measures rather than assumes; the Archive and Saved tabs reserve room for it as the other thirteen
@@ -177,7 +187,8 @@ be; the pre-landing copy of the live database is kept at
 `untracked/archive-backfill/acim.db.live-backup-before-landing-20260901-163242` if it is ever needed.
 
 **Build state — the phone and the Mac both carry the current commit, launched.** `./build.sh`, the
-arm64 device build and the eighteen checks are green. `/Applications` holds the signed macOS copy,
+arm64 device build and the eighteen checks are green. ⛔ `./build.sh` is now FOUR targets — iOS,
+macOS, watchOS and tvOS — and "all 3 targets" anywhere is stale. `/Applications` holds the signed macOS copy,
 running, with the widget registered as `com.larryseyer.acimdailyminute.widget` and
 `practiceAnchorLesson` holding the newest lesson from the store. On the phone
 `ACIMDailyMinuteWidgetExtension` is alive, which is the proof the schema is clean since the extension
@@ -227,7 +238,7 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
 ⛔ **A green `./build.sh` proves less than it looks like it does:**
-- `./build.sh` = three targets, **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
+- `./build.sh` = **four** targets — iOS sim, macOS, watchOS sim, tvOS sim — **compile-only**, and it passes `CODE_SIGNING_ALLOWED=NO` for macOS, so
   that binary has no entitlements, cannot open the App Group, and its widget is invisible to the system.
   ⛔⛔ **Now that iCloud sync exists, copying that product into `/Applications` CRASHES the app**, and
   the crash names CloudKit rather than the mistake: with sync switched on, `NSCloudKitMirroringDelegate`
@@ -776,6 +787,13 @@ inside it is still his and is marked `HIS CALL` there: video on the TV.
 block besides the submission-time toggle: the settled 20pt edge has not been seen in a Slide Over
 slice, where `ReadableContentWidth` stops clamping by design.
 
+⭐ **He has cued the WATCH, so it is next.** ⛔ It already compiles — `build.sh` has driven a watch
+leg all along — so a green build says nothing about it. The gap is that the app is not embedded and
+cannot reach a wrist, carries none of the corpus, and has no complication target. ⛔ **Drive
+`swiftc -typecheck` against the watchOS SDK over the whole source list before planning**: that is how
+the tvOS surface was measured, it took minutes, and it proved `todo.md`'s tvOS estimate wrong by a
+wide margin. The watch estimate in that file deserves the same scepticism.
+
 From [`todo.md`](todo.md), in order:
 
 1. **Phase 2 — the Watch**, which is a build rather than a fix: it cannot reach a wrist, carries no
@@ -812,6 +830,33 @@ undefined. Compatible mode — the unmodified iPad binary in a Vision Pro window
 and is a store toggle. **SwiftUI does not exist on Windows or Linux**, so
 those are a second front end whatever else is decided — which is why they are one web reader over the
 same JSON, and why they are last.
+
+⛔ **Two conditional-compilation idioms, and a bare `#else` is neither of them.**
+`#if os(iOS)` paired with `#elseif os(macOS)` is not exhaustive: tvOS and visionOS match **neither**
+branch, and the symbols the taken branch would have defined — `PlatformFont`, `PlatformColor`,
+`TextViewRepresentable`, `MacBottomTabBar`, `pageChevron` — simply vanish, with errors that name the
+symbol and never the fence. Use **`#if os(iOS) || os(tvOS)`** where the UIKit path is wanted and
+**`#if !os(tvOS)`** where a capability is missing; guard a FRAMEWORK with `canImport`, which states
+the real dependency. ⛔ **Three fences are iOS-only for a reason rather than an API, and widening
+them compiles and is wrong**: `OrientationController`, `BackgroundRefreshManager` (its whole job is
+the practice reminders) and the `LiveActivityManager` call sites.
+
+⛔ **A constant must never sit behind a platform fence.** Fencing `NotificationManager.swift` took
+`Notification.Name.openSettingsRequested` and `.reminderTapped` out of the tvOS build with it, and
+the error read `Notification.Name has no member` — naming neither the fence nor the cause. The names
+now live in `Services/NotificationNames.swift` and the practice-reminder keys in
+`Services/PracticeReminderKeys.swift`, both unfenced, with `PracticeReminderService.Key` kept as a
+typealias so existing call sites still read the same.
+
+⛔ **`SharedModelContainer.groupURL` no longer force-unwraps**, because a tvOS container — App Group
+included — is *purgeable*, and a target without the entitlement got `nil` and died at launch naming a
+URL rather than a missing entitlement. Where the group exists nothing changed. ⛔ **Not crashing is
+not the same as being durable**: on the TV the bundle and the feed are the only dependable sources,
+and a reader must not be invited to make marks that have no route off the device.
+
+⛔ **A `#if` between `}` and `else` severs an if-else chain**, and the compiler says only "expected
+expression". Fence INSIDE the branch body instead — `LessonDetailView`'s video stand-in is the
+worked example.
 
 ⛔ **The durability principle governs everything.** ACIM is timeless; YouTube, archive.org and every
 feed are rented and will end. Bundled content is permanent, the feed lasts decades with maintenance,

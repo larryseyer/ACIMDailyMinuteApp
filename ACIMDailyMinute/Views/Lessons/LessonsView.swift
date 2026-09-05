@@ -56,7 +56,9 @@ struct LessonsView: View {
                 Picker("Shelf", selection: $shelf) {
                     ForEach(Shelf.allCases) { Text($0.rawValue).tag($0) }
                 }
+                #if !os(tvOS)
                 .pickerStyle(.segmented)
+                #endif
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
@@ -230,7 +232,9 @@ private struct FilteredLessonsList: View {
             List {
                 if latestLessonNumber > 0 {
                     cadenceHeader
+                        #if !os(tvOS)
                         .listRowSeparator(.hidden)
+                        #endif
                         .listRowBackground(Color.clear)
                 }
                 ForEach(visible, id: \.self) { n in

@@ -1,5 +1,5 @@
 #!/bin/bash
-# build.sh — Fast Debug build verification for all 3 ACIM Daily Minute targets
+# build.sh — Fast Debug build verification for all 4 ACIM Daily Minute targets
 # Builds to simulators only (no physical device, no install/launch).
 # Use this for quick "does it compile?" checks during development.
 set -e
@@ -60,6 +60,27 @@ print(max(matches)[1])
 " "$WATCH_SIM"
 }
 
+# Same shape as the two above. An Apple TV 4K is picked by name across every
+# installed tvOS runtime, newest first, because the runtimes that carry it move
+# with Xcode the way the watch runtimes do.
+resolve_tv_sim_uuid() {
+  xcrun simctl list devices available -j | /usr/bin/python3 -c "
+import json, re, sys
+data = json.load(sys.stdin)
+matches = []
+for runtime, devices in data.get('devices', {}).items():
+    if 'tvOS' not in runtime:
+        continue
+    version = tuple(int(n) for n in re.findall(r'\\d+', runtime.rsplit('.', 1)[-1]))
+    for d in devices:
+        if d.get('name') == 'Apple TV 4K (3rd generation)' and d.get('isAvailable', False):
+            matches.append((version, d['udid']))
+if not matches:
+    sys.exit(1)
+print(max(matches)[1])
+"
+}
+
 IPAD_UUID="$(resolve_ipad_sim_uuid || true)"
 if [[ -z "$IPAD_UUID" ]]; then
   echo "✗ No available iPad (10th generation) simulator on iOS ${IPHONE_OS}."
@@ -70,6 +91,13 @@ fi
 WATCH_UUID="$(resolve_watch_sim_uuid || true)"
 if [[ -z "$WATCH_UUID" ]]; then
   echo "✗ No available ${WATCH_SIM} simulator on any installed watchOS runtime."
+  echo "  Install one via Xcode → Settings → Platforms, then retry."
+  exit 1
+fi
+
+TV_UUID="$(resolve_tv_sim_uuid || true)"
+if [[ -z "$TV_UUID" ]]; then
+  echo "✗ No available Apple TV 4K (3rd generation) simulator on any installed tvOS runtime."
   echo "  Install one via Xcode → Settings → Platforms, then retry."
   exit 1
 fi
@@ -136,6 +164,19 @@ run_build "watchOS (Debug) ${WATCH_SIM} [${WATCH_UUID}]" \
   -derivedDataPath "$BUILD_DIR" \
   build
 
+# ── tvOS Simulator ──
+# ⛔ A SEPARATE TARGET, not a destination of the app scheme: tvOS gets its own
+# product, its own entitlements (App Group, no iCloud) and device family 3. It
+# compiles the same source list as the app — every platform difference is a
+# fence inside a file, so there is no second membership list to drift.
+run_build "tvOS (Debug) Apple TV 4K (3rd generation) [${TV_UUID}]" \
+  "$LOG_DIR/tvos.log" \
+  -scheme "ACIMDailyMinuteTV" \
+  -destination "platform=tvOS Simulator,id=${TV_UUID}" \
+  -configuration Debug \
+  -derivedDataPath "$BUILD_DIR" \
+  build
+
 echo "═══════════════════════════════════════════════"
-echo "  ✓ All 3 targets compile cleanly"
+echo "  ✓ All 4 targets compile cleanly"
 echo "═══════════════════════════════════════════════"

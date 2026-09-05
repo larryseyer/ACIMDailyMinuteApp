@@ -1,5 +1,7 @@
 #if canImport(ActivityKit) && os(iOS)
+#if canImport(ActivityKit)
 import ActivityKit
+#endif
 import Foundation
 
 struct ACIMDailyMinuteAttributes: ActivityAttributes {

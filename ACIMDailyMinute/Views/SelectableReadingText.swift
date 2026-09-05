@@ -1,6 +1,6 @@
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 private typealias PlatformFont = UIFont
 private typealias PlatformColor = UIColor
@@ -250,7 +250,7 @@ struct SelectableReadingText: View {
     }
 
     fileprivate static var bodyColor: PlatformColor {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         .label
         #else
         .labelColor
@@ -278,7 +278,7 @@ struct SelectableReadingText: View {
     /// that is whatever accent the reader chose, which is what every other
     /// control in the window already wears.
     fileprivate static var linkAttributes: [NSAttributedString.Key: Any] {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         [.foregroundColor: PlatformColor.tintColor, .underlineStyle: 0]
         #else
         [.foregroundColor: PlatformColor.controlAccentColor, .underlineStyle: 0]
@@ -292,7 +292,7 @@ struct SelectableReadingText: View {
             return base
         case .serif:
             guard let descriptor = base.fontDescriptor.withDesign(.serif) else { return base }
-            #if os(iOS)
+            #if os(iOS) || os(tvOS)
             return PlatformFont(descriptor: descriptor, size: base.pointSize)
             #else
             return PlatformFont(descriptor: descriptor, size: base.pointSize) ?? base
@@ -301,7 +301,7 @@ struct SelectableReadingText: View {
     }
 }
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 private struct TextViewRepresentable: UIViewRepresentable {
     let attributed: NSAttributedString
     let display: String
@@ -319,14 +319,19 @@ private struct TextViewRepresentable: UIViewRepresentable {
         // The call sites are already inside a SwiftUI ScrollView. A second
         // scroller here breaks both.
         view.isScrollEnabled = false
+        #if !os(tvOS)
+        // tvOS has no editing and no selection; the reading is drawn, not worked on.
         view.isEditable = false
         view.isSelectable = true
+        #endif
         view.backgroundColor = .clear
         // Without these the text sits inset from the SwiftUI layout it replaces.
         view.textContainerInset = .zero
         view.textContainer.lineFragmentPadding = 0
         view.adjustsFontForContentSizeCategory = true
+        #if !os(tvOS)
         view.dataDetectorTypes = []
+        #endif
         view.linkTextAttributes = SelectableReadingText.linkAttributes
         view.setContentCompressionResistancePriority(.required, for: .vertical)
         view.setContentHuggingPriority(.required, for: .vertical)
@@ -506,6 +511,10 @@ private struct TextViewRepresentable: UIViewRepresentable {
         var scrolledResume: NSRange?
         var openLink: (URL) -> Void = { _ in }
 
+        // ⛔ The UITextItem interaction APIs do not exist on tvOS, and neither
+        // does the tap they serve: a cross-reference link cannot be followed
+        // without a pointer or a selection.
+        #if !os(tvOS)
         /// A tap on a reference opens the lesson in this app. The default
         /// action would hand the URL to the system, which has nothing
         /// registered for it and would open nothing.
@@ -527,6 +536,7 @@ private struct TextViewRepresentable: UIViewRepresentable {
         ) -> UITextItem.MenuConfiguration? {
             nil
         }
+        #endif
 
 
         func textView(

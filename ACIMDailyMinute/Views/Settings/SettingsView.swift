@@ -20,11 +20,11 @@ struct SettingsView: View {
     /// build the reader store with mirroring, named from there so the two
     /// can never drift apart. Written here, acted on at the next launch.
     @AppStorage(SharedModelContainer.syncEnabledKey) private var iCloudSyncEnabled = false
-    @AppStorage(PracticeReminderService.Key.enabled) private var practiceEnabled = false
-    @AppStorage(PracticeReminderService.Key.windowStart) private var practiceStartInterval: Double = Date().timeIntervalSinceReferenceDate
-    @AppStorage(PracticeReminderService.Key.windowEnd) private var practiceEndInterval: Double = Date().timeIntervalSinceReferenceDate
-    @AppStorage(PracticeReminderService.Key.ownStartLesson) private var practiceOwnStartLesson = 0
-    @AppStorage(PracticeReminderService.Key.ownStartDay) private var practiceOwnStartDay = ""
+    @AppStorage(PracticeReminderKey.enabled) private var practiceEnabled = false
+    @AppStorage(PracticeReminderKey.windowStart) private var practiceStartInterval: Double = Date().timeIntervalSinceReferenceDate
+    @AppStorage(PracticeReminderKey.windowEnd) private var practiceEndInterval: Double = Date().timeIntervalSinceReferenceDate
+    @AppStorage(PracticeReminderKey.ownStartLesson) private var practiceOwnStartLesson = 0
+    @AppStorage(PracticeReminderKey.ownStartDay) private var practiceOwnStartDay = ""
     @Environment(\.modelContext) private var modelContext
     /// "Lesson 95 · five minutes every hour" — what the reminders name today.
     @State private var todayLine = ""
@@ -36,10 +36,17 @@ struct SettingsView: View {
                     Picker("Appearance", selection: $appearance) {
                         ForEach(Appearance.allCases) { Text($0.label).tag($0.rawValue) }
                     }
-                    .pickerStyle(.segmented)
+                    #if !os(tvOS)
+                .pickerStyle(.segmented)
+                #endif
                     .labelsHidden()
                 }
 
+                // ⛔ Every reminder control is absent on tvOS. A television
+                // cannot deliver a local notification — it can only badge — so
+                // there is nothing here for a reader to set. DatePicker and
+                // Stepper do not exist there either.
+                #if !os(tvOS)
                 Section {
                     Toggle("Daily Minute", isOn: $minuteReminderEnabled)
                     if minuteReminderEnabled {
@@ -130,6 +137,7 @@ struct SettingsView: View {
                     reschedulePractice()
                 }
                 .task { refreshTodayLine() }
+                #endif
 
                 Section("Onboarding") {
                     Button("Replay introduction") {
@@ -157,6 +165,9 @@ struct SettingsView: View {
                     Text("Keeps your highlights, notes and bookmarks on your own Apple devices, in your own iCloud. Nothing goes to any server we run, there is still no account, and only your own marks travel — never the daily readings.\n\nUnlike restoring from a file, deleting a mark on one device deletes it on the others.\n\nTurning this on or off takes effect the next time you open the app.")
                 }
 
+                // ⛔ Absent on tvOS: there is no document picker there, so neither
+                // backup tier can be operated from a television.
+                #if !os(tvOS)
                 Section {
                     NavigationLink {
                         BackupRestoreView()
@@ -168,6 +179,7 @@ struct SettingsView: View {
                     // has never run this app, and will never be an Apple one.
                     Text("Carry your highlights, notes and bookmarks to another device — including a Windows, Linux or Android one, which iCloud cannot reach.")
                 }
+                #endif
 
                 Section("About") {
                     NavigationLink {
@@ -235,6 +247,9 @@ struct SettingsView: View {
         )
     }
 
+    // ⛔ These exist only to serve the reminder controls above, which tvOS does
+    // not have. They go with them rather than surviving as dead code.
+    #if !os(tvOS)
     /// "My own place" is on when a start lesson is set. Switching it on
     /// starts from the lesson the reminders would name anyway, so nothing
     /// jumps; switching it off returns to the published sequence.
@@ -292,6 +307,7 @@ struct SettingsView: View {
         let interval = lessonReminderTimeInterval
         Task { await NotificationManager.shared.applyDailyReminder(.lesson, enabled: enabled, timeInterval: interval) }
     }
+    #endif
 }
 
 #Preview {

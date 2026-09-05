@@ -1,3 +1,8 @@
+// ⛔ tvOS has no TextEditor, and no text selection either — the whole
+// selection→highlight→note pipeline has no port to a television. This is
+// absent there by construction rather than by removal: a reader cannot
+// make a note on the TV, so the editor does not exist there.
+#if !os(tvOS)
 import SwiftUI
 
 /// Where a reader writes.
@@ -81,3 +86,4 @@ struct NoteEditorView: View {
         #endif
     }
 }
+#endif

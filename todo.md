@@ -469,9 +469,20 @@ harnesses are the suite.
       visionOS target is the same porting job tvOS is — see Phase 3 — and belongs beside it, not
       here.
 
-### Phase 2 — Apple Watch, which is a build and not a fix
+### Phase 2 — Apple Watch, which is a build and not a fix ⭐ NEXT
+
+⭐ **He has cued this one: it is what to pick up next.**
 
 ⛔ **The watch does not work today, and the first item is why nothing else about it matters.**
+It already compiles — `build.sh` has driven a watch leg all along — so a green build says nothing
+here. The gap is that the app cannot reach a wrist, carries none of the corpus, and has no
+complication target. ⛔ Do not read the passing build leg as progress on any of that.
+
+⛔ **The tvOS port just established the pattern this phase should follow**, and it is worth reusing:
+drive `swiftc -typecheck` against the platform SDK over the whole source list, fix what it names, and
+only then touch the project. It found the real surface in minutes and proved this file's estimate for
+tvOS wrong by a wide margin — this file's watch estimate deserves the same scepticism before anyone
+plans around it.
 
 - [ ] ⛔ **The watch app is not embedded in the iOS app and therefore cannot reach a wrist.** The one
       `PBXCopyFilesBuildPhase` in the project embeds the widget extension; the iOS target declares no
@@ -495,53 +506,46 @@ harnesses are the suite.
       unpaired, and a session cannot activate unpaired. A paired phone+watch simulator pair is the
       only way to see the transport work.
 
-### Phase 3 — Apple TV, as a player
+### Phase 3 — Apple TV: the target is built, the interface is not
 
-His call: listen and watch first. That is what buys the hard part — **text selection does not exist
-on tvOS at all** (no pointer, no `isSelectable`, no edit menu, no `.textSelection`), so the
-selection→highlight→note pipeline cannot be ported and does not have to be faked.
+⛔ **The `ACIMDailyMinuteTV` target exists, compiles, installs and runs on the Apple TV simulator,
+and `build.sh` is now four legs.** It compiles the **same source list as the app** — every platform
+difference is a fence inside a file, so there is no second membership list to drift. Its entitlements
+carry the App Group and **no iCloud**, and its device family is `3`.
 
-- [ ] **The target, and a root of its own.** No tvOS product exists; `SUPPORTED_PLATFORMS` must gain
-      `appletvos appletvsimulator` and `TARGETED_DEVICE_FAMILY` a `3`, with a fourth entitlements
-      file. `ContentView` branches `#if os(iOS)` / `#else → macOS`, an exhaustive pair, and tvOS
-      falls into the AppKit branch. **79 conditional directives across 43 sites assume that same
-      pair.**
-- [ ] ⛔ **Fifteen classes of compile error break the moment an `appletvos` destination is added.**
-      Unguarded: `import WebKit` (`YouTubePlayerView.swift:2` — **tvOS has no WebKit**),
-      `import WidgetKit` (`DataService.swift:3`, which takes down the service everything fetches
-      through), the whole of `NotificationManager.swift`, `ShareLink` ×3, `.swipeActions` ×7,
-      `.refreshable` ×3, `DatePicker` ×4, `Stepper`, `TextEditor`, `.pickerStyle(.segmented)`,
-      `fileImporter`/`fileExporter` ×3. Mis-partitioned: `MacBottomTabBar` and `pageChevron`
-      undefined, `PlatformFont`/`PlatformColor`/`TextViewRepresentable` undefined, and
-      `Host.current()` in `FolderCopyService.swift:145`.
-- [ ] **Three things are nearly free.** `ReadingTextMeasurement.swift` needs only
-      `#if canImport(UIKit)` — every TextKit API it uses exists on tvOS. `Appearance.apply` can work
-      on tvOS, where `overrideUserInterfaceStyle` exists. `AudioManager` is `AVFoundation` +
-      `MediaPlayer`, both present; its one guard is `#if os(iOS) || os(watchOS)` around the session
-      category and wants `|| os(tvOS)`. ⛔ `ReadableContentWidth.swift` is the **one file already
-      written tvOS-correctly** — it uses `#if !os(macOS)` rather than the exhaustive pair, and it is
-      the pattern the other 42 sites should follow.
-- [ ] ⛔ **HIS CALL — video on the TV.** `YouTubePlayerView` is a `WKWebView` and tvOS has no WebKit;
-      the feed carries `youtube_url` and `audio_url` and **no direct video URL an `AVPlayer` could
-      open**. Three ways: hand off to the YouTube tvOS app, have the pipeline record an MP4 URL
-      beside the MP3s it already publishes, or ship audio only. **Audio only is the recommendation
-      for v1** — the archive.org MP3s stream to an Apple TV exactly as they do to a phone, and the
-      MP4 question is the pipeline's, separately, not blocking.
-- [ ] ⛔ **On tvOS the iCloud mirror stops being optional.** A tvOS app has no guaranteed persistent
-      local storage — the container, App Group included, is purgeable — and `UserDefaults` there is
-      capped and not durable either. `reader.store` holds the highlights and notes that nothing
-      anywhere can re-send. So on the TV the bundle and the feed are the only sources that may be
-      depended on, no SwiftData store may be load-bearing, and CloudKit is the only durable copy of a
-      reader's own words. ⛔ `SharedModelContainer.swift:51-54` **force-unwraps** the App Group
-      container URL: a tvOS target not provisioned with that group crashes at launch.
-- [ ] **If reading on the TV should ever hold a mark**, the shape is paragraph-granular focus, not
-      selection: `ReadingText.paragraphs(from:)` already splits the display string, so a focused
-      paragraph yields a real offset and length and stays compatible with every backup and every
-      other device. Coarser than a sentence, and it needs no selection API. Not for v1.
-- [ ] **What tvOS simply does not have**, so nothing may assume it: home-screen widgets as the phone
-      knows them (Top Shelf is the nearest thing), Live Activities, `WCSession`, deliverable local
-      notifications (badging only), pull-to-refresh, swipe actions, and any document picker — which
-      means the security-scoped folder-copy backup tier can never be configured there.
+⛔ **The port was much smaller than this file claimed** — "fifteen classes of compile error" across
+"79 directives at 43 sites" was wrong. One substitution, `#if os(iOS)` → `#if os(iOS) || os(tvOS)`,
+dissolved the whole mis-partitioning class; the rest was framework fences in about a dozen files.
+⛔ **The two idioms are `#if !os(tvOS)` and `#if os(iOS) || os(tvOS)`; a bare `#else` pair is what
+created the problem** and `Utilities/ReadableContentWidth.swift` is the file that always had it right.
+
+⛔ **Three fences are iOS-only for a REASON, not an API**, and widening them would compile and be
+wrong: `OrientationController` (a television does not rotate), `BackgroundRefreshManager` (its whole
+job is keeping practice reminders current) and the `LiveActivityManager` call sites.
+
+**What tvOS does not have, and therefore what the TV build does not show:** sharing, swipe actions,
+pull-to-refresh, the segmented picker *style* (the pickers themselves are there), reminders of any
+kind, note editing, text selection, and both backup tiers — there is no document picker on tvOS, so
+a reader's words cannot be carried off it.
+
+- [ ] ⛔ **HIS CALL — the player-first interface.** His decision is recorded: *tvOS is a player,
+      listen and watch first, reading secondary.* What runs today is the **phone's** five-tab layout,
+      which tvOS renders as a top tab bar; it works, but it is not the design he asked for. The
+      readable column is also 672pt on a 3840pt screen, which is right on a phone and thin on a
+      television. ⛔ Do not invent this alone — it stopped being a compile problem and became a
+      design one.
+- [ ] ⛔ **A reader must not be invited to annotate on the TV.** The container there is *purgeable*
+      and no document picker exists, so a highlight made on a television has no route off it.
+      `SharedModelContainer.groupURL` no longer force-unwraps, so a missing group no longer crashes
+      at launch — but not crashing is not the same as being durable. Either give the TV target
+      CloudKit or keep the reading surfaces read-only there.
+- [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
+      tvOS layered icon and a Top Shelf image before it could ship.
+- [ ] ⛔ **HIS CALL — video on the TV, unchanged and still not urgent.** tvOS has no WebKit, so the
+      `WKWebView` YouTube embed has no port, and **the feed carries no direct video URL an `AVPlayer`
+      could open** — so audio-only is not a preference, it is the only reachable option. The
+      archive.org MP3s stream to an Apple TV exactly as they do to a phone. An MP4 URL beside the
+      MP3s is a pipeline question, separate and not blocking.
 
 ### Phase 4 — Windows and Linux: one web reader over the same JSON
 

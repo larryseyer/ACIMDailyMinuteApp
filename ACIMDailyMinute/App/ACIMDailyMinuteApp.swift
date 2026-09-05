@@ -86,17 +86,19 @@ struct ACIMDailyMinuteApp: App {
             "dailyReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate,
             "lessonReminderEnabled": false,
             "lessonReminderTimeInterval": defaultReminderTime.timeIntervalSinceReferenceDate,
-            PracticeReminderService.Key.enabled: false,
-            PracticeReminderService.Key.windowStart: (Calendar.current.date(bySettingHour: 7, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
-            PracticeReminderService.Key.windowEnd: (Calendar.current.date(bySettingHour: 22, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
-            PracticeReminderService.Key.ownStartLesson: 0,
-            PracticeReminderService.Key.ownStartDay: ""
+            PracticeReminderKey.enabled: false,
+            PracticeReminderKey.windowStart: (Calendar.current.date(bySettingHour: 7, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
+            PracticeReminderKey.windowEnd: (Calendar.current.date(bySettingHour: 22, minute: 0, second: 0, of: Date()) ?? Date()).timeIntervalSinceReferenceDate,
+            PracticeReminderKey.ownStartLesson: 0,
+            PracticeReminderKey.ownStartDay: ""
         ])
         #if os(iOS)
         BackgroundRefreshManager.register()
         _ = PhoneWatchSyncService.shared
         #endif
+        #if !os(tvOS)
         Task { await NotificationManager.shared.setupDelegate() }
+        #endif
     }
 
     var body: some Scene {
@@ -117,7 +119,9 @@ struct ACIMDailyMinuteApp: App {
                     // Ask once, at launch, so the answer is already known when
                     // a reminder is switched on rather than asked for in the
                     // middle of that gesture.
+                    #if !os(tvOS)
                     Task { await NotificationManager.shared.requestPermissionIfNeeded() }
+                    #endif
                     // An annotation made on an archived minute knows only its
                     // date. Once the feed names the segment behind that date,
                     // the key is rewritten so the mark points at the permanent
@@ -147,7 +151,9 @@ struct ACIMDailyMinuteApp: App {
                     // the foreground lays them out again. On macOS, which has
                     // no background refresh, this is the only path.
                     if newPhase == .active {
+                        #if !os(tvOS)
                         PracticeReminderService.reschedule(in: sharedModelContainer.mainContext)
+                        #endif
                         // A window connected after the first appearance
                         // (iPad, a second scene) is caught here.
                         Appearance.apply(appearance)

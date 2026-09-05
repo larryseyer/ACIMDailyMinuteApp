@@ -68,7 +68,7 @@ struct JumpToLessonSheet: View {
                 }
             }
         }
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
         #endif
@@ -77,13 +77,17 @@ struct JumpToLessonSheet: View {
     @ViewBuilder
     private var lessonField: some View {
         let field = TextField("1–365", text: $raw)
+            // tvOS draws its own full-screen keyboard entry and has no
+            // rounded-border field style; the field itself is fine there.
+            #if !os(tvOS)
             .textFieldStyle(.roundedBorder)
+            #endif
             .font(.title3.monospacedDigit())
             .submitLabel(.go)
             .onSubmit(submit)
             .accessibilityLabel("Lesson number, 1 to 365")
 
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         field.keyboardType(.numberPad)
         #else
         field

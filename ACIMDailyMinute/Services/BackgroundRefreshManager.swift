@@ -1,5 +1,9 @@
 import Foundation
 
+// ⛔ iOS only, and not merely because of an API: this manager's whole job
+// is keeping the practice reminders pointed at the right lesson, and tvOS
+// cannot deliver a reminder. BackgroundTasks exists there; the reason to
+// use it does not.
 #if os(iOS)
 @preconcurrency import BackgroundTasks
 

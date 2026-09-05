@@ -45,11 +45,13 @@ struct ArchiveView: View {
                 }
                 .navigationTitle("Archive")
                 .searchable(text: $searchText, prompt: "Search the archive")
+                #if !os(tvOS)
                 .refreshable {
                     if connectivity.isConnected {
                         await refresh()
                     }
                 }
+                #endif
                 .navigationDestination(for: String.self) { dateString in
                     ArchiveDateDetailView(
                         dateString: dateString,

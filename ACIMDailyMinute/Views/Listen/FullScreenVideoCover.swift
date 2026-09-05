@@ -1,5 +1,9 @@
 import SwiftUI
 
+// ⛔ iOS only. This cover presents the YouTube player, which is a WKWebView,
+// and tvOS has no WebKit; it also drives OrientationController, which tvOS
+// has no use for. Video on the TV is a separate question — the feed carries
+// no direct video URL an AVPlayer could open — and audio is the tvOS path.
 #if os(iOS)
 
 /// Full-bleed autoplaying video, presented over whatever asked for it.
