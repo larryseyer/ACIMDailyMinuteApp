@@ -13,19 +13,32 @@ of mine is running.
 
 ⛔⛔ **TWO OF HIS DECISIONS ABOUT THE TELEVISION ARE SETTLED, AND THEY EXIST NOWHERE BUT HERE AND IN
 [`todo.md`](todo.md). Do not ask him again.** **The TV is a PLAYER** — listen and watch first,
-reading secondary — **and the TV app carries NO ANNOTATION AT ALL.** The consequences that follow
-from the second are written in Phase 3 of `todo.md` and are marked as *derived* rather than as his
-words: no highlights, no notes, **no bookmarks either**, `SaveButton` absent the way `ShareButton`
-already is, and a Saved tab with nothing it could ever show. ⛔ One question inside that is real and
-undecided: whether the TV keeps a **reading position** — a pointer rather than a mark, and the thing
-that makes a long reading usable. Decide it deliberately.
+reading secondary — **and the TV app carries NO ANNOTATION AT ALL.**
+⛔ **That second one is now CARRIED OUT and seen on the simulator**: four tabs with no Saved, card
+headers carrying Listen alone, and no "Add note" at the foot of a reading. The one question inside it
+is settled too — **the television KEEPS its reading position**, because a ribbon is a pointer rather
+than a mark; the reasoning is written into `Services/ReadingPositionStore.swift` so it reads as chosen
+rather than overlooked. Do not re-open either half.
 
-⛔ **A DEAD TAP IS SHIPPING ON tvOS.** `AnnotatableReadingText` draws its **"Add note" button
-unconditionally** while the sheet that button opens is fenced `#if !os(tvOS)` — on the television it
-renders, takes focus and does nothing. `menuActions` is unfenced beside it, and
-`SelectableReadingText` never actually sets `isSelectable = false` on tvOS though its comment says
-selection does not exist there. It is the first item of Phase 3 in [`todo.md`](todo.md), with the
-line numbers.
+⛔⛔ **A PUSHED READING CANNOT BE SCROLLED ON THE TELEVISION, and that is the largest open thing in
+this project.** Measured on the Apple TV simulator, on the build before the annotation removal and
+the build after it, so it is not a consequence of that work: `Text > Chapter 1 > Principles of
+Miracles` — "about 29 min", the longest section in the book — takes four presses of the remote's
+down arrow without changing a single pixel. Principles 1-3 are readable and 4-53 are unreachable.
+**The cause is the focus engine**: tvOS scrolls by moving focus, and a pushed reading has exactly one
+focusable element, `ListenButton`, at the top. The Today tab scrolls only because it is a list of
+cards each carrying its own Listen button, and that is what hid it. ⛔ **The fix is an interaction
+choice and it is HIS** — a focusable reading block the remote pans, or paging a screen at a time, are
+different televisions — so it is written down in Phase 3 of [`todo.md`](todo.md) rather than built.
+
+⛔ **A TELEVISION IS DRIVEN BY KEYS, NOT CLICKS, AND THE FRONT WINDOW MUST BE CHECKED EVERY TIME.**
+`osascript … key code` reaches the tvOS simulator — 126/125/123/124 for the arrows, 36 for Select,
+53 for Menu — and `xcrun simctl io <udid> screenshot` reads the result independently of what is
+stacked over the window. ⛔ **Other terminals share this Mac and they shut simulators down**: the TV
+sim was shut down mid-session by something else, and a `simctl install` then fails with
+`code=405, "Unable to lookup in current state: Shutdown"` — reboot it rather than believing the
+build broke. Match the window on the device's own name and confirm it is frontmost before **every**
+key, or the presses land in another agent's window and the screenshot innocently shows no change.
 
 ⛔ **The Apple TV target is built, runs, and `build.sh` is FOUR legs now.**
 `ACIMDailyMinuteTV` compiles, installs and launches on the Apple TV simulator, drawing the Daily
@@ -914,12 +927,18 @@ block besides the submission-time toggle: the settled 20pt edge has not been see
 slice, where `ReadableContentWidth` stops clamping by design.
 
 ⛔ **The tvOS PLAYER is what is open, and it is the next thing** — both of his calls about the
-television are settled (see the top of this file). What is left there is a layout he should shape,
-the dead "Add note" tap, and the annotation removal, which is mechanical.
+television are settled (see the top of this file). The annotation removal is done and seen. What is
+left there is a layout he should shape and the scrolling above, which is the same decision.
 
 From [`todo.md`](todo.md), in order:
 
 1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+   ⛔ Its first item is the reading that will not scroll, and that one needs him.
+   ⭐ **The one thing left that is purely agent work and was set up but not finished: the iPad
+   Slide Over check**, the last open item of Phase 1. The app is **already built for the iPad Pro
+   11-inch (M5) simulator** `24B47A3C-E5AC-417E-AEB6-6303684193FC` (iOS 26.5, booted) — install
+   `build/Debug-iphonesimulator/ACIMDailyMinute.app` and put it in a narrow slice. ⛔ Do not drive
+   the iPad sim `58B7D31D-…`; he has asked that that one be left alone.
    ⛔ Phase 2, the Watch, is finished apart from three design calls that are his and are marked
    `HIS CALL` there, and two complication families that need a real wrist; do not treat either as
    work to pick up.

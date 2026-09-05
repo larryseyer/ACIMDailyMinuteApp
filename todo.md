@@ -566,50 +566,36 @@ from the code, and is open to correction; the two sentences above are not.
       *Derived:* Listen becomes the landing tab and the Reading tabs fall behind it. ⛔ The layout
       itself is still his to shape — a shipped television interface is not something to invent from
       a compile fence.
-- [ ] **Take annotation out of the TV, wholly.** *Derived from his call, and each part is checkable:*
-      no highlights, no notes, **and no bookmarks** — a save is reader-created content with no route
-      off a television exactly as a highlight is. `SaveButton` should render `EmptyView` on tvOS the
-      way `ShareButton` already does, so `CardHeaderRow`'s trailing edge simply carries nothing.
-      With all three gone the **Saved tab has nothing it can ever show on tvOS** and should not be
-      one of its tabs.
-      ⛔ **Open question for whoever picks this up, and it is a real one:** a *reading position* —
-      the ribbon — is also reader-created, but it is a pointer rather than a mark and it is what
-      makes a long reading usable at all. Decide deliberately whether the TV keeps it; do not let it
-      survive merely because nobody fenced it.
-      ⛔ `SharedModelContainer.groupURL` no longer force-unwraps, so a missing App Group no longer
-      crashes at launch — **but not crashing is not the same as being durable**, and that fix is not
-      a licence to store a reader's words on a television.
-- [ ] ⛔⛔ **A DEAD TAP IS SHIPPING ON tvOS RIGHT NOW, and it is the first thing to fix.**
-      `AnnotatableReadingText.swift:86-91` draws the **"Add note" button unconditionally**, while the
-      sheet it opens (`:125-144`) is fenced `#if !os(tvOS)`. On the television that button renders,
-      takes focus, and does nothing at all when pressed. The same asymmetry sits one line up:
-      `menuActions` (`:183-203`), which is what turns a selection into a highlight or a note, is
-      **unfenced** and still handed to `SelectableReadingText` at `:74-78`.
-      ⛔ And `SelectableReadingText.swift:322-326` sets `isEditable = false` inside `#if !os(tvOS)`
-      but **never sets `isSelectable` on tvOS** — the comment says "tvOS has no editing and no
-      selection", and the code does not actually enforce the second half.
-- [ ] **Take Save out in ONE place, not nine.** `SaveButton` has **9 real call sites** — the two
-      Today cards, the Archive card, Manual, Workbook Introduction, three blocks in `LessonDetailView`
-      and `TextSectionView` — every one of them the identical shape
-      `} trailing: { ShareButton(...); SaveButton(...) }`. ⛔ **Put the `#if os(tvOS) → EmptyView()`
-      branch inside `SaveButton.swift`, exactly as `ShareButton.swift:18-22` already does it**, and
-      all nine surfaces follow with no edit. `CardHeaderRow` is agnostic to how many controls a slot
-      holds — `SegmentReadingView` already passes one and `CorpusReadingCard` already passes none —
-      so nothing in the scaffold or the header changes.
-- [ ] **The Saved tab is three permanent empty states on tvOS** once nothing writes:
-      `SavedView.swift:94-99`, `:130-135`, `:159-164` each fall to a `ContentUnavailableView` telling
-      the reader to do something the television cannot do. That is the argument for dropping the tab
-      there rather than fencing its contents.
-- [ ] ⛔ **The ribbon question, with what the CODE says rather than a preference.**
-      `ReadingPositionStore.swift:11-14` keeps a reading position in `UserDefaults.standard`
-      **alongside the reminder times and the appearance**, not in SwiftData with the marks, and
-      `SelectableReadingText.swift:47-51` says outright: *"A reader's place is not a reader's mark: a
-      wash here would read as a highlight they did not make."* It is never painted, never exported
-      and never listed in the Saved tab. So the code's own position is that a ribbon is **not** an
-      annotation — which is the strongest argument for the TV keeping it. Only three screens write
-      one (`recordsPosition: true`: `WorkbookIntroductionView.swift:63`, `LessonDetailView.swift:187,
-      256, 351`, `TextSectionView.swift:94`), and `ContinueReadingRow` already renders `EmptyView`
-      when there is no ribbon, so either answer is inert rather than broken.
+- [ ] ⛔ **Annotation is OUT of the television and the ribbon STAYS, by decision. Do not re-open
+      either half.** Seen on the simulator, not inferred: the tab bar is four tabs with no Saved, the
+      Daily Minute and Lesson card headers carry Listen alone with nothing on the trailing edge, and
+      the foot of a reading is its address and its read time with no "Add note". `SaveButton` holds
+      the `#if os(tvOS) → EmptyView()` branch so all nine call sites followed without an edit;
+      `AnnotatableReadingText` fences the note rows, the button and `menuActions` together;
+      `SelectableReadingText` now sets `isSelectable = false` there. ⛔ **`isEditable` is UNAVAILABLE
+      on tvOS and `isSelectable` is not** — that is why those two cannot share a fence, and it is why
+      the old pair set neither.
+      ⛔ **The ribbon stays, and the reasoning is in `ReadingPositionStore.swift`**: it lives in
+      `UserDefaults` beside the reminder times rather than in SwiftData with the marks, it is never
+      painted, exported or listed, `SelectableReadingText` says outright that a reader's place is not
+      a reader's mark — and it is device-local on a TV, so a purged container costs a scroll position
+      and not a word. Nothing of the reader's is trapped there because nothing of theirs is there.
+- [ ] ⛔⛔ **A PUSHED READING CANNOT BE SCROLLED ON THE TELEVISION. This is the first thing to fix
+      and it is bigger than anything else in this phase.** Measured on the Apple TV simulator, on the
+      build before the annotation removal and the build after it, so it is **not** a consequence of
+      that removal: open `Text > Chapter 1 > Principles of Miracles` — the longest section in the
+      book, "about 29 min" — press the remote's down arrow four times, and **the screen does not
+      change by a single pixel.** The reader sees principles 1, 2 and 3 and cannot reach 4 through 53.
+      ⛔ **The cause is the focus engine, not the scroll view.** tvOS scrolls a `ScrollView` by moving
+      focus, and a pushed reading has exactly **one** focusable element — `ListenButton` — sitting at
+      the top. `SelectableReadingText` wraps a `UITextView` with `isScrollEnabled = false` (correct:
+      it lives inside a SwiftUI scroller) and nothing in the body is focusable, so there is nowhere
+      below for focus to go and therefore nothing to scroll to. The Today tab scrolls fine, and that
+      is what hid this: it is a **list of cards**, each with its own focusable Listen button.
+      ⛔ **The fix is an interaction choice and it is HIS**, which is why it is written down rather
+      than built: a focusable reading block that the remote pans, versus paging the reading a screen
+      at a time, are different televisions. It belongs with "build the player-first interface" above.
+      Until it is made, **"reading secondary" is "reading impossible past one screen"** on the TV.
 - [ ] **The read-only rendering path already exists — do not build one.**
       `SelectableReadingText` with `menuActions: []` and `positionReporter: nil` is inert **by
       design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
