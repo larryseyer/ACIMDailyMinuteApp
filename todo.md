@@ -502,6 +502,12 @@ cost of anything on the watch is a *view* cost, never a porting cost. ⛔ **Use 
       something else entirely, is a design call.
 - [ ] **The watch app icon is a single 1024pt PNG.** It builds and it installs; whether it reads at
       complication and Dock size on a real wrist has not been looked at.
+- [ ] **No Apple Watch is paired to this Mac.** `xcrun devicectl list devices` knows two devices, the
+      Lyrics iPad and the iPhone 11 Pro Max. ⛔ **The signing side is already finished** — both watch
+      App IDs are registered with App Groups and both signed a real arm64 device build today — so
+      what is missing is hardware on the network, not authorisation. A watch is registered by pairing
+      it through its iPhone in Xcode > Window > Devices and Simulators; watch UDIDs are never typed
+      in by hand.
 
 ### Phase 3 — Apple TV: the target is built, the player is not
 
@@ -585,6 +591,23 @@ from the code, and is open to correction; the two sentences above are not.
       design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
       `AnnotatableReadingText` and uses that directly; `CorpusReadingCard` is the existing example of
       a deliberately thinner surface.
+- [ ] ⛔ **The TV cannot be put on a television yet, and the blocker is a DEVICE, not a capability.**
+      `xcodebuild -destination generic/platform=tvOS` fails with *"Your team has no devices from which
+      to generate a provisioning profile"* followed by *"No profiles for
+      'com.larryseyer.acimdailyminute' were found"*. Read those two together: **zero tvOS-class
+      devices are registered to team RR5DY39W4Q.** Everything else is already in place — the TV target
+      shares the App ID `com.larryseyer.acimdailyminute` with the phone and the Mac, that App ID
+      already carries App Groups, and `ACIMDailyMinuteTV.entitlements` asks for nothing else. ⛔ **Do
+      not "fix" the shared bundle id**: one App Store record carries the iOS and tvOS binaries
+      together, and that is the arrangement. Register an Apple TV (pair it over the network in Xcode >
+      Window > Devices and Simulators, with the television sitting on Settings > Remotes and Devices >
+      Remote App and Devices) and the next `-allowProvisioningUpdates` build issues the profile.
+      The simulator needs none of this.
+- [ ] ⛔ **The TV target is the only one NOT built under `SWIFT_STRICT_CONCURRENCY = complete`.**
+      The app, both widget extensions and the watch app all set it; the tvOS target does not, and it
+      also sets no `CODE_SIGN_STYLE`. So the television compiles under looser concurrency rules than
+      everything else it shares a source list with — code that passes there can fail on the app
+      target, in a direction no check would catch until someone builds the phone.
 - [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
       tvOS layered icon and a Top Shelf image before it could ship.
 - [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
