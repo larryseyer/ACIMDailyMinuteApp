@@ -20,6 +20,13 @@ already is, and a Saved tab with nothing it could ever show. ⛔ One question in
 undecided: whether the TV keeps a **reading position** — a pointer rather than a mark, and the thing
 that makes a long reading usable. Decide it deliberately.
 
+⛔ **A DEAD TAP IS SHIPPING ON tvOS.** `AnnotatableReadingText` draws its **"Add note" button
+unconditionally** while the sheet that button opens is fenced `#if !os(tvOS)` — on the television it
+renders, takes focus and does nothing. `menuActions` is unfenced beside it, and
+`SelectableReadingText` never actually sets `isSelectable = false` on tvOS though its comment says
+selection does not exist there. It is the first item of Phase 3 in [`todo.md`](todo.md), with the
+line numbers.
+
 ⛔ **The Apple TV target is built, runs, and `build.sh` is FOUR legs now.**
 `ACIMDailyMinuteTV` compiles, installs and launches on the Apple TV simulator, drawing the Daily
 Minute from the feed. It compiles the **same source list as the app** — every platform difference is
