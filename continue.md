@@ -42,6 +42,19 @@ it reads with no phone and no network, its complication has a real widget-extens
 calls that are his and are in [`todo.md`](todo.md). ⛔ **Neither the watch nor the TV is a compile
 problem** — both build — so a green build is not progress on either.
 
+⭐ **HE NAMED THE TWO THINGS TO DO FIRST, and they are both marked `⭐ NEXT` in
+[`todo.md`](todo.md): turn `SWIFT_STRICT_CONCURRENCY = complete` on for the tvOS target, and drive
+the watch SIMULATOR.** Take them before anything in the numbered list under `⛔ PICK UP HERE`, which
+is where both are described.
+
+⛔ **This Mac has twenty watch simulators across three runtimes (11.2, 26.2, 26.5) and three ACTIVE
+paired pairs**, so
+nothing about watch testing is blocked on hardware. `xcrun simctl list pairs` names them; the one
+already used is `E56C7939-…` — `iPhone 17 Pro Max` (`CE9761A7-…`) ↔ `Apple Watch Series 11 (46mm)`
+(`D876968B-…`), both watchOS/iOS 26.5. ⛔ `build.sh`'s own watch leg still resolves an **unpaired**
+`Apple Watch Series 10 (46mm)`, which is right for a compile and useless for `WCSession` — a session
+cannot activate unpaired, and that is why the transport went unproved for so long.
+
 ⛔ **The project is FIVE targets now, and three facts about the watch's wiring are load-bearing.**
 The iOS target embeds the watch app through `Embed Watch Content` (`dstSubfolderSpec = 16`,
 `dstPath = $(CONTENTS_FOLDER_PATH)/Watch`), and **both that build file and the target dependency carry
@@ -866,16 +879,27 @@ annotation removal, which is mechanical.
 
 From [`todo.md`](todo.md), in order:
 
-1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
-   ⛔ Phase 2, the Watch, is finished apart from two design calls that are his and are marked
-   `HIS CALL` there; do not treat them as work to pick up.
-2. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+1. ⭐ **Two small ones he named, and they are the FIRST thing a new session takes.** Both are marked
+   `⭐ NEXT` in [`todo.md`](todo.md) — one in Phase 3, one in Phase 2:
+   **(a) Turn `SWIFT_STRICT_CONCURRENCY = complete` on for the tvOS target.** It is the only one of
+   the five without it and it compiles the same source list as the app, so the television is checking
+   shared code under looser rules than the phone. ⛔ Expect real errors; that is the point. Every
+   repair is to shared code and must leave the other three legs, the device build and the nineteen
+   checks green.
+   **(b) Drive the watch SIMULATOR.** ⛔ The app already launches and draws there in both content
+   states, and `WCSession` is already proved on the paired pair — do not re-prove either. What is
+   unseen is the complication **on a face**, a long passage scrolling, the watch's own larger text
+   sizes, and the `@Query` redrawing a stale row into today's **without a relaunch**.
+2. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+   ⛔ Phase 2, the Watch, is otherwise finished apart from two design calls that are his and are
+   marked `HIS CALL` there; do not treat those as work to pick up.
+3. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
    call to confirm before it is built. ⛔ **It needs him, so it is not a build to start alone.**
-3. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
+4. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
    with their shape already decided, and the two builds with no decision outstanding if the platform
    work is not what a session should pick up.
-4. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+5. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
    smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
