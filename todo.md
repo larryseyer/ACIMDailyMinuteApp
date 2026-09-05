@@ -49,6 +49,14 @@ checks, real feed payloads. His eyes are the last resort, not the first.
       on the phone at that hour — and on the watch, mirrored — naming the lesson, and its tap opens
       that lesson. The Daily Minute and Daily Lesson reminders each fire at their own time; a tap on
       the first opens Today and on the second the Read tab. Nothing arrives during a Focus.
+- [ ] **The watch, on a wrist.** It installs with the phone now rather than separately. Expected:
+      today's Daily Minute with its address above it (`T-18.8.7`), under a heading that reads
+      **Today**. Then turn the phone off, or open the watch before the phone has fetched: the heading
+      changes to **From the Course** and a bundled passage draws in its place — the watch is never
+      blank and never needs a network. ⛔ Say if the second state should look different from the
+      first; right now only the heading distinguishes them. Then add the complication from the watch
+      face gallery in all three shapes.
+
 - [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
       `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
       the title. An unlistened row shows no date at all.
@@ -469,42 +477,31 @@ harnesses are the suite.
       visionOS target is the same porting job tvOS is — see Phase 3 — and belongs beside it, not
       here.
 
-### Phase 2 — Apple Watch, which is a build and not a fix ⭐ NEXT
+### Phase 2 — Apple Watch: the plumbing is done, the shape is his
 
-⭐ **He has cued this one: it is what to pick up next.**
+⛔ **The watch reaches a wrist, carries the Course, and its complication has a target.** What is left
+here is not a build: it is two decisions about what a watch is *for* in this app, and they are his.
 
-⛔ **The watch does not work today, and the first item is why nothing else about it matters.**
-It already compiles — `build.sh` has driven a watch leg all along — so a green build says nothing
-here. The gap is that the app cannot reach a wrist, carries none of the corpus, and has no
-complication target. ⛔ Do not read the passing build leg as progress on any of that.
+⛔ **The measurement that governs any further watch work.** A whole-module `swiftc -typecheck` of all
+126 app + widget sources against the watchOS SDK gives **45 errors in 16 files, 43 of them in
+`Views/`** — outside `Views/` there are exactly two lines, `NotificationManager.swift:227`
+(`UNNotificationSound(named:)`) and `FolderCopyService.swift:144` (`Host`). Every model, every
+utility and every service the reader's content passes through already compiles for watchOS. So the
+cost of anything on the watch is a *view* cost, never a porting cost. ⛔ **Use `-wmo`**: plain batch
+`-typecheck` stops after the first failing file and reports one error where there are dozens.
 
-⛔ **The tvOS port just established the pattern this phase should follow**, and it is worth reusing:
-drive `swiftc -typecheck` against the platform SDK over the whole source list, fix what it names, and
-only then touch the project. It found the real surface in minutes and proved this file's estimate for
-tvOS wrong by a wide margin — this file's watch estimate deserves the same scepticism before anyone
-plans around it.
-
-- [ ] ⛔ **The watch app is not embedded in the iOS app and therefore cannot reach a wrist.** The one
-      `PBXCopyFilesBuildPhase` in the project embeds the widget extension; the iOS target declares no
-      dependency on the watch target and has no "Embed Watch Content" phase. Add both. Also check in
-      the watch scheme — `build.sh:133` drives a scheme that is not shared.
-- [ ] ⛔ **The watch carries none of the bundled corpus**, so it is not usable on bundled content
-      alone and breaks the durability rule outright. Its Resources phase holds only
-      `Assets.xcassets`; its entire content is a **four-key `WCSession` payload** — text, publishedAt,
-      date, segmentHash. Add the corpus JSON and `CorpusService`. That also retires the dead
-      `WatchDataService.fetchDailyContent()` and the "Lesson N" caption, which can never populate
-      because nothing on the watch writes a `DailyLesson`.
-- [ ] **The complications cannot appear on a watch face.** `ACIMDailyMinuteWatchWidget` compiles into
-      the watch app but there is **no watchOS widget-extension target** and the struct is in no
-      `WidgetBundle`. Add the target. ⛔ `PARITY.md` marks this "Pass" — **that document is dated
-      2026-04-14 and is wrong here; re-derive it or delete it, do not trust it.**
-- [ ] **Smaller watch truths, all in `WatchDataService.swift`.** `fetchTodaysMinute()` sorts by
-      `publishedAt` and takes the newest row, so a week-old minute renders under "Today"; the
-      receiver inserts and never updates; and nothing redraws when a payload lands — no `@Query`, no
-      observation.
-- [ ] ⛔ **`WCSession` has never been proved end to end.** The watch simulator `build.sh` drives is
-      unpaired, and a session cannot activate unpaired. A paired phone+watch simulator pair is the
-      only way to see the transport work.
+- [ ] ⛔ **HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?** Today it
+      shows the minute alone. The phone pushes one payload and the watch keeps one row; adding the
+      lesson is two more keys and a second row, not a port. It is a question about what a glance is
+      for, which is why it is not being guessed.
+- [ ] ⛔ **HIS CALL — the complication's three families have never been seen on a face.** They are
+      honest now and they are plain: circular is the app's mark, rectangular and inline are the
+      opening of today's passage. ⛔ **What they used to show was a lie** — a lesson number read from
+      a `DailyLesson` nothing on the watch ever writes, so every face read `L —` and `No lesson`
+      forever. Whether plain-and-true is the right answer, or whether a complication should say
+      something else entirely, is a design call.
+- [ ] **The watch app icon is a single 1024pt PNG.** It builds and it installs; whether it reads at
+      complication and Dock size on a real wrist has not been looked at.
 
 ### Phase 3 — Apple TV: the target is built, the player is not
 

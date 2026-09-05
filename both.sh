@@ -3,7 +3,7 @@
 #   1. iPad (10th generation) Simulator, iOS 18.1          (boot, install, launch)
 #   2. Connected "iPhone 11 Pro Max" physical device, iOS 18.1 (install, launch)
 #
-# Unlike build.sh (which only compile-verifies iOS + macOS + watchOS), this
+# Unlike build.sh (which only compile-verifies iOS + macOS + watchOS + tvOS), this
 # script actually installs and launches the app on both targets for
 # end-to-end testing.
 #
