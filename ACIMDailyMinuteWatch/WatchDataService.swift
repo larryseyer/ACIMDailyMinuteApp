@@ -1,6 +1,9 @@
 import Foundation
 import SwiftData
 import WatchConnectivity
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 /// The watch's one moving part: it opens the cache store and receives what the
 /// phone pushes. It fetches nothing of its own.
@@ -85,6 +88,16 @@ final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
             minute.text = text
             if isNew { container.mainContext.insert(minute) }
             try? container.mainContext.save()
+            // ⛔ The complication does NOT observe the store. Its provider is
+            // asked once and then not again until the timeline's own hour is
+            // up, so without this the face keeps yesterday's passage for up to
+            // an hour after the phone has pushed today's — and the app beside
+            // it, which does watch the store through `@Query`, disagrees with
+            // it on the same wrist. `DataService` owes the same line on iOS
+            // for the same reason.
+            #if canImport(WidgetKit)
+            WidgetCenter.shared.reloadAllTimelines()
+            #endif
         }
     }
 }

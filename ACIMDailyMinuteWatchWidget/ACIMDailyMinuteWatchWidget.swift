@@ -4,7 +4,7 @@ import SwiftData
 
 struct WatchTimelineEntry: TimelineEntry {
     let date: Date
-    /// The opening of today's Daily Minute, already spacing-repaired.
+    /// Today's Daily Minute, whole and already spacing-repaired.
     ///
     /// ⛔ There is no lesson number here, and its absence is the point. This
     /// entry used to carry one, drawn from a `DailyLesson` **nothing on the
@@ -12,12 +12,19 @@ struct WatchTimelineEntry: TimelineEntry {
     /// face, permanently, and the rectangular one said `No lesson`. A
     /// complication that can only ever show a placeholder is worse than one
     /// that shows what the device actually holds.
-    let snippet: String?
+    ///
+    /// ⛔ It carries the whole passage rather than a cut of it, and **the
+    /// truncating belongs to `Text`**. A character count cannot know how much
+    /// fits: the same budget is three lines on a 49mm wrist at the smallest
+    /// text size and half a line at the largest. Cutting here also cuts
+    /// mid-word and with no ellipsis, so the wrist read `… To do n` and gave
+    /// the reader no sign that anything followed.
+    let text: String?
 }
 
 struct WatchTimelineProvider: TimelineProvider {
     func placeholder(in context: Context) -> WatchTimelineEntry {
-        WatchTimelineEntry(date: .now, snippet: nil)
+        WatchTimelineEntry(date: .now, text: nil)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (WatchTimelineEntry) -> Void) {
@@ -30,17 +37,24 @@ struct WatchTimelineProvider: TimelineProvider {
         completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
     }
 
-    /// ⛔ `SharedModelContainer.shared`, never `WatchDataService.shared.container`.
-    /// The shared one is **read-only**, and by the rule in
-    /// `SharedModelContainer.swift` a read-only configuration never mirrors — so
-    /// this extension needs no iCloud entitlement and cannot become a second
-    /// container syncing one store inside one process. It is the same call
-    /// `ACIMDailyMinuteTimelineProvider` makes on iOS, and dragging
+    /// ⛔ `SharedModelContainer.sharedCacheOnly`, never
+    /// `WatchDataService.shared.container` and never plain `shared`.
+    ///
+    /// Read-only, so by the rule in `SharedModelContainer.swift` it never
+    /// mirrors — this extension needs no iCloud entitlement and cannot become a
+    /// second container syncing one store inside one process. Dragging
     /// `WatchDataService` in here would have pulled `WatchConnectivity` and a
     /// writable store into an extension that needs neither.
+    ///
+    /// ⛔ And **cache-only**, because that is the shape `WatchDataService`
+    /// writes. `shared` asks the same file for the nine-model schema, Core Data
+    /// decides it must migrate in place, the read-only store refuses the write,
+    /// and this `guard` takes the placeholder branch — silently, on the face,
+    /// while the app beside it shows the passage. `ACIMDailyMinuteTimelineProvider`
+    /// keeps `shared` because the phone's app writes the nine.
     private func fetchEntry() -> WatchTimelineEntry {
-        guard let container = SharedModelContainer.shared else {
-            return WatchTimelineEntry(date: .now, snippet: nil)
+        guard let container = SharedModelContainer.sharedCacheOnly else {
+            return WatchTimelineEntry(date: .now, text: nil)
         }
         let context = ModelContext(container)
         var descriptor = FetchDescriptor<DailyMinute>(
@@ -48,15 +62,12 @@ struct WatchTimelineProvider: TimelineProvider {
         )
         descriptor.fetchLimit = 1
         guard let minute = try? context.fetch(descriptor).first else {
-            return WatchTimelineEntry(date: .now, snippet: nil)
+            return WatchTimelineEntry(date: .now, text: nil)
         }
 
-        // ⛔ Repair FIRST, then cut. The complication draws feed text directly
-        // rather than through `ReadingText`, so it owes the spacing repair by
-        // hand — and truncating before repairing would cut inside a join the
-        // repair was about to make.
-        let repaired = PunctuationSpacing.repaired(minute.text)
-        return WatchTimelineEntry(date: .now, snippet: String(repaired.prefix(100)))
+        // ⛔ The complication draws feed text directly rather than through
+        // `ReadingText`, so it owes the spacing repair by hand.
+        return WatchTimelineEntry(date: .now, text: PunctuationSpacing.repaired(minute.text))
     }
 }
 
@@ -77,8 +88,8 @@ struct ComplicationView: View {
                 Text("ACIM Daily Minute")
                     .font(.caption2)
                     .foregroundStyle(.tint)
-                if let snippet = entry.snippet {
-                    Text(snippet)
+                if let text = entry.text {
+                    Text(text)
                         .font(.caption)
                         .lineLimit(3)
                 } else {
@@ -88,7 +99,7 @@ struct ComplicationView: View {
                 }
             }
         case .accessoryInline:
-            Text(entry.snippet.map { String($0.prefix(40)) } ?? "ACIM Daily Minute")
+            Text(entry.text ?? "ACIM Daily Minute")
         default:
             Text("ACIM Daily Minute")
         }
