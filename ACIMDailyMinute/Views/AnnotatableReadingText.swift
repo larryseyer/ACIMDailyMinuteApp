@@ -78,6 +78,12 @@ struct AnnotatableReadingText: View {
             )
             .frame(maxWidth: .infinity, alignment: .leading)
 
+            // ⛔ **Everything below the reading is annotation, and the TV
+            // carries none of it — his call.** The rows and the button are
+            // fenced together rather than one at a time because they are one
+            // affordance: a note the television cannot write is a note it has
+            // nothing to list.
+            #if !os(tvOS)
             ForEach(storedNotes) { note in
                 noteRow(note)
             }
@@ -91,7 +97,6 @@ struct AnnotatableReadingText: View {
                 }
                 .buttonStyle(.plain)
 
-                #if !os(tvOS)
                 if !storedHighlights.isEmpty || !storedNotes.isEmpty {
                     ShareLink(item: exportText) {
                         Label("Export", systemImage: "square.and.arrow.up")
@@ -99,9 +104,9 @@ struct AnnotatableReadingText: View {
                     }
                     .buttonStyle(.plain)
                 }
-                #endif
             }
             .foregroundStyle(.secondary)
+            #endif
         }
         // Re-anchored when the reading appears rather than while its body is
         // being computed: correcting a drifted offset is a write, and a write
@@ -180,8 +185,17 @@ struct AnnotatableReadingText: View {
         )
     }
 
+    /// ⛔ **Empty on tvOS, and that is the second half of the same fence.**
+    /// These are what turn a selection into a highlight or a note, and the
+    /// second of them opens the editor sheet that `#if !os(tvOS)` removes. A
+    /// television has no text selection to raise the menu with in the first
+    /// place, so handing them over was already inert — but inert by accident,
+    /// which is the state a later change quietly reverses.
     private var menuActions: [SelectableReadingText.MenuAction] {
-        [
+        #if os(tvOS)
+        return []
+        #else
+        return [
             SelectableReadingText.MenuAction(
                 id: "highlight", title: "Highlight", systemImage: "highlighter"
             ) { range, quote in
@@ -200,6 +214,7 @@ struct AnnotatableReadingText: View {
                 draft = NoteDraft(existing: nil, highlightID: highlight?.id, quote: quote)
             }
         ]
+        #endif
     }
 
     private func noteRow(_ note: Note) -> some View {

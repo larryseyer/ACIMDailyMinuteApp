@@ -18,6 +18,20 @@ struct SaveButton: View {
     private static let accent = Color.acimGold
 
     var body: some View {
+        #if os(tvOS)
+        // ⛔ **His call: the TV app carries no annotation at all, and a save is
+        // annotation.** A bookmark is reader-created content, and a television
+        // has no route to carry it off — no share sheet, no iCloud entitlement,
+        // and an App Group container the system may purge. Inviting a reader to
+        // make a mark that cannot leave the device is worse than not offering
+        // the mark.
+        //
+        // Absent rather than disabled, exactly as `ShareButton` is: the branch
+        // lives here so all nine call sites follow without an edit, and
+        // `CardHeaderRow` is already agnostic to how many controls a slot holds
+        // — `SegmentReadingView` passes one and `CorpusReadingCard` passes none.
+        EmptyView()
+        #else
         Button(action: action) {
             Label(isSaved ? "Saved" : "Save", systemImage: isSaved ? "bookmark.fill" : "bookmark")
                 .font(.caption.weight(.medium))
@@ -42,6 +56,7 @@ struct SaveButton: View {
         .frame(minWidth: 44, minHeight: 44)
         .contentShape(Rectangle())
         .accessibilityLabel(isSaved ? "Remove from Saved" : "Save")
+        #endif
     }
 }
 
