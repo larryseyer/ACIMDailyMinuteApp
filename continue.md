@@ -35,17 +35,30 @@ a fence inside a file, so there is no second membership list to drift — with i
 the phone's five-tab layout, not the player he asked for**; the layout is a design pass and it is
 his to shape.
 
-⛔ **THE WATCH IS BUILT AND THE tvOS PLAYER IS WHAT IS OPEN.** Phase 2 is done: the watch app is
-embedded in the iOS app and installs with it, it carries `ACIMSegments.json` and the corpus layer so
-it reads with no phone and no network, its complication has a real widget-extension target, and
-`WCSession` has been proved end to end for the first time. What is left of the watch is two design
-calls that are his and are in [`todo.md`](todo.md). ⛔ **Neither the watch nor the TV is a compile
-problem** — both build — so a green build is not progress on either.
+⛔ **THE WATCH IS BUILT, ITS COMPLICATION IS PLACED, AND THE tvOS PLAYER IS WHAT IS OPEN.** Phase 2
+is done: the watch app is embedded in the iOS app and installs with it, it carries
+`ACIMSegments.json` and the corpus layer so it reads with no phone and no network, `WCSession` is
+proved end to end, the `@Query` redraws a stale row into today's **without a relaunch** — measured,
+not inferred from launch order — and the `.accessoryRectangular` complication is live in the Smart
+Stack drawing today's passage. What is left of the watch is three design calls that are his, plus
+two complication families a simulator cannot place — all four are in [`todo.md`](todo.md).
+⛔ **Neither the watch nor the TV is a compile problem** — both build — so a green build is not
+progress on either.
 
-⭐ **HE NAMED THE TWO THINGS TO DO FIRST, and they are both marked `⭐ NEXT` in
-[`todo.md`](todo.md): turn `SWIFT_STRICT_CONCURRENCY = complete` on for the tvOS target, and drive
-the watch SIMULATOR.** Take them before anything in the numbered list under `⛔ PICK UP HERE`, which
-is where both are described.
+⛔ **A READ-ONLY STORE MUST BE ASKED FOR THE SHAPE ITS WRITER LEFT IT, AND GETTING THAT WRONG IS
+SILENT.** `WatchDataService` writes `cache.store` with the six cache models alone
+(`includeReader: false`); a reader that asks the same file for the nine-model schema makes Core Data
+decide it must **migrate in place** — a write — and a read-only store refuses it with
+`CoreData: error: (8) attempt to write a readonly database` / *"Cannot migrate store in-place"*.
+`SharedModelContainer.shared` is therefore the **iOS** shape and only the iOS shape; the watch
+complication uses **`SharedModelContainer.sharedCacheOnly`**. ⛔ **Nothing about that failure looks
+like a failure**: the container is `nil`, `fetchEntry` takes its `guard`, and the face draws its
+"Open to read today's passage" placeholder while the app two taps away shows the passage from that
+very file. No build, no check and no crash log can see it — only a face can, and the error is in the
+simulator's own log rather than anywhere Xcode surfaces. ⛔ **The watch also owes
+`WidgetCenter.shared.reloadAllTimelines()` after every `WCSession` write**, as `DataService` does on
+iOS: a complication does not observe the store, so without it the face keeps yesterday's passage
+until its hourly timeline is up.
 
 ⛔ **This Mac has twenty watch simulators across three runtimes (11.2, 26.2, 26.5) and three ACTIVE
 paired pairs**, so
@@ -54,6 +67,18 @@ already used is `E56C7939-…` — `iPhone 17 Pro Max` (`CE9761A7-…`) ↔ `App
 (`D876968B-…`), both watchOS/iOS 26.5. ⛔ `build.sh`'s own watch leg still resolves an **unpaired**
 `Apple Watch Series 10 (46mm)`, which is right for a compile and useless for `WCSession` — a session
 cannot activate unpaired, and that is why the transport went unproved for so long.
+⛔ **What a watch simulator CANNOT do is wear a complication on a face.** Every one of them ships a
+single face, `Numerals Duo`, whose edit pages are STYLE and COLOR and which has no complication slot;
+its face gallery's **GET** does nothing under a synthetic tap; and adding a face in the paired phone
+simulator's Watch app adds it to the phone's list without ever reaching the watch, because simulator
+pairing carries `WCSession` payloads and not faces. **The Smart Stack is the one real placement a
+simulator offers**, and it takes `.accessoryRectangular` only.
+
+⛔ **All five targets set `SWIFT_STRICT_CONCURRENCY = complete` and all five set
+`SWIFT_VERSION = 6.0`, and the second makes the first a formality.** A clean tvOS build passes
+`-swift-version 6` to `swiftc` and no `-strict-concurrency` flag at any of its 160 compile steps —
+the Swift 6 language mode *is* complete data-race checking, so the setting only starts mattering
+again if a `SWIFT_VERSION` ever drops to 5. Nothing was hiding behind it on the television.
 
 ⛔ **The project is FIVE targets now, and three facts about the watch's wiring are load-bearing.**
 The iOS target embeds the watch app through `Embed Watch Content` (`dstSubfolderSpec = 16`,
@@ -579,6 +604,21 @@ landed. When it will not come forward, stop and say so rather than spending the 
 BUILD** — that is the tell, not a question to answer. A properly signed copy owns its App Group and
 never asks. Check `codesign -dv` first; see `./build.sh` below for what goes wrong and how badly.
 
+⛔ **A SIMULATOR can be driven too, and the recipe is not the Mac one.** `cliclick` is **killed on
+sight here** (`exit 137`, sandboxed or not) and is not the tool. Two things do work and they are used
+together: `osascript … System Events … click at {x, y}` posts a tap and reports back which element it
+hit, and a five-line `swiftc` CGEvent tool posts the press-and-holds and drags that System Events has
+no verb for — a long press on a watch face needs a 2.2-second `leftMouseDown`, and a scroll needs
+twenty `leftMouseDragged` steps. Read state with `xcrun simctl io <udid> screenshot`, which captures
+the device regardless of what is stacked over the window. ⛔ **Re-query the window's position before
+EVERY click.** Simulator windows move on their own and they reorder: booting a second watch sim put
+its window first, so `first window whose name contains "watchOS"` silently began pointing at the
+wrong device and half an hour of taps landed nowhere. Match on the device's own name — `"46mm"` —
+never on the platform. Map device-screenshot pixels to the screen with two calibration taps on
+targets you can identify in a screenshot, and check the result rather than trusting the arithmetic.
+⛔ **`Device > Home` from the menu bar is what leaves a mode**; the toolbar's Crown button pressed
+through accessibility does not, and neither does ⌘⇧H once the window has moved.
+
 ⏳ **The audio is published and nothing about it is left to do.** The `▶ WATCHING` block of
 [`todo.md`](todo.md) holds the one thing still moving on its own: two catch-up gaps the nightly run
 fills one per night. Read them off the feed's archive dates; nothing needs a hand. Do not re-open
@@ -873,33 +913,23 @@ inside it is still his and is marked `HIS CALL` there: video on the TV.
 block besides the submission-time toggle: the settled 20pt edge has not been seen in a Slide Over
 slice, where `ReadableContentWidth` stops clamping by design.
 
-⛔ **The tvOS PLAYER is what is open** — both of his calls about the television are settled (see the
-top of this file). What is left there is a layout he should shape, the dead "Add note" tap, and the
-annotation removal, which is mechanical.
+⛔ **The tvOS PLAYER is what is open, and it is the next thing** — both of his calls about the
+television are settled (see the top of this file). What is left there is a layout he should shape,
+the dead "Add note" tap, and the annotation removal, which is mechanical.
 
 From [`todo.md`](todo.md), in order:
 
-1. ⭐ **Two small ones he named, and they are the FIRST thing a new session takes.** Both are marked
-   `⭐ NEXT` in [`todo.md`](todo.md) — one in Phase 3, one in Phase 2:
-   **(a) Turn `SWIFT_STRICT_CONCURRENCY = complete` on for the tvOS target.** It is the only one of
-   the five without it and it compiles the same source list as the app, so the television is checking
-   shared code under looser rules than the phone. ⛔ Expect real errors; that is the point. Every
-   repair is to shared code and must leave the other three legs, the device build and the nineteen
-   checks green.
-   **(b) Drive the watch SIMULATOR.** ⛔ The app already launches and draws there in both content
-   states, and `WCSession` is already proved on the paired pair — do not re-prove either. What is
-   unseen is the complication **on a face**, a long passage scrolling, the watch's own larger text
-   sizes, and the `@Query` redrawing a stale row into today's **without a relaunch**.
-2. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
-   ⛔ Phase 2, the Watch, is otherwise finished apart from two design calls that are his and are
-   marked `HIS CALL` there; do not treat those as work to pick up.
-3. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
+1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
+   ⛔ Phase 2, the Watch, is finished apart from three design calls that are his and are marked
+   `HIS CALL` there, and two complication families that need a real wrist; do not treat either as
+   work to pick up.
+2. **The standardized reading layout, piece D — Archive becomes Video.** Piece A is built. D is
    app-only and the data exists; its decisions are in the `⏸ PAUSED` block, and the recast is his
    call to confirm before it is built. ⛔ **It needs him, so it is not a build to start alone.**
-4. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
+3. **An empty Archive day offering a way onward**, then **"let it fall open"** — both his proposals
    with their shape already decided, and the two builds with no decision outstanding if the platform
    work is not what a session should pick up.
-5. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
+4. **Workbook completion tracking, structuring the Manual**, then the pre-submission sweep and the
    smaller open items.
 
 Four corpus defects remain: the 186 one-paragraph lesson bodies — the one job that genuinely needs the
