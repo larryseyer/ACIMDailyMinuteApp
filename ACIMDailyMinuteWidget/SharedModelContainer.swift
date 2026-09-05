@@ -64,7 +64,36 @@ enum SharedModelContainer {
     static var groupURL: URL {
         if let shared = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) {
+            #if os(tvOS)
+            // ⛔ **On a television the group container's ROOT IS NOT WRITEABLE,
+            // and the entitlement being correct has nothing to do with it.**
+            // Measured on an Apple TV 4K running tvOS 26.6: the container holds
+            // exactly three writeable directories — `Library`,
+            // `Library/Caches` and `Library/Preferences` — and a store created
+            // at the root fails with `Sandbox access to file-write-create
+            // denied`, NSCocoaErrorDomain 513. The app then trapped in its own
+            // `fatalError`, so the television installed, showed its tile, and
+            // quit the instant it was opened.
+            //
+            // ⛔ **The nil-fallback below cannot catch this**: `containerURL`
+            // returns a perfectly good URL here. It is unwriteable, not absent,
+            // and those are different failures.
+            //
+            // ⛔ **`Library/Caches` is PURGEABLE and that is the honest place
+            // for this.** tvOS gives an app no durable local storage at all, by
+            // design — so the cache store is a cache in fact and not only in
+            // name, and the television may lose it at any moment. Nothing is
+            // lost when it does: the bundle is permanent and the feed
+            // re-fetchable, which is the durability rule rather than a
+            // consolation. It is also why the reading ribbon lives in
+            // `UserDefaults` and not in SwiftData — `Library/Preferences`
+            // survives what `Library/Caches` does not.
+            let writable = shared.appending(path: "Library/Caches", directoryHint: .isDirectory)
+            try? FileManager.default.createDirectory(at: writable, withIntermediateDirectories: true)
+            return writable
+            #else
             return shared
+            #endif
         }
         let fallback = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         try? FileManager.default.createDirectory(at: fallback, withIntermediateDirectories: true)
