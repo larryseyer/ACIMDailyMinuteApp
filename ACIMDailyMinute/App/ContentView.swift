@@ -84,7 +84,15 @@ struct ContentView: View {
                 NotificationCenter.default.post(name: .deepLinkArchive, object: d)
             }
         case .saved:
+            // ⛔ Tag 4 does not exist on the television, and selecting a tag no
+            // tab carries leaves a `TabView` showing nothing at all. Today is
+            // where a television goes instead — the route is reachable only
+            // from a URL or a notification tap, and tvOS has neither.
+            #if os(tvOS)
+            selectedTab = 0
+            #else
             selectedTab = 4
+            #endif
         }
     }
 
@@ -124,9 +132,17 @@ struct ContentView: View {
                     .tabItem { Label("Archive", systemImage: "archivebox.fill") }
                     .tag(3)
 
+                // ⛔ **No Saved tab on the television, and it is not a fence
+                // for tidiness.** With highlights, notes and saves all gone
+                // from tvOS — his call — every one of this screen's three
+                // lists falls to a `ContentUnavailableView` telling the reader
+                // to do something the television cannot do. A tab that can
+                // only ever be three apologies is not a tab.
+                #if !os(tvOS)
                 SavedView()
                     .tabItem { Label("Saved", systemImage: "bookmark.fill") }
                     .tag(4)
+                #endif
             }
 
             if audioManager.hasActiveAudio && selectedTab != 2 {

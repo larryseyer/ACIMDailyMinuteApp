@@ -16,6 +16,23 @@ import Foundation
 /// This file and `AnnotatableReadingText` are the only two that touch a ribbon.
 /// The value, the book, the merge and the re-anchoring are all in
 /// `ReadingPosition`, which `tools/verify_reading_position.sh` compiles alone.
+///
+/// ⛔ **THE TELEVISION KEEPS ITS RIBBON, AND THAT WAS DECIDED RATHER THAN
+/// OVERLOOKED.** His call is that the TV app carries no annotation at all, and
+/// highlights, notes and saves are gone from it. A ribbon is not in that set,
+/// and the boundary is the code's own rather than a preference: it lives here
+/// in `UserDefaults` beside the reminder times and the appearance, never in
+/// SwiftData with the marks; it is never painted, never exported, and never
+/// listed in the Saved tab; and `SelectableReadingText` says outright that a
+/// reader's place is not a reader's mark. It is a pointer, not a record of
+/// anything the reader made.
+///
+/// It also earns its place hardest on a television. Getting back to where you
+/// stopped costs a scroll on a phone and a long press on a remote, and the
+/// durability rule is satisfied rather than bent: a tvOS ribbon is device-local
+/// (no iCloud there), and if the App Group container is purged the reader loses
+/// a scroll position and not a word they wrote. Nothing of theirs is trapped on
+/// the television, because nothing of theirs is on it.
 enum ReadingPositionStore {
     /// Exposed so a view can bind an `@AppStorage` to the same key and be told
     /// when a ribbon moves; the accessors below stay the write path.

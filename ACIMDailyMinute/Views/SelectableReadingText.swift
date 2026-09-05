@@ -319,8 +319,15 @@ private struct TextViewRepresentable: UIViewRepresentable {
         // The call sites are already inside a SwiftUI ScrollView. A second
         // scroller here breaks both.
         view.isScrollEnabled = false
-        #if !os(tvOS)
-        // tvOS has no editing and no selection; the reading is drawn, not worked on.
+        // ⛔ **`isEditable` is UNAVAILABLE on tvOS and `isSelectable` is not**,
+        // which is why these two cannot share one fence. The old pair sat
+        // together behind `#if !os(tvOS)` under a comment claiming the
+        // television had neither editing nor selection — but the television was
+        // simply never told, and took `UITextView`'s own default. The half that
+        // compiles there is stated there.
+        #if os(tvOS)
+        view.isSelectable = false
+        #else
         view.isEditable = false
         view.isSelectable = true
         #endif
