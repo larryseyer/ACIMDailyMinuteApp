@@ -53,6 +53,17 @@ the **watch app**'s `PlugIns/`, and ⛔ **its bundle id is `…watchkitapp.widge
 and then reports three misleading provisioning errors about App Groups. That is a portal fact, not a
 build setting to fiddle with.
 
+⛔ **SIGNING, ALL FIVE TARGETS, MEASURED RATHER THAN ASSUMED.** Four App IDs exist under team
+`RR5DY39W4Q` and every one of them carries the App Group: `com.larryseyer.acimdailyminute` (plus
+iCloud and `aps-environment`), `.widget`, `.watchkitapp` and `.watchkitapp.widget`. All four signed
+real device builds today with `Apple Development: Larry Seyer (63S4HUDY4S)`. ⛔ **Xcode names watchOS
+profiles "iOS Team Provisioning Profile"** — that is Apple's naming, not a mis-selected profile, and
+it is worth knowing before someone chases it. ⛔ **The tvOS target shares the App ID
+`com.larryseyer.acimdailyminute` with the phone and the Mac, deliberately** — one App Store record
+carries both binaries — so the TV needs no App ID of its own and none should be created. **Four
+devices are registered and NONE of them is an Apple TV**, which is why a tvOS device build fails; the
+watch and TV device situations are both in [`todo.md`](todo.md).
+
 ⛔ **The whole app already compiles for watchOS, and that measurement decides the cost of anything
 proposed for the watch.** A whole-module `swiftc -typecheck` of all 126 app + widget sources against
 the watchOS SDK gives **45 errors in 16 files, 43 of them in `Views/`**; outside `Views/` there are
