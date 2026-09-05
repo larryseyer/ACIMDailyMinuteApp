@@ -500,6 +500,21 @@ cost of anything on the watch is a *view* cost, never a porting cost. ⛔ **Use 
       a `DailyLesson` nothing on the watch ever writes, so every face read `L —` and `No lesson`
       forever. Whether plain-and-true is the right answer, or whether a complication should say
       something else entirely, is a design call.
+- [ ] ⭐ NEXT — **drive the watch SIMULATOR, which this Mac has plenty of.** ⛔ Read what is already
+      proved before re-proving it: the app **launches and draws on a booted watch simulator**, in both
+      of its content states, and `WCSession` was carried end to end on the paired pair
+      `E56C7939-…` (`iPhone 17 Pro Max` ↔ `Apple Watch Series 11 (46mm)`, watchOS 26.5) — both stores
+      ended holding segment `12568` for the same date. That is done; it is not the item.
+      **What no eye has seen on a simulator is everything a screenshot of one screen cannot show:**
+      - the **complication on a watch face**, in all three families — add it from the face gallery in
+        the watch simulator. It has a real extension target now and has never been placed;
+      - a **long passage scrolling** on the watch, and where the six-line cap cuts it;
+      - the app at the **watch's own larger text sizes**, which are not iOS Dynamic Type;
+      - the **transition** — open the watch app with a stale store, watch the phone push, and confirm
+        the `@Query` redraws the row from `From the Course` to `Today` **without relaunching**. That
+        redraw is the whole point of the `@Query` and it has only been proved by launch order.
+      ⛔ Boot headlessly and shut down only what the session booted; other apps drive this computer,
+      and the iPad sim `58B7D31D-…` is never to be driven.
 - [ ] **The watch app icon is a single 1024pt PNG.** It builds and it installs; whether it reads at
       complication and Dock size on a real wrist has not been looked at.
 - [ ] **No Apple Watch is paired to this Mac.** `xcrun devicectl list devices` knows two devices, the
@@ -603,11 +618,20 @@ from the code, and is open to correction; the two sentences above are not.
       Window > Devices and Simulators, with the television sitting on Settings > Remotes and Devices >
       Remote App and Devices) and the next `-allowProvisioningUpdates` build issues the profile.
       The simulator needs none of this.
-- [ ] ⛔ **The TV target is the only one NOT built under `SWIFT_STRICT_CONCURRENCY = complete`.**
-      The app, both widget extensions and the watch app all set it; the tvOS target does not, and it
-      also sets no `CODE_SIGN_STYLE`. So the television compiles under looser concurrency rules than
-      everything else it shares a source list with — code that passes there can fail on the app
-      target, in a direction no check would catch until someone builds the phone.
+- [ ] ⭐ NEXT — **turn `SWIFT_STRICT_CONCURRENCY = complete` ON for the tvOS target. His call, made.**
+      It is the only one of the five without it: the app, both widget extensions and the watch app all
+      set it, and the TV target sets neither it nor `CODE_SIGN_STYLE`. That matters because **the TV
+      compiles the SAME SOURCE LIST as the app** — so today the television checks shared code under
+      looser rules than the phone does, and code can pass the tvOS leg and fail the iOS one.
+      Both configs are in `project.pbxproj`: `286B20B887B0C5BB916206F8` (Debug) and
+      `C1B4AA97E889EF8959A6C822` (Release). ⛔ Set it on **both**, and note the TV's list puts Release
+      first — the one place in this file where the pair is not in the usual order.
+      ⛔ **Expect it to surface real errors rather than none** — that is the reason for doing it, not a
+      sign it went wrong. ⛔ **A fix must never be made only for tvOS**: the offending code is shared,
+      so every repair has to leave `./build.sh`'s other three legs and the arm64 device build green,
+      and the nineteen checks with them. If a repair starts wanting a `#if os(tvOS)`, that is the
+      signal to stop and look again — the two idioms are `#if !os(tvOS)` and `#if os(iOS) || os(tvOS)`,
+      and a concurrency error is almost never a platform difference.
 - [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
       tvOS layered icon and a Top Shelf image before it could ship.
 - [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
