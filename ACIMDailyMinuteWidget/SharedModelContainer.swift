@@ -199,8 +199,35 @@ enum SharedModelContainer {
     /// crashed one, and once CloudKit is anywhere near this store there are more
     /// ways for the open to fail than there were — none of which the reader can
     /// do anything about from their home screen.
+    ///
+    /// ⛔ **This is the iOS shape and only the iOS shape.** The phone's app
+    /// writes both stores with the nine-model schema, so a reader that asks for
+    /// the same nine finds the store already in the shape it expects. The
+    /// **watch** writes `cache.store` with the six cache models alone — see
+    /// `sharedCacheOnly`, which is what a watch extension must use.
     static let shared: ModelContainer? = {
         try? makeContainer(allowsSave: false)
+    }()
+
+    /// The watch complication's container: read-only **and cache-only**.
+    ///
+    /// ⛔ **A reader must open a store in the shape its writer left it, and on
+    /// the watch that shape is the cache models alone.** `WatchDataService` asks
+    /// for `includeReader: false`, so `cache.store` carries the six-model
+    /// metadata. Asking the same file for the nine-model schema makes Core Data
+    /// decide the store is out of date and attempt a **migration in place** — a
+    /// write — which a read-only store refuses:
+    ///
+    ///     CoreData: error: (8) attempt to write a readonly database
+    ///     reason: Cannot migrate store in-place
+    ///
+    /// ⛔ **The failure is silent and it looks like empty data.** `shared` is
+    /// `nil`, `fetchEntry` takes its `guard` and the complication draws its
+    /// "Open to read today's passage" placeholder — on a wrist whose app, two
+    /// taps away, is showing the passage from that very file. Nothing crashes
+    /// and nothing appears in a build log; it is visible only on a face.
+    static let sharedCacheOnly: ModelContainer? = {
+        try? makeContainer(allowsSave: false, includeReader: false)
     }()
 }
 
