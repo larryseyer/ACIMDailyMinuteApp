@@ -11,15 +11,28 @@ says what is true now and what is next. REPLACE the state block below — never 
 Working tree clean on branch `ralph/acim-3.9-to-5-finish-2026-04-14`, committed and pushed. Nothing
 of mine is running.
 
+⛔⛔ **TWO OF HIS DECISIONS ABOUT THE TELEVISION ARE SETTLED, AND THEY EXIST NOWHERE BUT HERE AND IN
+[`todo.md`](todo.md). Do not ask him again.** **The TV is a PLAYER** — listen and watch first,
+reading secondary — **and the TV app carries NO ANNOTATION AT ALL.** The consequences that follow
+from the second are written in Phase 3 of `todo.md` and are marked as *derived* rather than as his
+words: no highlights, no notes, **no bookmarks either**, `SaveButton` absent the way `ShareButton`
+already is, and a Saved tab with nothing it could ever show. ⛔ One question inside that is real and
+undecided: whether the TV keeps a **reading position** — a pointer rather than a mark, and the thing
+that makes a long reading usable. Decide it deliberately.
+
 ⛔ **The Apple TV target is built, runs, and `build.sh` is FOUR legs now.**
 `ACIMDailyMinuteTV` compiles, installs and launches on the Apple TV simulator, drawing the Daily
 Minute from the feed. It compiles the **same source list as the app** — every platform difference is
 a fence inside a file, so there is no second membership list to drift — with its own entitlements
 (App Group, **no iCloud**) and device family `3`. Its scheme is **shared**. ⛔ **What runs there is
-the phone's five-tab layout, not the player-first interface he asked for**; that is a design pass and
-it is his. See Phase 3 in [`todo.md`](todo.md).
+the phone's five-tab layout, not the player he asked for**; the layout is a design pass and it is
+his to shape.
 
-⭐ **He has cued the WATCH as what comes next.**
+⛔ **TWO THINGS ARE READY TO PICK UP AND THE CHOICE IS NOT MINE TO GUESS.** He cued the **WATCH**
+explicitly, and then unblocked the **tvOS player** by settling the two calls above. Both are open;
+ask him which, or take the Watch, since that is the one he named. ⛔ **Neither is a compile problem
+any more** — the watch already builds and so does the TV — so a green build is not progress on
+either.
 
 ⛔ **Platform expansion Phase 1 is built and the eighteen checks are green.** The header keeps every
 word at every text size, on a third band where it needs one; the mini player clears a tab bar it now
@@ -234,6 +247,13 @@ never once fired. Doing it properly means scrolling from the SwiftUI side; it is
   Read tab should start empty. ⛔ **`build/Debug/` is the macOS product.**
   `build/Debug-iphonesimulator/` also contains an `ACIMDailyMinute.app`, and a `find` that is not
   anchored hands you the wrong one — check `codesign -dv` says `TeamIdentifier=RR5DY39W4Q`.
+- 📱 **His "Quantiloop iPad" CANNOT run this app, and it is not a signing or cable problem.**
+  It is an `iPad6,3` — a 9.7-inch iPad Pro — on **iPadOS 16.7.16**, which is that model's ceiling,
+  against an `IPHONEOS_DEPLOYMENT_TARGET` of **17.0**. Lowering the floor is not a setting: the app
+  is built on `@Observable` / the Observation framework, which is iOS 17+. ⛔ **His "Lyrics iPad"
+  (`iPad7,5`, iPadOS 17.7.11) WILL take the build** and is the device for the Slide Over check.
+  ⛔ `system_profiler SPUSBDataType` prints **nothing at all** on this Mac and is worthless for
+  finding a connected device — `ioreg -p IOUSB -l` and `ideviceinfo -u <udid>` are what answer.
 - 📱 **iPad (10th gen) sim** `58B7D31D-70BB-4286-BBB7-09ADDE1F3EF4` — driven only by `./build.sh`'s
   compile step. ⛔ **He has asked that it not be driven.** Other apps control this computer.
 
@@ -793,6 +813,10 @@ cannot reach a wrist, carries none of the corpus, and has no complication target
 `swiftc -typecheck` against the watchOS SDK over the whole source list before planning**: that is how
 the tvOS surface was measured, it took minutes, and it proved `todo.md`'s tvOS estimate wrong by a
 wide margin. The watch estimate in that file deserves the same scepticism.
+
+⛔ **The tvOS PLAYER is unblocked too** — both of his calls about the television are settled (see
+the top of this file) — so it sits beside the Watch rather than behind it. What is left there is a
+layout he should shape and the annotation removal, which is mechanical.
 
 From [`todo.md`](todo.md), in order:
 
