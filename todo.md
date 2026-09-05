@@ -506,7 +506,7 @@ plans around it.
       unpaired, and a session cannot activate unpaired. A paired phone+watch simulator pair is the
       only way to see the transport work.
 
-### Phase 3 — Apple TV: the target is built, the interface is not
+### Phase 3 — Apple TV: the target is built, the player is not
 
 ⛔ **The `ACIMDailyMinuteTV` target exists, compiles, installs and runs on the Apple TV simulator,
 and `build.sh` is now four legs.** It compiles the **same source list as the app** — every platform
@@ -528,20 +528,33 @@ pull-to-refresh, the segmented picker *style* (the pickers themselves are there)
 kind, note editing, text selection, and both backup tiers — there is no document picker on tvOS, so
 a reader's words cannot be carried off it.
 
-- [ ] ⛔ **HIS CALL — the player-first interface.** His decision is recorded: *tvOS is a player,
-      listen and watch first, reading secondary.* What runs today is the **phone's** five-tab layout,
-      which tvOS renders as a top tab bar; it works, but it is not the design he asked for. The
-      readable column is also 672pt on a 3840pt screen, which is right on a phone and thin on a
-      television. ⛔ Do not invent this alone — it stopped being a compile problem and became a
-      design one.
-- [ ] ⛔ **A reader must not be invited to annotate on the TV.** The container there is *purgeable*
-      and no document picker exists, so a highlight made on a television has no route off it.
-      `SharedModelContainer.groupURL` no longer force-unwraps, so a missing group no longer crashes
-      at launch — but not crashing is not the same as being durable. Either give the TV target
-      CloudKit or keep the reading surfaces read-only there.
+⛔⛔ **BOTH OF HIS CALLS ARE SETTLED. Do not re-open either, and do not ask him again.**
+**The TV is a PLAYER** — listen and watch first, reading secondary — **and the TV app carries NO
+ANNOTATION AT ALL.** Those are his words. Everything below marked *derived* follows from them and
+from the code, and is open to correction; the two sentences above are not.
+
+- [ ] **Build the player-first interface.** What runs today is the **phone's** five-tab layout,
+      which tvOS renders as a top tab bar. It works and it is not the design he asked for. The
+      readable column is also 672pt on a 3840pt screen — right on a phone, thin on a television.
+      *Derived:* Listen becomes the landing tab and the Reading tabs fall behind it. ⛔ The layout
+      itself is still his to shape — a shipped television interface is not something to invent from
+      a compile fence.
+- [ ] **Take annotation out of the TV, wholly.** *Derived from his call, and each part is checkable:*
+      no highlights, no notes, **and no bookmarks** — a save is reader-created content with no route
+      off a television exactly as a highlight is. `SaveButton` should render `EmptyView` on tvOS the
+      way `ShareButton` already does, so `CardHeaderRow`'s trailing edge simply carries nothing.
+      With all three gone the **Saved tab has nothing it can ever show on tvOS** and should not be
+      one of its tabs.
+      ⛔ **Open question for whoever picks this up, and it is a real one:** a *reading position* —
+      the ribbon — is also reader-created, but it is a pointer rather than a mark and it is what
+      makes a long reading usable at all. Decide deliberately whether the TV keeps it; do not let it
+      survive merely because nobody fenced it.
+      ⛔ `SharedModelContainer.groupURL` no longer force-unwraps, so a missing App Group no longer
+      crashes at launch — **but not crashing is not the same as being durable**, and that fix is not
+      a licence to store a reader's words on a television.
 - [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
       tvOS layered icon and a Top Shelf image before it could ship.
-- [ ] ⛔ **HIS CALL — video on the TV, unchanged and still not urgent.** tvOS has no WebKit, so the
+- [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
       `WKWebView` YouTube embed has no port, and **the feed carries no direct video URL an `AVPlayer`
       could open** — so audio-only is not a preference, it is the only reachable option. The
       archive.org MP3s stream to an Apple TV exactly as they do to a phone. An MP4 URL beside the
