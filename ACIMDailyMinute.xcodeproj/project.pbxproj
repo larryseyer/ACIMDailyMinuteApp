@@ -128,6 +128,7 @@
 		AA000001048 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001051 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
 		AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA000001053 /* ACIMDailyMinuteWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = AA000003003 /* ACIMDailyMinuteWatch Watch App.app */; platformFilters = (ios, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA000001054 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001056 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001057 /* ShareTextBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002052 /* ShareTextBuilder.swift */; };
@@ -141,7 +142,6 @@
 		AA000001065 /* ACIMDailyMinuteWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002059 /* ACIMDailyMinuteWatchApp.swift */; };
 		AA000001066 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002060 /* WatchContentView.swift */; };
 		AA000001067 /* WatchStoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002061 /* WatchStoryRow.swift */; };
-		AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
 		AA000001072 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001074 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		AA000001075 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
@@ -265,6 +265,25 @@
 		AA000001706 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
 		AA000001707 /* PracticeReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002707 /* PracticeReminderService.swift */; };
 		AA000001720 /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
+		AA000001801 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
+		AA000001802 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
+		AA000001803 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
+		AA000001804 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
+		AA000001805 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
+		AA000001810 /* ACIMDailyMinuteWatchWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002800 /* ACIMDailyMinuteWatchWidgetBundle.swift */; };
+		AA000001811 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
+		AA000001812 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
+		AA000001813 /* DailyMinute.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002100 /* DailyMinute.swift */; };
+		AA000001814 /* DailyLesson.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002101 /* DailyLesson.swift */; };
+		AA000001815 /* ArchivedReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002102 /* ArchivedReading.swift */; };
+		AA000001816 /* SegmentMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002309 /* SegmentMedia.swift */; };
+		AA000001817 /* Highlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002320 /* Highlight.swift */; };
+		AA000001818 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
+		AA000001819 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
+		AA000001820 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
+		AA000001821 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
+		AA000001822 /* PunctuationSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002350 /* PunctuationSpacing.swift */; };
+		AA000001823 /* ACIMDailyMinuteWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA000003004 /* ACIMDailyMinuteWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA000001999 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
 		AA90AE2EBF10DAF1A9864B1E /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
 		AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
@@ -318,6 +337,20 @@
 			remoteGlobalIDString = AA000006002;
 			remoteInfo = ACIMDailyMinuteWidgetExtension;
 		};
+		AA00000C002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA000009001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA000006003;
+			remoteInfo = "ACIMDailyMinuteWatch Watch App";
+		};
+		AA00000C003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA000009001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA000006004;
+			remoteInfo = ACIMDailyMinuteWatchWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -328,6 +361,28 @@
 			dstSubfolderSpec = 13;
 			files = (
 				AA000001052 /* ACIMDailyMinuteWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000D002 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				AA000001053 /* ACIMDailyMinuteWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA00000D003 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AA000001823 /* ACIMDailyMinuteWatchWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +435,7 @@
 		AA000002060 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchContentView.swift; sourceTree = "<group>"; };
 		AA000002061 /* WatchStoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStoryRow.swift; sourceTree = "<group>"; };
 		AA000002062 /* ACIMDailyMinuteWatchWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWatchWidget.swift; sourceTree = "<group>"; };
+		AA000002800 /* ACIMDailyMinuteWatchWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteWatchWidgetBundle.swift; sourceTree = "<group>"; };
 		AA000002063 /* ACIMDailyMinuteWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWatch.entitlements; sourceTree = "<group>"; };
 		AA000002064 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002065 /* WatchDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDataService.swift; sourceTree = "<group>"; };
@@ -489,6 +545,7 @@
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003003 /* ACIMDailyMinuteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ACIMDailyMinuteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000003004 /* ACIMDailyMinuteWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -521,6 +578,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA000004004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -546,6 +610,7 @@
 				AA000005002 /* ACIMDailyMinute */,
 				AA000005015 /* ACIMDailyMinuteWidget */,
 				AA000005018 /* ACIMDailyMinuteWatch */,
+				AA000005007 /* ACIMDailyMinuteWatchWidget */,
 				AA000005009 /* Products */,
 				AA000002049 /* ACIMDailyMinute.entitlements */,
 				1CE45C1A29E09A4473DF8253 /* Frameworks */,
@@ -686,6 +751,7 @@
 				AA000003001 /* ACIMDailyMinute.app */,
 				AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */,
 				AA000003003 /* ACIMDailyMinuteWatch Watch App.app */,
+				AA000003004 /* ACIMDailyMinuteWatchWidgetExtension.appex */,
 				5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */,
 			);
 			name = Products;
@@ -793,12 +859,20 @@
 				AA000002059 /* ACIMDailyMinuteWatchApp.swift */,
 				AA000002060 /* WatchContentView.swift */,
 				AA000002061 /* WatchStoryRow.swift */,
-				AA000002062 /* ACIMDailyMinuteWatchWidget.swift */,
 				AA000002065 /* WatchDataService.swift */,
 				AA000002064 /* Assets.xcassets */,
 				AA000002063 /* ACIMDailyMinuteWatch.entitlements */,
 			);
 			path = ACIMDailyMinuteWatch;
+			sourceTree = "<group>";
+		};
+		AA000005007 /* ACIMDailyMinuteWatchWidget */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002800 /* ACIMDailyMinuteWatchWidgetBundle.swift */,
+				AA000002062 /* ACIMDailyMinuteWatchWidget.swift */,
+			);
+			path = ACIMDailyMinuteWatchWidget;
 			sourceTree = "<group>";
 		};
 		AA000005019 /* Resources */ = {
@@ -896,11 +970,13 @@
 				AA000004001 /* Frameworks */,
 				AA000007002 /* Resources */,
 				AA00000D001 /* Embed Foundation Extensions */,
+				AA00000D002 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				AA00000B001 /* PBXTargetDependency */,
+				AA00000B002 /* PBXTargetDependency */,
 			);
 			name = ACIMDailyMinute;
 			productName = ACIMDailyMinute;
@@ -931,15 +1007,34 @@
 				AA000007005 /* Sources */,
 				AA000004003 /* Frameworks */,
 				AA000007006 /* Resources */,
+				AA00000D003 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AA00000B003 /* PBXTargetDependency */,
 			);
 			name = "ACIMDailyMinuteWatch Watch App";
 			productName = "ACIMDailyMinuteWatch Watch App";
 			productReference = AA000003003 /* ACIMDailyMinuteWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AA000006004 /* ACIMDailyMinuteWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000008006 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWatchWidgetExtension" */;
+			buildPhases = (
+				AA000007007 /* Sources */,
+				AA000004004 /* Frameworks */,
+				AA000007008 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ACIMDailyMinuteWatchWidgetExtension;
+			productName = ACIMDailyMinuteWatchWidgetExtension;
+			productReference = AA000003004 /* ACIMDailyMinuteWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -978,6 +1073,7 @@
 				AA000006001 /* ACIMDailyMinute */,
 				AA000006002 /* ACIMDailyMinuteWidgetExtension */,
 				AA000006003 /* ACIMDailyMinuteWatch Watch App */,
+				AA000006004 /* ACIMDailyMinuteWatchWidgetExtension */,
 				3C68D88D0C6BE2F640417FE3 /* ACIMDailyMinuteTV */,
 			);
 		};
@@ -1029,6 +1125,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000001076 /* Assets.xcassets in Resources */,
+				AA000001805 /* ACIMSegments.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007008 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1197,7 +1301,6 @@
 				AA000001065 /* ACIMDailyMinuteWatchApp.swift in Sources */,
 				AA000001066 /* WatchContentView.swift in Sources */,
 				AA000001067 /* WatchStoryRow.swift in Sources */,
-				AA000001068 /* ACIMDailyMinuteWatchWidget.swift in Sources */,
 				AA000001102 /* DailyMinute.swift in Sources */,
 				AA000001105 /* DailyLesson.swift in Sources */,
 				AA000001108 /* ArchivedReading.swift in Sources */,
@@ -1210,6 +1313,30 @@
 				AA000001075 /* SharedModelContainer.swift in Sources */,
 				AA000001078 /* WatchDataService.swift in Sources */,
 				AA000001352 /* PunctuationSpacing.swift in Sources */,
+				AA000001801 /* CorpusService.swift in Sources */,
+				AA000001802 /* Citation.swift in Sources */,
+				AA000001803 /* CorpusFallback.swift in Sources */,
+				AA000001804 /* LessonSchedule.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA000007007 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001810 /* ACIMDailyMinuteWatchWidgetBundle.swift in Sources */,
+				AA000001811 /* ACIMDailyMinuteWatchWidget.swift in Sources */,
+				AA000001812 /* SharedModelContainer.swift in Sources */,
+				AA000001813 /* DailyMinute.swift in Sources */,
+				AA000001814 /* DailyLesson.swift in Sources */,
+				AA000001815 /* ArchivedReading.swift in Sources */,
+				AA000001816 /* SegmentMedia.swift in Sources */,
+				AA000001817 /* Highlight.swift in Sources */,
+				AA000001818 /* Note.swift in Sources */,
+				AA000001819 /* Channel.swift in Sources */,
+				AA000001820 /* Bookmark.swift in Sources */,
+				AA000001821 /* CachedPodcastEpisode.swift in Sources */,
+				AA000001822 /* PunctuationSpacing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1349,6 +1476,19 @@
 			isa = PBXTargetDependency;
 			target = AA000006002 /* ACIMDailyMinuteWidgetExtension */;
 			targetProxy = AA00000C001 /* PBXContainerItemProxy */;
+		};
+		AA00000B002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+			);
+			target = AA000006003 /* ACIMDailyMinuteWatch Watch App */;
+			targetProxy = AA00000C002 /* PBXContainerItemProxy */;
+		};
+		AA00000B003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA000006004 /* ACIMDailyMinuteWatchWidgetExtension */;
+			targetProxy = AA00000C003 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1589,6 +1729,66 @@
 			};
 			name = Release;
 		};
+		AA00000A009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWatchWidget/ACIMDailyMinuteWatchWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinuteWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		AA00000A010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteWatchWidget/ACIMDailyMinuteWatchWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ACIMDailyMinuteWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
 		AA00000A005 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1791,6 +1991,15 @@
 			buildConfigurations = (
 				AA00000A007 /* Debug */,
 				AA00000A008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000008006 /* Build configuration list for PBXNativeTarget "ACIMDailyMinuteWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000A009 /* Debug */,
+				AA00000A010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
