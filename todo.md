@@ -572,12 +572,18 @@ a reader's words cannot be carried off it.
 ANNOTATION AT ALL.** Those are his words. Everything below marked *derived* follows from them and
 from the code, and is open to correction; the two sentences above are not.
 
-- [ ] **Build the player-first interface.** What runs today is the **phone's** five-tab layout,
-      which tvOS renders as a top tab bar. It works and it is not the design he asked for. The
-      readable column is also 672pt on a 3840pt screen — right on a phone, thin on a television.
-      *Derived:* Listen becomes the landing tab and the Reading tabs fall behind it. ⛔ The layout
-      itself is still his to shape — a shipped television interface is not something to invent from
-      a compile fence.
+- [ ] ⛔ **Build the player-first interface — and the design is WRITTEN, awaiting his review:**
+      `docs/superpowers/specs/2026-09-05-apple-tv-player-design.md`. ⛔ `docs/` is gitignored on
+      purpose (*"Internal planning docs, kept local, not in public repo"*), like all eleven specs
+      beside it — do not force it into git. **No implementation plan until he has reviewed it.**
+      ⛔ **The shape is settled: the iOS shape with one verb changed** — the same four tabs, and
+      pressing a card starts a player instead of opening a reading. **Listen does NOT become the
+      landing tab**, and the earlier note here deriving that was wrong: a television's first screen
+      answers "what do I put on now", and that is today, not the back catalogue. Today becomes a
+      player home. One architecture, not two to hold in step for twenty years.
+- [ ] ⛔ **Brand assets are why his home screen shows a white tile.** `Assets.xcassets` carries only
+      `AppIcon.appiconset`, the flat iOS icon. tvOS needs a `.brandassets` group with **layered**
+      parallax icons and a Top Shelf image. An art job, not a build setting.
 - [ ] ⛔ **Annotation is OUT of the television and the ribbon STAYS, by decision. Do not re-open
       either half.** Seen on the simulator, not inferred: the tab bar is four tabs with no Saved, the
       Daily Minute and Lesson card headers carry Listen alone with nothing on the trailing edge, and
@@ -592,39 +598,66 @@ from the code, and is open to correction; the two sentences above are not.
       painted, exported or listed, `SelectableReadingText` says outright that a reader's place is not
       a reader's mark — and it is device-local on a TV, so a purged container costs a scroll position
       and not a word. Nothing of the reader's is trapped there because nothing of theirs is there.
-- [ ] ⛔⛔ **A PUSHED READING CANNOT BE SCROLLED ON THE TELEVISION. This is the first thing to fix
-      and it is bigger than anything else in this phase.** Measured on the Apple TV simulator, on the
-      build before the annotation removal and the build after it, so it is **not** a consequence of
-      that removal: open `Text > Chapter 1 > Principles of Miracles` — the longest section in the
-      book, "about 29 min" — press the remote's down arrow four times, and **the screen does not
-      change by a single pixel.** The reader sees principles 1, 2 and 3 and cannot reach 4 through 53.
-      ⛔ **The cause is the focus engine, not the scroll view.** tvOS scrolls a `ScrollView` by moving
-      focus, and a pushed reading has exactly **one** focusable element — `ListenButton` — sitting at
-      the top. `SelectableReadingText` wraps a `UITextView` with `isScrollEnabled = false` (correct:
-      it lives inside a SwiftUI scroller) and nothing in the body is focusable, so there is nowhere
-      below for focus to go and therefore nothing to scroll to. The Today tab scrolls fine, and that
-      is what hid this: it is a **list of cards**, each with its own focusable Listen button.
-      ⛔ **The fix is an interaction choice and it is HIS**, which is why it is written down rather
-      than built: a focusable reading block that the remote pans, versus paging the reading a screen
-      at a time, are different televisions. It belongs with "build the player-first interface" above.
-      Until it is made, **"reading secondary" is "reading impossible past one screen"** on the TV.
+- [ ] ⛔⛔ **NOTHING IS FOCUSABLE, AND THAT ONE FACT IS THE WHOLE OF THIS PHASE.** tvOS navigates by
+      moving focus; this app was written for a finger. One defect, three faces, all measured
+      2026-09-05 on the simulator and on his own Apple TV:
+      - **A pushed reading will not scroll.** `Preface > The Use of Terms` ("about 22 min"), five
+        down presses, screenshots **MD5-identical**. One focusable element, `ListenButton`, at the
+        top; nothing below for focus to reach. The Today tab scrolls only because it is a list of
+        cards each carrying its own button, and that is what hid this.
+      - **The introduction cannot be paged, and it is a HARD GATE a viewer cannot pass.**
+        `TabView(.page)` moves by focus and cards 1-4 hold no focusable element — only the last card
+        has a button. Six arrow presses, three right and three down, gave three **MD5-identical**
+        screenshots. The only focusable thing there is Skip, so **Select dismisses the introduction
+        rather than advancing it**: the five cards he wrote cannot be read on a television.
+      - **A viewer cannot always see what is selected.** `.focusEffectDisabled()` on Skip was added
+        so the Mac would not draw a ring. On a television that ring is the only thing telling someone
+        across the room where they are.
+- [ ] ⛔⛔ **THE OBVIOUS FIX WAS TRIED AND FAILED. Do not re-spend that day.** A throwaway spike made
+      the `UITextView` focusable (subclass overriding `canBecomeFocused`), set
+      `isScrollEnabled = true`, set `panGestureRecognizer.allowedTouchTypes = [.indirect]` and
+      bounded the viewport. **Focus never left the tab bar** — `Read` stayed lit, the reading did not
+      move. So the `UIScrollView` header's promise that indirect pan "automatically supports
+      directional presses" is **not sufficient inside a SwiftUI `UIViewRepresentable`**: something
+      must route focus *into* the representable, and `canBecomeFocused` alone does not.
+      ⛔ **Next hypothesis, UNTESTED: `.focusable()` on the SwiftUI side of the representable.**
+      The spike is reverted; the mechanism is unproven and the spec says so.
+- [ ] ⛔ **The rule that came out of it: on tvOS take the MAC'S treatment, not the phone's.** The Mac
+      and the television both navigate discretely between things that hold focus; the phone navigates
+      continuously by dragging pixels. `OnboardingView` proves it — its **macOS branch already draws
+      one page at a time with chevron buttons at the sides**, and a button is focusable. That branch
+      is what a remote wants. Ask it of every tvOS fence: which of the other two platforms is this
+      actually like?
+- [ ] ⛔⛔ **The reading column is the iPad's: 672pt of 1920pt, 35% used and 65% empty.**
+      `ReadableContentWidthModifier` clamps at 672 whenever `sizeClass == .regular`, and **tvOS
+      reports `.regular`**. A 4K Apple TV is 1920x1080 *points*; overscan takes ~60pt per edge.
+      ⛔ **Widening alone makes it worse** — 672pt exists because 45-75 characters is what stays
+      readable, and a wide column at phone type size gives 130-character lines. **Width and type size
+      move together**, roughly 1200-1400pt with body type scaled for eight to ten feet. HIS EYES
+      decide the pair; it is not a constant to pick in a spec.
+- [ ] ⛔ **`.searchable` does not fall away on tvOS — it takes over.** The Read tab's one
+      `.searchable` draws a permanent full-width "Search the Course" keyboard, an a-z strip across
+      the top third of the screen, with the chapter list ghosted behind it. Always there, not a field
+      a viewer opens.
 - [ ] **The read-only rendering path already exists — do not build one.**
       `SelectableReadingText` with `menuActions: []` and `positionReporter: nil` is inert **by
       design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
       `AnnotatableReadingText` and uses that directly; `CorpusReadingCard` is the existing example of
       a deliberately thinner surface.
-- [ ] ⛔ **The TV cannot be put on a television yet, and the blocker is a DEVICE, not a capability.**
-      `xcodebuild -destination generic/platform=tvOS` fails with *"Your team has no devices from which
-      to generate a provisioning profile"* followed by *"No profiles for
-      'com.larryseyer.acimdailyminute' were found"*. Read those two together: **zero tvOS-class
-      devices are registered to team RR5DY39W4Q.** Everything else is already in place — the TV target
-      shares the App ID `com.larryseyer.acimdailyminute` with the phone and the Mac, that App ID
-      already carries App Groups, and `ACIMDailyMinuteTV.entitlements` asks for nothing else. ⛔ **Do
-      not "fix" the shared bundle id**: one App Store record carries the iOS and tvOS binaries
-      together, and that is the arrangement. Register an Apple TV (pair it over the network in Xcode >
-      Window > Devices and Simulators, with the television sitting on Settings > Remotes and Devices >
-      Remote App and Devices) and the next `-allowProvisioningUpdates` build issues the profile.
-      The simulator needs none of this.
+- [ ] ⛔ **HIS APPLE TV IS REGISTERED AND THE DEVICE LOOP WORKS** — build, install, launch, and read
+      the app's own stderr. `LIVINGROOM`, `AppleTV6,2` (Apple TV 4K, 1st gen), **tvOS 26.6**,
+      developer mode enabled. Two identifiers and they are not interchangeable: `-destination` takes
+      `platform=tvOS,id=9709e1041cefbcf9821b5cd219041c9233614727`; every `devicectl` call takes
+      `--device B2AAAF1A-7E8F-5DCC-9B0C-735D53C7E759`. ⛔ **`-allowProvisioningUpdates` will NOT
+      register a new device from the command line** — it only refreshes profiles for devices already
+      known; registering is his to do in Xcode. ⛔ **The television is in his office and is normally a
+      television**, so device time is borrowed and announced, never assumed. ⛔ **Do not "fix" the
+      shared bundle id**: one App Store record carries the iOS and tvOS binaries together.
+- [ ] ⛔⛔ **A SIMULATOR CANNOT TELL YOU THE APP RUNS.** It does not enforce the tvOS sandbox, so
+      anything about storage, entitlements or sandboxing that a simulator reports is worthless —
+      the app ran there for weeks while having **never once launched** on a real Apple TV.
+      ⛔ **`devicectl device process launch --console` is the tool that finds these**: it carries the
+      app's own stderr back, which no build, screenshot or crash log surfaces.
 - [ ] ⛔ **`SWIFT_STRICT_CONCURRENCY = complete` is set on all five targets, and on the TV it buys
       documentation rather than checking. Do not re-open it looking for hidden errors.** Every target
       also sets `SWIFT_VERSION = 6.0`, and **the Swift 6 language mode already IS complete
@@ -633,13 +666,28 @@ from the code, and is open to correction; the two sentences above are not.
       was never checking shared code under looser rules than the phone, and turning the setting on
       surfaced zero errors because there were none to surface. The setting earns its place only as
       the guard for a future `SWIFT_VERSION` of 5, where it would start mattering again.
-- [ ] **Brand assets.** The tvOS build warns: no "App Icon & Top Shelf Image" collection. Needs a
-      tvOS layered icon and a Top Shelf image before it could ship.
-- [ ] ⛔ **HIS CALL — video on the TV. The one tvOS question still genuinely open.** tvOS has no WebKit, so the
-      `WKWebView` YouTube embed has no port, and **the feed carries no direct video URL an `AVPlayer`
-      could open** — so audio-only is not a preference, it is the only reachable option. The
-      archive.org MP3s stream to an Apple TV exactly as they do to a phone. An MP4 URL beside the
-      MP3s is a pipeline question, separate and not blocking.
+- [ ] ⛔⛔ **VIDEO IS SETTLED: NO VIDEO IS HOSTED, ANYWHERE, EVER. The app renders the reading
+      itself.** Bundled passage + the archive.org MP3 + one bundled background image — which is what
+      the render already is. ⛔ **He ruled out paid hosting outright**: this is a non-profit paid from
+      his own pocket for an app meant to **outlive him**, so a recurring bill is not a cost, it is an
+      expiry date. Cloudflare R2 was recommended and rejected on exactly that ground. ⛔ Rendering
+      also **covers all 1,983 segments rather than the ~165 with renders**, draws native 4K text, and
+      obeys appearance and text size — burned-in text can do none of that. The MP4s stay on YouTube
+      for the world; audio stays on archive.org, untouched. **Do not re-open this and do not propose
+      a host.**
+      ⛔ **Why there was no other option, measured on the tvOS 26.5 SDK:** `WebKit.framework` and
+      `SafariServices.framework` are **absent** from tvOS (present in the iOS SDK) — Apple ships no
+      browser on Apple TV at all, so there is no web view to embed anything in. `JavaScriptCore` is
+      present but has no DOM and no `<video>`; `BrowserEngineKit` is sandbox plumbing. Both feeds
+      carry `youtube_url`, `youtube_id` and `audio_url` and **no video file URL**, and the
+      archive.org item holds 163 + 87 MP3s and zero video. Pulling a stream from YouTube for
+      `AVPlayer` is against YouTube's terms. Deep-linking to the YouTube app **cannot be tested**
+      without a registered Apple TV and hands the viewer away for good.
+      ⛔ **Also settled: the text does NOT advance with the narration.** Alignment data does not
+      exist. Approximate pacing needs none and stays cheap later; true alignment is ~5 KB per
+      reading, ~12 MB bundled, if it is ever wanted.
+      ⛔ **His archive.org ban was a FALSE POSITIVE** — they took him for a bot and have cleared him
+      completely. Never write it up as a strike against him.
 
 ### Phase 4 — Windows and Linux: one web reader over the same JSON
 
