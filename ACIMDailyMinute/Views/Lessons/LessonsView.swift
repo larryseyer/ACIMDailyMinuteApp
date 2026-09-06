@@ -89,7 +89,11 @@ struct LessonsView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Read")
+            #if !os(tvOS)
+            // On tvOS `.searchable` is a permanent a-z keyboard, not a field
+            // a viewer opens, and it covers the chapter list.
             .searchable(text: $searchText, prompt: "Search the Course")
+            #endif
             .navigationDestination(for: Int.self) { lessonNumber in
                 LessonDetailView(lessonNumber: lessonNumber)
             }

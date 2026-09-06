@@ -20,21 +20,21 @@ is settled too — **the television KEEPS its reading position**, because a ribb
 than a mark; the reasoning is written into `Services/ReadingPositionStore.swift` so it reads as chosen
 rather than overlooked. Do not re-open either half.
 
-⛔⛔ **NOTHING ON THE TELEVISION IS FOCUSABLE, AND THAT ONE FACT IS THE WHOLE OF PHASE 3.** tvOS
-navigates by moving focus; this app was written for a finger, so almost nothing can hold focus. It
-is not three defects, it is one wearing three hats, all measured 2026-09-05 on the simulator and on
-his own Apple TV:
-- **A pushed reading will not scroll.** One focusable element, `ListenButton`, at the top; nothing
-  below for focus to reach. `Preface > The Use of Terms` ("about 22 min") takes five down presses
-  with the screenshots **MD5-identical**.
-- **The introduction cannot be paged, and it is a HARD GATE.** `TabView(.page)` moves by focus, and
-  cards 1-4 hold no focusable element — only the last card has a button. Six arrow presses, three
-  right and three down, gave three **MD5-identical** screenshots. The only focusable thing on that
-  screen is Skip, so **Select dismisses the introduction rather than advancing it**, and the five
-  cards cannot be read on a television at all.
-- **A viewer cannot always see what is selected.** `.focusEffectDisabled()` on the Skip button was
-  added so the Mac would not draw a ring; on a television the ring is the only thing telling someone
-  across the room where they are.
+⛔⛔ **A PUSHED READING STILL WILL NOT SCROLL. THAT IS WHAT IS LEFT OF THE FOCUS PROBLEM.** tvOS
+navigates by moving focus; a pushed reading has one focusable element, `ListenButton`, at the top.
+`Preface > The Use of Terms` ("about 22 min") takes five down presses with screenshots
+**MD5-identical**.
+
+⛔ **The introduction is no longer a hard gate.** tvOS takes the Mac carousel — one page at a time,
+chevron buttons, preferred focus on the right chevron — so Select pages rather than dismissing.
+Measured 2026-09-06 on the Apple TV 4K (3rd generation) simulator: five Select presses, five
+distinct MD5s, all five cards, Continue, Get Started, Today. `.focusEffectDisabled()` is Mac-only;
+the television draws the ring on the focused chevron. `.searchable` is fenced off tvOS on Read and
+Archive; the Read tab shows the Workbook shelf with no a-z keyboard.
+
+⛔ **The companion note still does not scroll.** Get Started is focused and the body is clipped.
+`.focusable()` on `CompanionNoteBody` moved focus off Get Started without moving the text — the
+same shape as the reading, on a SwiftUI `ScrollView` rather than a representable. Reverted.
 
 ⛔ **THE OBVIOUS FIX WAS TRIED AND IT DID NOT WORK — do not re-spend that day.** A throwaway spike
 made the `UITextView` focusable (`canBecomeFocused` overridden in a subclass), set
@@ -46,12 +46,11 @@ route focus *into* the representable first, and `canBecomeFocused` alone does no
 is reverted. ⛔ **The next hypothesis, untested, is `.focusable()` on the SwiftUI side of the
 representable** — but the mechanism is UNPROVEN and the spec says so.
 
-⛔ **The rule that came out of it: ON tvOS TAKE THE MAC'S TREATMENT, NOT THE PHONE'S.** The Mac and
-the television both navigate discretely, between things that hold focus; the phone navigates
-continuously, by dragging pixels. `OnboardingView` proves it — its **macOS branch already draws one
-page at a time with chevron buttons at the sides**, and a button is focusable. That branch is what a
-remote wants; its iOS branch is what a remote cannot use. The same question should be asked of every
-tvOS fence: which of the other two platforms is this actually like?
+⛔ **The rule: ON tvOS TAKE THE MAC'S TREATMENT, NOT THE PHONE'S.** The Mac and the television both
+navigate discretely, between things that hold focus; the phone navigates continuously, by dragging
+pixels. `OnboardingView` now *is* that treatment on tvOS, not merely the proof that it would work.
+Ask the same question of every remaining tvOS fence: which of the other two platforms is this
+actually like?
 
 ⛔⛔ **HIS APPLE TV IS REGISTERED AND THE WHOLE DEVICE LOOP WORKS — build, install, launch, read the
 console.** `LIVINGROOM`, `AppleTV6,2` (Apple TV 4K, 1st gen) on **tvOS 26.6**, developer mode already
@@ -104,10 +103,9 @@ exists because 45-75 characters is what stays readable, and a wide column at pho
 scaled for a viewer eight to ten feet away, and the pair is judged with eyes on a television rather
 than fixed in a spec.
 
-⛔ **`.searchable` DOES NOT FALL AWAY ON tvOS — IT TAKES OVER.** The Read tab's one `.searchable`
-renders on the television as a permanent full-width "Search the Course" keyboard, an a-z strip
-across the top third of the screen, with the chapter list ghosted behind it. It is not a field a
-viewer opens; it is always there. Anything claiming the television simply lacks search is wrong.
+⛔ **`.searchable` is fenced off tvOS** on the Read tab and the Archive tab. Without the fence it
+renders as a permanent full-width a-z keyboard covering the shelf; with it, the Workbook list is
+the screen. Search is not a television verb.
 
 ⛔ **The white tile on his home screen is the missing brand assets, not a new defect.**
 `Assets.xcassets` carries only `AppIcon.appiconset`, the flat iOS icon. tvOS needs a `.brandassets`
@@ -869,9 +867,10 @@ the fold, the index, the scan, the cap, the snippet — and `tools/verify_corpus
 compiles it alone. `Services/CorpusSearchService.swift` is the actor that builds the record
 table in book order and owns the only `CorpusService`/catalog/`ReadingText` calls; the index is
 built once per process, on the actor, on the first non-empty query. `Views/Lessons/ReadSearchResultsList.swift`
-is the list. The Read tab has ONE `.searchable`, on its root content; `TextChaptersView` is a
-contents page only, and `FilteredLessonsList` no longer filters — the results list replaces the
-shelf while a query is typed, so the Jump button is absent then and typing the number is the jump.
+is the list. The Read tab has ONE `.searchable`, on its root content, and **none on tvOS**;
+`TextChaptersView` is a contents page only, and `FilteredLessonsList` no longer filters — the
+results list replaces the shelf while a query is typed, so the Jump button is absent then and
+typing the number is the jump.
 
 ⛔ **A reader's backup file is `.json` on purpose, and that is not a small decision.** No private
 extension and no private UTI: the file has to open on a Windows, Linux or Android machine with what
@@ -1055,10 +1054,10 @@ written and must not be written until he has reviewed the spec.**
 - **His archive.org ban was a false positive** — they took him for a bot and have cleared him
   entirely. It is not a strike against him and must not be described as one.
 
-⛔ **What is genuinely open on the television, in order:** the focus problem above, which is now the
-whole of Phase 3 and whose mechanism is UNPROVEN; then the reading column and type size, which need
-his eyes; then the introduction, which is a hard gate a viewer cannot pass. The annotation removal
-is done and seen.
+⛔ **What is genuinely open on the television, in order:** the pushed reading that will not scroll,
+whose mechanism is UNPROVEN; the companion note that will not scroll, same shape; then the reading
+column and type size, which need his eyes. The introduction pages, the focus ring, the searchable
+keyboard and the annotation removal are done and seen.
 
 From [`todo.md`](todo.md), in order:
 

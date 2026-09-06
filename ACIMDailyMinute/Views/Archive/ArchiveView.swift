@@ -44,7 +44,11 @@ struct ArchiveView: View {
                     Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
                 }
                 .navigationTitle("Archive")
+                #if !os(tvOS)
+                // Same as the Read tab: on tvOS `.searchable` takes over the
+                // screen rather than waiting to be opened.
                 .searchable(text: $searchText, prompt: "Search the archive")
+                #endif
                 #if !os(tvOS)
                 .refreshable {
                     if connectivity.isConnected {
