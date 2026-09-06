@@ -598,21 +598,19 @@ from the code, and is open to correction; the two sentences above are not.
       painted, exported or listed, `SelectableReadingText` says outright that a reader's place is not
       a reader's mark — and it is device-local on a TV, so a purged container costs a scroll position
       and not a word. Nothing of the reader's is trapped there because nothing of theirs is there.
-- [ ] ⛔⛔ **NOTHING IS FOCUSABLE, AND THAT ONE FACT IS THE WHOLE OF THIS PHASE.** tvOS navigates by
-      moving focus; this app was written for a finger. One defect, three faces, all measured
-      2026-09-05 on the simulator and on his own Apple TV:
-      - **A pushed reading will not scroll.** `Preface > The Use of Terms` ("about 22 min"), five
-        down presses, screenshots **MD5-identical**. One focusable element, `ListenButton`, at the
-        top; nothing below for focus to reach. The Today tab scrolls only because it is a list of
-        cards each carrying its own button, and that is what hid this.
-      - **The introduction cannot be paged, and it is a HARD GATE a viewer cannot pass.**
-        `TabView(.page)` moves by focus and cards 1-4 hold no focusable element — only the last card
-        has a button. Six arrow presses, three right and three down, gave three **MD5-identical**
-        screenshots. The only focusable thing there is Skip, so **Select dismisses the introduction
-        rather than advancing it**: the five cards he wrote cannot be read on a television.
-      - **A viewer cannot always see what is selected.** `.focusEffectDisabled()` on Skip was added
-        so the Mac would not draw a ring. On a television that ring is the only thing telling someone
-        across the room where they are.
+- [ ] ⛔⛔ **A PUSHED READING WILL NOT SCROLL, AND THAT IS WHAT IS LEFT OF THE FOCUS PROBLEM.**
+      tvOS navigates by moving focus; a pushed reading has one focusable element, `ListenButton`,
+      at the top, and nothing below for focus to reach. `Preface > The Use of Terms` ("about 22 min")
+      takes five down presses with screenshots **MD5-identical**. The Today tab scrolls only because
+      it is a list of cards each carrying its own button, and that is what hid this.
+      The introduction is no longer this defect: tvOS takes the Mac carousel (one page, chevron
+      buttons, preferred focus on the right chevron so Select pages rather than Skip). Five Select
+      presses, five distinct MD5s, all five cards, Continue, then Get Started. `.focusEffectDisabled()`
+      is Mac-only; the television draws the ring. `.searchable` is fenced off tvOS on Read and Archive.
+      ⛔ **The companion note still does not scroll.** Get Started sits outside the `ScrollView` and
+      is focused, so the note can be left, but the body is clipped and a `.focusable()` on
+      `CompanionNoteBody` moved focus without moving the text. Same shape as the reading: SwiftUI
+      focus is not enough to scroll.
 - [ ] ⛔⛔ **THE OBVIOUS FIX WAS TRIED AND FAILED. Do not re-spend that day.** A throwaway spike made
       the `UITextView` focusable (subclass overriding `canBecomeFocused`), set
       `isScrollEnabled = true`, set `panGestureRecognizer.allowedTouchTypes = [.indirect]` and
@@ -622,12 +620,6 @@ from the code, and is open to correction; the two sentences above are not.
       must route focus *into* the representable, and `canBecomeFocused` alone does not.
       ⛔ **Next hypothesis, UNTESTED: `.focusable()` on the SwiftUI side of the representable.**
       The spike is reverted; the mechanism is unproven and the spec says so.
-- [ ] ⛔ **The rule that came out of it: on tvOS take the MAC'S treatment, not the phone's.** The Mac
-      and the television both navigate discretely between things that hold focus; the phone navigates
-      continuously by dragging pixels. `OnboardingView` proves it — its **macOS branch already draws
-      one page at a time with chevron buttons at the sides**, and a button is focusable. That branch
-      is what a remote wants. Ask it of every tvOS fence: which of the other two platforms is this
-      actually like?
 - [ ] ⛔⛔ **The reading column is the iPad's: 672pt of 1920pt, 35% used and 65% empty.**
       `ReadableContentWidthModifier` clamps at 672 whenever `sizeClass == .regular`, and **tvOS
       reports `.regular`**. A 4K Apple TV is 1920x1080 *points*; overscan takes ~60pt per edge.
@@ -635,10 +627,6 @@ from the code, and is open to correction; the two sentences above are not.
       readable, and a wide column at phone type size gives 130-character lines. **Width and type size
       move together**, roughly 1200-1400pt with body type scaled for eight to ten feet. HIS EYES
       decide the pair; it is not a constant to pick in a spec.
-- [ ] ⛔ **`.searchable` does not fall away on tvOS — it takes over.** The Read tab's one
-      `.searchable` draws a permanent full-width "Search the Course" keyboard, an a-z strip across
-      the top third of the screen, with the chapter list ghosted behind it. Always there, not a field
-      a viewer opens.
 - [ ] **The read-only rendering path already exists — do not build one.**
       `SelectableReadingText` with `menuActions: []` and `positionReporter: nil` is inert **by
       design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
