@@ -145,12 +145,18 @@ struct ContentView: View {
                 #endif
             }
 
+            // ⛔ The television plays in the full-screen player. A mini player
+            // over the tabs is the phone's bar, and on tvOS it is a focus trap:
+            // its play button holds Select and the cards and Menu cannot be
+            // reached. Absence, not a disabled bar.
+            #if os(iOS)
             if audioManager.hasActiveAudio && selectedTab != 2 {
                 MiniPlayerView()
                     .onTapGesture { selectedTab = 2 }
                     .padding(.bottom, tabBarHeight)
                     .transition(.move(edge: .bottom))
             }
+            #endif
         }
         .background(TabBarHeightReader { tabBarHeight = $0 })
         #else
