@@ -1,826 +1,132 @@
 # ACIM Daily Minute — open items
 
-> **Role:** open-items ledger — what is open, blocked, or next. · **Status:** authoritative · **Verified:** 2026-09-05
-> **Forward state:** [continue.md](continue.md)
->
-> ⛔⛔ **FORWARD-ONLY, AND THAT IS AN OPERATOR RULE, NOT A STYLE.** Nothing here records what was done,
-> when, or by whom — and no history lessons. An item is here because it is OPEN, BLOCKED or NEXT, and it
-> **LEAVES the file the moment it is resolved.** History lives in `git log`.
->
-> ⛔ **The durability rule governs every item below.** ACIM is timeless; YouTube, archive.org and every
-> feed are rented and will end. Bundled content is permanent, the feed lasts decades with maintenance,
-> YouTube and archive.org are certain to end. The app must be wholly usable on bundled content alone,
-> every higher tier purely additive, and its absence invisible rather than broken. The app itself is not
-> permanent either — bundled data stays human-readable JSON, and reader-created content must export as
-> plain text.
->
-> ⛔ **The server owns Daily Minute selection, and the app can never compute it.** The pipeline picks a
-> **random** unused segment each day — all 158 observed transitions in `segments.used_date` jump — and it
-> must be the server anyway, because the run then builds the ElevenLabs narration and the YouTube render.
-> `daily-minute.json` is the sole authority for the whole remaining publishing run. A bundled corpus is a
-> *floor* for when the feed is stale or unreachable, never a replacement, and a corpus reading is never
-> persisted as a `DailyMinute` row. Lessons are the exception: their selection **is** sequential, so
-> day-of-year → Lesson N is valid for lessons once publishing completes.
->
-> ⛔ **Dates the app shows follow the same rule.** Forward-looking dates are fine ("Available
-> 2026-08-31"), and so is when the *reader* read or listened to something. When a reading was published
-> is the app's own bookkeeping and must not appear on any surface. The Archive tab is the one exemption —
-> its dates are the index, not a stamp.
+One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
-## ⏸ PARKED — one consolidated test pass, at the very end
-
-⛔⛔ **DO NOT ASK HIM TO CHECK ANY OF THIS UNTIL EVERYTHING BELOW IS SPEC'D, PLANNED AND
-IMPLEMENTED.** His words: "otherwise, I will just repeat myself on things that simply have not been
-done yet." This block only grows; it is handed over once, whole, when the build is complete. Keep
-adding to it — an unverifiable thing still gets written down — but never surface it as a request.
-
-Everything here is built and on his phone. Verify what can be verified without him first: `swiftc`
-harnesses against real data, `./build.sh`, the arm64 device build, install + launch, process-alive
-checks, real feed payloads. His eyes are the last resort, not the first.
-
-- [ ] **A reading now reaches its own last sentence — confirm it on the phone.** Open
-      `Read > Text > Chapter 1 > Distortions of Miracle Impulses` and scroll to the foot: it must end
-      *"…as the wholly satisfying nature of reality becomes apparent to both."* just above `Add note`.
-      Seen at 375pt and at full width on the iPad simulator; the phone is what is left. Then a
-      Workbook lesson, the Workbook introduction and a Manual segment, which are the other screens
-      that had the same clipped box — each should end on a full stop rather than mid-sentence.
-      ⛔ Then **Chapter 1 > Principles of Miracles**, the 29-minute section: it is taller now than it
-      used to be, so say whether it still scrolls without stutter on the phone.
-- [ ] **Light on the phone, and the reminders — what no harness can see.** Settings > Appearance >
-      **Light** on the phone at 375pt: every card, chip and gold word reads on the white ground, the
-      number badge on the Read list is legible, the introduction stays on its black ground by
-      design, and the five cards' line breaks land where he set them without a stray wrap. Then
-      Settings > Practice reminders > **Follow the lesson's practice**, with the day set to bracket
-      the next hour: the **Today** row names the lesson and its cadence, and one reminder arrives
-      on the phone at that hour — and on the watch, mirrored — naming the lesson, and its tap opens
-      that lesson. The Daily Minute and Daily Lesson reminders each fire at their own time; a tap on
-      the first opens Today and on the second the Read tab. Nothing arrives during a Focus.
-- [ ] **The watch, on a wrist.** It installs with the phone now rather than separately. Expected:
-      today's Daily Minute with its address above it (`T-18.8.7`), under a heading that reads
-      **Today**. Then turn the phone off, or open the watch before the phone has fetched: the heading
-      changes to **From the Course** and a bundled passage draws in its place — the watch is never
-      blank and never needs a network. ⛔ Say if the second state should look different from the
-      first; right now only the heading distinguishes them. Then add the complication from the watch
-      face gallery in all three shapes.
-
-- [ ] **B4/B5 — Listen rows.** No `01:00` chips anywhere. Tapping an episode leaves a check mark and
-      `Listened <date>`; swipe offers "Mark unplayed" and it clears. Lesson rows carry their length under
-      the title. An unlistened row shows no date at all.
-- [ ] **B6 — Saved tab.** Tapping a saved lesson opens that lesson and a saved minute opens **the
-      passage itself** — see the Saved-tap item below. Swiping either direction deletes. ⚠ Both edges
-      full-swipe, so any horizontal flick removes a bookmark — say so if the leading edge should
-      require a tap on Delete instead.
-
-- [ ] **Lesson bodies.** Open a lesson the feed has not published yet — anything in 1-80. Expected:
-      the full lesson text in flowing paragraphs, with no YouTube frame standing in for missing words.
-      All 365 bodies are bundled now. Note that choosing a lesson that *has* a video still opens that
-      video full screen first by design; dismissing it lands on the text.
-- [ ] **An unrecorded lesson answers the tap.** Tap Lesson 90 — dimmed, with `Available yyyy-MM-dd`
-      under its title. Expected: it opens, and above the text a clock line says `Not recorded yet.
-      Audio and video available <the same date>`. The two dates must agree.
-- [ ] **A day with no Daily Minute says when.** Archive tab, calendar. Pick **2026-09-10** — the row
-      under the calendar reads "The Daily Minute for this day will be available on 2026-09-10." and
-      tapping through shows the same sentence. Pick **2026-05-31** — "No reading was published on this
-      day. Missed days are filled in one a night; expect this one on <tomorrow>." Pick **2026-03-01** —
-      "The Daily Minute began on 2026-03-20. There is nothing before it." ⛔ The missed-day date rests
-      on the publisher's own rule, one catch-up per night oldest first; if the nightly run ever
-      changes that, `MinuteSchedule` is where the app's promise lives.
-
-- [ ] **Share on the Mac.** The Share glyph on the Daily Minute, Lesson and Archive cards draws bare,
-      like the phone — no bordered well the height of the header beside Save.
-- [ ] **The corpus floor.** Airplane mode, delete and reinstall, cold launch. Expected: Today shows a
-      complete reading from the bundle with no network, no spinner and no empty state. It is a plain
-      card with no save, share or Listen control, because that passage was never published.
-- [ ] **Downloads are live now, and nobody has drawn them.** The feeds carry an archive.org
-      `audio_url` on every episode that has an MP3 (158 of 165 minutes, all 85 lessons), so the
-      Today card's **Listen** control and the Listen row's swipe **Download** are live. Swipe a Listen row: expected **Mark listened** and **Download** side by
-      side, then **Remove download** in its place once fetched, and a downloaded row plays from
-      disk in airplane mode. ⛔ Look at the swipe at 375pt — the labels are system-drawn and
-      collapse to icons when narrow, but no one has seen them do it on this phone. The seven
-      March minutes with no recording show no Download, by design.
-- [ ] **A reading should scroll to its place on macOS too.** Today it opens at the top there, on
-      purpose: an `NSTextView` asked to bring a line into view moves its own bounds inside its frame
-      and draws the body over its own title. The scroll has to come from the SwiftUI side, where the
-      `ScrollView` itself can be told — SwiftUI has no scroll-to-offset, so it means the representable
-      reporting the target's y and the screen driving a `ScrollViewReader` against an anchor. It
-      costs macOS a convenience and nothing else: the right passage opens, the spotlight still paints.
-      ⛔ The same rule governs a search hit, so both move together.
-
-- [ ] **The ribbon, on the phone.** Read tab > Text. Open a section, scroll a screen or two in,
-      leave it. Expected: `Continue reading` above the chapter list naming that section, and
-      tapping it puts the passage you stopped at back at the top of the screen. The same for a
-      Workbook lesson. ⛔ **The reading is the durable part and the offset is the refinement**: if
-      the sample ever fails the row still names the right reading and opens it at its top, which
-      is what the app did before there was a ribbon — so what to watch for is a row naming the
-      *wrong* reading, not a scroll that lands high.
-      It runs correctly end to end on the Mac; nobody has seen it at 375pt.
-- [ ] **A search hit two screens down.** Search the Course, then open a hit that is deep in a long
-      Text section rather than near its start. Expected: the blue words are on screen when it
-      opens. They were not before — TextKit 2 lays out only what is visible, so the rectangle for a
-      passage below the fold came back empty and the scroll silently did nothing.
-- [ ] **The companion note.** Settings > About > "A note about using this app". Three places depart
-      from the wording he supplied, each to keep it in harmony with the Course, and each is his to
-      veto: the prescribed order of study is gone (the Manual says some should read the Manual first,
-      some begin with the Workbook, some start with the Text, and the Text's Introduction says free
-      will "means only that you may elect what you want to take at a given time"); the Workbook's own
-      "do not undertake more than one lesson a day" is stated; and the Workbook Introduction is quoted
-      directly rather than paraphrased. Everything else is his wording verbatim.
-- [ ] **The privacy policy is reachable now.** `PrivacyPolicyView` existed but nothing linked to it,
-      so the one screen stating the app collects nothing could not be opened from inside the app. It
-      sits under Settings > About beside the companion note. Confirm it reads correctly there.
-- [ ] **Highlights and notes, end to end.** Long-press a passage in any reading; the menu offers
-      **Highlight** and **Note** beside the system items. Highlight paints the passage yellow and it
-      is still painted after leaving the screen and coming back. **Note** marks the passage and opens
-      the editor. **Add note** under a reading writes a note about the whole reading; tapping an
-      existing note reopens it for editing. Dictation is the system keyboard's microphone — there is
-      no mic button and there must never be one, because `Info.plist` still carries zero
-      `UsageDescription` keys and that is load-bearing.
-
-- [ ] **Saved is three segments now** — Saved / Highlights / Notes, still one tab. Confirm each
-      empty state reads correctly, both swipe edges delete, a highlight row opens its reading and a
-      note row opens its reading. A Text or Manual row will not navigate: no reading UI exists for
-      those yet, by design, and the row still shows and still exports.
-
-- [ ] **Export.** The Export item in the Saved toolbar, and the one under each annotated reading,
-      hand over plain text. Confirm the file reads as a document a stranger could follow, that it
-      carries only the reader's own dates, and that a passage the publisher has since changed is
-      marked "passage not found in the current text" rather than dropped. This is the only way a
-      reader's words can ever leave the app — there is no server and no account.
-
-- [ ] **Every reading surface now draws through a text view, not `Text`.** This is the one thing
-      no harness can settle. Six surfaces changed renderer: the **Today Daily Minute card**, the
-      **Today lesson card**, the **Today corpus card** (the offline floor), the **lesson detail
-      body**, the **archived-lesson body**, and the **Introduction / lesson body in the archive
-      reader**. Confirm on each: the serif body looks unchanged, line spacing is unchanged, the card
-      still grows to fit the whole passage with no clipping and no inner scroll, and long-press
-      selects text rather than starting a drag. On macOS the body is 13pt by design — that matches
-      what `Text` did there before, so it is not a regression.
-      A harness already proves the *string* is character-for-character what it was, for all 365
-      lesson bodies, 1,983 corpus segments and 268 Text sections. Only the drawing is unverified.
-      ⛔ On macOS the drawing is held by `tools/verify_text_measurement.sh` and has been compared
-      against your screenshots; the phone is what is left to check.
-
-- [ ] **The date sweep.** Publication dates are gone from Today, Lessons, lesson detail, Listen and all
-      three widget sizes, and the privacy policy no longer carries a revision year. Confirm nothing dated
-      survives where he can see it.
-
-- [ ] **The Text is readable, and tab 1 is now Read.** It carries two segments, **Workbook** and
-      **Text**. The Text opens on a table of contents — Preface, then Chapters 1-31 — then the
-      sections of a chapter, then the reading. Confirm the Workbook still lands exactly where it
-      did and still scrolls to the current lesson; that a widget or notification tap on a lesson
-      still opens that lesson and never a chapter list; and that "After Lesson 365, the Text
-      begins." switches to the Text.
-
-- [ ] **The recovered paragraphing.** The Text arrived as raw page scans: paragraphs marked by
-      indentation, blank lines that were page breaks, and 351 running heads and page numbers sitting
-      inside sentences. It is recovered into 2,911 paragraphs at export, verified to break no
-      sentence. Whether it reads correctly to someone who knows the book is his call. Chapter 1's
-      "Principles of Miracles" is the section to check first — it should be 53 numbered paragraphs,
-      1 through 53, with nothing between them.
-
-- [ ] **The longest section on the phone.** Chapter 1.2 is 34,385 characters in one non-scrolling
-      text view. Every other section is a fifth of that or less. Confirm it scrolls without stutter.
-
-- [ ] **Reading straight through.** Previous and Next at the foot of a section cross chapter
-      boundaries by design. Confirm the last section of a chapter leads into the next chapter's
-      first, and that the first section of the Preface offers no Previous.
-
-- [ ] **Annotation in the Text.** Highlight and Note work in a Text section exactly as in a lesson,
-      and the Saved tab's Highlights and Notes rows now open the passage instead of sitting inert.
-      A saved Text section shows as "Chapter N" with its section title. A Manual row still will not
-      navigate, by design.
-
-- [ ] **The spacing repair.** 6,221 missing spaces are back across all five bundled files —
-      `their Source,Which is` now reads `their Source, Which is`. Confirm a repaired passage reads as
-      the book does, and that nothing was joined that should not have been. Chapter 1's "Principles
-      of Miracles" and any lesson body are the quickest look. The rule inserts a space and never
-      removes or changes a character, so no word the publisher narrated has moved; what his eyes
-      settle is whether the result reads right. Feed text and the widget are repaired at render, so
-      today's minute on the phone and on the lock screen should both be clean.
-
-- [ ] **The two Part Introductions.** "Part 1 Introduction" appears above Lesson 1 and "Part 2
-      Introduction" between Lesson 180 and Lesson 181. Both read, annotate and save. Their titles
-      come from the corpus rather than from literals, so the row and the screen cannot disagree.
-
-- [ ] **Citations.** Four surfaces now name a place in the book instead of the pipeline's own
-      name for the source PDF (`github_push.py:402` writes `source_pdf` straight through, so a
-      reader saw `Text Part A`). The Today Daily
-      Minute card shows the stem `T-5.3`; the offline corpus card shows the full `T-5.3.7`; a
-      Text section carries its stem beside the chapter title; and share text and the
-      plain-text export carry the full citation, with the export naming the edition in its
-      header. A Saved row and an export heading read `Text, Chapter 5 — The Mind of the
-      Atonement (T-5.3)`.
-      ⛔ **These are NOT the citations of the widely-cited edition, deliberately.** Ours is a
-      different book, and that is measured: our Chapter 1 is "INTRODUCTION TO MIRACLES" with
-      **53** numbered miracle principles rather than 50, and a chapter's Introduction occupies
-      section 1. Arabic section numbers (`T-5.3.7`, never `T-5.III.7`) are the signal. Emitting
-      the familiar form would have pointed a reader holding the other edition at the wrong
-      words, permanently, in an export meant to outlive the app. **This is the one judgement
-      here that is yours to overturn.**
-      There is no sentence number: two defensible splitters disagree on 644 of 3,564
-      paragraphs, so a `:1` would be a number this app invented.
-      ⛔ **The Archive card is the exception — it shows a book name, not an address**, so
-      `Text` rather than `Text Part A`. An archived row carries no segment id, because the
-      feed's inline archive entries have none. Resolving it by matching the passage's text at
-      runtime was rejected: the locator belongs at export, and keying a row by its content is
-      the bug this project keeps rediscovering. Giving the Archive a real citation means
-      adding `segment_id` to the pipeline's archive entries first.
-      118 of 1,983 passages carry no citation and show their book name instead: all 105 Manual
-      segments, plus 13 that did not resolve uniquely. Nothing is guessed.
-
-- [ ] **The two Workbook Part Introductions name themselves from the corpus.** They are keyed
-      `.lesson(0)` and `.lesson(500)`, which made every Saved row and export heading call them
-      "Lesson 0" and "Lesson 500". Confirm both read correctly in Saved and in an export.
-
-- [ ] **The Text's missing chapter openings are back.** About 12,000 characters that were
-      never in the bundle: nine chapter openings and the publisher's front matter. The
-      extractor cut each chapter at its first *section* heading and dropped the opening prose
-      glued to the wrapped chapter title. Recovered at export from the segments, which are a
-      continuous cut of the same PDFs — nothing re-extracted, nothing read from a PDF, nothing
-      written to the database. **272 sections now, not 268.**
-      ⛔ **Addresses moved in three chapters, permanently.** Chapters 13, 16 and 20 had no
-      Introduction at all, so the recovered opening became section 1 and everything after it
-      shifted: **today's `T-16.1 True Empathy` is `T-16.2`.** That matches the 28 chapters
-      where the Introduction already was section 1. It was safe to do only because nothing has
-      shipped and the annotation store was empty — 0 highlights, 0 notes, 0 bookmarks, verified
-      before the change and again after. The same move made later would strand real marks.
-      Confirm the four recovered openings read correctly, and that Chapter 16 now opens on
-      `To empathize does not mean to join in SUFFERING` rather than on `True Empathy`.
-
-- [ ] **The card header, now that a play control is on it every day.** Two bands on every card and
-      every screen size: the title centred on its own line, then **Listen on the leading edge, Share
-      and Save on the trailing edge**. Check the Daily Minute card, a Lesson card and an Archive
-      card. Expected: no `DAILY / MINUTE` split and no `Lis-`/`ten` hyphen anywhere; Share and Save
-      in the same place on a passage that has audio and one that does not; and **tap Save** —
-      `Saved` is wider than `Save`, so that tap is the one that can shift the layout under your
-      finger. ⛔ Most readings have no audio, so the usual state is the control band holding only
-      Share and Save. `tools/verify_card_header.sh` proves the words never break and the two
-      controls never move; whether the two-band arrangement reads well is yours.
-
-- [ ] **Saving a passage, twice.** Tap Save on any reading, leave the screen, come back, tap Save
-      again. Expected: it saves, then un-saves, every time. Every write now decides against a fetch
-      rather than the view's own `@Query` snapshot, which is what makes a row written by the watch or
-      by an import in the same tick visible to it. ⛔ There is no unique index behind this any more —
-      `BookmarkStore` is the whole guarantee. The rule is proved by 381 cases in
-      `tools/verify_bookmark_identity.sh`; only the tap needs a hand.
-
-- [ ] **Backup & Restore, end to end.** Settings > Your Work > Backup & Restore. **Save a backup**
-      should open a real Save dialog on the Mac and the Files sheet on the phone, and produce
-      `ACIM Daily Minute backup <date>.json`. Open that file in any text editor: it should read as a
-      document — the edition named at the top, then every mark with the passage it belongs to, its
-      address in the book, and the words. Confirm it makes sense to someone who has never run the
-      app, because that is the whole point of the format.
-
-- [ ] **Restoring merges rather than duplicates.** Make a highlight and a note on the Mac, back up,
-      restore that file on the phone, and confirm both arrive once. Restore the SAME file a second
-      time and confirm nothing is added and the summary says so. Then edit the same note differently
-      on both machines, back up from one, restore onto the other, and confirm the note holds **both**
-      versions with the separator line between them rather than only the newer one. Nothing anywhere
-      can re-send a reader what they wrote, so this is the behaviour that matters most.
-
-- [ ] **The import summary reads the way you want it to.** After a restore it reports what was
-      added, how many notes were written in two places, and that nothing was removed. Say if the
-      wording is wrong — it is the only thing telling a reader what just happened to their work.
-
-- [ ] **The companion note now closes the introduction.** Launch fresh (or Settings > Onboarding >
-      **Replay introduction**) and page through to the end. Expected: the last carousel page's button
-      now reads **Continue** rather than Get Started; tapping it shows "A Note About Using ACIM Daily
-      Minute" in full, scrollable, on the introduction's black ground; and its **Get Started** button
-      is what finally dismisses the introduction. Confirm the same note still reads correctly under
-      Settings > About, because both screens render one view and the words exist in only one place.
-      ⛔ Check it at 375pt: the note is long and it is the first thing a new reader meets.
-
-- [ ] **Saving, then deleting from the Saved tab.** Tap Save on a reading, leave, come back,
-      tap again — it must save then un-save, every time. Then delete a saved row from the Saved tab by
-      swiping. Nothing in the database prevents duplicate bookmarks any more; `BookmarkStore` does, and
-      the Saved tab's delete was rerouted through it in this change. 381 cases hold the rule, but the
-      tap needs a hand.
-
-- [ ] **Your highlights and notes survived the store split.** The app now keeps the reader's work in
-      `reader.store` and the feed caches in `cache.store`, and lifts the old rows across once on first
-      launch. Proved on the Mac against real data — 2 highlights and 2 notes moved, the old file kept
-      its copy, and a second launch added nothing — but the phone's own store has only ever been
-      migrated by the phone. Open Saved and confirm every highlight and note is still there, and that
-      the Archive tab refilled itself.
-
-- [ ] **iCloud sync, the part no harness can reach: two devices.** Settings > Your Work > **Sync with
-      iCloud**, on the Mac and on the phone, then reopen each — the switch deliberately takes effect at
-      next launch, and the footer says so. Expected: a highlight made on one appears on the other, and
-      **deleting one on either device removes it from both** — that is the real difference from a file
-      restore, which only ever adds. ⛔ Proved so far only on the Mac alone: the container builds, 4
-      records reached iCloud, and off → on → off leaves the work intact. **Mac → phone carries a
-      highlight.** What is left is the return trip, and the deletion: make a mark on the *phone* and
-      confirm it reaches the Mac, then **delete one on either device and confirm it goes from both** —
-      that is the real difference from a file restore, which only ever adds.
-      ⛔ Expect one `badContainer` failure on a device's very first sync; the next launch fixes it.
-- [ ] **The privacy policy now describes iCloud, and three of its claims changed.** Settings > About >
-      Privacy Policy. Read it against what the app now does: "never leaves your device" and "no data is
-      sent to any server" and "no push notification server is used" were all falsified by CloudKit and
-      were rewritten in the same change. There is a new **iCloud Sync** section. The App Store label
-      stays "Data Not Collected". ⛔ This is the one screen in the app where a wrong sentence is a
-      promise broken rather than a bug, so it is worth reading as a whole rather than skimmed.
-- [ ] ⛔ **Before any release build: deploy the CloudKit schema from Development to Production** in the
-      CloudKit Dashboard. Debug builds use Development; TestFlight and the App Store use Production, and
-      no amount of local testing detects the gap. This is a release-gate step, not a test.
-- [ ] **A folder of your own, end to end.** Settings > Your Work > Backup & Restore > **Keep a copy
-      in a folder** > Choose a folder… Pick a Dropbox or iCloud Drive folder on the Mac. Expected:
-      `ACIM Daily Minute backup (<this Mac's name>).json` appears in it at once and the screen shows
-      the folder and "Last written". Then make a highlight and wait three seconds — the file's
-      modification time moves; make one and immediately put the app in the background — it still
-      moves. On the phone, choose the same folder through Files: its file is named `(iPhone)`, so
-      the two devices never overwrite each other. Rename the folder in Finder and tap **Write now**
-      — it must still land, since the bookmark follows the folder. Delete the folder and tap Write
-      now — expected the red sentence "The folder can no longer be found. Choose it again." and
-      nothing else changes. ⛔ Nothing is ever read from that folder: bringing the phone's file onto
-      the Mac is still **Restore from a file…** by hand, and that is the design, not a gap. The
-      Mac's `Host` name is what it is called on that machine; the phone says `iPhone` because iOS
-      stopped giving apps the reader's own device name.
-
-- [ ] **Search, the book's index.** Read tab, the one search field, prompt "Search the Course".
-      Type `holy instant`: a Headings group if any title matches, then every occurrence in book
-      order under its section, lesson or Manual heading, each row a snippet with the match in bold
-      and its address (`T-15.1.3`, `W-45.2`) beneath. Tap a Text hit, a lesson hit, an Introduction
-      hit and a Manual hit: each opens with the matched words tinted blue and scrolled into view.
-      A lesson opened this way does NOT open its video first. Type `45`: Lesson 45 leads the
-      Headings group. Type `the`: the list ends with "Showing the first 1,000 matches." Type
-      `God's` with a straight apostrophe: it finds the Course's `God’s`. Then clear the field: the
-      Workbook and Text shelves are exactly as they were, and the Text's chapter list no longer has
-      a search field of its own. The Jump button is absent while a query is typed, by design —
-      typing the number is the jump.
-      ⛔ Check the spotlight scroll at 375pt on a long section (Chapter 1.2): the scroll happens
-      once, on arrival, and never fights the reader afterwards. The tint is `systemBlue` at 0.22 —
-      chosen because the app's accent is gold and a highlight is yellow; if it reads wrong on the
-      dark ground, `SelectableReadingText.spotlightColor` is the one place it lives.
-      ⛔ At your Dynamic Type (about xxLarge) a snippet row is capped at three lines, and a long
-      `…before` fragment can push the bolded match itself off the row. Search `forgiveness`, look
-      at the rows: if the bold words are clipped anywhere, that cap is the thing to change. A
-      single letter typed shows an empty list, not "No Results", by design; a single digit is a
-      lesson number and shows that lesson.
-- [ ] **The Manual opens now.** A Manual highlight, note or saved row in Saved opens its passage on
-      a screen titled Manual, with Save in the toolbar and annotation working. No Previous or Next,
-      no contents, by design — structuring the Manual is its own item.
-- [ ] **Cross-reference links.** Open a review lesson — 84 is today's, or any of 51-60, 81-90,
-      111-120, 141-150, 171-180, 201-220 — and the bracketed numbers, `[67]`, draw in the accent
-      colour. Tap one: Lesson 67 opens to read, with NO video first, and Back returns to the
-      review. A long press on the number shows no link preview. Highlight across one and the
-      yellow paints behind it while it stays tappable. Then Today: the Daily Minute's footer
-      (`T-5.3.7`, `W-45.2`) is in the accent colour; tap it and the Text section or lesson opens
-      with that whole paragraph tinted blue and scrolled into view, Back returns to Today, and the
-      tab has not changed. A `Pref.N` footer opens the Preface at its head with nothing painted,
-      by design. The offline corpus card's footer does the same. On the Mac all of it is a click.
-      ⛔ Check `[67]` at 375pt and xxLarge: the tint must not make the number look like a button
-      the words around it are not.
-- [ ] **One reading shape everywhere.** Open a lesson from the Read list, a Text section, the
-      Workbook Introduction, a Manual passage, the Today cards and an Archive day. On every one:
-      the eyebrow is centred above the controls, the play control is on the leading edge when it
-      exists at all, and **Share and Save are together on the trailing edge and in the same place
-      on all of them**. Save must be gone from the nav bar on all four pushed screens. The nav bar
-      now names the BOOK — Text, Workbook, Manual for Teachers — and the eyebrow names the place.
-      A Text section shows its chapter title above its section title, and its address at the foot
-      where it is printed but not tappable; the Today footers stay tappable. Read time reads
-      sensibly at both ends: Lesson 1 says "less than a minute", the longest Text section says
-      "about 29 min", and no reading anywhere says "about 0 min". The Introduction and the Manual
-      offer Share for the first time.
-      ⛔ Check the eyebrow at 375pt and xxLarge on every screen — `WORKBOOK FOR STUDENTS` is the
-      longest string and the band breaks its words rather than wrapping.
-
-- [ ] **Two calls on the Daily Minute passage screen — the one a Saved row opens.**
-      1. **It offers Share and NOT Save.** A minute saved from Today keys one way and the same
-         minute saved from the Archive keys another — two addresses for one passage already — and a
-         Save there would make a third. Say the word if you want it anyway and the third key gets
-         designed properly first.
-      2. **Its address at the foot — `W-290.3` — is tappable**, and it is the only pushed reading
-         where that is true. Everywhere else the address names the passage already on screen and a
-         link there would teach you links are broken; here it names where the passage begins in the
-         book, with the pages around it. ⛔ **No eye has seen this tap** — check it lands in the
-         Workbook at that paragraph and that Back returns you to the passage.
-
-## ⏸ PAUSED — the standardized reading layout (piece A built; D is next)
-
-Piece A, the scaffold, is built: `Views/ReadingScaffold.swift` owns the band order and all ten render
-sites pass slots. Spec and plan:
-`docs/superpowers/specs/2026-09-02-standardized-reading-layout-design.md` and
-`docs/superpowers/plans/2026-09-02-standardized-reading-layout.md`. The four remaining pieces are
-below, and these decisions of his govern them:
-
-- **`Add note` stays at the bottom.** His call, and it belongs with the citation, not the actions.
-- **One play control, audio-first.** Tap plays narration and the reader keeps reading; video is
-  deliberate (long-press / menu), because video takes the screen and is the most perishable tier.
-  It sits leftmost so Save and Share never shift position between passages.
-- **The tab bar becomes Today | Read | Listen | Video | Saved.** `Archive` becomes `Video` — all 158
-  published entries already carry a `youtube_id`, so it is a recast rather than a build, and it
-  retires the last exemption to the no-publication-dates rule. Label items by citation, not date.
-- **Listen becomes activity, not a catalogue** — now playing, part-finished, downloaded, finished.
-  The Course stays organized exactly once, in Read.
-
-**Four pieces remain, in this order: D → E → B → C.**
-- **D — Archive → Video.** App-only; the data exists today. **Next.**
-- **E — structure the Manual.** ⛔ **The Manual is NOT free.** Its 105 bundled rows are arbitrary
-  ~1,300-character word-count cuts that begin mid-thought, with no titles and `citation: nil`. Its
-  real Introduction / 29 questions / Clarification of Terms exist only in `4_ACIM_Manual.pdf`, so it
-  needs a structure layer built at export, the way the Text's 272 sections were. Annotations key on
-  `manual:<segmentId>`, **not** a section address, so structuring it cannot move a reader's marks —
-  unlike the Text renumber that made `T-16.1` into `T-16.2`.
-- **B — media index + inline play control.** The only piece needing a pipeline change. Availability
-  must be a feed-driven overlay keyed by `segment:<id>` / `lesson:<n>` — never bundled (stale the
-  next day), never computed from a filename.
-- **C — Listen as activity.** Needs playback progress, which does not exist yet.
-
-⛔ **Audio and video are produced about one a day: ~1.5 years for the 365 lessons, ~7 years for the
-1,983 minute segments.** So **most readings will have no media for the life of this app.** Absence is
-the normal state: the play control is absent entirely rather than greyed out, and nothing shifts
-position when one does appear.
-
-## ▶ WATCHING — the nightly catch-up
-
-The feeds carry the archive.org URLs now: `daily-minute.json` on 157 of 164 archive entries plus
-today, `daily-lesson.json` on all 84 plus today, `podcast-minute.xml` 158 enclosures of 165 items,
-`podcast-lessons.xml` 85 of 85. All 243 recorded MP3 URLs answer a ranged GET. The seven minutes
-without one are 2026-03-20 … 03-26, which have no recording at all.
-
-- [ ] Two catch-up gaps remain: **2026-05-31 and 08-14** — the two dates missing from the archive
-      list between 03-20 and today. One per night by design (`CATCH_UP_MAX_PER_RUN = 1`); two
-      nights to clear. Read it off the feed's archive dates; `./catchup.sh list` on MacLive says the
-      same, when that machine is mounted.
-
-## ▶ OPEN — platform expansion
-
-Ranked by his instruction, and the ranking is a resource decision, not a design one: get it right on
-the common Apple environment first, then expand. Do not let a non-Apple consideration shape an
-Apple-platform design. Two of his calls are already made: **tvOS is a player — listen and watch
-first, reading secondary**, and **Windows and Linux are reached by one web reader over the same
-JSON**, not by porting Swift.
-
-⛔ **The durability rule decides more of this than any platform API.** The app must be wholly usable
-on bundled content alone. That is what makes tvOS tractable and it is what the watch fails today.
-
-### Phase 1 — iOS and iPadOS certification, first
-
-⛔ **Do NOT add SE / Pro Max / iPad Pro simulator legs to `build.sh`.** It was measured:
-`xcodebuild -showBuildSettings` is byte-identical across simulator device models — same `ARCHS`,
-same `SDK_NAME`, same deployment target, same device family. A simulator destination's device model
-never reaches the compiler, so those legs would compile the same binary three more times and catch
-nothing. The layout regression net is `tools/verify_card_header_dynamic_type.sh`, which measures
-real iOS metrics; the only compile that genuinely differs is the arm64 `iphoneos` device build,
-which `both.sh` already drives. ⛔ There are still **zero test targets** — the shared scheme's
-`TestAction` has no testables, so `xcodebuild test` tests nothing. The nineteen `swiftc`/`simctl`
-harnesses are the suite.
-
-⛔ **The compact slice is measured and Phase 1's padding question is answered.** On the iPad Pro
-11-inch (M5) simulator `24B47A3C-…` at a 375pt window: 20.0pt leading and 20.0pt trailing on a Today
-card and on a pushed reading, `ReadableContentWidth` correctly not clamping, and every tab, the
-Archive calendar, the mini player and a reading's footer laying out whole. ⛔ **iPadOS 26 has no
-Slide Over — it has windows.** The compact slice is reached by dragging the app window's own
-bottom-right grab handle inward, with Settings > Multitasking & Gestures set to **Windowed Apps**;
-there is no Slide Over gesture left to drive. ⛔ Do not drive the iPad sim `58B7D31D-…`, which he has
-asked be left alone.
-
-- [ ] ⛔ **At submission, switch visionOS availability on in App Store Connect.** The app already
-      qualifies for "Designed for iPad" on Vision Pro unchanged: device family `1,2`, all four iPad
-      orientations, and no `UIRequiredDeviceCapabilities`. It is an availability toggle on the
-      existing iPad build and needs no code, no target and no build setting.
-      ⛔ **It is NOT done by lifting `SUPPORTED_PLATFORMS`, and that claim was wrong.** Measured on a
-      visionOS 26.5 simulator: `os(iOS)` is **false** there, `os(visionOS)` is true, and
-      `canImport(AppKit)` is **false**. The app's 48 `#if os(iOS)` sites pair with `#elseif
-      os(macOS)`, so visionOS falls through both branches and `PlatformFont`, `PlatformColor`,
-      `TextViewRepresentable`, `MacBottomTabBar` and `pageChevron` are all undefined. A **native**
-      visionOS target is the same porting job tvOS is — see Phase 3 — and belongs beside it, not
-      here.
-
-### Phase 2 — Apple Watch: the plumbing is done, the shape is his
-
-⛔ **The watch reaches a wrist, carries the Course, and its complication draws today's passage in the
-Smart Stack.** What is left here is not a build: it is three decisions about what a watch is *for* in
-this app, and they are his — plus two families of complication that only a real wrist can place.
-
-⛔ **The measurement that governs any further watch work.** A whole-module `swiftc -typecheck` of all
-126 app + widget sources against the watchOS SDK gives **45 errors in 16 files, 43 of them in
-`Views/`** — outside `Views/` there are exactly two lines, `NotificationManager.swift:227`
-(`UNNotificationSound(named:)`) and `FolderCopyService.swift:144` (`Host`). Every model, every
-utility and every service the reader's content passes through already compiles for watchOS. So the
-cost of anything on the watch is a *view* cost, never a porting cost. ⛔ **Use `-wmo`**: plain batch
-`-typecheck` stops after the first failing file and reports one error where there are dozens.
-
-- [ ] ⛔ **HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?** Today it
-      shows the minute alone. The phone pushes one payload and the watch keeps one row; adding the
-      lesson is two more keys and a second row, not a port. It is a question about what a glance is
-      for, which is why it is not being guessed.
-- [ ] ⛔ **HIS CALL — whether plain-and-true is what a complication should say.** They are honest now
-      and they are plain: circular is the app's mark, rectangular and inline are the opening of
-      today's passage. **The rectangular one has been seen** — it is in the Smart Stack, it names the
-      app on one line and gives three lines of the passage, and `Text` truncates it with its own
-      ellipsis at whatever the wrist and the text size allow. ⛔ **What they used to show was a lie** —
-      a lesson number read from a `DailyLesson` nothing on the watch ever writes, so every face read
-      `L —` and `No lesson` forever. Whether plain-and-true is the right answer, or whether a
-      complication should say something else entirely, is a design call.
-- [ ] ⛔ **HIS CALL — the wrist shows six lines of a reading and offers no way to reach the rest.**
-      `WatchStoryRow` sets `lineLimit(6)`; the list holds that one row and nothing beneath it, so
-      scrolling reaches the end at once. Measured on today's minute: **1,335 characters, 254 words,
-      of which about 150 characters are readable** — the other 89% is on the phone or nowhere. Either
-      answer is defensible and neither is a bug: a glance is allowed to be a glance, and a wrist is a
-      poor place for 254 words. What is not defensible is the middle, which is what ships now — an
-      ellipsis that promises more and leads nowhere. If it should open, the row becomes a
-      `NavigationLink` to a scrolling passage; if it should not, the cap wants a sentence saying so.
-- [ ] ⛔ **`.accessoryCircular` and `.accessoryInline` have still never been placed, and a SIMULATOR
-      CANNOT PLACE THEM.** `.accessoryRectangular` is proved — it is live in the Smart Stack and draws
-      today's passage. The other two need a watch FACE, and every watch simulator on this Mac ships
-      exactly one face, **Numerals Duo**, whose edit pages are STYLE and COLOR and which has no
-      complication slot at all. Three routes were measured and all three fail: the watch's own face
-      gallery lists every face but its **GET** button does nothing under a synthetic tap; the Ultra 3
-      simulator defaults to the same lone face rather than a Modular one; and **GET** in the paired
-      phone simulator's Watch app *does* work and adds the face to the phone's list, but it never
-      reaches the watch — simulator pairing carries `WCSession` payloads and not faces. So this waits
-      on a real wrist and joins the item below it.
-- [ ] **The watch app icon is a single 1024pt PNG, and at grid size it is a photograph.** Seen on the
-      simulator's app grid beside twelve system icons: it reads as a warm image where the others read
-      as one flat mark, and its two lines of script lettering are present but not legible at that
-      size. Whether that is wrong is his call — it is recognisable, which may be all an icon owes —
-      but it is the one icon on that screen a reader identifies by colour rather than by shape.
-- [ ] **No Apple Watch is paired to this Mac.** `xcrun devicectl list devices` knows two devices, the
-      Lyrics iPad and the iPhone 11 Pro Max. ⛔ **The signing side is already finished** — both watch
-      App IDs are registered with App Groups and both signed a real arm64 device build today — so
-      what is missing is hardware on the network, not authorisation. A watch is registered by pairing
-      it through its iPhone in Xcode > Window > Devices and Simulators; watch UDIDs are never typed
-      in by hand.
-
-### Phase 3 — Apple TV: the target is built, the player is not
-
-⛔ **The `ACIMDailyMinuteTV` target exists, compiles, installs and runs on the Apple TV simulator,
-and `build.sh` is now four legs.** It compiles the **same source list as the app** — every platform
-difference is a fence inside a file, so there is no second membership list to drift. Its entitlements
-carry the App Group and **no iCloud**, and its device family is `3`.
-
-⛔ **The port was much smaller than this file claimed** — "fifteen classes of compile error" across
-"79 directives at 43 sites" was wrong. One substitution, `#if os(iOS)` → `#if os(iOS) || os(tvOS)`,
-dissolved the whole mis-partitioning class; the rest was framework fences in about a dozen files.
-⛔ **The two idioms are `#if !os(tvOS)` and `#if os(iOS) || os(tvOS)`; a bare `#else` pair is what
-created the problem** and `Utilities/ReadableContentWidth.swift` is the file that always had it right.
-
-⛔ **Three fences are iOS-only for a REASON, not an API**, and widening them would compile and be
-wrong: `OrientationController` (a television does not rotate), `BackgroundRefreshManager` (its whole
-job is keeping practice reminders current) and the `LiveActivityManager` call sites.
-
-**What tvOS does not have, and therefore what the TV build does not show:** sharing, swipe actions,
-pull-to-refresh, the segmented picker *style* (the pickers themselves are there), reminders of any
-kind, note editing, text selection, and both backup tiers — there is no document picker on tvOS, so
-a reader's words cannot be carried off it.
-
-⛔⛔ **BOTH OF HIS CALLS ARE SETTLED. Do not re-open either, and do not ask him again.**
-**The TV is a PLAYER** — listen and watch first, reading secondary — **and the TV app carries NO
-ANNOTATION AT ALL.** Those are his words. Everything below marked *derived* follows from them and
-from the code, and is open to correction; the two sentences above are not.
-
-- [ ] ⛔ **Build the player-first interface — and the design is WRITTEN, awaiting his review:**
-      `docs/superpowers/specs/2026-09-05-apple-tv-player-design.md`. ⛔ `docs/` is gitignored on
-      purpose (*"Internal planning docs, kept local, not in public repo"*), like all eleven specs
-      beside it — do not force it into git. **No implementation plan until he has reviewed it.**
-      ⛔ **The shape is settled: the iOS shape with one verb changed** — the same four tabs, and
-      pressing a card starts a player instead of opening a reading. **Listen does NOT become the
-      landing tab**, and the earlier note here deriving that was wrong: a television's first screen
-      answers "what do I put on now", and that is today, not the back catalogue. Today becomes a
-      player home. One architecture, not two to hold in step for twenty years.
-- [ ] ⛔ **Brand assets are why his home screen shows a white tile.** `Assets.xcassets` carries only
-      `AppIcon.appiconset`, the flat iOS icon. tvOS needs a `.brandassets` group with **layered**
-      parallax icons and a Top Shelf image. An art job, not a build setting.
-- [ ] ⛔ **Annotation is OUT of the television and the ribbon STAYS, by decision. Do not re-open
-      either half.** Seen on the simulator, not inferred: the tab bar is four tabs with no Saved, the
-      Daily Minute and Lesson card headers carry Listen alone with nothing on the trailing edge, and
-      the foot of a reading is its address and its read time with no "Add note". `SaveButton` holds
-      the `#if os(tvOS) → EmptyView()` branch so all nine call sites followed without an edit;
-      `AnnotatableReadingText` fences the note rows, the button and `menuActions` together;
-      `SelectableReadingText` now sets `isSelectable = false` there. ⛔ **`isEditable` is UNAVAILABLE
-      on tvOS and `isSelectable` is not** — that is why those two cannot share a fence, and it is why
-      the old pair set neither.
-      ⛔ **The ribbon stays, and the reasoning is in `ReadingPositionStore.swift`**: it lives in
-      `UserDefaults` beside the reminder times rather than in SwiftData with the marks, it is never
-      painted, exported or listed, `SelectableReadingText` says outright that a reader's place is not
-      a reader's mark — and it is device-local on a TV, so a purged container costs a scroll position
-      and not a word. Nothing of the reader's is trapped there because nothing of theirs is there.
-- [ ] ⛔ **The companion note still does not scroll.** Get Started sits outside the `ScrollView` and
-      is focused, so the note can be left, but the body is clipped. It is a SwiftUI `ScrollView` of
-      `Text`, not the reading representable, so the `onKeyPress` path that pages a pushed reading
-      does not reach it. `.focusable()` on `CompanionNoteBody` moved focus off Get Started without
-      moving the text. Next.
-- [ ] ⛔⛔ **The reading column is the iPad's: 672pt of 1920pt, 35% used and 65% empty.**
-      `ReadableContentWidthModifier` clamps at 672 whenever `sizeClass == .regular`, and **tvOS
-      reports `.regular`**. A 4K Apple TV is 1920x1080 *points*; overscan takes ~60pt per edge.
-      ⛔ **Widening alone makes it worse** — 672pt exists because 45-75 characters is what stays
-      readable, and a wide column at phone type size gives 130-character lines. **Width and type size
-      move together**, roughly 1200-1400pt with body type scaled for eight to ten feet. HIS EYES
-      decide the pair; it is not a constant to pick in a spec.
-- [ ] **The read-only rendering path already exists — do not build one.**
-      `SelectableReadingText` with `menuActions: []` and `positionReporter: nil` is inert **by
-      design**, and says so at `:39-41` and `:546-549`. A tvOS reading surface bypasses
-      `AnnotatableReadingText` and uses that directly; `CorpusReadingCard` is the existing example of
-      a deliberately thinner surface.
-- [ ] ⛔ **HIS APPLE TV IS REGISTERED AND THE DEVICE LOOP WORKS** — build, install, launch, and read
-      the app's own stderr. `LIVINGROOM`, `AppleTV6,2` (Apple TV 4K, 1st gen), **tvOS 26.6**,
-      developer mode enabled. Two identifiers and they are not interchangeable: `-destination` takes
-      `platform=tvOS,id=9709e1041cefbcf9821b5cd219041c9233614727`; every `devicectl` call takes
-      `--device B2AAAF1A-7E8F-5DCC-9B0C-735D53C7E759`. ⛔ **`-allowProvisioningUpdates` will NOT
-      register a new device from the command line** — it only refreshes profiles for devices already
-      known; registering is his to do in Xcode. ⛔ **The television is in his office and is normally a
-      television**, so device time is borrowed and announced, never assumed. ⛔ **Do not "fix" the
-      shared bundle id**: one App Store record carries the iOS and tvOS binaries together.
-- [ ] ⛔⛔ **A SIMULATOR CANNOT TELL YOU THE APP RUNS.** It does not enforce the tvOS sandbox, so
-      anything about storage, entitlements or sandboxing that a simulator reports is worthless —
-      the app ran there for weeks while having **never once launched** on a real Apple TV.
-      ⛔ **`devicectl device process launch --console` is the tool that finds these**: it carries the
-      app's own stderr back, which no build, screenshot or crash log surfaces.
-- [ ] ⛔ **`SWIFT_STRICT_CONCURRENCY = complete` is set on all five targets, and on the TV it buys
-      documentation rather than checking. Do not re-open it looking for hidden errors.** Every target
-      also sets `SWIFT_VERSION = 6.0`, and **the Swift 6 language mode already IS complete
-      data-race checking** — measured: a clean tvOS build passes `-swift-version 6` to `swiftc` and
-      passes no `-strict-concurrency` flag at all, at any of its 160 compile steps. So the television
-      was never checking shared code under looser rules than the phone, and turning the setting on
-      surfaced zero errors because there were none to surface. The setting earns its place only as
-      the guard for a future `SWIFT_VERSION` of 5, where it would start mattering again.
-- [ ] ⛔⛔ **VIDEO IS SETTLED: NO VIDEO IS HOSTED, ANYWHERE, EVER. The app renders the reading
-      itself.** Bundled passage + the archive.org MP3 + one bundled background image — which is what
-      the render already is. ⛔ **He ruled out paid hosting outright**: this is a non-profit paid from
-      his own pocket for an app meant to **outlive him**, so a recurring bill is not a cost, it is an
-      expiry date. Cloudflare R2 was recommended and rejected on exactly that ground. ⛔ Rendering
-      also **covers all 1,983 segments rather than the ~165 with renders**, draws native 4K text, and
-      obeys appearance and text size — burned-in text can do none of that. The MP4s stay on YouTube
-      for the world; audio stays on archive.org, untouched. **Do not re-open this and do not propose
-      a host.**
-      ⛔ **Why there was no other option, measured on the tvOS 26.5 SDK:** `WebKit.framework` and
-      `SafariServices.framework` are **absent** from tvOS (present in the iOS SDK) — Apple ships no
-      browser on Apple TV at all, so there is no web view to embed anything in. `JavaScriptCore` is
-      present but has no DOM and no `<video>`; `BrowserEngineKit` is sandbox plumbing. Both feeds
-      carry `youtube_url`, `youtube_id` and `audio_url` and **no video file URL**, and the
-      archive.org item holds 163 + 87 MP3s and zero video. Pulling a stream from YouTube for
-      `AVPlayer` is against YouTube's terms. Deep-linking to the YouTube app **cannot be tested**
-      without a registered Apple TV and hands the viewer away for good.
-      ⛔ **Also settled: the text does NOT advance with the narration.** Alignment data does not
-      exist. Approximate pacing needs none and stays cheap later; true alignment is ~5 KB per
-      reading, ~12 MB bundled, if it is ever wanted.
-      ⛔ **His archive.org ban was a FALSE POSITIVE** — they took him for a bot and have cleared him
-      completely. Never write it up as a strike against him.
-
-### Phase 4 — Windows and Linux: one web reader over the same JSON
-
-Explicitly last. Nothing starts here while any Apple platform is unfinished.
-
-- [ ] **A static reader served from acimdailyminute.org**, over the **same** bundled JSON the app
-      ships — `ACIMSegments.json`, `ACIMTextSections.json`, `Workbook365Bodies.json`,
-      `ACIMManual.json`, `WorkbookIntroductions.json`, about 5.6 MB — which the site already
-      publishes. Installable as a PWA, so Windows, Linux, Android and ChromeOS are all reached by one
-      codebase with no store, no signing and no review.
-- [ ] ⛔ **It must read and write the same backup `.json`.** That file was designed for exactly this:
-      plain UTF-8, no private extension, no private UTI, with a human name and citation on every mark
-      so it reads as a document. Import stays strictly additive there as it is in the app — a
-      snapshot carries no deletions, and `MergePlan` has no field that can express one.
-- [ ] **The rules are ported, never re-invented.** The punctuation-spacing repair, the citation
-      format and its paragraph rule, the anchor and quote re-resolution and the merge algebra are
-      already written as portable specifications, and several have Python twins in `tools/` that the
-      Swift harnesses are proved against. Those twins are the reference implementation for a web
-      port — a second implementation that disagrees is the bug this whole project is built to avoid.
-
-## ▶ OPEN — physical-book parity gaps
-
-What a physical *A Course in Miracles* gives a reader that this app does not. Ranked by how much each
-blocks "this replaces my book". The content is now bundled and reachable through `CorpusService` —
-1,983 segments, 272 Text sections, 105 Manual segments, 365 lesson bodies. These are what turn it into
-a book.
-
-- [ ] **An empty Archive day should offer a way onward.** His proposal, and the shape is decided:
-      under the sentence that says why a day is empty, list **the nearest few days before it that do
-      have a reading** — a handful, enough to fill the space, not a second archive. Both surfaces
-      show the same emptiness: the row under the calendar and the pushed day screen.
-      Counting back from the **selected** day rather than from today, so browsing April offers April.
-      Nothing when the selected day has a reading — there is no space to fill. The rows the calendar
-      already draws its dots from are the same rows this needs, so no new query.
-      ⛔ The Archive is the one place dates are the index rather than a publication stamp, so a row
-      here names its **date** and its book — that exemption does not extend anywhere else.
-
-- [ ] **"Let it fall open"** — a random passage. A real practice with the physical book. His
-      proposal, not yet built: a random *published* Daily Minute from the archive rather than a
-      random corpus passage, so it arrives with narration and video; fall back to a random bundled
-      segment when the archive cache is empty. Draws from ~165 entries instead of the whole book,
-      so it repeats sooner; that is the trade he chose.
-- [ ] **Workbook completion tracking** — which lessons the reader has *done*, distinct from listened.
-- [ ] **Structure the Manual for Teachers** into its question-and-answer form. It is bundled as 105
-      unstructured segments by decision, searchable and readable one passage at a time through
-      `ManualSegmentView`; a browsable structure is what is missing.
-
-## ▶ OPEN — content and pipeline
-
-- [ ] **Every Workbook introduction is glued to the foot of the lesson before it.** In
-      `Workbook365Bodies.json` the Review I introduction ends Lesson 50's body, Review II ends 80,
-      Review III 110, Review IV 140, Review V 170, the "Introduction to Lessons 181-200" ends 180,
-      Review VI ends 200, the Part II introduction and "What is Forgiveness?" end 220, each later
-      "What is …?" ends 230, 240 … 350, and "What am I?" with "Our final lessons" ends 360. A reader
-      opening Lesson 50 reads Review I's instructions at its foot, and the review lessons themselves
-      (51-60, 81-90, 141-150, 171-180, 201-220) are bare ideas with their instructions a lesson
-      away. Found while reading every lesson for its practice cadence; the cadence data was authored
-      from those tails, so it is right, but the reading surface is not. Each belongs as its own
-      reading, keyed like the two Part Introductions, and the segments are the identity so the
-      repair is at export and at render, never a re-extraction.
-- [ ] **`WorkbookIntroductions.json` entry 500 is two paragraphs short.** The Part II Introduction
-      stops at "…safely home, where He would have us be." and lacks the closing paragraphs — the
-      only place the Course says how the "What is …?" sections are to be used ("slowly read and
-      thought about a little while, preceding one of the holy and blessed instants in the day").
-      They are in Lesson 220's body tail and the PDF.
-
-- [ ] ⛔ **`Pref.N` names two paragraphs.** The Preface ships as two sections — `0.1 Publisher's
-      Note`, 17 paragraphs, and `0.2 The Use of Terms`, 42 — but the citation format carries no
-      section number, so `Pref.10` is paragraph 10 of either, and 21 shipped segments carry the
-      form (`Pref.1` … `Pref.40`). A tap on one opens the Preface at its head rather than guess.
-      Fixing it means a `Pref.S.N` form, which changes a citation already printed into exports;
-      his call.
-      `Citation.swift`'s `preface` case and `tools/citations.py`'s `text_citation` are the two
-      places the format lives.
-
-- [ ] ⛔ **Letter-spaced headings are still sitting inside reader-facing text.** Found while
-      recovering the Text's chapter openings, and deliberately **not fixed** there — it is a
-      different defect, in different files, with different decisions to make.
-      The page sets some headings letter-spaced (`w h o a r e g o d ’s t e a c h e r s ?`), and
-      they survive inline, glued to the front of the prose that follows them:
-      **20 runs in 13 lesson bodies, 62 runs in 24 Manual records, 152 runs in 92 segments.**
-      The Text is clean and now has a committed guard (`letter_spaced_headings` in
-      `text_paragraphs.py`) that keeps it that way; the other three files have no such guard
-      because they would fail it today.
-      The open question is what a heading should BECOME — its own paragraph, a section title, or
-      nothing — and for the Manual that is entangled with giving it a structure to browse at all.
-
-- [ ] **Eleven running heads survive inside Chapter 11's prose.** `and you will not perceive God’s
-      answer 11 GOD’S PLAN FOR SALVATION to YOU.` — in sections 11.2 through 11.10. The recovery in
-      `tools/text_paragraphs.py` drops page furniture line by line, and these eleven landed *mid-line*
-      where the line test cannot see them. Found while measuring the spacing repair; left alone
-      deliberately, because a mid-line rule cuts into the delicate paragraph recovery and deserves
-      its own measurement. Reproduce with
-      `(?<=[a-z] )\d{1,3} [A-Z][A-Z’ ]{8,}(?= [a-z])` over `ACIMTextSections.json`.
-- [ ] **A stray space before a closing quote.** `and He will abide with you. "The Holy Spirit` — the
-      mirror of the spacing defect, far rarer. A rule that *removes* a character is more dangerous
-      than one that inserts one, so it was left out of the repair rather than guessed at. Measure it
-      before writing a rule.
-- [ ] **186 of 365 lesson bodies are one paragraph.** Not a rendering bug — those 186 carry no blank
-      line in `lessons.text` at all, so there is nothing in the row to split on. Unlike the spacing
-      repair, this one **does** need the PDFs: the paragraph breaks exist only in the page layout of
-      `/Users/larryseyer/Dropbox/ACIM PDF/3_ACIM_Workbook.pdf`, exactly as the Text's did. Read the
-      PDF to find where paragraphs break and apply the breaks to the existing row — never replace the
-      row's text with PDF text, which would reintroduce the page furniture and change words the
-      publisher has already narrated. The spacing repair fixed the words *within* a paragraph; this
-      is the paragraph boundaries themselves, and it is its own scope call.
-
-## ▶ OPEN — how each Apple platform actually gets exercised
-
-Both simulators he asked about are **already installed on this Mac**; neither is the obstacle.
-
-- [ ] **watchOS — the sim proves compilation, not the sync.** `./build.sh` builds against
-      "Apple Watch Series 10 (46mm)" (`32AC5279-DC44-4404-9F4B-53D3FEEB7AE8`), and there are two sims
-      by that name across runtimes, so resolve by UUID rather than name. ⛔ **Neither Series 10 sim is
-      paired with any iPhone sim**, and `WCSession` — the one-way phone-to-watch sync this app depends
-      on — cannot activate unpaired. Xcode's auto-created pairs are all watchOS 26.5 (Series 11 46mm
-      `D876968B…` with iPhone 17 Pro Max `CE9761A7…`, and others). Exercising the sync means running
-      the watch app on a *paired* pair, booting **both** halves, and installing the iOS app on the
-      phone half — or using his real Apple Watch, where the watch app installs through the paired
-      iPhone. `xcrun simctl list pairs` shows the current pairs; `simctl pair` makes one.
-- [ ] **tvOS** — nothing to run until a tvOS target exists. See platform expansion above.
-- [ ] **macOS** — needs the signed build, not `./build.sh`. See platform expansion above.
-
-## ▶ OPEN — small, unscheduled
-
-- [ ] **The archive minute is the last reading that cannot be marked.** `ArchivedReadingCard`
-      draws its minute body as plain `Text`, so it alone offers no selection, no highlight, no
-      note and no export. Every other reading goes through `AnnotatableReadingText`. Left out of
-      the scaffold work deliberately — it is a renderer change, not a layout one — and it lands on
-      a surface whose bookmark key already does not alias with Today's.
-
-- [ ] **The eyebrow cannot hold at accessibility text sizes.** `CardHeaderRow`'s label is
-      `lineLimit(1)` with `fixedSize`, so at AX sizes it breaks its words rather than wrapping or
-      shrinking. True before the scaffold and unchanged by it. Fixing it means letting the eyebrow
-      wrap, which changes the header's height on every reading — his layout call, not a defect to
-      quietly patch.
-
-- [ ] **`ACIMChime.caf` is duplicated and nothing syncs it.** `assets/ACIMChime.caf` is the source;
-      `ACIMDailyMinute/Resources/ACIMChime.caf` is what the app bundles and the only one
-      `NotificationManager.swift:128` can see. Updating `assets/` alone ships the old sound with a
-      fully green build. It has already been missed twice. Two ways to end it, his call: add a copy
-      step to `./build.sh`, or delete the `assets/` copy and make `Resources/` the single source.
-
-- [ ] **`prd.json` names the forbidden string inside the rule that forbids it.** Ten lines across
-      `prd.json` and `bash/archive/.../prd.json` contain the literal the absolute-clean rule bans, as
-      part of the rule text itself. Pre-existing, and a self-reference rather than a leak, but it
-      means a plain repo-wide grep can never come back empty. His call: reword the rule to describe
-      the string without spelling it, or accept those lines as the one exemption.
-
-- [ ] **The Listen tab has no defined behaviour when YouTube fails.** `LiteYouTubeCard` needs a
-      `WKNavigationDelegate` failure path so a dead video source degrades to what it has rather than a
-      dead frame. It belongs with Listen work rather than corpus work, which is why the corpus
-      tasks left it standing.
-- [ ] **No deep-link route for the Listen tab.** `DeepLinkRoute` covers today / lesson / archive / saved.
-      Not a defect, but it makes that tab unverifiable without hand-tapping.
-- [ ] **Today-tab and Archive-tab minute bookmarks do not alias.** Today keys on `DailyMinute.segmentHash`,
-      Archive on `ArchivedReading.lineHash`, so the same passage saved from both places lands twice.
-      Documented in `ArchivedReadingCard.swift`.
-- [ ] **One defaults key is dead.** `lastArchiveFetch` is declared at
-      `Services/FetchCooldown.swift:44` and never used. Found while deciding what a backup carries.
-      It does not travel.
-
-- [ ] **Pre-submission sweep.** Walk Archive, Saved, Lessons, deep links, widget and watch for surfaces
-      that display data they do not have. No `TODO`/`FIXME`/stub copy remains in any view, widget or watch
-      source, so what is left is behavioural empty-state handling — an interactive pass on the device.
+## PARKED — one test pass, at the end, on his phone
+
+Do not ask him to check any of this until everything below is built. His words: otherwise he will just repeat himself on things that have not been done yet.
+
+- [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
+- [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
+- [ ] The watch on a wrist: today's Daily Minute under **Today**, bundled fallback under **From the Course** with the phone off; place the complication in all three shapes.
+- [ ] Listen rows: no `01:00` chips; tap leaves a check and `Listened <date>`; swipe offers Mark unplayed; unlistened rows show no date.
+- [ ] Saved tab: a saved lesson opens the lesson, a saved minute opens the passage; swipe either direction deletes — say if the leading edge should require a tap on Delete instead.
+- [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
+- [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
+- [ ] Archive calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day.
+- [ ] Share on the Mac draws bare, like the phone.
+- [ ] Airplane mode, delete and reinstall, cold launch: Today shows a bundled reading with no save, share, or Listen.
+- [ ] Listen swipe Download, then Remove download; a downloaded row plays from disk in airplane mode; look at the swipe at 375pt.
+- [ ] A reading should scroll to its place on macOS too (spotlight and ribbon).
+- [ ] The ribbon on the phone at 375pt: Continue reading names the right section and opens it.
+- [ ] A search hit two screens down is on screen, words tinted blue.
+- [ ] Companion note under Settings > About: three wording departures are his to veto.
+- [ ] Privacy policy is reachable from Settings > About.
+- [ ] Highlights and notes end to end; there is no mic button.
+- [ ] Saved is three segments: empty states, both swipe edges, a highlight or note row opens its reading.
+- [ ] Export hands over plain text a stranger could follow, with only the reader's dates.
+- [ ] Six surfaces now draw through a text view: serif, spacing, no clip, long-press selects. Phone is what is left.
+- [ ] Publication dates are gone from Today, Lessons, Listen, widgets, and the privacy policy.
+- [ ] Tab 1 is Read (Workbook / Text); a widget or notification tap on a lesson still opens that lesson.
+- [ ] Chapter 1 Principles of Miracles is 53 numbered paragraphs.
+- [ ] Chapter 1.2 (34,385 characters) scrolls without stutter on the phone.
+- [ ] Previous and Next cross chapter boundaries; the first Preface section offers no Previous.
+- [ ] Highlight and Note work in the Text; Saved rows open the passage; a Manual row still will not navigate, by design.
+- [ ] Spacing repair reads as the book; today's minute on the phone and lock screen is clean.
+- [ ] Part 1 Introduction above Lesson 1; Part 2 Introduction between 180 and 181.
+- [ ] Citations are `T-5.3` Arabic, not the widely-cited edition — that judgement is his to overturn.
+- [ ] The two Workbook Part Introductions are not named Lesson 0 or Lesson 500 in Saved or export.
+- [ ] Chapter 16 opens on recovered prose, not True Empathy; today's `T-16.1` is `T-16.2`.
+- [ ] Card header: title on its own line, Listen leading, Share and Save trailing; tap Save does not shift the layout.
+- [ ] Tap Save, leave, come back, tap again: it saves then un-saves every time.
+- [ ] Backup & Restore produces a file that reads as a document.
+- [ ] Restoring merges rather than duplicates; a second restore of the same file adds nothing; conflicting notes keep both versions.
+- [ ] Import summary wording is his to keep or change.
+- [ ] Introduction last page is Continue, then the companion note, then Get Started; check at 375pt.
+- [ ] Saving, then deleting from the Saved tab, goes through BookmarkStore.
+- [ ] Highlights and notes survived the store split on the phone; Archive refilled.
+- [ ] iCloud: a mark on the phone reaches the Mac; deleting on either device removes it from both.
+- [ ] Privacy policy describes iCloud; read it as a whole.
+- [ ] Before any release build: deploy the CloudKit schema from Development to Production.
+- [ ] Folder copy: a chosen Dropbox or iCloud Drive folder gets a per-device file; nothing is ever read from it.
+- [ ] Search the Course: hits in book order with citation and snippet; a lesson opened this way does not open its video first.
+- [ ] A Manual highlight, note, or saved row opens its passage.
+- [ ] Cross-reference links: tap `[67]` on a review lesson; Daily Minute footer is tappable; Back returns.
+- [ ] One reading shape everywhere: Share and Save together on the trailing edge; Save gone from the nav bar.
+- [ ] Daily Minute passage screen (a Saved row): Share and not Save; tappable footer `W-290.3` lands in the Workbook.
+
+## PAUSED — standardized reading layout (D is next)
+
+His calls already made: Add note stays at the bottom; one play control, audio-first; tab bar becomes Today | Read | Listen | Video | Saved; Listen becomes activity, not a catalogue.
+
+- [ ] D — Archive becomes Video. App-only; confirm the recast with him before building.
+- [ ] E — Structure the Manual. Its 105 bundled rows are word-count cuts, not the book's questions.
+- [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
+- [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
+
+## WATCHING — nightly catch-up
+
+- [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
+
+## OPEN — platform expansion
+
+Ranked by his instruction: get it right on the common Apple environment first. tvOS is a player; Windows and Linux are one web reader over the same JSON.
+
+### Phase 1 — iOS and iPadOS
+
+- [ ] At submission, switch visionOS availability on in App Store Connect. Compatible mode; no code.
+
+### Phase 2 — Apple Watch (shape is his)
+
+- [ ] HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?
+- [ ] HIS CALL — whether plain-and-true is what a complication should say.
+- [ ] HIS CALL — the wrist shows six lines and offers no way to reach the rest.
+- [ ] `.accessoryCircular` and `.accessoryInline` have never been placed; a simulator cannot place them.
+- [ ] HIS CALL — the watch app icon at grid size reads as a photograph.
+- [ ] No Apple Watch is paired to this Mac; WCSession cannot be exercised unpaired.
+
+### Phase 3 — Apple TV
+
+The TV is a player, and it carries no annotation. Do not re-open either.
+
+- [ ] The companion note still does not scroll. Get Started is focused; the body is a SwiftUI ScrollView of Text, so the reading's onKeyPress path does not reach it.
+- [ ] Build the player-first interface. Spec is written at `docs/superpowers/specs/2026-09-05-apple-tv-player-design.md`, awaiting his review; no plan until then.
+- [ ] Brand assets: tvOS needs layered parallax icons and a Top Shelf image.
+- [ ] The reading column is the iPad's 672pt of 1920pt. Width and type size move together; his eyes decide the pair.
+
+### Phase 4 — Windows and Linux (last)
+
+- [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.
+- [ ] It must read and write the same backup `.json`.
+- [ ] The rules are ported, never re-invented.
+
+## OPEN — physical-book parity
+
+- [ ] An empty Archive day lists the nearest few days before it that do have a reading.
+- [ ] "Let it fall open" — a random published Daily Minute, falling back to a bundled segment.
+- [ ] Workbook completion tracking — which lessons the reader has done, distinct from listened.
+- [ ] Structure the Manual for Teachers into its question-and-answer form.
+
+## OPEN — content and pipeline
+
+- [ ] Every Workbook introduction is glued to the foot of the lesson before it.
+- [ ] `WorkbookIntroductions.json` entry 500 is two paragraphs short.
+- [ ] HIS CALL — `Pref.N` names two paragraphs; fixing it changes a citation already printed into exports.
+- [ ] Letter-spaced headings still sit inside lesson, Manual, and segment text.
+- [ ] Eleven running heads survive inside Chapter 11's prose.
+- [ ] A stray space before a closing quote. Measure before writing a rule that removes a character.
+- [ ] 186 of 365 lesson bodies are one paragraph; the breaks exist only in the Workbook PDF.
+
+## OPEN — small
+
+- [ ] The archive minute is the last reading that cannot be marked.
+- [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
+- [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
+- [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
+- [ ] The Listen tab has no defined behaviour when YouTube fails.
+- [ ] No deep-link route for the Listen tab.
+- [ ] Today-tab and Archive-tab minute bookmarks do not alias.
+- [ ] `lastArchiveFetch` is declared and never used.
+- [ ] Pre-submission sweep: walk surfaces that display data they do not have.
