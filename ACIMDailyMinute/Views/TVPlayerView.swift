@@ -184,9 +184,12 @@ struct TVPlayerView: View {
     @State private var showTransport = true
     @State private var hideTransportTask: Task<Void, Never>?
     @State private var startTask: Task<Void, Never>?
+    @State private var endWatchTask: Task<Void, Never>?
+    @State private var endDismissTask: Task<Void, Never>?
     @State private var clock = PlayheadClock()
     @State private var startedAt = Date()
     @State private var crawlNudge: CGFloat = 0
+    @State private var isFinished = false
 
     private var display: String {
         TVPlayerText.normalized(item.text)
@@ -237,6 +240,9 @@ struct TVPlayerView: View {
                 clock.sync(media: time, playing: audio.isPlaying)
             }
         }
+        .onChange(of: audio.didFinishPlayback) { _, finished in
+            if finished { markFinished() }
+        }
         .onPlayPauseCommand {
             guard hasAudio, audio.hasActiveAudio else { return }
             audio.togglePlayback()
@@ -262,15 +268,37 @@ struct TVPlayerView: View {
                     nudge: crawlNudge
                 )
 
-                VStack {
-                    Spacer()
-                    transport
-                        .padding(.horizontal, 80)
-                        .padding(.bottom, 36)
-                        .opacity(hasAudio && showTransport ? 1 : 0)
+                if hasAudio, showTransport, !isFinished {
+                    VStack {
+                        Spacer()
+                        transport
+                            .padding(.horizontal, 80)
+                            .padding(.bottom, 36)
+                    }
+                }
+
+                if isFinished {
+                    endCard
                 }
             }
         }
+    }
+
+    /// The list they came from is the menu. This is the focused way off the
+    /// finished frame; Menu still dismisses, and a short hold auto-returns.
+    private var endCard: some View {
+        ZStack {
+            Color.black.opacity(0.45)
+            VStack(spacing: 20) {
+                Text(item.eyebrow)
+                    .font(.caption.weight(.semibold))
+                    .textCase(.uppercase)
+                    .foregroundStyle(.white.opacity(0.7))
+                Button("Choose another") { dismiss() }
+                    .buttonStyle(.card)
+            }
+        }
+        .ignoresSafeArea()
     }
 
     private var transport: some View {
@@ -327,8 +355,10 @@ struct TVPlayerView: View {
 
     private func start() {
         startedAt = Date()
+        isFinished = false
         UIApplication.shared.isIdleTimerDisabled = true
         revealTransport()
+        watchForEnd()
         guard let url = item.audioURL, !url.isEmpty else { return }
         // `video_builder.py` delays the MP3 with `-itsoffset TITLE_HOLD_SECONDS`
         // so the title card is silent and the voice starts with the crawl.
@@ -342,9 +372,47 @@ struct TVPlayerView: View {
 
     private func stop() {
         startTask?.cancel()
+        endWatchTask?.cancel()
+        endDismissTask?.cancel()
         hideTransportTask?.cancel()
         UIApplication.shared.isIdleTimerDisabled = false
         if hasAudio { audio.stop() }
+    }
+
+    /// Audio posts `didFinishPlayback`; a silent crawl is done when its
+    /// estimated duration elapses. Either way the finished frame is not a
+    /// place to sit — Choose another, or a short hold, returns to the list.
+    private func watchForEnd() {
+        endWatchTask?.cancel()
+        endWatchTask = Task {
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 400_000_000)
+                if isFinished { return }
+                if audio.didFinishPlayback {
+                    markFinished()
+                    return
+                }
+                let elapsed = Date().timeIntervalSince(startedAt)
+                if elapsed > TVPlayerLayout.titleHold + 1,
+                   mediaTime(at: .now) >= videoDuration - 0.05 {
+                    markFinished()
+                    return
+                }
+            }
+        }
+    }
+
+    private func markFinished() {
+        guard !isFinished else { return }
+        isFinished = true
+        showTransport = false
+        if hasAudio { audio.stop() }
+        endDismissTask?.cancel()
+        endDismissTask = Task {
+            try? await Task.sleep(nanoseconds: TVPlayerLayout.endHoldNanos)
+            guard !Task.isCancelled else { return }
+            dismiss()
+        }
     }
 
     private func move(_ direction: MoveCommandDirection) {
@@ -395,6 +463,7 @@ private enum TVPlayerLayout {
     static let holdOffscreen: CGFloat = 100
     static let nudgeStep: CGFloat = 80
     static let transportFadeNanos: UInt64 = 4_000_000_000
+    static let endHoldNanos: UInt64 = 8_000_000_000
     static let fontName = "Helvetica"
 }
 

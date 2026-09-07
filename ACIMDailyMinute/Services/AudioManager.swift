@@ -11,10 +11,15 @@ final class AudioManager {
     var duration: Double = 0
     var hasActiveAudio = false
     var lastError: String?
+    /// True after the current item plays through to its end. Cleared on the
+    /// next `play` or `stop`. The television player uses this to leave the
+    /// finished frame instead of sitting on it.
+    var didFinishPlayback = false
 
     private var player: AVPlayer?
     private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
+    private var endObserver: NSObjectProtocol?
 
     func play(url: String, title: String) {
         stop()
@@ -55,6 +60,8 @@ final class AudioManager {
         player = AVPlayer(playerItem: item)
         currentTitle = title
         hasActiveAudio = true
+        didFinishPlayback = false
+        observeEnd(of: item)
 
         setupTimeObserver()
         setupRemoteCommands()
@@ -88,14 +95,40 @@ final class AudioManager {
             player?.removeTimeObserver(observer)
             timeObserver = nil
         }
+        if let endObserver {
+            NotificationCenter.default.removeObserver(endObserver)
+            self.endObserver = nil
+        }
         player?.pause()
         player = nil
         isPlaying = false
         hasActiveAudio = false
+        didFinishPlayback = false
         currentTime = 0
         duration = 0
         currentTitle = ""
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+    }
+
+    private func observeEnd(of item: AVPlayerItem) {
+        if let endObserver {
+            NotificationCenter.default.removeObserver(endObserver)
+        }
+        endObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: item,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                self.isPlaying = false
+                self.didFinishPlayback = true
+                if self.duration > 0 {
+                    self.currentTime = self.duration
+                }
+                self.updateNowPlayingInfo()
+            }
+        }
     }
 
     // MARK: - Failure Reporting
