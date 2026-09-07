@@ -158,8 +158,17 @@ struct LessonsView: View {
                 Button {
                     isJumpSheetPresented = true
                 } label: {
+                    #if os(tvOS)
+                    // Icon+title in this slot sizes to the glyph and clips to "J...p".
+                    Text("Jump to Lesson")
+                        .fixedSize(horizontal: true, vertical: false)
+                    #else
                     Label("Jump", systemImage: "arrow.right.to.line")
+                    #endif
                 }
+                #if os(tvOS)
+                .buttonStyle(.bordered)
+                #endif
                 .accessibilityLabel("Jump to lesson number")
             }
         }
@@ -194,6 +203,8 @@ struct LessonsView: View {
     private var jumpPlacement: ToolbarItemPlacement {
         #if os(iOS)
         .topBarTrailing
+        #elseif os(tvOS)
+        .automatic
         #else
         .primaryAction
         #endif
