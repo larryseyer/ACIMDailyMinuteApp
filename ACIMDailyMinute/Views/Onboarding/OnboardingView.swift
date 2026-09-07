@@ -22,6 +22,7 @@ struct OnboardingView: View {
     @State private var showingNote = false
     #if os(tvOS)
     @FocusState private var focused: OnboardingFocus?
+    @StateObject private var notePage = VerticalPageState()
     #endif
 
     private var pages: [(systemImage: String, title: String, description: String)] {
@@ -64,12 +65,7 @@ struct OnboardingView: View {
             focused = page == pages.count - 1 ? .continuePage : .next
         }
         .onChange(of: showingNote) { _, showing in
-            // Release Continue / Skip so the note's own focusable can take
-            // the remote. Setting `.note` here used to match nothing — the
-            // `.focused` binding sat on a wrapper, not on the focusable —
-            // and SwiftUI handed the remote to Get Started, which is the
-            // defect: down then does not page.
-            if showing { focused = nil }
+            if showing { focused = .getStarted }
         }
         #endif
         #if os(macOS)
@@ -109,7 +105,15 @@ struct OnboardingView: View {
     /// a navigation title there.
     private var noteStage: some View {
         VStack(spacing: 0) {
-            CompanionNoteScroll()
+            #if os(tvOS)
+            TVPageableScroll(page: notePage, capturesKeys: false) {
+                CompanionNoteBody()
+            }
+            #else
+            ScrollView {
+                CompanionNoteBody()
+            }
+            #endif
 
             Button {
                 hasSeenOnboarding = true
@@ -123,6 +127,12 @@ struct OnboardingView: View {
             .tint(Color.acimGold)
             #if os(tvOS)
             .focused($focused, equals: .getStarted)
+            // Get Started holds focus so a click and Select dismiss. The
+            // arrows page the note through this button — a television
+            // delivers keys to the focused view, and the note itself is
+            // not one.
+            .onKeyPress(.downArrow) { notePage.page(goingDown: true) ? .handled : .ignored }
+            .onKeyPress(.upArrow) { notePage.page(goingDown: false) ? .handled : .ignored }
             #endif
             .padding(.horizontal, 40)
             .padding(.top, 12)

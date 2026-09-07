@@ -107,8 +107,22 @@ struct CompanionNoteBody: View {
 /// stack. The introduction presents the same body its own way, with a button
 /// instead of a navigation title — see `OnboardingView`.
 struct CompanionNoteView: View {
+    #if os(tvOS)
+    @StateObject private var page = VerticalPageState()
+    #endif
+
     var body: some View {
-        CompanionNoteScroll()
+        Group {
+            #if os(tvOS)
+            TVPageableScroll(page: page, capturesKeys: true) {
+                CompanionNoteBody()
+            }
+            #else
+            ScrollView {
+                CompanionNoteBody()
+            }
+            #endif
+        }
         .navigationTitle("About")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -116,44 +130,39 @@ struct CompanionNoteView: View {
     }
 }
 
-/// The scroller both presentations share. On a phone or a Mac it is a
-/// `ScrollView`. On a television a `ScrollView` of `Text` has nothing
-/// focusable, so the remote's down arrow never moves a pixel — Get Started
-/// stays focused and the rest of the note is unreachable. tvOS pages by the
-/// same arithmetic the reading `UITextView` already uses.
-struct CompanionNoteScroll: View {
-    var body: some View {
-        #if os(tvOS)
-        TVPageableScroll {
-            CompanionNoteBody()
-        }
-        #else
-        ScrollView {
-            CompanionNoteBody()
-        }
-        #endif
+#if os(tvOS)
+/// Offset and sizes for a television-paged document. The introduction's
+/// Get Started button holds focus (so a click and Select dismiss) and calls
+/// `page` on the arrows; Settings has no such button, so the scroller
+/// captures the keys itself.
+@MainActor
+final class VerticalPageState: ObservableObject {
+    @Published var offset: CGFloat = 0
+    var contentHeight: CGFloat = 0
+    var viewportHeight: CGFloat = 0
+
+    func page(goingDown: Bool) -> Bool {
+        guard contentHeight > 0, viewportHeight > 0 else { return true }
+        guard let next = VerticalPager.page(
+            current: offset,
+            contentHeight: contentHeight,
+            viewportHeight: viewportHeight,
+            goingDown: goingDown,
+            lineHeight: UIFont.preferredFont(forTextStyle: .body).lineHeight
+        ) else { return false }
+        offset = next
+        return true
     }
 }
 
-#if os(tvOS)
-/// Pages a tall SwiftUI document with the remote.
-///
-/// ⛔ **Not a `ScrollView`.** tvOS scrolls by moving focus, and there is no
-/// focusable descendant in a stack of `Text`. The reading screens already
-/// proved the working shape: the view itself is focusable, the glow is off,
-/// `onKeyPress` consumes the arrow while there is more to page and returns
-/// `.ignored` at either end so Skip / Get Started can take focus.
+/// Pages a tall SwiftUI document. Not a `ScrollView`: tvOS scrolls by moving
+/// focus, and a stack of `Text` has nothing focusable. The offset is owned
+/// by `VerticalPageState` so a focused button next to this view can page it.
 struct TVPageableScroll<Content: View>: View {
+    @ObservedObject var page: VerticalPageState
+    var capturesKeys: Bool = true
     @ViewBuilder var content: Content
-    @State private var offset: CGFloat = 0
-    @State private var contentHeight: CGFloat = 0
-    @State private var viewportHeight: CGFloat = 0
     @FocusState private var isFocused: Bool
-    @Namespace private var focusNS
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
 
     var body: some View {
         GeometryReader { viewport in
@@ -168,47 +177,45 @@ struct TVPageableScroll<Content: View>: View {
                         )
                     }
                 )
-                .offset(y: -offset)
+                .offset(y: -page.offset)
+                .animation(.easeInOut(duration: 0.2), value: page.offset)
                 .frame(
                     width: viewport.size.width,
                     height: viewport.size.height,
                     alignment: .topLeading
                 )
-                .onAppear { viewportHeight = viewport.size.height }
-                .onChange(of: viewport.size.height) { _, h in viewportHeight = h }
+                .onAppear { page.viewportHeight = viewport.size.height }
+                .onChange(of: viewport.size.height) { _, h in page.viewportHeight = h }
         }
         .clipped()
-        .contentShape(Rectangle())
-        .focusable()
-        .focused($isFocused)
-        .focusEffectDisabled()
-        .focusScope(focusNS)
-        .prefersDefaultFocus(true, in: focusNS)
-        .onAppear {
-            // A Button in the same stack (Get Started) wins the first focus
-            // pass. Claim the remote on the next turn, once this view is in
-            // the engine.
-            DispatchQueue.main.async { isFocused = true }
-        }
-        .onPreferenceChange(TVScrollContentHeightKey.self) { contentHeight = $0 }
-        .onKeyPress(.downArrow) { press(goingDown: true) }
-        .onKeyPress(.upArrow) { press(goingDown: false) }
+        .onPreferenceChange(TVScrollContentHeightKey.self) { page.contentHeight = $0 }
+        .modifier(TVPageKeyCapture(page: page, enabled: capturesKeys, isFocused: $isFocused))
     }
+}
 
-    private func press(goingDown: Bool) -> KeyPress.Result {
-        // A press before the first layout would otherwise return nil and
-        // hand the arrow to Get Started, which is the defect this view exists
-        // to close.
-        guard contentHeight > 0, viewportHeight > 0 else { return .handled }
-        guard let next = VerticalPager.page(
-            current: offset,
-            contentHeight: contentHeight,
-            viewportHeight: viewportHeight,
-            goingDown: goingDown,
-            lineHeight: UIFont.preferredFont(forTextStyle: .body).lineHeight
-        ) else { return .ignored }
-        withAnimation(.easeInOut(duration: 0.2)) { offset = next }
-        return .handled
+/// Keys live on the focused view. Settings has only this scroller, so it
+/// captures them. The introduction leaves them off so Get Started can keep
+/// focus — a television click is a Select on whatever is focused, and if
+/// that is the note, Get Started never fires.
+private struct TVPageKeyCapture: ViewModifier {
+    @ObservedObject var page: VerticalPageState
+    var enabled: Bool
+    var isFocused: FocusState<Bool>.Binding
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if enabled {
+            content
+                .contentShape(Rectangle())
+                .focusable()
+                .focused(isFocused)
+                .focusEffectDisabled()
+                .onAppear { DispatchQueue.main.async { isFocused.wrappedValue = true } }
+                .onKeyPress(.downArrow) { page.page(goingDown: true) ? .handled : .ignored }
+                .onKeyPress(.upArrow) { page.page(goingDown: false) ? .handled : .ignored }
+        } else {
+            content
+        }
     }
 }
 
