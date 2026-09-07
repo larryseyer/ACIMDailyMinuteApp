@@ -94,7 +94,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 - [ ] The companion note still does not scroll. Get Started is focused; the body is a SwiftUI ScrollView of Text, so the reading's onKeyPress path does not reach it.
 - [ ] Build the player-first interface. Spec is written at `docs/superpowers/specs/2026-09-05-apple-tv-player-design.md`, awaiting his review; no plan until then.
 - [ ] Brand assets: tvOS needs layered parallax icons and a Top Shelf image.
-- [ ] The reading column is the iPad's 672pt of 1920pt. Width and type size move together; his eyes decide the pair.
 
 ### Phase 4 — Windows and Linux (last)
 
