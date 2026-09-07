@@ -93,7 +93,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 - [ ] Listen and Archive on the television still open a list, not the player.
 - [ ] Read on the television still pushes a reading; Select should start the player.
-- [ ] Brand assets: tvOS needs layered parallax icons and a Top Shelf image.
 
 ### Phase 4 — Windows and Linux (last)
 
