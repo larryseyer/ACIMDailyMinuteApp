@@ -1,5 +1,5 @@
 # continue.md
 
-Read on the television still pushes a reading; Select should start the player.
+D — Archive becomes Video. Confirm the recast before building.
 
-todo.md — Phase 3, Apple TV.
+todo.md — PAUSED, standardized reading layout.

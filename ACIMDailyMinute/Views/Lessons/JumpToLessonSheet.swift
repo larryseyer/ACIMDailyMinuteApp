@@ -15,6 +15,9 @@ struct JumpToLessonSheet: View {
     @Binding var path: NavigationPath
 
     @Environment(\.dismiss) private var dismiss
+    #if os(tvOS)
+    @Environment(\.openPlayer) private var openPlayer
+    #endif
     @State private var raw: String = ""
 
     private var trimmed: String {
@@ -96,7 +99,11 @@ struct JumpToLessonSheet: View {
 
     private func submit() {
         guard let n = parsed, (1...365).contains(n) else { return }
+        #if os(tvOS)
+        openPlayer(.workbookLesson(n))
+        #else
         path.append(n)
+        #endif
         dismiss()
     }
 }

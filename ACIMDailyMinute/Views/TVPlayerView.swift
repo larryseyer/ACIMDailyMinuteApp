@@ -11,7 +11,7 @@ import UIKit
 ///
 /// The composition is `video_builder.py` in the daily pipeline
 /// (`acim-daily-minute`), drawn live at 4K instead of muxed into an MP4.
-struct TVPlayerItem: Identifiable, Hashable {
+struct TVPlayerItem: Identifiable, Hashable, Sendable {
     let id: String
     let eyebrow: String
     let title: String?
@@ -88,6 +88,79 @@ struct TVPlayerItem: Identifiable, Hashable {
             citation: nil,
             audioURL: reading.audioURL,
             artName: "PlayerArtLesson"
+        )
+    }
+
+    static func workbookLesson(_ number: Int, audioURL: String? = nil) -> TVPlayerItem {
+        if let intro = WorkbookBodiesCatalog.introduction(for: number) {
+            return TVPlayerItem(
+                id: "intro:\(number)",
+                eyebrow: "Introduction",
+                title: intro.title,
+                text: intro.body,
+                citation: nil,
+                audioURL: audioURL,
+                artName: "PlayerArtLesson"
+            )
+        }
+        let title = WorkbookCatalog.title(for: number)
+        let body = WorkbookBodiesCatalog.body(for: number) ?? title ?? "Lesson \(number)"
+        return TVPlayerItem(
+            id: "lesson:\(number)",
+            eyebrow: "Lesson \(number)",
+            title: title,
+            text: body,
+            citation: nil,
+            audioURL: audioURL,
+            artName: "PlayerArtLesson"
+        )
+    }
+
+    static func textSection(chapter: Int, section: Int) -> TVPlayerItem {
+        guard let reading = CorpusService.shared.textSection(chapter: chapter, section: section) else {
+            return TVPlayerItem(
+                id: "text:\(chapter).\(section)",
+                eyebrow: "Text",
+                title: nil,
+                text: "",
+                citation: nil,
+                audioURL: nil,
+                artName: "PlayerArtText"
+            )
+        }
+        return TVPlayerItem(
+            id: "text:\(chapter).\(section)",
+            eyebrow: chapter == 0 ? "Preface" : "Chapter \(chapter)",
+            title: reading.sectionTitle,
+            text: reading.body,
+            citation: nil,
+            audioURL: nil,
+            artName: "PlayerArtText"
+        )
+    }
+
+    static func manual(_ segmentId: Int) -> TVPlayerItem {
+        let reading = CorpusService.shared.manualSegment(id: segmentId)
+        return TVPlayerItem(
+            id: "manual:\(segmentId)",
+            eyebrow: "Manual for Teachers",
+            title: nil,
+            text: reading?.body ?? "",
+            citation: reading?.citation,
+            audioURL: nil,
+            artName: "PlayerArtText"
+        )
+    }
+
+    func withAudioURL(_ url: String) -> TVPlayerItem {
+        TVPlayerItem(
+            id: id,
+            eyebrow: eyebrow,
+            title: title,
+            text: text,
+            citation: citation,
+            audioURL: url,
+            artName: artName
         )
     }
 
@@ -523,6 +596,31 @@ private struct TVPlayerScrollLayer: View {
 
 /// Interpolates between the audio observer's 0.5s ticks so the crawl does
 /// not stutter. Resyncs on play/pause and on a seek larger than a tick.
+/// Installed by the Read tab so a lesson, section, or introduction Select
+/// starts the player instead of pushing a reading.
+struct OpenPlayerAction: Sendable {
+    private let handler: @Sendable (TVPlayerItem) -> Void
+
+    init(handler: @escaping @Sendable (TVPlayerItem) -> Void) {
+        self.handler = handler
+    }
+
+    func callAsFunction(_ item: TVPlayerItem) { handler(item) }
+}
+
+private struct OpenPlayerKey: EnvironmentKey {
+    static let defaultValue = OpenPlayerAction { _ in
+        assertionFailure("openPlayer used with no player installed")
+    }
+}
+
+extension EnvironmentValues {
+    var openPlayer: OpenPlayerAction {
+        get { self[OpenPlayerKey.self] }
+        set { self[OpenPlayerKey.self] = newValue }
+    }
+}
+
 private struct PlayheadClock {
     var originMedia: Double = 0
     var originWall: Date = .now

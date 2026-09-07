@@ -23,6 +23,9 @@ import SwiftData
 ///     programmatically appends an `Int` to the shared `NavigationPath`.
 struct LessonsView: View {
     @Environment(AudioManager.self) private var audio
+    #if os(tvOS)
+    @Environment(\.modelContext) private var modelContext
+    #endif
     @Query(sort: \DailyLesson.lessonNumber) private var lessons: [DailyLesson]
     @Query(
         filter: #Predicate<ArchivedReading> { $0.channel == "daily-lesson" },
@@ -45,6 +48,9 @@ struct LessonsView: View {
     @State private var searchText: String = ""
     @State private var isJumpSheetPresented: Bool = false
     @State private var shelf: Shelf = .workbook
+    #if os(tvOS)
+    @State private var playerItem: TVPlayerItem?
+    #endif
 
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -110,12 +116,22 @@ struct LessonsView: View {
                 ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
             }
             .readingDestinations(path: $path)
+            #if os(tvOS)
+            .environment(\.openPlayer, OpenPlayerAction { present($0) })
+            .fullScreenCover(item: $playerItem) { item in
+                TVPlayerView(item: item)
+            }
+            #endif
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
                 // A widget or notification tap on a lesson must never land on a
                 // chapter list.
                 shelf = .workbook
+                #if os(tvOS)
+                present(.workbookLesson(n))
+                #else
                 path.append(n)
+                #endif
             }
         }
     }
@@ -151,6 +167,29 @@ struct LessonsView: View {
             JumpToLessonSheet(path: $path)
         }
     }
+
+    #if os(tvOS)
+    /// Attach a published MP3 when Read opens a lesson that has one, so the
+    /// book and the narration meet without Read becoming Listen.
+    private func present(_ item: TVPlayerItem) {
+        guard item.audioURL == nil,
+              item.id.hasPrefix("lesson:"),
+              let number = Int(item.id.dropFirst("lesson:".count))
+        else {
+            playerItem = item
+            return
+        }
+        let descriptor = FetchDescriptor<DailyLesson>(
+            predicate: #Predicate { $0.lessonNumber == number }
+        )
+        if let lesson = try? modelContext.fetch(descriptor).first,
+           let url = lesson.audioURL, !url.isEmpty {
+            playerItem = item.withAudioURL(url)
+        } else {
+            playerItem = item
+        }
+    }
+    #endif
 
     private var jumpPlacement: ToolbarItemPlacement {
         #if os(iOS)
@@ -229,6 +268,9 @@ private struct FilteredLessonsList: View {
     /// fires once per appearance — re-running it on a later redraw would yank
     /// the list out from under someone who has scrolled away.
     @State private var hasScrolledToCurrent = false
+    #if os(tvOS)
+    @Environment(\.openPlayer) private var openPlayer
+    #endif
 
     var body: some View {
         let visible = lessonNumbers()
@@ -279,18 +321,22 @@ private struct FilteredLessonsList: View {
     @ViewBuilder
     private func introductionRow(_ lessonNumber: Int) -> some View {
         if let intro = WorkbookBodiesCatalog.introduction(for: lessonNumber) {
-            NavigationLink(value: IntroductionRef(lessonNumber: lessonNumber)) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(intro.title)
-                        .font(.system(.subheadline, design: .serif).weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("Workbook for Students")
-                        .font(.acimCaption2)
-                        .foregroundStyle(.tertiary)
-                }
-                .padding(.vertical, 4)
-                .contentShape(Rectangle())
+            let label = VStack(alignment: .leading, spacing: 2) {
+                Text(intro.title)
+                    .font(.system(.subheadline, design: .serif).weight(.semibold))
+                    .foregroundStyle(.primary)
+                Text("Workbook for Students")
+                    .font(.acimCaption2)
+                    .foregroundStyle(.tertiary)
             }
+            .padding(.vertical, 4)
+            .contentShape(Rectangle())
+
+            #if os(tvOS)
+            Button { openPlayer(.workbookLesson(lessonNumber)) } label: { label }
+            #else
+            NavigationLink(value: IntroductionRef(lessonNumber: lessonNumber)) { label }
+            #endif
         }
     }
 

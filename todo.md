@@ -91,8 +91,6 @@ Ranked by his instruction: get it right on the common Apple environment first. t
 
 The TV is a player, and it carries no annotation. Do not re-open either.
 
-- [ ] Read on the television still pushes a reading; Select should start the player.
-
 ### Phase 4 — Windows and Linux (last)
 
 - [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.

@@ -16,6 +16,9 @@ struct ContinueReadingRow: View {
     /// Coming back from a reading is exactly when this has changed, and a
     /// `List` will not re-read `UserDefaults` on its own to find out.
     @AppStorage(ReadingPositionStore.defaultsKey) private var stored: Data = Data()
+    #if os(tvOS)
+    @Environment(\.openPlayer) private var openPlayer
+    #endif
 
     private var position: ReadingPosition? {
         ReadingPosition.decode(stored)[book.rawValue]
@@ -41,14 +44,29 @@ struct ContinueReadingRow: View {
     var body: some View {
         switch key {
         case .textSection(let chapter, let section):
+            #if os(tvOS)
+            Button { openPlayer(.textSection(chapter: chapter, section: section)) } label: { label }
+                .buttonStyle(.plain)
+            #else
             NavigationLink(value: TextSectionRef(chapter: chapter, section: section)) { label }
                 .buttonStyle(.plain)
+            #endif
         case .lesson(let number) where number == 0 || number == 500:
+            #if os(tvOS)
+            Button { openPlayer(.workbookLesson(number)) } label: { label }
+                .buttonStyle(.plain)
+            #else
             NavigationLink(value: IntroductionRef(lessonNumber: number)) { label }
                 .buttonStyle(.plain)
+            #endif
         case .lesson(let number):
+            #if os(tvOS)
+            Button { openPlayer(.workbookLesson(number)) } label: { label }
+                .buttonStyle(.plain)
+            #else
             NavigationLink(value: LessonRef(lessonNumber: number, presentsVideo: false)) { label }
                 .buttonStyle(.plain)
+            #endif
         case .segment, .manual, .minuteDate, nil:
             EmptyView()
         }
