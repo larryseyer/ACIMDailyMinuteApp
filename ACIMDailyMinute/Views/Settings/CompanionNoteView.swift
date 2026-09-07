@@ -108,15 +108,117 @@ struct CompanionNoteBody: View {
 /// instead of a navigation title — see `OnboardingView`.
 struct CompanionNoteView: View {
     var body: some View {
-        ScrollView {
-            CompanionNoteBody()
-        }
+        CompanionNoteScroll()
         .navigationTitle("About")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 }
+
+/// The scroller both presentations share. On a phone or a Mac it is a
+/// `ScrollView`. On a television a `ScrollView` of `Text` has nothing
+/// focusable, so the remote's down arrow never moves a pixel — Get Started
+/// stays focused and the rest of the note is unreachable. tvOS pages by the
+/// same arithmetic the reading `UITextView` already uses.
+struct CompanionNoteScroll: View {
+    var body: some View {
+        #if os(tvOS)
+        TVPageableScroll {
+            CompanionNoteBody()
+        }
+        #else
+        ScrollView {
+            CompanionNoteBody()
+        }
+        #endif
+    }
+}
+
+#if os(tvOS)
+/// Pages a tall SwiftUI document with the remote.
+///
+/// ⛔ **Not a `ScrollView`.** tvOS scrolls by moving focus, and there is no
+/// focusable descendant in a stack of `Text`. The reading screens already
+/// proved the working shape: the view itself is focusable, the glow is off,
+/// `onKeyPress` consumes the arrow while there is more to page and returns
+/// `.ignored` at either end so Skip / Get Started can take focus.
+struct TVPageableScroll<Content: View>: View {
+    @ViewBuilder var content: Content
+    @State private var offset: CGFloat = 0
+    @State private var contentHeight: CGFloat = 0
+    @State private var viewportHeight: CGFloat = 0
+    @FocusState private var isFocused: Bool
+    @Namespace private var focusNS
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        GeometryReader { viewport in
+            content
+                .frame(width: viewport.size.width, alignment: .topLeading)
+                .fixedSize(horizontal: false, vertical: true)
+                .background(
+                    GeometryReader { g in
+                        Color.clear.preference(
+                            key: TVScrollContentHeightKey.self,
+                            value: g.size.height
+                        )
+                    }
+                )
+                .offset(y: -offset)
+                .frame(
+                    width: viewport.size.width,
+                    height: viewport.size.height,
+                    alignment: .topLeading
+                )
+                .onAppear { viewportHeight = viewport.size.height }
+                .onChange(of: viewport.size.height) { _, h in viewportHeight = h }
+        }
+        .clipped()
+        .contentShape(Rectangle())
+        .focusable()
+        .focused($isFocused)
+        .focusEffectDisabled()
+        .focusScope(focusNS)
+        .prefersDefaultFocus(true, in: focusNS)
+        .onAppear {
+            // A Button in the same stack (Get Started) wins the first focus
+            // pass. Claim the remote on the next turn, once this view is in
+            // the engine.
+            DispatchQueue.main.async { isFocused = true }
+        }
+        .onPreferenceChange(TVScrollContentHeightKey.self) { contentHeight = $0 }
+        .onKeyPress(.downArrow) { press(goingDown: true) }
+        .onKeyPress(.upArrow) { press(goingDown: false) }
+    }
+
+    private func press(goingDown: Bool) -> KeyPress.Result {
+        // A press before the first layout would otherwise return nil and
+        // hand the arrow to Get Started, which is the defect this view exists
+        // to close.
+        guard contentHeight > 0, viewportHeight > 0 else { return .handled }
+        guard let next = VerticalPager.page(
+            current: offset,
+            contentHeight: contentHeight,
+            viewportHeight: viewportHeight,
+            goingDown: goingDown,
+            lineHeight: UIFont.preferredFont(forTextStyle: .body).lineHeight
+        ) else { return .ignored }
+        withAnimation(.easeInOut(duration: 0.2)) { offset = next }
+        return .handled
+    }
+}
+
+private struct TVScrollContentHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+#endif
 
 #Preview {
     NavigationStack {

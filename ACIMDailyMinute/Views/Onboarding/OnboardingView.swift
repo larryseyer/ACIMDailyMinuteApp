@@ -64,7 +64,12 @@ struct OnboardingView: View {
             focused = page == pages.count - 1 ? .continuePage : .next
         }
         .onChange(of: showingNote) { _, showing in
-            if showing { focused = .getStarted }
+            // Release Continue / Skip so the note's own focusable can take
+            // the remote. Setting `.note` here used to match nothing — the
+            // `.focused` binding sat on a wrapper, not on the focusable —
+            // and SwiftUI handed the remote to Get Started, which is the
+            // defect: down then does not page.
+            if showing { focused = nil }
         }
         #endif
         #if os(macOS)
@@ -104,9 +109,7 @@ struct OnboardingView: View {
     /// a navigation title there.
     private var noteStage: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                CompanionNoteBody()
-            }
+            CompanionNoteScroll()
 
             Button {
                 hasSeenOnboarding = true
