@@ -20,31 +20,29 @@ is settled too — **the television KEEPS its reading position**, because a ribb
 than a mark; the reasoning is written into `Services/ReadingPositionStore.swift` so it reads as chosen
 rather than overlooked. Do not re-open either half.
 
-⛔⛔ **A PUSHED READING STILL WILL NOT SCROLL. THAT IS WHAT IS LEFT OF THE FOCUS PROBLEM.** tvOS
-navigates by moving focus; a pushed reading has one focusable element, `ListenButton`, at the top.
-`Preface > The Use of Terms` ("about 22 min") takes five down presses with screenshots
-**MD5-identical**.
+⛔ **A pushed reading pages with the remote.** On tvOS a reading SCREEN (one that records a ribbon)
+sizes its `UITextView` to a viewport, takes focus, and handles the arrows itself:
+`onKeyPress` returns `.handled` while there is more to page and `.ignored` at either end so
+Previous / Next can take focus. Three facts, all measured, and all three are required:
+`.focusable()` alone lets SwiftUI treat down as focus movement and walk to the footer links,
+leaving the text unmoved; `canBecomeFocused` on the UIView alone never pulled focus off the
+tab bar; the `UIScrollView` pan-recogniser promise does not fire inside a SwiftUI representable.
+`Preface > The Use of Terms` ("about 22 min") takes eight down presses with eight distinct MD5s;
+the title stays put and the body advances, on whole lines. Cards keep the phone treatment —
+they already sit in a list of buttons. The glow is suppressed on the reading
+(`.focusEffectDisabled()`), not on the chrome. Lives in `SelectableReadingText`; iOS is unchanged.
 
 ⛔ **The introduction is no longer a hard gate.** tvOS takes the Mac carousel — one page at a time,
 chevron buttons, preferred focus on the right chevron — so Select pages rather than dismissing.
 Measured 2026-09-06 on the Apple TV 4K (3rd generation) simulator: five Select presses, five
-distinct MD5s, all five cards, Continue, Get Started, Today. `.focusEffectDisabled()` is Mac-only;
-the television draws the ring on the focused chevron. `.searchable` is fenced off tvOS on Read and
-Archive; the Read tab shows the Workbook shelf with no a-z keyboard.
+distinct MD5s, all five cards, Continue, Get Started, Today. `.focusEffectDisabled()` is Mac-only
+on the introduction; the television draws the ring on the focused chevron. `.searchable` is fenced
+off tvOS on Read and Archive; the Read tab shows the Workbook shelf with no a-z keyboard.
 
 ⛔ **The companion note still does not scroll.** Get Started is focused and the body is clipped.
-`.focusable()` on `CompanionNoteBody` moved focus off Get Started without moving the text — the
-same shape as the reading, on a SwiftUI `ScrollView` rather than a representable. Reverted.
-
-⛔ **THE OBVIOUS FIX WAS TRIED AND IT DID NOT WORK — do not re-spend that day.** A throwaway spike
-made the `UITextView` focusable (`canBecomeFocused` overridden in a subclass), set
-`isScrollEnabled = true` and set `panGestureRecognizer.allowedTouchTypes = [.indirect]`, and
-bounded the viewport. **Focus still never left the tab bar** — `Read` stayed lit and the reading did
-not move. So the `UIScrollView` header's promise that indirect pan "automatically supports
-directional presses" is **not sufficient inside a SwiftUI `UIViewRepresentable`**: something has to
-route focus *into* the representable first, and `canBecomeFocused` alone does not do it. The spike
-is reverted. ⛔ **The next hypothesis, untested, is `.focusable()` on the SwiftUI side of the
-representable** — but the mechanism is UNPROVEN and the spec says so.
+It is a SwiftUI `ScrollView` of `Text`, not the reading representable, so the `onKeyPress` path
+does not reach it. `.focusable()` on `CompanionNoteBody` moved focus off Get Started without
+moving the text. Next.
 
 ⛔ **The rule: ON tvOS TAKE THE MAC'S TREATMENT, NOT THE PHONE'S.** The Mac and the television both
 navigate discretely, between things that hold focus; the phone navigates continuously, by dragging
@@ -693,6 +691,10 @@ this Mac:
 
 ## ⛔ PICK UP HERE
 
+**The companion note still does not scroll.** Get Started is focused and the body is clipped. It is
+a SwiftUI `ScrollView` of `Text`, not the reading representable, so the `onKeyPress` path that
+pages a pushed reading does not reach it. That is the next television item.
+
 ⛔ **He is testing now, and the `⏸ PARKED` block in [`todo.md`](todo.md) is live rather than held.**
 He asked for it as a list and has begun working through it, so an item there may be surfaced — but
 only from that block, and only as part of the list. **Never invent a new thing for him to check while
@@ -1054,15 +1056,15 @@ written and must not be written until he has reviewed the spec.**
 - **His archive.org ban was a false positive** — they took him for a bot and have cleared him
   entirely. It is not a strike against him and must not be described as one.
 
-⛔ **What is genuinely open on the television, in order:** the pushed reading that will not scroll,
-whose mechanism is UNPROVEN; the companion note that will not scroll, same shape; then the reading
-column and type size, which need his eyes. The introduction pages, the focus ring, the searchable
-keyboard and the annotation removal are done and seen.
+⛔ **What is genuinely open on the television, in order:** the companion note that will not scroll
+(a SwiftUI `ScrollView` of `Text`, so the reading's `onKeyPress` path does not reach it); then the
+reading column and type size, which need his eyes. The introduction pages, the pushed reading,
+the focus ring, the searchable keyboard and the annotation removal are done and seen.
 
 From [`todo.md`](todo.md), in order:
 
 1. **Phase 3 — Apple TV**, then **Phase 4 — the web reader**, in that order and never overlapping.
-   ⛔ Its first item is the reading that will not scroll, and that one needs him.
+   ⛔ Its first item is the companion note that will not scroll.
    ⛔ Do not drive the iPad sim `58B7D31D-…`; he has asked that that one be left alone. The iPad
    Pro 11-inch (M5) sim `24B47A3C-E5AC-417E-AEB6-6303684193FC` (iOS 26.5) is the one to use.
    ⛔ Phase 2, the Watch, is finished apart from three design calls that are his and are marked

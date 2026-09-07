@@ -68,9 +68,45 @@ struct SelectableReadingText: View {
     @MainActor
     final class PositionReporter {
         fileprivate var read: (() -> Int?)?
+        #if os(tvOS)
+        fileprivate weak var textView: UITextView?
+        #endif
 
         func currentOffset() -> Int? { read?() }
+
+        #if os(tvOS)
+        /// Pages the reading. Returns false at either end so the arrow can
+        /// leave for Previous / Next rather than trapping the viewer.
+        fileprivate func page(_ direction: MoveCommandDirection) -> Bool {
+            guard let view = textView, view.bounds.height > 0 else { return false }
+            let maxY = max(0, view.contentSize.height - view.bounds.height)
+            let current = view.contentOffset.y
+            // Whole lines, so a page does not land mid-glyph at the top edge.
+            let font = view.attributedText.length > 0
+                ? view.attributedText.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
+                : view.font
+            let line = max(font?.lineHeight ?? 28, 1)
+            let step = max((view.bounds.height * 0.8 / line).rounded(.down) * line, line)
+            let target: CGFloat
+            switch direction {
+            case .down:
+                if current >= maxY - 1 { return false }
+                target = min(current + step, maxY)
+            case .up:
+                if current <= 1 { return false }
+                target = max(current - step, 0)
+            default:
+                return false
+            }
+            view.setContentOffset(CGPoint(x: 0, y: target), animated: true)
+            return true
+        }
+        #endif
     }
+
+    #if os(tvOS)
+    @FocusState private var readingFocused: Bool
+    #endif
 
     /// Where a tapped cross-reference goes. Installed by the enclosing stack's
     /// `readingDestinations(path:)`.
@@ -130,6 +166,27 @@ struct SelectableReadingText: View {
                 openReading(.lesson(LessonRef(lessonNumber: lesson, presentsVideo: false)))
             }
         )
+        // tvOS scrolls by moving focus. `.focusable()` puts the representable
+        // in the engine; the arrows are handled here rather than left to the
+        // focus engine, which would walk to Previous / Next at the foot.
+        // `onMoveCommand` observes and does not consume — returning `.handled`
+        // from `onKeyPress` is what keeps focus on the reading so it can page.
+        #if os(tvOS)
+        .focusable(positionReporter != nil)
+        .focused($readingFocused)
+        .focusEffectDisabled()
+        .onKeyPress(.downArrow) {
+            guard positionReporter != nil else { return .ignored }
+            return (positionReporter?.page(.down) ?? false) ? .handled : .ignored
+        }
+        .onKeyPress(.upArrow) {
+            guard positionReporter != nil else { return .ignored }
+            return (positionReporter?.page(.up) ?? false) ? .handled : .ignored
+        }
+        .onAppear {
+            if positionReporter != nil { readingFocused = true }
+        }
+        #endif
     }
 
     /// The spotlight's words, found again in the string this view draws. An
@@ -301,6 +358,14 @@ struct SelectableReadingText: View {
     }
 }
 
+#if os(tvOS)
+/// Directional presses only reach a representable whose UIView can become
+/// focused. The SwiftUI `.focusable()` on the wrapper is the other half.
+private final class FocusableReadingTextView: UITextView {
+    override var canBecomeFocused: Bool { true }
+}
+#endif
+
 #if os(iOS) || os(tvOS)
 private struct TextViewRepresentable: UIViewRepresentable {
     let attributed: NSAttributedString
@@ -314,22 +379,43 @@ private struct TextViewRepresentable: UIViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeUIView(context: Context) -> UITextView {
+        #if os(tvOS)
+        // Reading screens (those that report a ribbon) scroll themselves on
+        // the television: the outer SwiftUI ScrollView only moves when focus
+        // does, and a full-height text view has no on-screen neighbour for
+        // focus to reach. Cards keep the phone treatment — they already sit
+        // in a list of buttons.
+        let view: UITextView = positionReporter != nil
+            ? FocusableReadingTextView()
+            : UITextView()
+        #else
         let view = UITextView()
+        #endif
         view.delegate = context.coordinator
+        #if os(tvOS)
+        if positionReporter != nil {
+            view.isScrollEnabled = true
+            view.isUserInteractionEnabled = true
+            view.showsVerticalScrollIndicator = true
+            view.panGestureRecognizer.allowedTouchTypes = [
+                NSNumber(value: UITouch.TouchType.indirect.rawValue)
+            ]
+            view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+            view.setContentHuggingPriority(.defaultLow, for: .vertical)
+        } else {
+            view.isScrollEnabled = false
+            view.setContentCompressionResistancePriority(.required, for: .vertical)
+            view.setContentHuggingPriority(.required, for: .vertical)
+        }
+        view.isSelectable = false
+        #else
         // The call sites are already inside a SwiftUI ScrollView. A second
         // scroller here breaks both.
         view.isScrollEnabled = false
-        // ⛔ **`isEditable` is UNAVAILABLE on tvOS and `isSelectable` is not**,
-        // which is why these two cannot share one fence. The old pair sat
-        // together behind `#if !os(tvOS)` under a comment claiming the
-        // television had neither editing nor selection — but the television was
-        // simply never told, and took `UITextView`'s own default. The half that
-        // compiles there is stated there.
-        #if os(tvOS)
-        view.isSelectable = false
-        #else
         view.isEditable = false
         view.isSelectable = true
+        view.setContentCompressionResistancePriority(.required, for: .vertical)
+        view.setContentHuggingPriority(.required, for: .vertical)
         #endif
         view.backgroundColor = .clear
         // Without these the text sits inset from the SwiftUI layout it replaces.
@@ -340,8 +426,6 @@ private struct TextViewRepresentable: UIViewRepresentable {
         view.dataDetectorTypes = []
         #endif
         view.linkTextAttributes = SelectableReadingText.linkAttributes
-        view.setContentCompressionResistancePriority(.required, for: .vertical)
-        view.setContentHuggingPriority(.required, for: .vertical)
         return view
     }
 
@@ -363,6 +447,9 @@ private struct TextViewRepresentable: UIViewRepresentable {
             Self.scroll(view, to: resume, anchor: .top, attempt: 0)
         }
         installReporter(on: view, display: display)
+        #if os(tvOS)
+        positionReporter?.textView = view
+        #endif
     }
 
     /// Hands the owner a way to ask where the reader is now.
@@ -571,10 +658,20 @@ private struct TextViewRepresentable: UIViewRepresentable {
         // Measured through `ReadingTextMeasurement` rather than the view, so both
         // platforms size a reading by the one rule `verify_text_measurement.sh`
         // compiles and checks.
-        return CGSize(
-            width: width,
-            height: ReadingTextMeasurement.height(of: attributed, width: width)
-        )
+        let contentHeight = ReadingTextMeasurement.height(of: attributed, width: width)
+        #if os(tvOS)
+        if positionReporter != nil {
+            // A full-height text view has nothing to pan. Cap to a viewport
+            // so the view itself can take focus and scroll. The outer
+            // ScrollView proposes unbounded height, so the cap cannot come
+            // from the proposal alone.
+            let screenCap = UIScreen.main.bounds.height * 0.65
+            let proposed = proposal.height ?? .infinity
+            let cap = (proposed.isFinite && proposed > 0) ? min(proposed, screenCap) : screenCap
+            return CGSize(width: width, height: min(contentHeight, cap))
+        }
+        #endif
+        return CGSize(width: width, height: contentHeight)
     }
 }
 #elseif os(macOS)
