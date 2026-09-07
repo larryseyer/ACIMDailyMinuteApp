@@ -598,28 +598,11 @@ from the code, and is open to correction; the two sentences above are not.
       painted, exported or listed, `SelectableReadingText` says outright that a reader's place is not
       a reader's mark — and it is device-local on a TV, so a purged container costs a scroll position
       and not a word. Nothing of the reader's is trapped there because nothing of theirs is there.
-- [ ] ⛔⛔ **A PUSHED READING WILL NOT SCROLL, AND THAT IS WHAT IS LEFT OF THE FOCUS PROBLEM.**
-      tvOS navigates by moving focus; a pushed reading has one focusable element, `ListenButton`,
-      at the top, and nothing below for focus to reach. `Preface > The Use of Terms` ("about 22 min")
-      takes five down presses with screenshots **MD5-identical**. The Today tab scrolls only because
-      it is a list of cards each carrying its own button, and that is what hid this.
-      The introduction is no longer this defect: tvOS takes the Mac carousel (one page, chevron
-      buttons, preferred focus on the right chevron so Select pages rather than Skip). Five Select
-      presses, five distinct MD5s, all five cards, Continue, then Get Started. `.focusEffectDisabled()`
-      is Mac-only; the television draws the ring. `.searchable` is fenced off tvOS on Read and Archive.
-      ⛔ **The companion note still does not scroll.** Get Started sits outside the `ScrollView` and
-      is focused, so the note can be left, but the body is clipped and a `.focusable()` on
-      `CompanionNoteBody` moved focus without moving the text. Same shape as the reading: SwiftUI
-      focus is not enough to scroll.
-- [ ] ⛔⛔ **THE OBVIOUS FIX WAS TRIED AND FAILED. Do not re-spend that day.** A throwaway spike made
-      the `UITextView` focusable (subclass overriding `canBecomeFocused`), set
-      `isScrollEnabled = true`, set `panGestureRecognizer.allowedTouchTypes = [.indirect]` and
-      bounded the viewport. **Focus never left the tab bar** — `Read` stayed lit, the reading did not
-      move. So the `UIScrollView` header's promise that indirect pan "automatically supports
-      directional presses" is **not sufficient inside a SwiftUI `UIViewRepresentable`**: something
-      must route focus *into* the representable, and `canBecomeFocused` alone does not.
-      ⛔ **Next hypothesis, UNTESTED: `.focusable()` on the SwiftUI side of the representable.**
-      The spike is reverted; the mechanism is unproven and the spec says so.
+- [ ] ⛔ **The companion note still does not scroll.** Get Started sits outside the `ScrollView` and
+      is focused, so the note can be left, but the body is clipped. It is a SwiftUI `ScrollView` of
+      `Text`, not the reading representable, so the `onKeyPress` path that pages a pushed reading
+      does not reach it. `.focusable()` on `CompanionNoteBody` moved focus off Get Started without
+      moving the text. Next.
 - [ ] ⛔⛔ **The reading column is the iPad's: 672pt of 1920pt, 35% used and 65% empty.**
       `ReadableContentWidthModifier` clamps at 672 whenever `sizeClass == .regular`, and **tvOS
       reports `.regular`**. A 4K Apple TV is 1920x1080 *points*; overscan takes ~60pt per edge.
