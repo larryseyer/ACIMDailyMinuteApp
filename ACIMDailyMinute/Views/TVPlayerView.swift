@@ -57,6 +57,40 @@ struct TVPlayerItem: Identifiable, Hashable {
         )
     }
 
+    /// Archive lesson rows store the title in `text` and no body. The crawl
+    /// needs the passage, so the bundled Workbook body fills that hole.
+    static func archived(_ reading: ArchivedReading) -> TVPlayerItem {
+        if reading.channel == "daily-minute" {
+            return TVPlayerItem(
+                id: "archive-minute:\(reading.lineHash)",
+                eyebrow: "Daily Minute",
+                title: nil,
+                text: reading.text,
+                citation: nil,
+                audioURL: reading.audioURL,
+                artName: "PlayerArt"
+            )
+        }
+        let number = reading.lessonNumber ?? 0
+        let intro = WorkbookBodiesCatalog.introduction(for: number)
+        let title = reading.text.isEmpty
+            ? (intro?.title ?? WorkbookCatalog.title(for: number))
+            : reading.text
+        let body = WorkbookBodiesCatalog.body(for: number)
+            ?? intro?.body
+            ?? title
+            ?? ""
+        return TVPlayerItem(
+            id: "archive-lesson:\(number)",
+            eyebrow: (number == 0 || number == 500) ? "Introduction" : "Lesson \(number)",
+            title: title,
+            text: body,
+            citation: nil,
+            audioURL: reading.audioURL,
+            artName: "PlayerArtLesson"
+        )
+    }
+
     /// `lessons.py` and `text_chapters.py` pick the background by book.
     private static func artName(for sourcePDF: String) -> String {
         switch sourcePDF {

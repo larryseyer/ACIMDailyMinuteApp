@@ -36,8 +36,11 @@ struct ListenView: View {
     @State private var downloadRevision = 0
     @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
-    #if os(iOS) || os(tvOS)
+    #if os(iOS)
     @State private var videoRequest: VideoRequest?
+    #endif
+    #if os(tvOS)
+    @State private var playerItem: TVPlayerItem?
     #endif
 
     @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
@@ -127,6 +130,11 @@ struct ListenView: View {
             #if os(iOS)
             .fullScreenCover(item: $videoRequest) { request in
                 FullScreenVideoCover(videoURL: request.url)
+            }
+            #endif
+            #if os(tvOS)
+            .fullScreenCover(item: $playerItem) { item in
+                TVPlayerView(item: item)
             }
             #endif
             #if !os(tvOS)
@@ -266,7 +274,11 @@ struct ListenView: View {
                             if selectedFeed == .lesson {
                                 lessonsLastWatchedIndex = list.count - offset
                             }
+                            #if os(tvOS)
+                            openPlayer(episode)
+                            #else
                             play(episode)
+                            #endif
                         }
                     )
                     #if !os(tvOS)
@@ -340,12 +352,97 @@ struct ListenView: View {
             audio.play(url: episode.audioURL, title: episode.title)
             return
         }
-        #if os(iOS) || os(tvOS)
+        #if os(iOS)
         if !episode.youtubeURL.isEmpty {
             videoRequest = VideoRequest(id: episode.youtubeURL)
         }
         #endif
     }
+
+    #if os(tvOS)
+    /// The catalogue stays a list; Select starts the composed player rather
+    /// than handing the URL to the mini player or a YouTube view tvOS cannot
+    /// host. Passage text comes from the archive, today's feed, or the
+    /// bundled Workbook — the episode itself carries none.
+    private func openPlayer(_ episode: PodcastEpisode) {
+        PlaybackHistory.markPlayed(episode.id)
+        let audioURL = resolvedAudioURL(for: episode)
+        switch selectedFeed {
+        case .minute:
+            let day = Self.utcDayString(from: episode.date)
+            let text = minutePassage(on: day)
+            playerItem = TVPlayerItem(
+                id: "listen:\(episode.id)",
+                eyebrow: "Daily Minute",
+                title: nil,
+                text: text.isEmpty ? episode.title : text,
+                citation: nil,
+                audioURL: audioURL,
+                artName: "PlayerArt"
+            )
+        case .lesson:
+            let number = Self.lessonNumber(from: episode.title) ?? 0
+            let passage = lessonPassage(number: number, fallbackTitle: episode.title)
+            playerItem = TVPlayerItem(
+                id: "listen:\(episode.id)",
+                eyebrow: (number == 0 || number == 500) ? "Introduction" : "Lesson \(number)",
+                title: passage.title,
+                text: passage.body,
+                citation: nil,
+                audioURL: audioURL,
+                artName: "PlayerArtLesson"
+            )
+        }
+    }
+
+    private func resolvedAudioURL(for episode: PodcastEpisode) -> String? {
+        if let local = AudioDownloadStore.localURL(for: episode.id) {
+            return local.absoluteString
+        }
+        if !episode.audioURL.isEmpty { return episode.audioURL }
+        return nil
+    }
+
+    private func minutePassage(on day: String) -> String {
+        let archive = FetchDescriptor<ArchivedReading>(
+            predicate: #Predicate { $0.channel == "daily-minute" && $0.dateString == day }
+        )
+        if let row = try? modelContext.fetch(archive).first, !row.text.isEmpty {
+            return row.text
+        }
+        let today = FetchDescriptor<DailyMinute>(
+            predicate: #Predicate { $0.date == day }
+        )
+        if let row = try? modelContext.fetch(today).first {
+            return row.text
+        }
+        return ""
+    }
+
+    private func lessonPassage(number: Int, fallbackTitle: String) -> (title: String?, body: String) {
+        let published = FetchDescriptor<DailyLesson>(
+            predicate: #Predicate { $0.lessonNumber == number }
+        )
+        if let row = try? modelContext.fetch(published).first {
+            return (row.lessonTitle, row.text)
+        }
+        if let intro = WorkbookBodiesCatalog.introduction(for: number) {
+            return (intro.title, intro.body)
+        }
+        let title = WorkbookCatalog.title(for: number) ?? fallbackTitle
+        let body = WorkbookBodiesCatalog.body(for: number) ?? title
+        return (title, body)
+    }
+
+    private static func utcDayString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+    #endif
 
     private func isCurrentlyPlaying(_ episode: PodcastEpisode) -> Bool {
         audio.hasActiveAudio && audio.currentTitle == episode.title
@@ -419,7 +516,7 @@ private enum LoadState: Equatable {
 }
 
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 /// Wraps the URL so `fullScreenCover(item:)` has something `Identifiable` to
 /// key on, without conforming `String` app-wide.
 private struct VideoRequest: Identifiable {

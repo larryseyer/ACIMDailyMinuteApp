@@ -57,11 +57,13 @@ struct ArchivedReadingCard: View {
 
     var body: some View {
         ReadingScaffold(eyebrow: headerLabel, footer: footer) {
+            #if !os(tvOS)
             if let audioURL = reading.audioURL, !audioURL.isEmpty {
                 ListenButton(title: listenTitle) {
                     audio.play(url: audioURL, title: listenTitle)
                 }
             }
+            #endif
         } trailing: {
             ShareButton(text: shareText)
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)

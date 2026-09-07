@@ -18,6 +18,9 @@ struct ArchiveDateDetailView: View {
     let availability: MinuteSchedule.Availability
 
     @Query private var readings: [ArchivedReading]
+    #if os(tvOS)
+    @State private var playerItem: TVPlayerItem?
+    #endif
 
     init(dateString: String, availability: MinuteSchedule.Availability) {
         self.dateString = dateString
@@ -36,7 +39,14 @@ struct ArchiveDateDetailView: View {
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(readings) { reading in
+                            #if os(tvOS)
+                            Button { playerItem = .archived(reading) } label: {
+                                ArchivedReadingCard(reading: reading)
+                            }
+                            .buttonStyle(.card)
+                            #else
                             ArchivedReadingCard(reading: reading)
+                            #endif
                         }
                     }
                     .padding(20)
@@ -45,6 +55,11 @@ struct ArchiveDateDetailView: View {
             }
         }
         .navigationTitle(formattedTitle)
+        #if os(tvOS)
+        .fullScreenCover(item: $playerItem) { item in
+            TVPlayerView(item: item)
+        }
+        #endif
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif

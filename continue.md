@@ -1,5 +1,5 @@
 # continue.md
 
-Listen and Archive on the television still open a list, not the player.
+Read on the television still pushes a reading; Select should start the player.
 
 todo.md — Phase 3, Apple TV.

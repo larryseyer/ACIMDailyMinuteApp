@@ -91,7 +91,6 @@ Ranked by his instruction: get it right on the common Apple environment first. t
 
 The TV is a player, and it carries no annotation. Do not re-open either.
 
-- [ ] Listen and Archive on the television still open a list, not the player.
 - [ ] Read on the television still pushes a reading; Select should start the player.
 
 ### Phase 4 — Windows and Linux (last)
