@@ -14,6 +14,9 @@ struct TodayView: View {
     @State private var isRefreshing = false
     @State private var showOfflineToast = false
     @State private var path = NavigationPath()
+    #if os(tvOS)
+    @State private var playerItem: TVPlayerItem?
+    #endif
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -28,13 +31,34 @@ struct TodayView: View {
                     }
 
                     if let minute = minutes.first, !isMinuteStale {
+                        #if os(tvOS)
+                        Button { playerItem = .minute(minute) } label: {
+                            DailyMinuteCard(minute: minute)
+                        }
+                        .buttonStyle(.card)
+                        #else
                         DailyMinuteCard(minute: minute)
+                        #endif
                     } else if let segment = corpusReading {
+                        #if os(tvOS)
+                        Button { playerItem = .segment(segment) } label: {
+                            CorpusReadingCard(segment: segment)
+                        }
+                        .buttonStyle(.card)
+                        #else
                         CorpusReadingCard(segment: segment)
+                        #endif
                     }
 
                     if let lesson = lessons.first {
+                        #if os(tvOS)
+                        Button { playerItem = .lesson(lesson) } label: {
+                            DailyLessonCard(lesson: lesson)
+                        }
+                        .buttonStyle(.card)
+                        #else
                         DailyLessonCard(lesson: lesson)
+                        #endif
                     }
                 }
                 .padding(.horizontal, 20)
@@ -44,6 +68,11 @@ struct TodayView: View {
             }
             .navigationTitle("Today")
             .readingDestinations(path: $path)
+            #if os(tvOS)
+            .fullScreenCover(item: $playerItem) { item in
+                TVPlayerView(item: item)
+            }
+            #endif
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {

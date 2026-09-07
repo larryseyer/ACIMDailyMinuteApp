@@ -20,11 +20,13 @@ struct DailyLessonCard: View {
                 eyebrow: "Lesson \(lesson.lessonNumber)",
                 footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
             ) {
+                #if !os(tvOS)
                 if let audioURL = lesson.audioURL, !audioURL.isEmpty {
                     ListenButton(title: "Lesson \(lesson.lessonNumber)") {
                         audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
                     }
                 }
+                #endif
             } trailing: {
                 ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)
