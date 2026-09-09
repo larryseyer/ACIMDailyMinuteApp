@@ -48,6 +48,9 @@ struct TextSectionView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        // ⛔ A Text section has no audio. Leaving a Workbook session up would
+        // keep the previous lesson in the mini player under this page.
+        .onAppear { audio.dismissForTextReading() }
     }
 
     private func content(_ reading: CorpusTextSection) -> some View {

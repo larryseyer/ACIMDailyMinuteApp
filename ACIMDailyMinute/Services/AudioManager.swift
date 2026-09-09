@@ -96,6 +96,14 @@ final class AudioManager {
         }
     }
 
+    /// The Text is a different book and has no audio of its own. Arriving on
+    /// a chapter or section must drop a Workbook lesson (or Daily Minute)
+    /// still in the mini player, or that session sits under the page.
+    func dismissForTextReading() {
+        guard hasActiveAudio else { return }
+        stop()
+    }
+
     func togglePlayback() {
         guard let player else { return }
         if isPlaying {
