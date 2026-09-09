@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		00D41811AAA4D849DDA89F39 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
+		AA000001900 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
+		AA000001901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
+		AA000001902 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
+		AA000001903 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
+		AA000001904 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
 		00DB89897C46AD26D5F02642 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
 		04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
 		04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
@@ -426,6 +431,10 @@
 		AA000002047 /* LargeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetView.swift; sourceTree = "<group>"; };
 		AA000002048 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		AA000002049 /* ACIMDailyMinute.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinute.entitlements; sourceTree = "<group>"; };
+		AA000002900 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		AA000002910 /* ACIMDailyMinute-Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ACIMDailyMinute-Release.entitlements"; sourceTree = "<group>"; };
+		AA000002911 /* ACIMDailyMinute.macos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinute.macos.entitlements; sourceTree = "<group>"; };
+		AA000002912 /* ACIMDailyMinute.macos-Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ACIMDailyMinute.macos-Release.entitlements"; sourceTree = "<group>"; };
 		AA000002050 /* ACIMDailyMinuteWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWidget.entitlements; sourceTree = "<group>"; };
 		AA000002051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
@@ -619,6 +628,10 @@
 				AA000005007 /* ACIMDailyMinuteWatchWidget */,
 				AA000005009 /* Products */,
 				AA000002049 /* ACIMDailyMinute.entitlements */,
+				AA000002910 /* ACIMDailyMinute-Release.entitlements */,
+				AA000002911 /* ACIMDailyMinute.macos.entitlements */,
+				AA000002912 /* ACIMDailyMinute.macos-Release.entitlements */,
+				AA000002900 /* PrivacyInfo.xcprivacy */,
 				1CE45C1A29E09A4473DF8253 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -1092,6 +1105,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001904 /* PrivacyInfo.xcprivacy in Resources */,
 				9608388FEBFF171EA2854DC7 /* Assets.xcassets in Resources */,
 				3F3F1E6DC5174E2F7DBF95DB /* ACIMChime.caf in Resources */,
 				9923F552EE496B083F507AE7 /* Workbook365.json in Resources */,
@@ -1108,6 +1122,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001900 /* PrivacyInfo.xcprivacy in Resources */,
 				AA000001011 /* Assets.xcassets in Resources */,
 				AA000001079 /* ACIMChime.caf in Resources */,
 				AA000001300 /* Workbook365.json in Resources */,
@@ -1124,6 +1139,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001901 /* PrivacyInfo.xcprivacy in Resources */,
 				AA000001080 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1132,6 +1148,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001902 /* PrivacyInfo.xcprivacy in Resources */,
 				AA000001076 /* Assets.xcassets in Resources */,
 				AA000001805 /* ACIMSegments.json in Resources */,
 			);
@@ -1141,6 +1158,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001903 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1511,14 +1529,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteTV.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR5DY39W4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
@@ -1664,14 +1687,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinute.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = ACIMDailyMinute.macos.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinute/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1690,7 +1719,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1705,15 +1734,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinute.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ACIMDailyMinute-Release.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "ACIMDailyMinute.macos-Release.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = RR5DY39W4Q;
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinute/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1732,7 +1767,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1753,12 +1788,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinuteWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1783,12 +1820,14 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinuteWatchWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1815,7 +1854,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinuteWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute Widget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1823,7 +1863,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1834,6 +1874,8 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 			};
 			name = Debug;
 		};
@@ -1850,7 +1892,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ACIMDailyMinuteWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute Widget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1858,7 +1901,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -1869,6 +1912,8 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"ENABLE_APP_SANDBOX[sdk=macosx*]" = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 			};
 			name = Release;
 		};
@@ -1883,13 +1928,15 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.larryseyer.acimdailyminute;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1914,13 +1961,15 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.larryseyer.acimdailyminute;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1940,14 +1989,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteTV.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR5DY39W4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.larryseyer.acimdailyminute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;

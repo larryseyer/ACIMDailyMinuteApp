@@ -50,6 +50,7 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] iCloud: a mark on the phone reaches the Mac; deleting on either device removes it from both.
 - [ ] Privacy policy describes iCloud; read it as a whole.
 - [ ] Before any release build: deploy the CloudKit schema from Development to Production.
+- [ ] Publish https://www.acimdailyminute.org/privacy.html matching the in-app policy, including optional iCloud. The URL currently 404s.
 - [ ] Folder copy: a chosen Dropbox or iCloud Drive folder gets a per-device file; nothing is ever read from it.
 - [ ] Search the Course: hits in book order with citation and snippet; a lesson opened this way does not open its video first.
 - [ ] A Manual highlight, note, or saved row opens its passage.

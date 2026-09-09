@@ -121,9 +121,9 @@ enum SharedModelContainer {
     /// rule below: the app is the sole process that ever mirrors, so it is the
     /// sole process that needs this answer. An earlier design put the flag in the
     /// App Group so the widget could agree — which would have been the first
-    /// `UserDefaults(suiteName:)` in the repo and, worse, unreliable on macOS,
-    /// where this app is unsandboxed while its widget extension is sandboxed and
-    /// the two resolve group preference domains differently.
+    /// `UserDefaults(suiteName:)` in the repo. The Mac app and its widget are
+    /// both sandboxed; the flag still lives in the app's own defaults because
+    /// only the app mirrors.
     static var syncEnabled: Bool {
         get { UserDefaults.standard.bool(forKey: syncEnabledKey) }
         set { UserDefaults.standard.set(newValue, forKey: syncEnabledKey) }
