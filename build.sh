@@ -166,9 +166,10 @@ run_build "watchOS (Debug) ${WATCH_SIM} [${WATCH_UUID}]" \
 
 # ── tvOS Simulator ──
 # ⛔ A SEPARATE TARGET, not a destination of the app scheme: tvOS gets its own
-# product, its own entitlements (App Group, no iCloud) and device family 3. It
-# compiles the same source list as the app — every platform difference is a
-# fence inside a file, so there is no second membership list to drift.
+# product, its own entitlements (App Group, the same CloudKit container as
+# iOS/macOS, runs-as-current-user) and device family 3. It compiles the same
+# source list as the app — every platform difference is a fence inside a file,
+# so there is no second membership list to drift.
 run_build "tvOS (Debug) Apple TV 4K (3rd generation) [${TV_UUID}]" \
   "$LOG_DIR/tvos.log" \
   -scheme "ACIMDailyMinuteTV" \

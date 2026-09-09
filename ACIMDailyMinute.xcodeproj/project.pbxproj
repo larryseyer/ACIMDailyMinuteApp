@@ -437,6 +437,8 @@
 		AA000002910 /* ACIMDailyMinute-Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ACIMDailyMinute-Release.entitlements"; sourceTree = "<group>"; };
 		AA000002911 /* ACIMDailyMinute.macos.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinute.macos.entitlements; sourceTree = "<group>"; };
 		AA000002912 /* ACIMDailyMinute.macos-Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ACIMDailyMinute.macos-Release.entitlements"; sourceTree = "<group>"; };
+		AA000002913 /* ACIMDailyMinuteTV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteTV.entitlements; sourceTree = "<group>"; };
+		AA000002914 /* ACIMDailyMinuteTV-Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ACIMDailyMinuteTV-Release.entitlements"; sourceTree = "<group>"; };
 		AA000002050 /* ACIMDailyMinuteWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWidget.entitlements; sourceTree = "<group>"; };
 		AA000002051 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000002052 /* ShareTextBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareTextBuilder.swift; sourceTree = "<group>"; };
@@ -634,6 +636,8 @@
 				AA000002910 /* ACIMDailyMinute-Release.entitlements */,
 				AA000002911 /* ACIMDailyMinute.macos.entitlements */,
 				AA000002912 /* ACIMDailyMinute.macos-Release.entitlements */,
+				AA000002913 /* ACIMDailyMinuteTV.entitlements */,
+				AA000002914 /* ACIMDailyMinuteTV-Release.entitlements */,
 				AA000002900 /* PrivacyInfo.xcprivacy */,
 				1CE45C1A29E09A4473DF8253 /* Frameworks */,
 			);
@@ -1543,6 +1547,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1994,7 +1999,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ACIMDailyMinuteTV.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "ACIMDailyMinuteTV-Release.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR5DY39W4Q;
@@ -2003,6 +2008,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "ACIM Daily Minute";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Sparkly Edition text is public domain. App copyright 2026 Larry Seyer";
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

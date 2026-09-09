@@ -131,8 +131,10 @@ func drawnHeight(_ a: NSAttributedString, width: CGFloat) -> CGFloat? {
     view.textContainerInset = .zero
     view.textContainer?.lineFragmentPadding = 0
     view.textContainer?.widthTracksTextView = true
-    view.isVerticallyResizable = true
+    view.isVerticallyResizable = false
     view.isHorizontallyResizable = false
+    view.setContentHuggingPriority(.required, for: .vertical)
+    view.setContentCompressionResistancePriority(.required, for: .vertical)
     view.setFrameSize(NSSize(width: width, height: 10))
     view.textContainer?.containerSize = CGSize(width: width, height: .greatestFiniteMagnitude)
     view.textStorage?.setAttributedString(a)
@@ -199,6 +201,38 @@ if !(hl > hs * 2) {
     failures.append("length insensitive: 1x measured \(hs), 20x measured \(hl)")
 }
 
+// 6. ⛔ SwiftUI owns the height, via sizeThatFits. A vertically resizable
+//    NSTextView also resizes its own frame to the layout, so a first pass
+//    at a 10pt width (what a representable has before SwiftUI assigns the
+//    real one) grows the view to tens of thousands of points. SwiftUI then
+//    keeps that height; the words reflow to the real width and sit in the
+//    middle of the leftover, which is the empty band between a section
+//    title and the first paragraph. The view must not grow itself.
+checked += 1
+let grew = MainActor.assumeIsolated { () -> CGFloat in
+    let view = NSTextView()
+    view.isEditable = false
+    view.isSelectable = true
+    view.drawsBackground = false
+    view.textContainerInset = .zero
+    view.textContainer?.lineFragmentPadding = 0
+    view.textContainer?.widthTracksTextView = true
+    view.isVerticallyResizable = false
+    view.isHorizontallyResizable = false
+    view.setContentHuggingPriority(.required, for: .vertical)
+    view.setContentCompressionResistancePriority(.required, for: .vertical)
+    view.setFrameSize(NSSize(width: 10, height: 50))
+    view.textStorage?.setAttributedString(long)
+    view.layoutSubtreeIfNeeded()
+    return view.frame.height
+}
+if grew > 50.5 {
+    failures.append(
+        "NSTextView grew itself from 50pt to \(grew)pt at a 10pt width — "
+        + "that leftover height is the empty band under the section title"
+    )
+}
+
 if failures.isEmpty {
     print("PASS — \(checked) measurements over \(bodies.count) real bodies "
           + "at \(widths.count) widths and \(lineSpacings.count) line spacings")
@@ -216,3 +250,12 @@ swiftc -O \
     -o "$WORK/verify" 2>&1 | grep -v "^$" || true
 
 "$WORK/verify" "$WORK/bodies.json"
+
+# ⛔ The probe above is not the production view. `makeNSView` must match it
+# or the empty band returns on a Mac and this harness still passes.
+SRC="$REPO/ACIMDailyMinute/Views/SelectableReadingText.swift"
+make_ns=$(grep -A 40 'func makeNSView' "$SRC")
+echo "$make_ns" | grep -q 'isVerticallyResizable = false' \
+    || { echo "FAIL: makeNSView still lets the NSTextView grow itself (isVerticallyResizable is not false)"; exit 1; }
+echo "$make_ns" | grep -q 'setContentHuggingPriority(.required, for: .vertical)' \
+    || { echo "FAIL: makeNSView does not hug vertically, so SwiftUI can stretch a reading and leave a band under the title"; exit 1; }

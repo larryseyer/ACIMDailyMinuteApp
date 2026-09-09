@@ -1,9 +1,7 @@
 # continue.md
 
-Three live bugs, in this order. Do not pick a parked item. Do not ask him to look at anything until they are built.
+LIVE is empty.
 
-1. Apple TV crashes the instant it opens — CloudKit mirroring on a box with no iCloud entitlement.
-2. Mac companion-note title: Skip overlaps "Minute".
-3. Mac Text: some chapters put a large empty band between the title and the first paragraph.
+Parked is his phone test pass. Do not ask him to walk it.
 
-todo.md — LIVE, those three.
+Next buildable item that does not wait on him: an empty Archive day lists the nearest few days before it that do have a reading.

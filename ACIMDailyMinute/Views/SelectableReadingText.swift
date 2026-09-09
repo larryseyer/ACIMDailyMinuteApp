@@ -675,6 +675,16 @@ private struct TextViewRepresentable: UIViewRepresentable {
     }
 }
 #elseif os(macOS)
+/// The iOS half sets `isScrollEnabled = false`. AppKit has no such switch:
+/// `scrollToVisible` on a text view that is not inside an `NSScrollView`
+/// moves the view's own bounds, which is how a reading used to draw over
+/// its title. Swallowing those calls is the equivalent.
+private final class ReadingNSTextView: NSTextView {
+    @discardableResult
+    override func scrollToVisible(_ rect: NSRect) -> Bool { false }
+    override func scrollRangeToVisible(_ range: NSRange) {}
+}
+
 private struct TextViewRepresentable: NSViewRepresentable {
     let attributed: NSAttributedString
     let display: String
@@ -687,7 +697,7 @@ private struct TextViewRepresentable: NSViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> NSTextView {
-        let view = NSTextView()
+        let view = ReadingNSTextView()
         view.delegate = context.coordinator
         view.isEditable = false
         view.isSelectable = true
@@ -695,8 +705,16 @@ private struct TextViewRepresentable: NSViewRepresentable {
         view.textContainerInset = .zero
         view.textContainer?.lineFragmentPadding = 0
         view.textContainer?.widthTracksTextView = true
-        view.isVerticallyResizable = true
+        // SwiftUI sizes this view through `sizeThatFits`. A vertically
+        // resizable NSTextView also resizes its own frame to the layout, so
+        // a first pass at a ~10pt width grows it by tens of thousands of
+        // points. SwiftUI keeps that height after the real width arrives;
+        // the words reflow and sit in the leftover, which is the empty
+        // band between a section title and the first paragraph.
+        view.isVerticallyResizable = false
         view.isHorizontallyResizable = false
+        view.setContentHuggingPriority(.required, for: .vertical)
+        view.setContentCompressionResistancePriority(.required, for: .vertical)
         view.isAutomaticLinkDetectionEnabled = false
         view.linkTextAttributes = SelectableReadingText.linkAttributes
         return view
@@ -708,14 +726,13 @@ private struct TextViewRepresentable: NSViewRepresentable {
         context.coordinator.openLink = openLink
         guard let storage = view.textStorage else { return }
         if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
-        // ⛔ **Nothing scrolls here, and that is deliberate.** An `NSTextView` is
-        // vertically resizable — that is what lets SwiftUI size it — and asking
-        // it to bring a rectangle into view moves its own bounds inside the
-        // frame it was given, so the reading draws forty points above where it
-        // was laid out, over the top of its own title, while the title stays
-        // put. A `UITextView` cannot do this: the iOS half switches its own
-        // scrolling off outright, and macOS has no equivalent that leaves a
-        // reading measurable.
+        // ⛔ **Nothing scrolls here, and that is deliberate.** Asking an
+        // `NSTextView` to bring a rectangle into view moves its own bounds
+        // inside the frame it was given, so the reading draws forty points
+        // above where it was laid out, over the top of its own title, while
+        // the title stays put. A `UITextView` cannot do this: the iOS half
+        // switches its own scrolling off outright. `ReadingNSTextView` is
+        // the macOS equivalent — it ignores `scrollToVisible`.
         //
         // So a spotlight and a ribbon both open a macOS reading at its top. The
         // words are still painted and the reader still lands on the right

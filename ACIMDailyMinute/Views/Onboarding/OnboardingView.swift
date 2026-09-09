@@ -20,6 +20,12 @@ struct OnboardingView: View {
     /// entrances for free, since `hasSeenOnboarding` is the only thing that
     /// presents the introduction and **Replay introduction** merely clears it.
     @State private var showingNote = false
+    /// Skip sits in the top-trailing overlay. On a wide Mac sheet the
+    /// companion-note title is one line at that same y, so "Minute" draws
+    /// under the button unless the note keeps this much of the trailing
+    /// edge clear. Settings > About uses the same body without Skip, which
+    /// is why the reserve lives here and not inside `CompanionNoteBody`.
+    private static let skipOverlayReserve: CGFloat = 72
     #if os(tvOS)
     @FocusState private var focused: OnboardingFocus?
     @StateObject private var notePage = VerticalPageState()
@@ -108,10 +114,12 @@ struct OnboardingView: View {
             #if os(tvOS)
             TVPageableScroll(page: notePage, capturesKeys: false) {
                 CompanionNoteBody()
+                    .padding(.trailing, Self.skipOverlayReserve)
             }
             #else
             ScrollView {
                 CompanionNoteBody()
+                    .padding(.trailing, Self.skipOverlayReserve)
             }
             #endif
 

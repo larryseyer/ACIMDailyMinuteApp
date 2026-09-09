@@ -15,7 +15,7 @@
 		<string>iCloud.com.larryseyer.acimdailyminute</string>
 	</array>
 	<key>aps-environment</key>
-	<string>development</string>
+	<string>production</string>
 	<key>com.apple.developer.user-management</key>
 	<array>
 		<string>runs-as-current-user</string>

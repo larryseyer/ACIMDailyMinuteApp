@@ -153,6 +153,15 @@ enum SharedModelContainer {
     /// the iCloud entitlement would therefore have switched mirroring on for the
     /// cache store, the Shortcut and the legacy recovery copy, all by doing
     /// nothing. Every configuration in this file names its choice.
+    ///
+    /// ⛔ **tvOS is entitled to the same container.** The television target
+    /// shares the app's bundle ID and `ACIMDailyMinuteTV.entitlements` carries
+    /// CloudKit plus `runs-as-current-user`, so a mark made on the phone can
+    /// land on the box the current Apple TV user is sitting in front of. The
+    /// local store still lives in `Library/Caches` and is still purgeable —
+    /// CloudKit is what refills it. Forcing `.none` on tvOS is the other door,
+    /// and it is the one that produced EXC_BREAKPOINT in
+    /// `PFCloudKitContainerProvider` when the entitlement was missing.
     static func makeContainer(allowsSave: Bool, includeReader: Bool = true) throws -> ModelContainer {
         if !allowsSave { try createStoresIfMissing() }
 
