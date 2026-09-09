@@ -4,6 +4,14 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
+## LIVE — next chat, in this order
+
+- [ ] Apple TV (LIVINGROOM) dies on open: EXC_BREAKPOINT on `com.apple.coredata.cloudkit.queue` (`PFCloudKitContainerProvider`). The TV has no iCloud entitlement; force `cloudKitDatabase: .none` on tvOS. Crash `ACIMDailyMinuteTV-2026-09-09-101331.ips` is still on the device.
+- [ ] Mac introduction companion note: Skip sits on the last word of "A Note About Using ACIM Daily Minute". `OnboardingView` overlays Skip top-trailing; `CompanionNoteBody` draws that title at the same y, one line on a wide Mac sheet.
+- [ ] Mac Text: some chapters leave a large empty band between the section title and the first paragraph. Repro Chapter 7, "Healing and the Changelessness of Mind". `TextSectionView` plus the macOS `NSTextView` in `SelectableReadingText`.
+
+---
+
 ## PARKED — one test pass, at the end, on his phone
 
 Do not ask him to check any of this until everything below is built. His words: otherwise he will just repeat himself on things that have not been done yet.
