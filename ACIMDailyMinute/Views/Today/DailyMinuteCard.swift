@@ -28,9 +28,10 @@ struct DailyMinuteCard: View {
                 if let audioURL = minute.audioURL, !audioURL.isEmpty {
                     ListenButton(
                         title: "Daily Minute",
-                        isActive: audio.isActive(url: audioURL)
+                        isActive: audio.isActive(url: audioURL),
+                        isPlaying: audio.isPlaying
                     ) {
-                        audio.playOrStop(url: audioURL, title: "Daily Minute")
+                        audio.playOrToggle(url: audioURL, title: "Daily Minute")
                     }
                 }
                 #endif

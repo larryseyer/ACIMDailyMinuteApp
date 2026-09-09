@@ -9,7 +9,7 @@ final class AudioManager {
     var currentTitle = ""
     /// The resolved URL of the item in the mini player. Header Listen buttons
     /// match on this, not on `currentTitle`: every Daily Minute is titled
-    /// "Daily Minute", and a title match would paint Stop on a different day's
+    /// "Daily Minute", and a title match would paint Pause on a different day's
     /// card.
     var currentURL = ""
     var currentTime: Double = 0
@@ -85,11 +85,12 @@ final class AudioManager {
         hasActiveAudio && currentURL == Self.resolve(url)
     }
 
-    /// Header Listen/Stop: start this reading, or end it if it already owns
-    /// the mini player. Pause/resume stays on the mini player.
-    func playOrStop(url: String, title: String) {
+    /// Header Listen/Pause/Play: start this reading, or toggle pause/resume
+    /// if it already owns the mini player — the same job as the mini player's
+    /// play/pause control.
+    func playOrToggle(url: String, title: String) {
         if isActive(url: url) {
-            stop()
+            togglePlayback()
         } else {
             play(url: url, title: title)
         }

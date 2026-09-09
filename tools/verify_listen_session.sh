@@ -1,15 +1,16 @@
 #!/bin/bash
-# Proves the header Listen control can tell which reading owns the mini player.
+# Proves the header Listen control can tell which reading owns the mini player,
+# and that a tap on that reading pauses rather than dismissing the session.
 #
-# What this guards is a Stop that appears on the wrong card. Every Daily Minute
-# is titled "Daily Minute", so matching on the title would paint Stop on a
-# different day's header and make that tap kill today's audio instead of
-# starting the other day's. Identity is the resolved URL. Relative feed paths
+# What this guards is a Pause that appears on the wrong card. Every Daily Minute
+# is titled "Daily Minute", so matching on the title would paint Pause on a
+# different day's header. Identity is the resolved URL. Relative feed paths
 # and their absolute host form are the same session; two different paths are not.
 #
-# It also holds stop() and the stop branch of playOrStop: after either, that
-# URL is no longer active. play() itself is not called — it would construct an
-# AVPlayer — because this harness is about identity, not playback.
+# The header matches the mini player: play/pause, not Stop. playOrToggle on the
+# active URL must leave the session up. stop() still clears it. play() itself
+# is not called — it would construct an AVPlayer — because this harness is
+# about identity, not playback.
 #
 #   ./tools/verify_listen_session.sh
 set -e
@@ -58,11 +59,12 @@ enum Harness {
             "resolve() must collapse the relative path and its host form"
         )
 
-        audio.playOrStop(url: relative, title: "Daily Minute")
-        check(!audio.hasActiveAudio, "playOrStop on the active URL must stop")
-        check(audio.currentURL.isEmpty, "playOrStop stop branch must clear currentURL")
-        check(!audio.isActive(url: relative), "playOrStop stop branch must make isActive false")
-        check(audio.currentTitle.isEmpty, "playOrStop stop branch must clear the title")
+        audio.isPlaying = true
+        audio.playOrToggle(url: relative, title: "Daily Minute")
+        check(audio.hasActiveAudio, "playOrToggle on the active URL must not dismiss the mini player")
+        check(audio.isActive(url: relative), "playOrToggle on the active URL must keep the session")
+        check(audio.currentTitle == "Daily Minute", "playOrToggle must not clear the title")
+        check(!audio.isActive(url: other), "a different path is still a different session")
 
         audio.hasActiveAudio = true
         audio.currentURL = AudioManager.resolve(relative)

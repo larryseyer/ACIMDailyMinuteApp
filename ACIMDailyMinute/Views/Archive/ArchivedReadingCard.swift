@@ -61,9 +61,10 @@ struct ArchivedReadingCard: View {
             if let audioURL = reading.audioURL, !audioURL.isEmpty {
                 ListenButton(
                     title: listenTitle,
-                    isActive: audio.isActive(url: audioURL)
+                    isActive: audio.isActive(url: audioURL),
+                    isPlaying: audio.isPlaying
                 ) {
-                    audio.playOrStop(url: audioURL, title: listenTitle)
+                    audio.playOrToggle(url: audioURL, title: listenTitle)
                 }
             }
             #endif

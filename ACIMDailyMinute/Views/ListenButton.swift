@@ -12,13 +12,14 @@ import SwiftUI
 /// buy about 40pt and would have made the row fit on one line — but `SaveButton`
 /// records that unlabelled glyphs tested as unfindable here, and buying width by
 /// re-introducing a known usability defect is not a trade this app makes. While
-/// this reading owns the mini player the word is **Stop**, so the same finger
-/// that started playback can end it without reaching the bottom of the screen.
-/// Pause/resume stays on the mini player.
+/// this reading owns the mini player the control matches that bar: **Pause**
+/// while playing, **Play** while paused, so the same finger that started
+/// playback can halt it without reaching the bottom of the screen.
 ///
-/// ⛔ **"Stop" is shorter than "Listen".** The control is leading-anchored, so
-/// the capsule shrinking does not move Share and Save. Do not reserve Listen's
-/// width — that would be buying space the trailing edge does not need.
+/// ⛔ **"Play" and "Pause" are not wider than "Listen".** The control is
+/// leading-anchored, so a shorter capsule does not move Share and Save. Do not
+/// reserve Listen's width — that would be buying space the trailing edge does
+/// not need.
 ///
 /// ⛔ **Absence is the normal state.** Audio and video are produced about one a
 /// day, so most readings will carry neither for the life of this app. The caller
@@ -27,13 +28,28 @@ import SwiftUI
 struct ListenButton: View {
     let title: String
     var isActive: Bool = false
+    var isPlaying: Bool = false
     let action: () -> Void
+
+    private var showsPause: Bool { isActive && isPlaying }
+
+    private var label: String {
+        if showsPause { return "Pause" }
+        if isActive { return "Play" }
+        return "Listen"
+    }
+
+    private var accessibilityText: String {
+        if showsPause { return "Pause \(title)" }
+        if isActive { return "Play \(title)" }
+        return "Listen to \(title)"
+    }
 
     var body: some View {
         Button(action: action) {
             Label(
-                isActive ? "Stop" : "Listen",
-                systemImage: isActive ? "stop.fill" : "play.fill"
+                label,
+                systemImage: showsPause ? "pause.fill" : "play.fill"
             )
                 .font(.caption.weight(.medium))
                 .lineLimit(1)
@@ -47,16 +63,17 @@ struct ListenButton: View {
         // to the 44pt minimum, as SaveButton's is.
         .frame(minHeight: 44)
         .contentShape(Rectangle())
-        .accessibilityLabel(isActive ? "Stop \(title)" : "Listen to \(title)")
+        .accessibilityLabel(accessibilityText)
     }
 }
 
 #Preview {
     VStack(spacing: 16) {
         ListenButton(title: "Daily Minute", action: {})
-        ListenButton(title: "Daily Minute", isActive: true, action: {})
+        ListenButton(title: "Daily Minute", isActive: true, isPlaying: true, action: {})
+        ListenButton(title: "Daily Minute", isActive: true, isPlaying: false, action: {})
         ListenButton(title: "Lesson 81", action: {})
-        ListenButton(title: "Lesson 81", isActive: true, action: {})
+        ListenButton(title: "Lesson 81", isActive: true, isPlaying: true, action: {})
     }
     .padding()
     .background(Color(white: 0.11))
