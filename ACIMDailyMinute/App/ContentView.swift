@@ -40,7 +40,12 @@ struct ContentView: View {
             #if os(tvOS)
             .environment(\.openPlayer, OpenPlayerAction { presentPlayer($0) })
             .fullScreenCover(item: $playerItem) { item in
+                // The cover is a new presentation. On tvOS it does not
+                // inherit @Environment(AudioManager.self) from the tabs —
+                // nested under Jump to Lesson it assertionFailure'd
+                // (ACIMDailyMinuteTV-2026-09-09-105807.ips). Hand it over.
                 TVPlayerView(item: item)
+                    .environment(audioManager)
             }
             .task { await warmPodcastCache() }
             #endif

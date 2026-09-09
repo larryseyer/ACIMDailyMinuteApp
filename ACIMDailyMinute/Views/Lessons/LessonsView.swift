@@ -20,7 +20,8 @@ import SwiftData
 /// Phase 3.5c wires two refinements on top of the 3.5a/3.5b spine:
 ///   * `.searchable` — one field for the whole Course; see ReadSearchResultsList.
 ///   * Jump-to-N sheet — toolbar button opens `JumpToLessonSheet`, which
-///     programmatically appends an `Int` to the shared `NavigationPath`.
+///     reports the number. iOS appends it to `NavigationPath`; tvOS holds
+///     it until the sheet has dismissed, then opens the player.
 struct LessonsView: View {
     @Environment(AudioManager.self) private var audio
     #if os(tvOS)
@@ -47,6 +48,9 @@ struct LessonsView: View {
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
     @State private var isJumpSheetPresented: Bool = false
+    #if os(tvOS)
+    @State private var pendingJump: Int?
+    #endif
     @State private var shelf: Shelf = .workbook
 
     private var trimmedQuery: String {
@@ -163,9 +167,26 @@ struct LessonsView: View {
                 .accessibilityLabel("Jump to lesson number")
             }
         }
-        .sheet(isPresented: $isJumpSheetPresented) {
-            JumpToLessonSheet(path: $path)
+        .sheet(isPresented: $isJumpSheetPresented, onDismiss: openPendingJump) {
+            JumpToLessonSheet { n in
+                #if os(tvOS)
+                pendingJump = n
+                #else
+                path.append(n)
+                #endif
+            }
         }
+    }
+
+    /// tvOS presents the player as a sheet. Opening it while Jump to Lesson
+    /// is still up nests two sheets; the inner one has no AudioManager and
+    /// TVPlayerView assertionFailure's (ACIMDailyMinuteTV-2026-09-09-105807.ips).
+    private func openPendingJump() {
+        #if os(tvOS)
+        guard let n = pendingJump else { return }
+        pendingJump = nil
+        openPlayer(.workbookLesson(n))
+        #endif
     }
 
     private var jumpPlacement: ToolbarItemPlacement {

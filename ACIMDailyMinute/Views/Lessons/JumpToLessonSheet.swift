@@ -2,22 +2,20 @@ import SwiftUI
 
 /// Compact sheet that lets a reader jump directly to any workbook lesson 1–365.
 ///
-/// Pushed into the parent `LessonsView` by mutating the shared `NavigationPath`:
-/// on submit we `path.append(n)` and dismiss. `LessonsView`'s existing
-/// `.navigationDestination(for: Int.self)` handles the actual navigation, so
-/// this sheet stays focused on input + validation.
+/// Reports the number through `onJump` and dismisses. The parent decides what
+/// that number means: on iOS it pushes the lesson; on tvOS it must wait until
+/// this sheet is gone before opening the player. Opening the player from
+/// inside the sheet nested two presentations and crashed
+/// (ACIMDailyMinuteTV-2026-09-09-105807.ips).
 ///
 /// Validation is strict and silent until the reader has typed something: the
 /// Go button is disabled while the trimmed input isn't a valid 1…365 integer,
 /// and an inline hint appears only once there's non-empty invalid text to
 /// complain about.
 struct JumpToLessonSheet: View {
-    @Binding var path: NavigationPath
+    let onJump: (Int) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    #if os(tvOS)
-    @Environment(\.openPlayer) private var openPlayer
-    #endif
     @State private var raw: String = ""
 
     private var trimmed: String {
@@ -99,17 +97,12 @@ struct JumpToLessonSheet: View {
 
     private func submit() {
         guard let n = parsed, (1...365).contains(n) else { return }
-        #if os(tvOS)
-        openPlayer(.workbookLesson(n))
-        #else
-        path.append(n)
-        #endif
+        onJump(n)
         dismiss()
     }
 }
 
 #Preview {
-    @Previewable @State var path = NavigationPath()
-    return JumpToLessonSheet(path: $path)
+    JumpToLessonSheet { _ in }
         .preferredColorScheme(.dark)
 }

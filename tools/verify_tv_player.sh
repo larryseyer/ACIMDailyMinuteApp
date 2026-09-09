@@ -12,6 +12,14 @@
 #      default OpenPlayerAction assertionFailure's: crash
 #      ACIMDailyMinuteTV-2026-09-09-104129.ips. The player has to be
 #      installed at ContentView, above the tabs.
+#   3. Jump to Lesson 47 (a recorded lesson) still crashed after (2):
+#      ACIMDailyMinuteTV-2026-09-09-105807.ips. The jump sheet called
+#      openPlayer while it was still up. tvOS presents the player as
+#      another sheet on top of that one; TVPlayerView's TimelineView then
+#      reads @Environment(AudioManager.self) from a presentation that
+#      does not have it, and EnvironmentValues.subscript assertionFailure's.
+#      The sheet has to dismiss first, and the cover has to be handed
+#      AudioManager itself.
 #
 # ⛔ LessonNarration.swift is compiled alone. It must stay free of SwiftUI
 # and SwiftData, or the only way to prove a lesson number maps to an
@@ -113,3 +121,29 @@ if ! grep -q 'openPlayer(\.textSection' "$REPO/ACIMDailyMinute/Views/Text/TextCh
     exit 1
 fi
 echo "PASS — ContentView owns the television player"
+
+JUMP="$REPO/ACIMDailyMinute/Views/Lessons/JumpToLessonSheet.swift"
+if grep -q 'openPlayer' "$JUMP"; then
+    echo "FAIL: JumpToLessonSheet still calls openPlayer — presenting the player over the jump sheet crashes the television (ACIMDailyMinuteTV-2026-09-09-105807.ips)"
+    exit 1
+fi
+
+LESSONS="$REPO/ACIMDailyMinute/Views/Lessons/LessonsView.swift"
+if ! grep -q 'onDismiss:' "$LESSONS"; then
+    echo "FAIL: LessonsView does not wait for the jump sheet to dismiss before opening the player"
+    exit 1
+fi
+if ! grep -q 'pendingJump' "$LESSONS"; then
+    echo "FAIL: LessonsView has nowhere to hold the jumped lesson until the sheet is gone"
+    exit 1
+fi
+if ! grep -q 'openPlayer(\.workbookLesson' "$LESSONS"; then
+    echo "FAIL: LessonsView no longer opens the player for a jumped lesson"
+    exit 1
+fi
+
+if ! grep -A3 'TVPlayerView(item: item)' "$CONTENT" | grep -q 'environment(audioManager)'; then
+    echo "FAIL: TVPlayerView cover is not given AudioManager — a nested sheet then assertionFailure's on @Environment(AudioManager.self)"
+    exit 1
+fi
+echo "PASS — Jump to Lesson waits for the sheet, and the player carries AudioManager"
