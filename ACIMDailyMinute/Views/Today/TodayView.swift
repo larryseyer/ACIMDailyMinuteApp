@@ -15,7 +15,7 @@ struct TodayView: View {
     @State private var showOfflineToast = false
     @State private var path = NavigationPath()
     #if os(tvOS)
-    @State private var playerItem: TVPlayerItem?
+    @Environment(\.openPlayer) private var openPlayer
     #endif
 
     var body: some View {
@@ -32,7 +32,7 @@ struct TodayView: View {
 
                     if let minute = minutes.first, !isMinuteStale {
                         #if os(tvOS)
-                        Button { playerItem = .minute(minute) } label: {
+                        Button { openPlayer(.minute(minute)) } label: {
                             DailyMinuteCard(minute: minute)
                         }
                         .buttonStyle(.card)
@@ -41,7 +41,7 @@ struct TodayView: View {
                         #endif
                     } else if let segment = corpusReading {
                         #if os(tvOS)
-                        Button { playerItem = .segment(segment) } label: {
+                        Button { openPlayer(.segment(segment)) } label: {
                             CorpusReadingCard(segment: segment)
                         }
                         .buttonStyle(.card)
@@ -52,7 +52,7 @@ struct TodayView: View {
 
                     if let lesson = lessons.first {
                         #if os(tvOS)
-                        Button { playerItem = .lesson(lesson) } label: {
+                        Button { openPlayer(.lesson(lesson)) } label: {
                             DailyLessonCard(lesson: lesson)
                         }
                         .buttonStyle(.card)
@@ -68,11 +68,6 @@ struct TodayView: View {
             }
             .navigationTitle("Today")
             .readingDestinations(path: $path)
-            #if os(tvOS)
-            .fullScreenCover(item: $playerItem) { item in
-                TVPlayerView(item: item)
-            }
-            #endif
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {

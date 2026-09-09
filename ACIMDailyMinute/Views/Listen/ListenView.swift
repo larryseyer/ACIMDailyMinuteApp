@@ -43,7 +43,7 @@ struct ListenView: View {
     @State private var videoRequest: VideoRequest?
     #endif
     #if os(tvOS)
-    @State private var playerItem: TVPlayerItem?
+    @Environment(\.openPlayer) private var openPlayer
     #endif
 
     @AppStorage("listen.lessons.lastWatchedIndex") private var lessonsLastWatchedIndex: Int = 1
@@ -84,11 +84,7 @@ struct ListenView: View {
     }
 
     private static func lessonNumber(from title: String) -> Int? {
-        let trimmed = title.trimmingCharacters(in: .whitespaces)
-        if trimmed == "Introduction" { return 0 }
-        guard trimmed.hasPrefix("Lesson ") else { return nil }
-        let digits = trimmed.dropFirst("Lesson ".count).prefix(while: \.isNumber)
-        return Int(digits)
+        LessonNarration.number(fromTitle: title)
     }
 
     private var embedURL: URL? {
@@ -132,11 +128,7 @@ struct ListenView: View {
                 FullScreenVideoCover(videoURL: request.url)
             }
             #endif
-            #if os(tvOS)
-            .fullScreenCover(item: $playerItem) { item in
-                TVPlayerView(item: item)
-            }
-            #endif
+
             #if !os(tvOS)
             .refreshable {
                 await reload(force: true)
@@ -286,7 +278,7 @@ struct ListenView: View {
                                 lessonsLastWatchedIndex = list.count - offset
                             }
                             #if os(tvOS)
-                            openPlayer(episode)
+                            presentEpisode(episode)
                             #else
                             play(episode)
                             #endif
@@ -385,14 +377,14 @@ struct ListenView: View {
     /// than handing the URL to the mini player or a YouTube view tvOS cannot
     /// host. Passage text comes from the archive, today's feed, or the
     /// bundled Workbook — the episode itself carries none.
-    private func openPlayer(_ episode: PodcastEpisode) {
+    private func presentEpisode(_ episode: PodcastEpisode) {
         PlaybackHistory.markPlayed(episode.id)
         let audioURL = playbackURL(for: episode)
         switch selectedFeed {
         case .minute:
             let day = Self.utcDayString(from: episode.date)
             let text = minutePassage(on: day)
-            playerItem = TVPlayerItem(
+            openPlayer(TVPlayerItem(
                 id: "listen:\(episode.id)",
                 eyebrow: "Daily Minute",
                 title: nil,
@@ -400,11 +392,11 @@ struct ListenView: View {
                 citation: nil,
                 audioURL: audioURL,
                 artName: "PlayerArt"
-            )
+            ))
         case .lesson:
             let number = Self.lessonNumber(from: episode.title) ?? 0
             let passage = lessonPassage(number: number, fallbackTitle: episode.title)
-            playerItem = TVPlayerItem(
+            openPlayer(TVPlayerItem(
                 id: "listen:\(episode.id)",
                 eyebrow: (number == 0 || number == 500) ? "Introduction" : "Lesson \(number)",
                 title: passage.title,
@@ -412,7 +404,7 @@ struct ListenView: View {
                 citation: nil,
                 audioURL: audioURL,
                 artName: "PlayerArtLesson"
-            )
+            ))
         }
     }
 

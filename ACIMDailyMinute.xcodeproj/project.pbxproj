@@ -30,6 +30,7 @@
 		13FA11A3E611C27FF6B1EBC9 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
 		21F4C8A17B3E9D6A5C2B4E8F /* VerticalPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002505 /* VerticalPager.swift */; };
 		45C8D1E2A9B7F4E63D1C8A05 /* TVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002507 /* TVPlayerView.swift */; };
+		45C8D1E2A9B7F4E63D1C8A06 /* LessonNarration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002508 /* LessonNarration.swift */; };
 		14932A1F2D20151299AA46B7 /* FetchCooldown.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002034 /* FetchCooldown.swift */; };
 		1944E8E82B1E072F571D01C8 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002345 /* NoteRow.swift */; };
 		200235292F43BB852320FC60 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
@@ -246,6 +247,7 @@
 		AA000001417 /* MinuteSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002417 /* MinuteSchedule.swift */; };
 		AA000001500 /* ReadableContentWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002500 /* ReadableContentWidth.swift */; };
 		AA000001505 /* VerticalPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002505 /* VerticalPager.swift */; };
+		AA000001508 /* LessonNarration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002508 /* LessonNarration.swift */; };
 		AA000001507 /* TVPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002507 /* TVPlayerView.swift */; };
 		AA000001501 /* QuittableSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002501 /* QuittableSheet.swift */; };
 		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
@@ -533,6 +535,7 @@
 		AA000002500 /* ReadableContentWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadableContentWidth.swift; sourceTree = "<group>"; };
 		AA000002505 /* VerticalPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPager.swift; sourceTree = "<group>"; };
 		AA000002507 /* TVPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVPlayerView.swift; sourceTree = "<group>"; };
+		AA000002508 /* LessonNarration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonNarration.swift; sourceTree = "<group>"; };
 		AA000002501 /* QuittableSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuittableSheet.swift; sourceTree = "<group>"; };
 		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
 		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
@@ -800,6 +803,7 @@
 				AA000002222 /* DeepLinkRoute.swift */,
 				AA000002500 /* ReadableContentWidth.swift */,
 				AA000002505 /* VerticalPager.swift */,
+				AA000002508 /* LessonNarration.swift */,
 				AA000002501 /* QuittableSheet.swift */,
 				AA000002350 /* PunctuationSpacing.swift */,
 				AA000002360 /* Citation.swift */,
@@ -1210,6 +1214,7 @@
 				AA000001081 /* PlatformTypography.swift in Sources */,
 				AA000001500 /* ReadableContentWidth.swift in Sources */,
 				AA000001505 /* VerticalPager.swift in Sources */,
+				AA000001508 /* LessonNarration.swift in Sources */,
 				AA000001507 /* TVPlayerView.swift in Sources */,
 				AA000001501 /* QuittableSheet.swift in Sources */,
 				AA000001082 /* ArchiveCalendarView.swift in Sources */,
@@ -1414,6 +1419,7 @@
 				48762C843F450E5770BBFA75 /* PlatformTypography.swift in Sources */,
 				13FA11A3E611C27FF6B1EBC9 /* ReadableContentWidth.swift in Sources */,
 				21F4C8A17B3E9D6A5C2B4E8F /* VerticalPager.swift in Sources */,
+				45C8D1E2A9B7F4E63D1C8A06 /* LessonNarration.swift in Sources */,
 				45C8D1E2A9B7F4E63D1C8A05 /* TVPlayerView.swift in Sources */,
 				334BA79AD0ACE5426CE0BA65 /* QuittableSheet.swift in Sources */,
 				2EE2D33E133F9FD25CC09A53 /* ArchiveCalendarView.swift in Sources */,

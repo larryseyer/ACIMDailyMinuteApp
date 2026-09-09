@@ -19,7 +19,7 @@ struct ArchiveDateDetailView: View {
 
     @Query private var readings: [ArchivedReading]
     #if os(tvOS)
-    @State private var playerItem: TVPlayerItem?
+    @Environment(\.openPlayer) private var openPlayer
     #endif
 
     init(dateString: String, availability: MinuteSchedule.Availability) {
@@ -40,7 +40,7 @@ struct ArchiveDateDetailView: View {
                     LazyVStack(spacing: 16) {
                         ForEach(readings) { reading in
                             #if os(tvOS)
-                            Button { playerItem = .archived(reading) } label: {
+                            Button { openPlayer(.archived(reading)) } label: {
                                 ArchivedReadingCard(reading: reading)
                             }
                             .buttonStyle(.card)
@@ -55,11 +55,6 @@ struct ArchiveDateDetailView: View {
             }
         }
         .navigationTitle(formattedTitle)
-        #if os(tvOS)
-        .fullScreenCover(item: $playerItem) { item in
-            TVPlayerView(item: item)
-        }
-        #endif
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif

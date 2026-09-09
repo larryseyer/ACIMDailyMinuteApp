@@ -24,7 +24,7 @@ import SwiftData
 struct LessonsView: View {
     @Environment(AudioManager.self) private var audio
     #if os(tvOS)
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.openPlayer) private var openPlayer
     #endif
     @Query(sort: \DailyLesson.lessonNumber) private var lessons: [DailyLesson]
     @Query(
@@ -48,9 +48,6 @@ struct LessonsView: View {
     @State private var searchText: String = ""
     @State private var isJumpSheetPresented: Bool = false
     @State private var shelf: Shelf = .workbook
-    #if os(tvOS)
-    @State private var playerItem: TVPlayerItem?
-    #endif
 
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -116,19 +113,13 @@ struct LessonsView: View {
                 ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
             }
             .readingDestinations(path: $path)
-            #if os(tvOS)
-            .environment(\.openPlayer, OpenPlayerAction { present($0) })
-            .fullScreenCover(item: $playerItem) { item in
-                TVPlayerView(item: item)
-            }
-            #endif
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
                 // A widget or notification tap on a lesson must never land on a
                 // chapter list.
                 shelf = .workbook
                 #if os(tvOS)
-                present(.workbookLesson(n))
+                openPlayer(.workbookLesson(n))
                 #else
                 path.append(n)
                 #endif
@@ -176,29 +167,6 @@ struct LessonsView: View {
             JumpToLessonSheet(path: $path)
         }
     }
-
-    #if os(tvOS)
-    /// Attach a published MP3 when Read opens a lesson that has one, so the
-    /// book and the narration meet without Read becoming Listen.
-    private func present(_ item: TVPlayerItem) {
-        guard item.audioURL == nil,
-              item.id.hasPrefix("lesson:"),
-              let number = Int(item.id.dropFirst("lesson:".count))
-        else {
-            playerItem = item
-            return
-        }
-        let descriptor = FetchDescriptor<DailyLesson>(
-            predicate: #Predicate { $0.lessonNumber == number }
-        )
-        if let lesson = try? modelContext.fetch(descriptor).first,
-           let url = lesson.audioURL, !url.isEmpty {
-            playerItem = item.withAudioURL(url)
-        } else {
-            playerItem = item
-        }
-    }
-    #endif
 
     private var jumpPlacement: ToolbarItemPlacement {
         #if os(iOS)

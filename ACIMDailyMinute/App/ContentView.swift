@@ -8,6 +8,13 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    #if os(tvOS)
+    /// One player for every tab. Installing `openPlayer` on a single
+    /// NavigationStack does not reach `navigationDestination` content on
+    /// tvOS — TextChapterView Select then hits the default
+    /// `assertionFailure` (crash ACIMDailyMinuteTV-2026-09-09-104129.ips).
+    @State private var playerItem: TVPlayerItem?
+    #endif
     #if os(iOS) || os(tvOS)
     /// The real height of the tab bar the mini player has to clear.
     ///
@@ -30,6 +37,13 @@ struct ContentView: View {
         tabContainer
             .environment(audioManager)
             .environment(connectivity)
+            #if os(tvOS)
+            .environment(\.openPlayer, OpenPlayerAction { presentPlayer($0) })
+            .fullScreenCover(item: $playerItem) { item in
+                TVPlayerView(item: item)
+            }
+            .task { await warmPodcastCache() }
+            #endif
             .animation(.easeInOut(duration: 0.2), value: audioManager.hasActiveAudio)
             .onAppear { connectivity.start() }
             .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequested)) { _ in
@@ -66,6 +80,70 @@ struct ContentView: View {
             }
             #endif
     }
+
+    #if os(tvOS)
+    /// Attach a published MP3 before the cover appears. Updating the item
+    /// afterwards would not rebuild `fullScreenCover` — identity is the
+    /// lesson id, and that does not change when the URL arrives.
+    private func presentPlayer(_ item: TVPlayerItem) {
+        if let url = item.audioURL, !url.isEmpty {
+            playerItem = item
+            return
+        }
+        guard let number = LessonNarration.number(fromPlayerID: item.id) else {
+            playerItem = item
+            return
+        }
+        let attached = attaching(item, number: number)
+        if attached.audioURL != nil {
+            playerItem = attached
+            return
+        }
+        Task {
+            await warmPodcastCache()
+            playerItem = attaching(item, number: number)
+        }
+    }
+
+    private func attaching(_ item: TVPlayerItem, number: Int) -> TVPlayerItem {
+        let daily: String? = {
+            let descriptor = FetchDescriptor<DailyLesson>(
+                predicate: #Predicate { $0.lessonNumber == number }
+            )
+            return (try? modelContext.fetch(descriptor))?.first?.audioURL
+        }()
+        let archived: String? = {
+            let channel = "daily-lesson"
+            let descriptor = FetchDescriptor<ArchivedReading>(
+                predicate: #Predicate { $0.channel == channel && $0.lessonNumber == number }
+            )
+            return (try? modelContext.fetch(descriptor))?.first?.audioURL
+        }()
+        let podcasts = (try? modelContext.fetch(
+            FetchDescriptor<CachedPodcastEpisode>(
+                predicate: #Predicate { $0.channel == "lesson" }
+            )
+        )) ?? []
+        let podcast = LessonNarration.podcastURL(
+            forLesson: number,
+            episodes: podcasts.map { (id: $0.id, title: $0.title, audioURL: $0.audioURL) }
+        )
+        guard let url = LessonNarration.url(daily: daily, archived: archived, podcast: podcast) else {
+            return item
+        }
+        return item.withAudioURL(url)
+    }
+
+    private func warmPodcastCache() async {
+        let service = PodcastService()
+        if let lessons = try? await service.fetchLessonEpisodes(force: false) {
+            try? PodcastService.persist(lessons, channel: "lesson", in: modelContext)
+        }
+        if let minutes = try? await service.fetchMinuteEpisodes(force: false) {
+            try? PodcastService.persist(minutes, channel: "minute", in: modelContext)
+        }
+    }
+    #endif
 
     private func follow(_ route: DeepLinkRoute) {
         switch route {
