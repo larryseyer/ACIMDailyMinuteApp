@@ -266,6 +266,8 @@
 		AA000001621 /* ReadingKeyNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002621 /* ReadingKeyNaming.swift */; };
 		AA000001622 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
 		AA000001623 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
+		AA000001624 /* ArchiveCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002624 /* ArchiveCalendar.swift */; };
+		A6240000C4A1E0DA62400001 /* ArchiveCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002624 /* ArchiveCalendar.swift */; };
 		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		AA000001702 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
 		AA000001703 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
@@ -548,6 +550,7 @@
 		AA000002621 /* ReadingKeyNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKeyNaming.swift; sourceTree = "<group>"; };
 		AA000002622 /* ReadingPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPositionStore.swift; sourceTree = "<group>"; };
 		AA000002623 /* ContinueReadingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueReadingRow.swift; sourceTree = "<group>"; };
+		AA000002624 /* ArchiveCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendar.swift; sourceTree = "<group>"; };
 		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 		AA000002702 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
@@ -784,6 +787,7 @@
 				AA000002603 /* PlaybackHistory.swift */,
 				AA000002602 /* YouTubeID.swift */,
 				AA000002601 /* LessonSchedule.swift */,
+				AA000002624 /* ArchiveCalendar.swift */,
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
@@ -1285,6 +1289,7 @@
 				AA000001621 /* ReadingKeyNaming.swift in Sources */,
 				AA000001622 /* ReadingPositionStore.swift in Sources */,
 				AA000001623 /* ContinueReadingRow.swift in Sources */,
+				AA000001624 /* ArchiveCalendar.swift in Sources */,
 				AA000001701 /* PracticeAnchorStore.swift in Sources */,
 				AA000001702 /* Appearance.swift in Sources */,
 				AA000001703 /* ACIMColors.swift in Sources */,
@@ -1408,6 +1413,7 @@
 				45C8D1E2A9B7F4E63D1C8A05 /* TVPlayerView.swift in Sources */,
 				334BA79AD0ACE5426CE0BA65 /* QuittableSheet.swift in Sources */,
 				2EE2D33E133F9FD25CC09A53 /* ArchiveCalendarView.swift in Sources */,
+				A6240000C4A1E0DA62400001 /* ArchiveCalendar.swift in Sources */,
 				35BBF18D6DA4A1612E897F47 /* ArchiveDateDetailView.swift in Sources */,
 				36D4DF1D0A1E08B1C2D27EE6 /* ArchivedReadingCard.swift in Sources */,
 				A05A3DDF2978D9956855AD60 /* AboutView.swift in Sources */,

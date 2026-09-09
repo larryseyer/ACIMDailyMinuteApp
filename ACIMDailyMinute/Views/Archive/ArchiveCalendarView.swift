@@ -8,25 +8,14 @@ import SwiftUI
 /// that stays legible on the dark ground.
 struct ArchiveCalendarView: View {
     @Binding var selection: Date
+    @Binding var visibleMonth: Date
 
     /// `yyyy-MM-dd` strings that have at least one archived reading. Matching
     /// on the formatted string rather than a `Date` avoids every timezone and
     /// start-of-day trap in comparing instants across a calendar grid.
     let availableDateStrings: Set<String>
 
-    @State private var visibleMonth: Date
-
-    private let calendar: Calendar = {
-        var c = Calendar(identifier: .gregorian)
-        c.firstWeekday = 1 // Sunday
-        return c
-    }()
-
-    init(selection: Binding<Date>, availableDateStrings: Set<String> = []) {
-        self._selection = selection
-        self.availableDateStrings = availableDateStrings
-        self._visibleMonth = State(initialValue: selection.wrappedValue)
-    }
+    private let calendar = ArchiveCalendarState.grid
 
     var body: some View {
         VStack(spacing: 12) {
@@ -231,16 +220,23 @@ struct ArchiveCalendarView: View {
 }
 
 #Preview {
-    ArchiveCalendarView(
-        selection: .constant(Date()),
-        availableDateStrings: Set(
-            (0..<20).compactMap { offset in
-                Calendar.current.date(byAdding: .day, value: -offset * 2, to: Date())
-            }
-            .map(ArchiveCalendarView.dateString(from:))
-        )
-    )
-    .frame(width: 340)
-    .padding()
-    .preferredColorScheme(.dark)
+    struct Host: View {
+        @State private var calendar = ArchiveCalendarState.starting(now: Date())
+        var body: some View {
+            ArchiveCalendarView(
+                selection: $calendar.selection,
+                visibleMonth: $calendar.visibleMonth,
+                availableDateStrings: Set(
+                    (0..<20).compactMap { offset in
+                        Calendar.current.date(byAdding: .day, value: -offset * 2, to: Date())
+                    }
+                    .map(ArchiveCalendarView.dateString(from:))
+                )
+            )
+            .frame(width: 340)
+            .padding()
+            .preferredColorScheme(.dark)
+        }
+    }
+    return Host()
 }

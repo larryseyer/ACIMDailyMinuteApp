@@ -31,7 +31,7 @@ struct ArchiveView: View {
 
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
-    @State private var selectedDate: Date = Self.today()
+    @State private var archiveCalendar = ArchiveCalendarState.starting(now: Date())
     @State private var isRefreshing = false
 
     var body: some View {
@@ -68,7 +68,7 @@ struct ArchiveView: View {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("Today") {
                             withAnimation {
-                                selectedDate = Self.today()
+                                archiveCalendar.revealToday(now: Date())
                             }
                         }
                     }
@@ -76,7 +76,7 @@ struct ArchiveView: View {
                     ToolbarItem(placement: .automatic) {
                         Button("Today") {
                             withAnimation {
-                                selectedDate = Self.today()
+                                archiveCalendar.revealToday(now: Date())
                             }
                         }
                     }
@@ -133,7 +133,8 @@ struct ArchiveView: View {
 
     private var calendar: some View {
         ArchiveCalendarView(
-            selection: $selectedDate,
+            selection: $archiveCalendar.selection,
+            visibleMonth: $archiveCalendar.visibleMonth,
             availableDateStrings: datesWithReadings
         )
     }
@@ -152,7 +153,7 @@ struct ArchiveView: View {
     }
 
     private var selectedDateRow: some View {
-        let dateString = Self.dateString(from: selectedDate)
+        let dateString = Self.dateString(from: archiveCalendar.selection)
         let sentence = availability(of: dateString).sentence
 
         return Button {
@@ -160,7 +161,7 @@ struct ArchiveView: View {
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(Self.longDateString(from: selectedDate))
+                    Text(Self.longDateString(from: archiveCalendar.selection))
                         .font(.body.weight(.medium))
                         .foregroundStyle(.primary)
                     Text(sentence ?? "Open readings")
