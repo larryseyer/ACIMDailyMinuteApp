@@ -1,13 +1,21 @@
 import SwiftUI
 
-/// Single episode row inside the Listen tab feed. Whole row is tappable
-/// and routes to `AudioManager.play` via the `onTap` closure the parent
-/// provides — no environment reads here so the row stays a pure value
-/// renderer and SwiftUI can skip it cleanly during list virtualisation.
+/// Single episode row inside the Listen tab feed.
 ///
-/// When the episode matches the active `AudioManager` title the leading
-/// glyph swaps from `play.fill` to `waveform` in the gold accent, giving
-/// a now-playing cue without a separate indicator column.
+/// Audio rows use the same `ListenButton` the Today header does — Listen,
+/// then Pause while playing and Play while paused — so the finger that
+/// started a Minute or Lesson can halt it without leaving this list.
+/// ContentView hides the mini-player overlay on this tab, and a waveform
+/// glyph cannot be paused; this is the pause control. The title and
+/// listened marker stay a second tap target for the same action, because
+/// SwiftUI will not nest a Button inside a Button.
+///
+/// Video-only rows (no published MP3) keep a whole-row tap that opens the
+/// video. There is no in-app pause for that path: YouTube's own chrome
+/// takes over once the player is up.
+///
+/// No environment reads, so the row stays a pure value renderer and
+/// SwiftUI can skip it cleanly during list virtualisation.
 ///
 /// The trailing column is a listened marker rather than a duration. Every Daily
 /// Minute runs the same minute, so printing `01:00` on all of them said nothing;
@@ -20,7 +28,8 @@ import SwiftUI
 struct PodcastEpisodeRow: View {
     let episode: PodcastEpisode
     let feed: PodcastFeed
-    let isPlaying: Bool
+    var isActive: Bool = false
+    var isPlaying: Bool = false
 
     /// When the reader last opened this episode; `nil` if they never have.
     let playedAt: Date?
@@ -30,12 +39,37 @@ struct PodcastEpisodeRow: View {
     private static let accent = Color.acimGold
 
     var body: some View {
+        #if os(tvOS)
+        playableRow
+        #else
+        if opensVideo {
+            playableRow
+        } else {
+            HStack(spacing: 12) {
+                ListenButton(
+                    title: episode.title,
+                    isActive: isActive,
+                    isPlaying: isPlaying,
+                    action: onTap
+                )
+                Button(action: onTap) {
+                    rowContent
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(accessibilityLabel)
+                .accessibilityHint(playPauseHint)
+            }
+            .padding(.vertical, 6)
+            .accessibilityElement(children: .contain)
+        }
+        #endif
+    }
+
+    private var playableRow: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
                 icon
-                textColumn
-                Spacer(minLength: 8)
-                listenedIndicator
+                rowContent
             }
             .padding(.vertical, 6)
             .contentShape(Rectangle())
@@ -43,13 +77,20 @@ struct PodcastEpisodeRow: View {
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityHint(opensVideo ? "Opens video" : "Plays episode")
+        .accessibilityHint(opensVideo ? "Opens video" : playPauseHint)
+    }
+
+    private var rowContent: some View {
+        HStack(spacing: 12) {
+            textColumn
+            Spacer(minLength: 8)
+            listenedIndicator
+        }
+        .contentShape(Rectangle())
     }
 
     /// True when this episode has no published audio and tapping will open its
-    /// video instead — the branch `ListenView.play(_:)` already takes. Until
-    /// audio hosting is unblocked that is every episode, so the row must not
-    /// keep showing a play glyph and promising a listen it cannot deliver.
+    /// video instead — the branch `ListenView.play(_:)` already takes.
     private var opensVideo: Bool {
         episode.audioURL.isEmpty && !episode.youtubeURL.isEmpty
     }
@@ -61,14 +102,20 @@ struct PodcastEpisodeRow: View {
     private var icon: some View {
         Image(systemName: glyph)
             .font(.system(size: 22))
-            .foregroundStyle(isPlaying ? Self.accent : .primary)
+            .foregroundStyle(isActive ? Self.accent : .primary)
             .frame(width: 30)
-            .symbolEffect(.variableColor.iterative, options: .repeating, isActive: isPlaying)
     }
 
     private var glyph: String {
-        if isPlaying { return "waveform" }
+        if isActive && isPlaying { return "pause.fill" }
+        if isActive { return "play.fill" }
         return opensVideo ? "play.rectangle.fill" : "play.fill"
+    }
+
+    private var playPauseHint: String {
+        if isActive && isPlaying { return "Pauses episode" }
+        if isActive { return "Resumes episode" }
+        return "Plays episode"
     }
 
     private var textColumn: some View {

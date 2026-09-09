@@ -5,11 +5,14 @@ import SwiftData
 ///
 /// Two independently-fetched podcast feeds (Daily Minute + Daily Lesson)
 /// surface as a segmented picker above a newest-first episode list. Tapping
-/// a row hands the URL to the root `AudioManager`, which drives the
-/// reserved MiniPlayer overlay in `ContentView`. A 16:9 YouTube playlist
-/// embed at the top switches between the Daily Minute and Daily Lesson
-/// playlists based on the selected feed. The Lessons playlist remembers
-/// the last-watched lesson index across launches via `@AppStorage`.
+/// a row hands the URL to the root `AudioManager` through `playOrToggle`,
+/// the same path the Today header uses, so a second tap pauses. ContentView
+/// hides the floating mini player on this tab (a tap there only switches
+/// here), so this view draws `MiniPlayerView` in the bottom inset itself.
+/// A 16:9 YouTube playlist embed at the top switches between the Daily
+/// Minute and Daily Lesson playlists based on the selected feed. The
+/// Lessons playlist remembers the last-watched lesson index across
+/// launches via `@AppStorage`.
 struct ListenView: View {
     @Environment(AudioManager.self) private var audio
     @Environment(ConnectivityManager.self) private var connectivity
@@ -122,9 +125,6 @@ struct ListenView: View {
             }
             .listStyle(.plain)
             .readableContentWidth()
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-            }
             .navigationTitle("Listen")
             // ⛔ iOS only: the cover presents a WKWebView and tvOS has no WebKit.
             #if os(iOS)
@@ -159,6 +159,16 @@ struct ListenView: View {
                 }
             }
         }
+        // ContentView hides the overlay on this tab (a tap there only
+        // switches here), so the bar has to be drawn on the stack itself —
+        // full width, above the tab bar, not inside the readable column.
+        #if !os(tvOS)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if audio.hasActiveAudio {
+                MiniPlayerView()
+            }
+        }
+        #endif
     }
 
     // MARK: - YouTube
@@ -268,7 +278,8 @@ struct ListenView: View {
                     PodcastEpisodeRow(
                         episode: episode,
                         feed: selectedFeed,
-                        isPlaying: isCurrentlyPlaying(episode),
+                        isActive: isActive(episode),
+                        isPlaying: audio.isPlaying,
                         playedAt: playedAt,
                         onTap: {
                             if selectedFeed == .lesson {
@@ -336,27 +347,37 @@ struct ListenView: View {
     // MARK: - Actions
 
     private func play(_ episode: PodcastEpisode) {
-        // Opening is the only listened signal available: no MP3 is published
-        // yet, so there is no playback position to measure against. A swipe
-        // action undoes an accidental tap.
-        PlaybackHistory.markPlayed(episode.id)
-
         // Audio is the intended experience; the video is what exists when no
         // MP3 has been published for this reading yet. Tapping play should do
         // something either way rather than silently failing.
-        if let local = AudioDownloadStore.localURL(for: episode.id) {
-            audio.play(url: local.absoluteString, title: episode.title)
+        //
+        // playOrToggle is the Today-header path: a second tap on the active
+        // episode pauses instead of restarting from the beginning. Listened
+        // is recorded only when a new session starts, not when one pauses.
+        if let url = playbackURL(for: episode) {
+            if !audio.isActive(url: url) {
+                PlaybackHistory.markPlayed(episode.id)
+            }
+            audio.playOrToggle(url: url, title: episode.title)
             return
         }
-        if !episode.audioURL.isEmpty {
-            audio.play(url: episode.audioURL, title: episode.title)
-            return
-        }
+        PlaybackHistory.markPlayed(episode.id)
         #if os(iOS)
         if !episode.youtubeURL.isEmpty {
             videoRequest = VideoRequest(id: episode.youtubeURL)
         }
         #endif
+    }
+
+    /// Local download if present, otherwise the feed enclosure. Identity for
+    /// `isActive` / `playOrToggle` is this string, not the episode title —
+    /// every Daily Minute is titled "Daily Minute".
+    private func playbackURL(for episode: PodcastEpisode) -> String? {
+        if let local = AudioDownloadStore.localURL(for: episode.id) {
+            return local.absoluteString
+        }
+        if !episode.audioURL.isEmpty { return episode.audioURL }
+        return nil
     }
 
     #if os(tvOS)
@@ -366,7 +387,7 @@ struct ListenView: View {
     /// bundled Workbook — the episode itself carries none.
     private func openPlayer(_ episode: PodcastEpisode) {
         PlaybackHistory.markPlayed(episode.id)
-        let audioURL = resolvedAudioURL(for: episode)
+        let audioURL = playbackURL(for: episode)
         switch selectedFeed {
         case .minute:
             let day = Self.utcDayString(from: episode.date)
@@ -393,14 +414,6 @@ struct ListenView: View {
                 artName: "PlayerArtLesson"
             )
         }
-    }
-
-    private func resolvedAudioURL(for episode: PodcastEpisode) -> String? {
-        if let local = AudioDownloadStore.localURL(for: episode.id) {
-            return local.absoluteString
-        }
-        if !episode.audioURL.isEmpty { return episode.audioURL }
-        return nil
     }
 
     private func minutePassage(on day: String) -> String {
@@ -444,8 +457,9 @@ struct ListenView: View {
     }
     #endif
 
-    private func isCurrentlyPlaying(_ episode: PodcastEpisode) -> Bool {
-        audio.hasActiveAudio && audio.currentTitle == episode.title
+    private func isActive(_ episode: PodcastEpisode) -> Bool {
+        guard let url = playbackURL(for: episode) else { return false }
+        return audio.isActive(url: url)
     }
 
     private func reload(force: Bool) async {

@@ -12,6 +12,7 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
 - [ ] The watch on a wrist: today's Daily Minute under **Today**, bundled fallback under **From the Course** with the phone off; place the complication in all three shapes.
 - [ ] Listen rows: no `01:00` chips; tap leaves a check and `Listened <date>`; swipe offers Mark unplayed; unlistened rows show no date.
+- [ ] Listen Minute and Lessons: the row control is Listen, then Pause while playing and Play while paused; the mini player on this tab pauses too.
 - [ ] Saved tab: a saved lesson opens the lesson, a saved minute opens the passage; swipe either direction deletes — say if the leading edge should require a tap on Delete instead.
 - [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
 - [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
