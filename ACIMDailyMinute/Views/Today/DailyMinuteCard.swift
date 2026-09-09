@@ -26,8 +26,11 @@ struct DailyMinuteCard: View {
             ReadingScaffold(eyebrow: "Daily Minute", footer: footer) {
                 #if !os(tvOS)
                 if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                    ListenButton(title: "Daily Minute") {
-                        audio.play(url: audioURL, title: "Daily Minute")
+                    ListenButton(
+                        title: "Daily Minute",
+                        isActive: audio.isActive(url: audioURL)
+                    ) {
+                        audio.playOrStop(url: audioURL, title: "Daily Minute")
                     }
                 }
                 #endif

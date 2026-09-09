@@ -22,8 +22,11 @@ struct DailyLessonCard: View {
             ) {
                 #if !os(tvOS)
                 if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                    ListenButton(title: "Lesson \(lesson.lessonNumber)") {
-                        audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
+                    ListenButton(
+                        title: "Lesson \(lesson.lessonNumber)",
+                        isActive: audio.isActive(url: audioURL)
+                    ) {
+                        audio.playOrStop(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
                     }
                 }
                 #endif

@@ -7,6 +7,11 @@ import MediaPlayer
 final class AudioManager {
     var isPlaying = false
     var currentTitle = ""
+    /// The resolved URL of the item in the mini player. Header Listen buttons
+    /// match on this, not on `currentTitle`: every Daily Minute is titled
+    /// "Daily Minute", and a title match would paint Stop on a different day's
+    /// card.
+    var currentURL = ""
     var currentTime: Double = 0
     var duration: Double = 0
     var hasActiveAudio = false
@@ -25,7 +30,8 @@ final class AudioManager {
         stop()
         lastError = nil
 
-        guard let audioURL = URL(string: Self.resolve(url)) else { return }
+        let resolved = Self.resolve(url)
+        guard let audioURL = URL(string: resolved) else { return }
 
         #if os(iOS) || os(watchOS) || os(tvOS)
         do {
@@ -59,6 +65,7 @@ final class AudioManager {
         }
         player = AVPlayer(playerItem: item)
         currentTitle = title
+        currentURL = resolved
         hasActiveAudio = true
         didFinishPlayback = false
         observeEnd(of: item)
@@ -69,6 +76,23 @@ final class AudioManager {
         player?.play()
         isPlaying = true
         updateNowPlayingInfo()
+    }
+
+    /// True while the mini player is showing this reading, including paused
+    /// and finished-but-not-dismissed. Relative and absolute forms of the
+    /// same path compare equal through `resolve`.
+    func isActive(url: String) -> Bool {
+        hasActiveAudio && currentURL == Self.resolve(url)
+    }
+
+    /// Header Listen/Stop: start this reading, or end it if it already owns
+    /// the mini player. Pause/resume stays on the mini player.
+    func playOrStop(url: String, title: String) {
+        if isActive(url: url) {
+            stop()
+        } else {
+            play(url: url, title: title)
+        }
     }
 
     func togglePlayback() {
@@ -107,6 +131,7 @@ final class AudioManager {
         currentTime = 0
         duration = 0
         currentTitle = ""
+        currentURL = ""
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 

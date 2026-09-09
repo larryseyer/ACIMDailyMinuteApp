@@ -229,9 +229,14 @@ if [ -n "$TOOLBAR_SAVE" ]; then
     exit 1
 fi
 
-# 4. Nobody hand-rolls a Listen control. Three surfaces did, at a different
-#    font and padding than the shared one.
-INLINE_LISTEN="$(grep -rln 'Label("Listen", systemImage:' "$VIEWS" \
+# 4. Nobody hand-rolls a Listen/Stop control. Three surfaces did, at a different
+#    font and padding than the shared one. The shared control must still name
+#    both words so the same tap target can start and end playback.
+if ! grep -q 'isActive ? "Stop" : "Listen"' "$VIEWS/ListenButton.swift"; then
+    echo "FAIL: ListenButton lost the Listen/Stop swap"
+    exit 1
+fi
+INLINE_LISTEN="$(grep -rEln 'Label\("(Listen|Stop)", systemImage:' "$VIEWS" --include='*.swift' \
     | grep -v 'ListenButton.swift' || true)"
 if [ -n "$INLINE_LISTEN" ]; then
     echo "FAIL: a Listen control is hand-rolled in:"

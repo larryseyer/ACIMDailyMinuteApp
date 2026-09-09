@@ -165,8 +165,11 @@ private struct FullLessonView: View {
                 footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
             ) {
                 if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                    ListenButton(title: "Lesson \(lesson.lessonNumber)") {
-                        audio.play(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
+                    ListenButton(
+                        title: "Lesson \(lesson.lessonNumber)",
+                        isActive: audio.isActive(url: audioURL)
+                    ) {
+                        audio.playOrStop(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
                     }
                 }
             } trailing: {
@@ -236,8 +239,11 @@ private struct MetadataOnlyLessonView: View {
                 )
             ) {
                 if let audioURL = archive.audioURL, !audioURL.isEmpty {
-                    ListenButton(title: "Lesson \(lessonNumber)") {
-                        audio.play(url: audioURL, title: "Lesson \(lessonNumber)")
+                    ListenButton(
+                        title: "Lesson \(lessonNumber)",
+                        isActive: audio.isActive(url: audioURL)
+                    ) {
+                        audio.playOrStop(url: audioURL, title: "Lesson \(lessonNumber)")
                     }
                 }
             } trailing: {
@@ -319,8 +325,11 @@ private struct AbsentLessonView: View {
                 )
             ) {
                 if lessonNumber == 0, let audioURL = introAudioURL, !audioURL.isEmpty {
-                    ListenButton(title: "Introduction") {
-                        audio.play(url: audioURL, title: "Introduction")
+                    ListenButton(
+                        title: "Introduction",
+                        isActive: audio.isActive(url: audioURL)
+                    ) {
+                        audio.playOrStop(url: audioURL, title: "Introduction")
                     }
                 }
             } trailing: {
