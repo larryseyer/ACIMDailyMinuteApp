@@ -41,7 +41,6 @@ enum FetchCooldownKey {
     static let dailyMinute = "lastDailyMinuteFetch"
     static let dailyLesson = "lastDailyLessonFetch"
     static let feed = "lastFeedFetch"
-    static let archive = "lastArchiveFetch"
 }
 
 // MARK: - Intervals

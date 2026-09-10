@@ -166,6 +166,8 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .deepLinkArchive, object: d)
             }
+        case .listen:
+            selectedTab = 2
         case .saved:
             // ⛔ Tag 4 does not exist on the television, and selecting a tag no
             // tab carries leaves a `TabView` showing nothing at all. Today is

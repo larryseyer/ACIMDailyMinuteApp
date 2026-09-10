@@ -216,7 +216,10 @@ struct BookmarkRow: View {
                 return l.lessonTitle.isEmpty ? "Lesson \(l.lessonNumber)" : l.lessonTitle
             }
             if let r = archiveLessons.first {
-                return r.text.isEmpty ? "Lesson \(r.lessonNumber ?? 0)" : r.text
+                if let n = r.lessonNumber, n > 0 {
+                    return r.text.isEmpty ? "Lesson \(n)" : r.text
+                }
+                return r.text.isEmpty ? nil : r.text
             }
             return nil
         }

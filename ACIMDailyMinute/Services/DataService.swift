@@ -199,9 +199,9 @@ struct DataService: Sendable {
         let isNew = existing == nil
 
         let minute = existing ?? DailyMinute()
-        // `segmentHash` is the unique attribute and doubles as the bookmark key
-        // (`"minute:\(segmentHash)"`). Once assigned it never changes, or saved
-        // readings would orphan every time the text was corrected. New rows only.
+        // `segmentHash` is the unique attribute. Bookmark keys live on the day
+        // (`ArchiveService.minuteLineHash`) so Today and Archive agree. Once
+        // assigned, segmentHash never changes; new rows only.
         if isNew {
             minute.segmentHash = HashUtility.sha256Truncated(
                 "minute:\(dto.segment_id)|\(dto.date)|\(dto.text)"
@@ -233,6 +233,17 @@ struct DataService: Sendable {
         )
 
         try ArchiveService.persistInlineMinutes(dto.archive, in: context)
+
+        // Today used to key a save on `segmentHash` (body + id + date). Archive
+        // keys on the day. One passage, two keys, two Saved rows. Fold the
+        // old Today key onto the Archive key so a save from either tab is one.
+        if !minute.segmentHash.isEmpty, !minute.date.isEmpty {
+            BookmarkStore.resolveRename(
+                from: "minute:\(minute.segmentHash)",
+                to: "minute:\(ArchiveService.minuteLineHash(date: minute.date))",
+                in: context
+            )
+        }
 
         try context.save()
         FetchCooldown.markFetched(key: FetchCooldownKey.dailyMinute)

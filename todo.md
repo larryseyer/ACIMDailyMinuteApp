@@ -19,6 +19,9 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] Archive calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
 - [ ] Let it fall open on Archive: a published minute; with no archive, a bundled Text passage.
 - [ ] Workbook lesson 84: the circle in the nav marks it done; the row grows a check; a Listen tap does not.
+- [ ] Listen with the network off: the YouTube card says video is unavailable and the list still plays.
+- [ ] acimdailyminute://listen opens the Listen tab.
+- [ ] An archive minute can be highlighted; Save on Today and on that day's Archive row is one Saved row.
 - [ ] Share on the Mac draws bare, like the phone.
 - [ ] Airplane mode, delete and reinstall, cold launch: Today shows a bundled reading with no save, share, or Listen.
 - [ ] Listen swipe Download, then Remove download; a downloaded row plays from disk in airplane mode; look at the swipe at 375pt.
@@ -117,12 +120,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
-- [ ] The archive minute is the last reading that cannot be marked.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
-- [ ] The Listen tab has no defined behaviour when YouTube fails.
-- [ ] No deep-link route for the Listen tab.
-- [ ] Today-tab and Archive-tab minute bookmarks do not alias.
-- [ ] `lastArchiveFetch` is declared and never used.
-- [ ] Pre-submission sweep: walk surfaces that display data they do not have.

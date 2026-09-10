@@ -39,7 +39,7 @@ enum BackupService {
     ///   They record what THIS device last fetched from the feed; importing
     ///   one would tell a device it had learned something it never did.
     /// - Fetch cooldowns — `lastForegroundCheck`, `lastDailyMinuteFetch`,
-    ///   `lastDailyLessonFetch`, `lastFeedFetch`, `lastArchiveFetch`. Importing
+    ///   `lastDailyLessonFetch`, `lastFeedFetch`. Importing
     ///   one would stop a fetch that never happened here.
     /// - Cache schema markers — `contentSchemaVersion`, `podcastCacheSchemaVersion`.
     ///   They describe this device's store, not the reader.

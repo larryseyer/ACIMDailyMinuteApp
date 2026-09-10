@@ -1,7 +1,7 @@
 # continue.md
 
-LIVE: 1.0.0 store date is 13 September 2026. First in-repo gate: pre-submission sweep — walk surfaces that display data they do not have.
+LIVE: Structure the Manual for Teachers into its question-and-answer form.
 
-Cannot submit without him: privacy.html (still 404), CloudKit schema Development to Production, screenshots, App Store Connect.
+Store gates that wait on him: CloudKit Development to Production, screenshots, App Store Connect. Privacy.html is the other terminal.
 
 Parked is his phone test pass. Do not ask him to walk it.

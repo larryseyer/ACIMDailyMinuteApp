@@ -8,7 +8,9 @@ struct DailyMinuteCard: View {
     @Environment(AudioManager.self) private var audio
     @Query private var bookmarks: [Bookmark]
 
-    private var itemKey: String { "minute:\(minute.segmentHash)" }
+    /// Same key the Archive card writes: `daily-minute|date`. A hash of the
+    /// body made Today and Archive disagree about one passage.
+    private var itemKey: String { "minute:\(ArchiveService.minuteLineHash(date: minute.date))" }
 
     /// Positional, so an annotation outlives the rolling archive window. The
     /// date is the fallback for a minute whose segment the feed did not name;

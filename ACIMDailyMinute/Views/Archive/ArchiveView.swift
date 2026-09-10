@@ -413,7 +413,7 @@ private struct ArchiveSearchResultsList: View {
     private func row(for reading: ArchivedReading) -> some View {
         let label = reading.channel == "daily-minute"
             ? "Daily Minute"
-            : "Lesson \(reading.lessonNumber ?? 0)"
+            : (reading.lessonNumber.flatMap { $0 > 0 ? "Lesson \($0)" : nil } ?? "Lesson")
         let snippet = snippet(for: reading)
 
         VStack(alignment: .leading, spacing: 4) {

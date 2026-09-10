@@ -8,6 +8,7 @@ enum DeepLinkRoute: Sendable, Equatable {
     /// One lesson, pushed.
     case lesson(Int)
     case archive(Date)
+    case listen
     case saved
 
     static func parse(_ url: URL) -> DeepLinkRoute? {
@@ -18,6 +19,7 @@ enum DeepLinkRoute: Sendable, Equatable {
         case "today": return .today
         case "saved": return .saved
         case "lessons": return .lessons
+        case "listen": return .listen
         case "lesson":
             guard let n = segments.first.flatMap(Int.init), (1...365).contains(n) else { return nil }
             return .lesson(n)

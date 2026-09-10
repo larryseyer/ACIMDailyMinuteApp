@@ -102,13 +102,19 @@ struct ListenView: View {
                 #if os(iOS)
                 if let url = embedURL {
                     Section {
-                        youtubeCard(url: url.absoluteString)
-                            .id(url)
-                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                            #if !os(tvOS)
-                            .listRowSeparator(.hidden)
-                            #endif
-                            .listRowBackground(Color.clear)
+                        Group {
+                            if connectivity.isConnected {
+                                youtubeCard(url: url.absoluteString)
+                                    .id(url)
+                            } else {
+                                youtubeUnavailable
+                            }
+                        }
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        #if !os(tvOS)
+                        .listRowSeparator(.hidden)
+                        #endif
+                        .listRowBackground(Color.clear)
                     }
                 }
                 #endif
@@ -184,6 +190,17 @@ struct ListenView: View {
         .padding(16)
         .background(Color.acimCard)
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private var youtubeUnavailable: some View {
+        Text("Video is unavailable. Audio still plays from the list below.")
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .background(Color.acimCard)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .accessibilityLabel("Video is unavailable")
     }
     #endif
 

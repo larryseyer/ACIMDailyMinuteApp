@@ -4,8 +4,9 @@ import SwiftData
 /// Renders a single `ArchivedReading` row inside the Archive tab's per-date detail.
 ///
 /// Dispatches on `reading.channel`:
-///   * `"daily-minute"` — the passage body in system serif, with its book name
-///     and the date beneath it.
+///   * `"daily-minute"` — the passage body through `AnnotatableReadingText`,
+///     keyed by the day's `yyyy-MM-dd` so a highlight or note has somewhere
+///     to live. Book name and date sit in the footer.
 ///   * `"daily-lesson"` — "Lesson N" and the title (stored in `reading.text`
 ///     per `ArchiveService.persistInlineLessons`). Archive lesson entries ship
 ///     no body, so the scaffold's body slot is empty and its footer follows the
@@ -80,10 +81,13 @@ struct ArchivedReadingCard: View {
             }
         } body: {
             if isMinute {
-                Text(reading.text)
-                    .font(.system(.body, design: .serif))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
+                AnnotatableReadingText(
+                    raw: reading.text,
+                    key: .minuteDate(reading.dateString),
+                    design: .serif
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(16)

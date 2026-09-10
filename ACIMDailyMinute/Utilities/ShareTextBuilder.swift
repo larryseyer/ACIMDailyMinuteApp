@@ -74,9 +74,13 @@ enum ShareTextBuilder {
     /// unlike `lessonShareText`, which includes the full body. The trailing
     /// attribution lines stay consistent with the Workbook framing.
     static func archivedLessonShareText(_ reading: ArchivedReading) -> String {
-        let n = reading.lessonNumber ?? 0
         let title = reading.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let header = title.isEmpty ? "Lesson \(n)" : "Lesson \(n): \(title)"
+        let header: String
+        if let n = reading.lessonNumber, n > 0 {
+            header = title.isEmpty ? "Lesson \(n)" : "Lesson \(n): \(title)"
+        } else {
+            header = title.isEmpty ? "Lesson" : title
+        }
         var parts: [String] = [header]
         parts.append("— A Course in Miracles, Workbook for Students")
         parts.append("www.acimdailyminute.org")

@@ -30,10 +30,13 @@ struct LiteYouTubeCard: View {
 
     @State private var isActivated = false
     @State private var useFallbackThumbnail = false
+    @State private var artworkFailed = false
 
     var body: some View {
         Group {
-            if isActivated {
+            if videoID == nil || artworkFailed {
+                unavailable
+            } else if isActivated {
                 YouTubePlayerView(videoURL: playerURL, autoplay: true)
             } else {
                 facade
@@ -75,7 +78,13 @@ struct LiteYouTubeCard: View {
                     // high-resolution thumbnail; `hqdefault` is always present.
                     // Retry once at the lower size before giving up on artwork.
                     Color.clear
-                        .onAppear { useFallbackThumbnail = true }
+                        .onAppear {
+                            if useFallbackThumbnail {
+                                artworkFailed = true
+                            } else {
+                                useFallbackThumbnail = true
+                            }
+                        }
                 case .empty:
                     ProgressView().tint(.white)
                 @unknown default:
@@ -89,6 +98,17 @@ struct LiteYouTubeCard: View {
         guard let videoID else { return nil }
         let name = useFallbackThumbnail ? "hqdefault" : "maxresdefault"
         return URL(string: "https://img.youtube.com/vi/\(videoID)/\(name).jpg")
+    }
+
+    private var unavailable: some View {
+        Text("Video is unavailable. Audio still plays from the list below.")
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(16)
+            .background(Color.black.opacity(0.85))
+            .accessibilityLabel("Video is unavailable")
     }
 
     /// YouTube's own play button, redrawn: the reader is expecting it, and it is

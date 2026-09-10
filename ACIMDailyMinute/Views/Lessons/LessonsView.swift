@@ -299,11 +299,13 @@ private struct FilteredLessonsList: View {
                         meta: meta[n],
                         isBookmarked: bookmarkedNumbers.contains(n),
                         isCompleted: completedNumbers.contains(n),
-                        availableOn: LessonSchedule.availabilityDate(
-                            for: n,
-                            latestRecorded: latestLessonNumber,
-                            latestDate: latestPublishedAt ?? Date()
-                        )
+                        availableOn: latestPublishedAt.flatMap {
+                            LessonSchedule.availabilityDate(
+                                for: n,
+                                latestRecorded: latestLessonNumber,
+                                latestDate: $0
+                            )
+                        }
                     )
                 }
             }
