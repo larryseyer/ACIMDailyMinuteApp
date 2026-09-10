@@ -31,6 +31,9 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+# App Store simulator captures (large binaries; kept on disk for upload)
+store-screenshots/**/*.png
+
 # OS files
 .DS_Store
 *.swp

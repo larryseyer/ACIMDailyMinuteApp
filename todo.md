@@ -120,6 +120,8 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
+- [ ] iPad does not use the full width of the screen — the reading column sits in a narrow strip with empty space on both sides.
+- [ ] Mac Debug launch from Terminal dies in CloudKit setup (crash.txt): unsigned binary, parent is bash, trap on `com.apple.coredata.cloudkit.queue`.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.

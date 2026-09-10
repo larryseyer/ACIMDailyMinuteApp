@@ -50,7 +50,10 @@ struct ContentView: View {
             .task { await warmPodcastCache() }
             #endif
             .animation(.easeInOut(duration: 0.2), value: audioManager.hasActiveAudio)
-            .onAppear { connectivity.start() }
+            .onAppear {
+                connectivity.start()
+                applyScreenshotTabIfRequested()
+            }
             .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequested)) { _ in
                 showSettings = true
             }
@@ -149,6 +152,41 @@ struct ContentView: View {
         }
     }
     #endif
+
+    /// Debug-only: `SIMCTL_CHILD_ACIM_SCREENSHOT_TAB=read` (or listen, archive,
+    /// saved, lesson, settings) opens that surface without going through a
+    /// system "Open in app?" alert. Release builds ignore this.
+    private func applyScreenshotTabIfRequested() {
+        #if DEBUG
+        switch ProcessInfo.processInfo.environment["ACIM_SCREENSHOT_TAB"] {
+        case "read": selectedTab = 1
+        case "listen": selectedTab = 2
+        case "archive":
+            selectedTab = 3
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                NotificationCenter.default.post(
+                    name: .deepLinkArchive,
+                    object: LessonSchedule.day(from: "2026-09-02")
+                )
+            }
+        case "saved":
+            #if os(tvOS)
+            selectedTab = 0
+            #else
+            selectedTab = 4
+            #endif
+        case "lesson":
+            selectedTab = 1
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                NotificationCenter.default.post(name: .deepLinkLesson, object: 84)
+            }
+        case "settings":
+            showSettings = true
+        default:
+            break
+        }
+        #endif
+    }
 
     private func follow(_ route: DeepLinkRoute) {
         switch route {
