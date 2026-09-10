@@ -4,6 +4,8 @@
 
 1.0.0 (build 1)
 
+Official store date: 13 September 2026 — iPhone, iPad, Mac (app and widgets), Apple TV.
+
 ## App Name
 
 ACIM Daily Minute
