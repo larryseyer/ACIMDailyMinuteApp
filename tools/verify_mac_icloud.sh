@@ -101,6 +101,36 @@ if grep -n 'os(macOS)' "$CONTAINER" | grep -q 'cloudKitDatabase'; then
     fail "SharedModelContainer fences CloudKit off macOS — a signed Mac would then never sync"
 fi
 
+# ── 4. SecCode is a macOS header. Security.framework is not. ────────────
+# The framework exists on iOS, watchOS and tvOS; SecCode.h is behind
+# SEC_OS_OSX_INCLUDES. An unfenced `import Security` would compile on
+# those platforms and then fail on SecCodeCopySelf. Keep the import
+# inside os(macOS) so the other three targets never see the symbols.
+/usr/bin/python3 - "$CONTAINER" <<'PY' || fail "import Security is not fenced to os(macOS)"
+from pathlib import Path
+import sys
+lines = Path(sys.argv[1]).read_text().splitlines()
+stack = []
+for i, raw in enumerate(lines, 1):
+    s = raw.strip()
+    if s.startswith("#if "):
+        stack.append(s[4:].strip())
+    elif s.startswith("#elseif ") or s.startswith("#else"):
+        if stack:
+            stack[-1] = s
+    elif s.startswith("#endif"):
+        if stack:
+            stack.pop()
+    if s == "import Security":
+        if not any(frame == "os(macOS)" for frame in stack):
+            print(f"line {i}: import Security sits under {stack!r}, want os(macOS)")
+            sys.exit(1)
+        break
+else:
+    print("no import Security")
+    sys.exit(1)
+PY
+
 if [ "$failures" -ne 0 ]; then
     echo "FAIL — $failures check(s) failed"
     exit 1

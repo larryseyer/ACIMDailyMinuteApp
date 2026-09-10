@@ -5,6 +5,10 @@ import SwiftData
 // in Debug and silently does nothing in a distributed build.
 import CloudKit
 #if os(macOS)
+// Security.framework exists on every Apple OS. The SecCode APIs below
+// do not: their headers are behind SEC_OS_OSX_INCLUDES (macOS and
+// Mac Catalyst only). An unfenced import would compile on iOS; calling
+// SecCodeCopySelf there would not.
 import Security
 #endif
 
