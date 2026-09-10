@@ -78,8 +78,6 @@ https://www.acimdailyminute.org/
 
 https://www.acimdailyminute.org/privacy.html
 
-> This URL currently 404s. Publish a page that matches the in-app privacy policy (including optional iCloud) before submission. App Store Connect will not accept a broken privacy URL.
-
 ## Screenshots Required
 
 Screenshots are a manual step — capture these scenes on each required device size.
