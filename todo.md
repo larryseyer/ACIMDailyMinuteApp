@@ -91,7 +91,7 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
-- [ ] HIS — Mac store shots: size the window to 1280×800 and take Today, Read, Video, Saved, Settings.
+- [ ] Remake every store screenshot after the app is complete. The current set still says Archive and the Mac shot is the wrong size. Do not upload it.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.

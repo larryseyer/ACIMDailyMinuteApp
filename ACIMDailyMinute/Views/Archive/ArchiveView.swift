@@ -50,7 +50,7 @@ struct ArchiveView: View {
                 #if !os(tvOS)
                 // Same as the Read tab: on tvOS `.searchable` takes over the
                 // screen rather than waiting to be opened.
-                .searchable(text: $searchText, prompt: "Search the archive")
+                .searchable(text: $searchText, prompt: "Search past readings")
                 #endif
                 #if !os(tvOS)
                 .refreshable {
