@@ -59,7 +59,8 @@ struct ArchiveView: View {
                 .navigationDestination(for: String.self) { dateString in
                     ArchiveDateDetailView(
                         dateString: dateString,
-                        availability: availability(of: dateString)
+                        availability: availability(of: dateString),
+                        archived: datesWithReadings
                     )
                 }
                 .readingDestinations(path: $path)

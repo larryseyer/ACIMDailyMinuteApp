@@ -1,7 +1,5 @@
 # continue.md
 
-LIVE is empty.
+LIVE: "Let it fall open" — a random published Daily Minute, falling back to a bundled segment.
 
 Parked is his phone test pass. Do not ask him to walk it.
-
-Next buildable item that does not wait on him: an empty Archive day lists the nearest few days before it that do have a reading.

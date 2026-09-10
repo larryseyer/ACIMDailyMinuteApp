@@ -81,4 +81,25 @@ enum MinuteSchedule {
         let expected = calendar.date(byAdding: .day, value: rank, to: todayDay) ?? todayDay
         return .expectedOn(expected)
     }
+
+    /// The nearest archived days strictly before `date`, newest first.
+    ///
+    /// An empty Archive cell used to open onto a sentence and nowhere to go.
+    /// The days that do hold a reading are almost always one or two cells
+    /// away; this names them so the empty day can list them. Matching on the
+    /// feed's own `yyyy-MM-dd` strings, not on instants, keeps it clear of
+    /// every start-of-day trap the availability walk already documents.
+    static func nearestArchivedDays(
+        before date: Date,
+        archived: Set<String>,
+        count: Int = 3
+    ) -> [String] {
+        guard count > 0 else { return [] }
+        let key = LessonSchedule.formatted(date)
+        return archived
+            .filter { !$0.isEmpty && $0 < key }
+            .sorted(by: >)
+            .prefix(count)
+            .map { $0 }
+    }
 }
