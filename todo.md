@@ -61,11 +61,11 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] One reading shape everywhere: Share and Save together on the trailing edge; Save gone from the nav bar.
 - [ ] Daily Minute passage screen (a Saved row): Share and not Save; tappable footer `W-290.3` lands in the Workbook.
 
-## PAUSED — standardized reading layout (D is next)
+## PAUSED — standardized reading layout
 
-His calls already made: Add note stays at the bottom; one play control, audio-first; tab bar becomes Today | Read | Listen | Video | Saved; Listen becomes activity, not a catalogue.
+Add note stays at the bottom; one play control, audio-first. The tab recast that would rename the Archive *tab* (the calendar of past readings) to Video is not confirmed — that tab is not archive.org.
 
-- [ ] D — Archive becomes Video. App-only; confirm the recast with him before building.
+- [ ] D — HIS CALL — whether the Archive tab (past Daily Minutes/Lessons by date) should be recast as a Video tab. Not archive.org, not YouTube hosting, not the Apple TV on-the-fly player.
 - [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
 

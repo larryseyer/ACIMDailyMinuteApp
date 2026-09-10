@@ -1,6 +1,6 @@
 # continue.md
 
-LIVE: D — Archive becomes Video. App-only; confirm the recast with him before building.
+LIVE: D is paused. It was a proposed rename of the in-app Archive *tab*, not archive.org. He questioned it. Do not build it.
 
 NEXT: B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 
