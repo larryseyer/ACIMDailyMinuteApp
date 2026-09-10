@@ -153,12 +153,16 @@ struct ContentView: View {
     }
     #endif
 
-    /// Debug-only: `SIMCTL_CHILD_ACIM_SCREENSHOT_TAB=read` (or listen, archive,
-    /// saved, lesson, settings) opens that surface without going through a
-    /// system "Open in app?" alert. Release builds ignore this.
+    /// Debug-only: `defaults write … ACIM_SCREENSHOT_TAB read` (or listen,
+    /// archive, saved, lesson, settings) opens that surface without going
+    /// through a system "Open in app?" alert. The env var
+    /// `ACIM_SCREENSHOT_TAB` still works. Release builds ignore this.
     private func applyScreenshotTabIfRequested() {
         #if DEBUG
-        switch ProcessInfo.processInfo.environment["ACIM_SCREENSHOT_TAB"] {
+        let tab = ProcessInfo.processInfo.environment["ACIM_SCREENSHOT_TAB"]
+            ?? UserDefaults.standard.string(forKey: "ACIM_SCREENSHOT_TAB")
+        UserDefaults.standard.removeObject(forKey: "ACIM_SCREENSHOT_TAB")
+        switch tab {
         case "read": selectedTab = 1
         case "listen": selectedTab = 2
         case "archive":
@@ -178,7 +182,9 @@ struct ContentView: View {
         case "lesson":
             selectedTab = 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                NotificationCenter.default.post(name: .deepLinkLesson, object: 84)
+                // Unpublished: bundled text, no YouTube. A recorded lesson
+                // auto-presents video and the store shot becomes the overlay.
+                NotificationCenter.default.post(name: .deepLinkLesson, object: 256)
             }
         case "settings":
             showSettings = true
