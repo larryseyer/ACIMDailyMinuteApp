@@ -296,10 +296,12 @@ enum BackupService {
             defaults.object(forKey: key) == nil ? nil : defaults.double(forKey: key)
         }
         let listened = PlaybackHistory.entries
+        let completed = WorkbookCompletion.entries
         let positions = ReadingPositionStore.entries
 
         return BackupDocument.Settings(
             listenedEpisodes: listened.isEmpty ? nil : listened,
+            completedLessons: completed.isEmpty ? nil : completed,
             dailyReminderEnabled: bool(ReaderKey.dailyReminderEnabled),
             dailyReminderTimeInterval: double(ReaderKey.dailyReminderTimeInterval),
             lessonReminderEnabled: bool(ReaderKey.lessonReminderEnabled),
@@ -326,6 +328,7 @@ enum BackupService {
     /// another — move only on request.
     private static func applySettings(_ settings: BackupDocument.Settings, restoreScalars: Bool) {
         if let incoming = settings.listenedEpisodes { mergeListened(incoming) }
+        if let incoming = settings.completedLessons { mergeCompleted(incoming) }
         // A ribbon merges rather than displaces: per book, the later place is
         // where the reader actually got to, and that is an answer neither
         // device has to be asked for.
@@ -394,6 +397,16 @@ enum BackupService {
             merged[episode] = listenedAt
         }
         PlaybackHistory.entries = merged
+    }
+
+    private static func mergeCompleted(_ incoming: [Int: Date]) {
+        var merged = WorkbookCompletion.entries
+        for (lesson, doneAt) in incoming {
+            guard (1...365).contains(lesson) else { continue }
+            if let existing = merged[lesson], existing >= doneAt { continue }
+            merged[lesson] = doneAt
+        }
+        WorkbookCompletion.entries = merged
     }
 
     /// The scheduled notification is OS-side state rebuilt from the two keys, so

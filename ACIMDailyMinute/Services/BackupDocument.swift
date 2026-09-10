@@ -118,6 +118,9 @@ struct BackupDocument: Codable, Equatable, Sendable {
     /// written as a placeholder for something that does not exist yet.
     struct Settings: Codable, Equatable, Sendable {
         var listenedEpisodes: [String: Date]?
+        /// Lessons the reader marked done, keyed by number. Distinct from
+        /// `listenedEpisodes`: a podcast tap is not the day's work.
+        var completedLessons: [Int: Date]? = nil
         /// The Daily Minute reminder. The key predates the split into two
         /// reminders and keeps its name, so a file written before it still
         /// restores the reminder its reader had.

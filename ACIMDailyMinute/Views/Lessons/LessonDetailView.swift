@@ -78,6 +78,7 @@ struct LessonDetailView: View {
     /// lesson text, which is still here underneath.
     @State private var hasAutoPresentedVideo = false
     @State private var isShowingVideo = false
+    @AppStorage(WorkbookCompletion.defaultsKey) private var completedLessonsData: Data = Data()
 
     /// This lesson's own video, or `nil` when we don't know it.
     ///
@@ -123,6 +124,24 @@ struct LessonDetailView: View {
         // The nav bar names the BOOK; the scaffold's eyebrow names the place.
         // Saying "Lesson 84" in both put the same phrase twice within 40 points.
         .navigationTitle("Workbook")
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    WorkbookCompletion.toggle(lessonNumber)
+                } label: {
+                    Image(systemName: WorkbookCompletion.isDone(lessonNumber, in: WorkbookCompletion.entries)
+                          ? "checkmark.circle.fill"
+                          : "circle")
+                }
+                .accessibilityLabel(
+                    WorkbookCompletion.isDone(lessonNumber, in: WorkbookCompletion.entries)
+                    ? "Mark lesson as not done"
+                    : "Mark lesson as done"
+                )
+            }
+        }
+        #endif
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $isShowingVideo) {

@@ -52,6 +52,8 @@ struct LessonsView: View {
     @State private var pendingJump: Int?
     #endif
     @State private var shelf: Shelf = .workbook
+    /// Bound so the spine redraws when a lesson is marked done on its screen.
+    @AppStorage(WorkbookCompletion.defaultsKey) private var completedLessonsData: Data = Data()
 
     private var trimmedQuery: String {
         searchText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -139,6 +141,7 @@ struct LessonsView: View {
         return FilteredLessonsList(
             meta: meta,
             bookmarkedNumbers: bookmarkedNumbers,
+            completedNumbers: Set(WorkbookCompletion.entries.keys),
             latestLessonNumber: anchor.number,
             latestPublishedAt: anchor.date,
             onOpenText: { shelf = .text }
@@ -260,6 +263,7 @@ struct LessonsView: View {
 private struct FilteredLessonsList: View {
     let meta: [Int: LessonMeta]
     let bookmarkedNumbers: Set<Int>
+    let completedNumbers: Set<Int>
     let latestLessonNumber: Int
     let latestPublishedAt: Date?
     let onOpenText: () -> Void
@@ -294,6 +298,7 @@ private struct FilteredLessonsList: View {
                         lessonNumber: n,
                         meta: meta[n],
                         isBookmarked: bookmarkedNumbers.contains(n),
+                        isCompleted: completedNumbers.contains(n),
                         availableOn: LessonSchedule.availabilityDate(
                             for: n,
                             latestRecorded: latestLessonNumber,

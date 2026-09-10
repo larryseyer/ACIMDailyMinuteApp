@@ -12,6 +12,7 @@ struct LessonRow: View {
     let lessonNumber: Int
     let meta: LessonMeta?
     let isBookmarked: Bool
+    let isCompleted: Bool
 
     /// `nil` once the lesson has been recorded. Non-nil is what makes the row
     /// dim and inert, so the two states cannot drift apart.
@@ -52,6 +53,12 @@ struct LessonRow: View {
             numberBadge
             titleColumn
             Spacer(minLength: 8)
+            if isCompleted {
+                Image(systemName: "checkmark")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Self.accent)
+                    .accessibilityLabel("Done")
+            }
             if isBookmarked {
                 Image(systemName: "bookmark.fill")
                     .font(.caption2)

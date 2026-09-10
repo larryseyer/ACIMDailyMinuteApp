@@ -56,3 +56,65 @@ enum PlaybackHistory {
         }
     }
 }
+
+/// Which Workbook lessons the reader has done — not which they have listened to.
+///
+/// Listen already records that an episode was opened. Completing a lesson is
+/// the day's work, marked by the reader, and a tap on a podcast row must not
+/// tick it off. Stored next to listened history in `UserDefaults` for the
+/// same reasons: a new `@Model` would have to join both the app and widget
+/// schemas, and the widget has no use for this.
+enum WorkbookCompletion {
+    static let defaultsKey = "completedLessons"
+
+    static func isDone(_ lesson: Int, in entries: [Int: Date]) -> Bool {
+        (1...365).contains(lesson) && entries[lesson] != nil
+    }
+
+    static func marking(_ lesson: Int, at date: Date, in entries: [Int: Date]) -> [Int: Date] {
+        guard (1...365).contains(lesson) else { return entries }
+        var next = entries
+        next[lesson] = date
+        return next
+    }
+
+    static func clearing(_ lesson: Int, in entries: [Int: Date]) -> [Int: Date] {
+        var next = entries
+        next.removeValue(forKey: lesson)
+        return next
+    }
+
+    static var entries: [Int: Date] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: defaultsKey),
+                  let decoded = try? JSONDecoder().decode([Int: Date].self, from: data)
+            else { return [:] }
+            return decoded
+        }
+        set {
+            let data = try? JSONEncoder().encode(newValue)
+            UserDefaults.standard.set(data, forKey: defaultsKey)
+        }
+    }
+
+    static func doneAt(_ lesson: Int) -> Date? {
+        guard (1...365).contains(lesson) else { return nil }
+        return entries[lesson]
+    }
+
+    static func markDone(_ lesson: Int, at date: Date = Date()) {
+        entries = marking(lesson, at: date, in: entries)
+    }
+
+    static func clear(_ lesson: Int) {
+        entries = clearing(lesson, in: entries)
+    }
+
+    static func toggle(_ lesson: Int) {
+        if doneAt(lesson) == nil {
+            markDone(lesson)
+        } else {
+            clear(lesson)
+        }
+    }
+}
