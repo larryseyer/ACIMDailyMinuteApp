@@ -27,9 +27,9 @@ EXPECTED_MANUAL = 105
 # Two minutes may begin in the same paragraph when one long paragraph is cut
 # into several. Pinned rather than tolerated: a change here means the locator
 # moved, and nothing else in the suite would say so.
-EXPECTED_SHARED_CITATIONS = 166
+EXPECTED_SHARED_CITATIONS = 13
 EXPECTED_TEXT_PARAGRAPHS = 2949
-EXPECTED_LESSON_PARAGRAPHS = 603
+EXPECTED_LESSON_PARAGRAPHS = 2657
 
 
 def load(name):

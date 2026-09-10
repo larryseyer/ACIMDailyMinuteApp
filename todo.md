@@ -108,7 +108,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 ## OPEN — content and pipeline
 
 - [ ] HIS CALL — `Pref.N` names two paragraphs; fixing it changes a citation already printed into exports.
-- [ ] 186 of 365 lesson bodies are one paragraph; the breaks exist only in the Workbook PDF.
 
 ## OPEN — small
 

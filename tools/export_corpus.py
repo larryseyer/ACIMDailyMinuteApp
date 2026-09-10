@@ -16,6 +16,7 @@ from letterspaced_headings import strip as strip_headings
 from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
 from workbook_introductions import merge_introductions, split_lessons
+from workbook_paragraphs import display_body as display_lesson
 
 DB = Path("/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db")
 OUT = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
@@ -105,11 +106,14 @@ def main():
         )
     ]
     lesson_rows, extracted = split_lessons(lesson_rows)
+    for row in lesson_rows:
+        row["body"] = display_lesson(row["body"])
 
-    # The Text is the only corpus without a curated `text_paragraphs` column,
-    # so its paragraph structure is recovered here rather than in the app.
-    # Emitting display form keeps ReadingText.displayString a no-op over it,
-    # which is what stops a highlight offset and the screen from drifting.
+    # The Text and the Workbook lessons have no curated `text_paragraphs`
+    # column, so their paragraph structure is recovered here rather than in
+    # the app. Emitting display form keeps ReadingText.displayString a no-op
+    # over them, which is what stops a highlight offset and the screen from
+    # drifting.
     raw_sections = [
         {"chapterNumber": r[0], "chapterTitle": r[1],
          "sectionNumber": r[2], "sectionTitle": r[3], "body": r[4]}
