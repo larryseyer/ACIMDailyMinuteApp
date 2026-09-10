@@ -4,7 +4,7 @@ LIVE: B — Media index + inline play control. Feed-driven overlay keyed by segm
 
 NEXT: C — Listen as activity. Needs playback progress, which does not exist yet.
 
-Store submission is stopped. Do not submit. Do not recapture shots until the app is complete. The files in `store-screenshots/` were taken before the Video recast and are all stale.
+Store submission is stopped. Do not submit and do not recapture shots until B, C, and the parked phone pass are done.
 
 Parked is his phone test pass. Do not ask him to walk it. He is already using the phone and reporting what he finds.
 

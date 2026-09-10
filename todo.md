@@ -4,9 +4,20 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
+## LIVE — standardized reading layout
+
+Add note stays at the bottom; one play control, audio-first. The calendar tab is named Video. That tab is not archive.org.
+
+- [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
+- [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
+
+## WATCHING — nightly catch-up
+
+- [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
+
 ## PARKED — one test pass, at the end, on his phone
 
-Do not ask him to check any of this until everything below is built. His words: otherwise he will just repeat himself on things that have not been done yet.
+Do not ask him to check any of this until B and C are built. His words: otherwise he will just repeat himself on things that have not been done yet.
 
 - [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
@@ -53,7 +64,6 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] Introduction last page is Continue, then the companion note, then Get Started; check at 375pt.
 - [ ] Saving, then deleting from the Saved tab, goes through BookmarkStore.
 - [ ] Highlights and notes survived the store split on the phone; Archive refilled.
-- [ ] Before any release build: deploy the CloudKit schema from Development to Production.
 - [ ] Folder copy: a chosen Dropbox or iCloud Drive folder gets a per-device file; nothing is ever read from it.
 - [ ] Search the Course: hits in book order with citation and snippet; a lesson opened this way does not open its video first.
 - [ ] A Manual highlight, note, or saved row opens its passage.
@@ -61,16 +71,13 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] One reading shape everywhere: Share and Save together on the trailing edge; Save gone from the nav bar.
 - [ ] Daily Minute passage screen (a Saved row): Share and not Save; tappable footer `W-290.3` lands in the Workbook.
 
-## PAUSED — standardized reading layout
+## BEFORE SUBMIT — after the phone pass
 
-Add note stays at the bottom; one play control, audio-first. He confirmed the Archive *tab* (calendar of past readings) should be named Video. That tab is not archive.org.
+Store record exists (iOS, macOS, tvOS). Do not add a visionOS platform. Do not upload the current shots.
 
-- [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
-- [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
-
-## WATCHING — nightly catch-up
-
-- [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
+- [ ] Before any release build: deploy the CloudKit schema from Development to Production.
+- [ ] Remake every store screenshot. The current set still says Archive and the Mac shot is the wrong size.
+- [ ] Support URL is `https://www.acimdailyminute.org/support.html`. Tick compatible iPhone/iPad on Vision Pro. Then submit.
 
 ## OPEN — Apple Watch (shape is his)
 
@@ -91,7 +98,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
-- [ ] Remake every store screenshot after the app is complete. The current set still says Archive and the Mac shot is the wrong size. Do not upload it.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
