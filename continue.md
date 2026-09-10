@@ -4,7 +4,7 @@ LIVE: B — Media index + inline play control. Feed-driven overlay keyed by segm
 
 NEXT: C — Listen as activity. Needs playback progress, which does not exist yet.
 
-After C: reader text size on iPhone and iPad (Default / Large / Larger, body only; iPad default Large). Not built yet — design is waiting on his yes.
+After C: reader text size. Design is approved — do not re-ask. iPhone and iPad only; Settings under Appearance; Default / Large / Larger; body (serif) only; iPad default Large; multiplier on `preferredFont(.body)`; AppStorage; Mac and TV unchanged.
 
 Store submission is stopped. Do not submit and do not recapture shots until B, C, and the parked phone pass are done.
 
