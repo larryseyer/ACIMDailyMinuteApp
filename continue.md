@@ -4,6 +4,8 @@ LIVE: B — Media index + inline play control. Feed-driven overlay keyed by segm
 
 NEXT: C — Listen as activity. Needs playback progress, which does not exist yet.
 
+After C: reader text size on iPhone and iPad (Default / Large / Larger, body only; iPad default Large). Not built yet — design is waiting on his yes.
+
 Store submission is stopped. Do not submit and do not recapture shots until B, C, and the parked phone pass are done.
 
 Parked is his phone test pass. Do not ask him to walk it. He is already using the phone and reporting what he finds.

@@ -10,6 +10,7 @@ Add note stays at the bottom; one play control, audio-first. The calendar tab is
 
 - [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
+- [ ] Reader text size on iPhone and iPad only: Default / Large / Larger, body only; iPad default is Large.
 
 ## WATCHING — nightly catch-up
 
