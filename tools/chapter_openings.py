@@ -22,9 +22,9 @@ rows that already exist.
 -- because the two sides disagree about whitespace, line wrapping and letter
 spacing, and none of that is a difference in the words.
 """
-import re
 
 from citations import display_paragraphs, normalize
+from letterspaced_headings import strip as strip_letterspaced_headings
 
 # A window long enough that ordinary phrasing cannot repeat it by chance, short
 # enough to still sit inside a one-sentence gap.
@@ -120,15 +120,6 @@ def gaps(sections, segments, family="Text"):
     return found
 
 
-# A paragraph that opens with a run of single letters is a letter-spaced
-# heading the PDF set that way -- `p u b l i s h e r ’s n o t e`. Ordinary prose
-# never opens with four of them, so the run is the signal.
-#
-# ⛔ The possessive has to be part of the run. Matching only single characters
-# stops at the `’s` and leaves `’s n o t e` sitting in the body, which is not
-# furniture any other check knows how to see.
-_SINGLE = re.compile(r"^(?:(?:['’]s|\S) ){4,}", re.UNICODE)
-
 # What sentence-ending punctuation looks like, so a splice knows whether it is
 # joining two paragraphs or finishing a sentence someone cut in half.
 SENTENCE_END = set('.!?"”’)')
@@ -168,11 +159,6 @@ def strip_trailing_title(text, section_title):
     if normalize(tail) == normalize(section_title):
         return "\n\n".join(stripped.split("\n\n")[:-1]).rstrip()
     return stripped
-
-
-def strip_letterspaced_headings(text):
-    """Un-glue a letter-spaced heading from the paragraph it was set into."""
-    return "\n\n".join(_SINGLE.sub("", block) for block in text.split("\n\n"))
 
 
 def recovered_sections(sections, segments):

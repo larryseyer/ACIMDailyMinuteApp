@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from chapter_openings import recovered_sections, splice
 from citations import addressable_paragraphs, locate
+from letterspaced_headings import strip as strip_headings
 from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
 from workbook_introductions import merge_introductions, split_lessons
@@ -31,12 +32,12 @@ EXPECTED = {
 
 
 def write(name, rows):
-    # The one place the spacing repair is applied, so no corpus can be exported
-    # with the defect still in it. The bundled JSON is the permanent artifact
-    # that outlives the app, so it has to be correct as a document and not only
-    # when this app happens to render it.
+    # Letter-spaced headings and the spacing repair are applied here so no
+    # corpus can be exported with either defect still in it. The bundled JSON
+    # is the permanent artifact that outlives the app, so it has to be correct
+    # as a document and not only when this app happens to render it.
     for row in rows:
-        row["body"] = repair(row["body"])
+        row["body"] = repair(strip_headings(row["body"]))
 
     path = OUT / name
     path.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -165,6 +166,12 @@ def main():
     # locator has no business inside the app, so it runs once, here, and its
     # answer travels in the bundle. The Manual is bundled as 105 cuts of a
     # continuous stream with nothing to address, so it is not searched at all.
+    #
+    # Headings come off before the probe: a `l e s s o n 15` sitting between
+    # two lessons made the locator slide into the next lesson, citing a
+    # paragraph the passage does not begin in.
+    for row in segment_rows:
+        row["body"] = strip_headings(row["body"])
     index = addressable_paragraphs(raw_sections, lesson_rows, introduction_rows)
     located = 0
     for row in segment_rows:
