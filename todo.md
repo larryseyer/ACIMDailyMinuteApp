@@ -63,9 +63,9 @@ Do not ask him to check any of this until everything below is built. His words: 
 
 ## PAUSED — standardized reading layout
 
-Add note stays at the bottom; one play control, audio-first. The tab recast that would rename the Archive *tab* (the calendar of past readings) to Video is not confirmed — that tab is not archive.org.
+Add note stays at the bottom; one play control, audio-first. He confirmed the Archive *tab* (calendar of past readings) should be named Video. That tab is not archive.org.
 
-- [ ] D — HIS CALL — whether the Archive tab (past Daily Minutes/Lessons by date) should be recast as a Video tab. Not archive.org, not YouTube hosting, not the Apple TV on-the-fly player.
+- [ ] D — Recast the Archive tab as Video: tab label, navigation title, deep links, store listing, parked test wording. Do not rename `ArchiveService`, `ArchivedReading`, or anything that talks to archive.org.
 - [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
 
