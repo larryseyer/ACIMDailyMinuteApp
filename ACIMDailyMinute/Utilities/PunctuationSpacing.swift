@@ -8,11 +8,21 @@ import Foundation
 /// repairs it once at export, and the feed, where nothing can repair it but the
 /// app. This is the app's half, and it is deliberately the same rule.
 ///
-/// The rule inserts one space and never removes or changes a character, so a
-/// word the publisher narrated stays the word the publisher narrated. It is
-/// idempotent, which is what lets it run at export *and* at render without the
+/// Two halves, measured separately. The insert half never removes a character,
+/// so a word the publisher narrated stays the word the publisher narrated. The
+/// remove half deletes only U+0020 immediately before a closing double quote
+/// (`the “self ”`, `with you. ”The Holy Spirit`) — 22 occurrences in the
+/// bundle, all defects, zero legitimate. It runs first so that `.”T` can still
+/// receive the insert. A space before an opening quote is English and is not
+/// touched.
+///
+/// Idempotent, which is what lets it run at export *and* at render without the
 /// two disagreeing about what the reader is looking at.
 enum PunctuationSpacing {
+    /// A U+0020 the page did not have, sitting in front of a closing double
+    /// quote. Opening quotes (`“`) are not this character.
+    private static let strayBeforeClosing = " ”"
+
     /// Terminal or internal punctuation, or a closing double quote, run
     /// straight into the next sentence or quotation.
     private static let runTogether = "([.,;:!?”])([A-Z“‘])"
@@ -24,9 +34,10 @@ enum PunctuationSpacing {
     /// letter.
     private static let closingSingleQuote = "(’)(?!S(?![A-Za-z]))([A-Z])"
 
-    /// The text with its missing spaces restored.
+    /// The text with its missing spaces restored and stray ones removed.
     static func repaired(_ text: String) -> String {
         text
+            .replacingOccurrences(of: strayBeforeClosing, with: "”")
             .replacingOccurrences(of: runTogether, with: "$1 $2", options: .regularExpression)
             .replacingOccurrences(of: closingSingleQuote, with: "$1 $2", options: .regularExpression)
     }

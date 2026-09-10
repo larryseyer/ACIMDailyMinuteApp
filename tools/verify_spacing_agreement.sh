@@ -40,6 +40,10 @@ cases += [
     "their Source,Which is", "William Thetford.The edit", "sin.”To study",
     "the ego may ask,“How did", "peace,TEACH peace", "Here you are;This is you",
     "one thing:You THINK", "answer 11 GOD’S PLAN to YOU", "", " ", ".", "’S", "’",
+    # The remove half: a U+0020 in front of a closing double quote. The
+    # opening-quote case must stay; it is English.
+    'the “self ” the ego sees', 'with you. ”The Holy Spirit',
+    'Listen, learn, and DO; ” – Listen', 'said “hello', 'already.” Next',
 ]
 # Two boundaries in a row, and a boundary at either end of the string. The
 # accented and combining cases matter because offsets are Character-based: a
