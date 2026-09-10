@@ -95,13 +95,21 @@ enum ShareTextBuilder {
         return parts.joined(separator: "\n\n")
     }
 
-    /// ⛔ A Manual passage names its book and no address. The Manual ships as
-    /// 105 word-count cuts with no titles and `citation: nil`, so there is
-    /// nothing narrower to cite, and inventing one here would print an address
-    /// into a reader's share sheet that nothing else in the app agrees with.
-    static func manualShareText(body: String) -> String {
+    /// A cut of the Manual names its located address when it has one.
+    static func manualShareText(body: String, citation: String? = nil) -> String {
         var parts: [String] = [body]
-        parts.append("— A Course in Miracles, Manual for Teachers")
+        if let citation {
+            parts.append("— A Course in Miracles, Manual for Teachers, \(citation)")
+        } else {
+            parts.append("— A Course in Miracles, Manual for Teachers")
+        }
+        parts.append("www.acimdailyminute.org")
+        return parts.joined(separator: "\n\n")
+    }
+
+    static func manualSectionShareText(_ section: CorpusManualSection) -> String {
+        var parts: [String] = [section.title, section.body]
+        parts.append("— A Course in Miracles, Manual for Teachers, \(section.stem)")
         parts.append("www.acimdailyminute.org")
         return parts.joined(separator: "\n\n")
     }

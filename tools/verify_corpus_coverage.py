@@ -85,17 +85,29 @@ def main():
         print(f"  FAIL: {gap['normalized_length']} characters missing: {flat[:90]!r}")
         failed = True
 
-    # 3. The Manual is bundled as the same 105 rows the segments carry, so it is
-    #    covered by construction. Assert that rather than assume it.
-    manual_bodies = {display_form(row["body"]) for row in load("ACIMManual.json")}
+    # 3. Every Manual Daily Minute cut's words sit in the structured book.
+    from citations import normalize
+    manuals = load("ACIMManual.json")
+    stream = normalize("".join(row["body"] for row in manuals))
     manual_segments = [row for row in segments if row["sourcePDF"] == "Manual"]
-    orphaned = [
-        row["segmentId"] for row in manual_segments
-        if display_form(row["body"]) not in manual_bodies
-    ]
-    print(f"Manual: {len(manual_segments)} segments, {len(orphaned)} not in the bundle")
+    orphaned = []
+    for row in manual_segments:
+        n = normalize(row["body"])
+        hit = n[:80] in stream
+        if not hit:
+            for off in range(0, min(400, max(0, len(n) - 80)), 20):
+                if n[off:off + 80] in stream:
+                    hit = True
+                    break
+        if not hit:
+            orphaned.append(row["segmentId"])
+    print(f"Manual: {len(manuals)} sections, {len(manual_segments)} segments, "
+          f"{len(orphaned)} not in the book")
+    if len(manuals) != 31:
+        print(f"  FAIL: expected 31 Manual sections, got {len(manuals)}")
+        failed = True
     if orphaned:
-        print(f"  FAIL: Manual segments missing from ACIMManual.json: {orphaned[:10]}")
+        print(f"  FAIL: Manual segments missing from the structured book: {orphaned[:10]}")
         failed = True
 
     print("FAIL" if failed else "OK")

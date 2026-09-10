@@ -110,6 +110,8 @@ struct ReadSearchResultsList: View {
             NavigationLink(value: LessonRef(lessonNumber: n, spotlight: spotlight), label: label)
         case .manual(let id):
             NavigationLink(value: ManualSegmentRef(segmentId: id, spotlight: spotlight), label: label)
+        case .manualSection(let n):
+            NavigationLink(value: ManualSectionRef(number: n, spotlight: spotlight), label: label)
         case .segment, .minuteDate:
             // Never indexed. Drawn inert rather than pushed somewhere wrong.
             label()
@@ -188,7 +190,7 @@ struct ReadSearchResultsList: View {
                 .foregroundStyle(.primary)
                 .lineLimit(3)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(citation?.rawValue ?? "Manual for Teachers")
+            Text(citation?.rawValue ?? entry.subtitle ?? "Manual for Teachers")
                 .font(.acimCaption2.monospaced())
                 .foregroundStyle(.tertiary)
         }

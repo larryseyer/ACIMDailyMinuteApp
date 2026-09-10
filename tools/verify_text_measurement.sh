@@ -61,7 +61,7 @@ def take(rows, label, n):
         return
     step = max(1, len(rows) // n)
     for r in rows[::step][:n]:
-        cases.append({"label": f"{label} {r.get('sectionTitle') or r.get('lessonNumber') or r.get('segmentId')}",
+        cases.append({"label": f"{label} {r.get('sectionTitle') or r.get('title') or r.get('lessonNumber') or r.get('number') or r.get('segmentId')}",
                       "body": r["body"]})
 
 take(load("ACIMTextSections.json"), "text", 12)

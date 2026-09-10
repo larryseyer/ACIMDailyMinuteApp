@@ -9,8 +9,9 @@ import Foundation
 enum CitationResolver {
     /// The address without a paragraph — what a heading shows.
     ///
-    /// Nil where the reading has no addressable form: the Manual, and an
-    /// archived minute whose segment is not yet known.
+    /// Nil where the reading has no addressable form: an archived minute
+    /// whose segment is not yet known, and a Manual *cut* that has not been
+    /// located (the structured question has a stem).
     static func stem(for key: ReadingKey, corpus: CorpusService = .shared) -> String? {
         switch key {
         case .textSection(let chapter, let section):
@@ -30,7 +31,12 @@ enum CitationResolver {
             return "W-\(number)"
         case .segment(let id):
             return corpus.segment(id: id)?.parsedCitation?.stem
-        case .manual, .minuteDate:
+        case .manual(let id):
+            return corpus.segment(id: id)?.parsedCitation?.stem
+        case .manualSection(let number):
+            guard let section = corpus.manualSection(number) else { return nil }
+            return section.stem
+        case .minuteDate:
             return nil
         }
     }
@@ -60,9 +66,13 @@ enum CitationResolver {
             guard let body else { return nil }
             return ReadingText.displayString(from: body)
 
+        case .manualSection(let number):
+            guard let section = corpus.manualSection(number) else { return nil }
+            return ReadingText.displayString(from: section.body)
+
         case .segment, .manual, .minuteDate:
-            // A segment cites where it begins and never counts paragraphs; the
-            // other two have no addressable form at all.
+            // A segment cites where it begins and never counts paragraphs; a
+            // date key has no addressable form at all.
             return nil
         }
     }
@@ -94,6 +104,9 @@ enum CitationResolver {
             }
             guard (1...365).contains(number) else { return nil }
             return .lesson(number: number, paragraph: paragraph)
+
+        case .manualSection(let number):
+            return .manual(number: number, paragraph: paragraph)
 
         case .segment, .manual, .minuteDate:
             return nil
@@ -150,6 +163,12 @@ enum CitationResolver {
                 citation.paragraph, of: .lesson(intro.lessonNumber), corpus: corpus
             ) else { return nil }
             return .introduction(IntroductionRef(lessonNumber: intro.lessonNumber, spotlight: spotlight))
+
+        case .manual(let number, let paragraph):
+            guard let spotlight = paragraphSpotlight(
+                paragraph, of: .manualSection(number), corpus: corpus
+            ) else { return nil }
+            return .manualSection(ManualSectionRef(number: number, spotlight: spotlight))
         }
     }
 

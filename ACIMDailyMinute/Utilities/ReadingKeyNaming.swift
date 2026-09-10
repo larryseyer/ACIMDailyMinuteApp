@@ -14,8 +14,8 @@ extension ReadingKey {
     /// The stem in parentheses is the address — the one part of this line that
     /// still means something to someone holding the printed book, or reading the
     /// export years after this app is gone. Readings with no addressable form
-    /// (the Manual, an archived minute whose segment is unknown) carry no stem
-    /// rather than a plausible-looking one.
+    /// (an archived minute whose segment is unknown) carry no stem rather
+    /// than a plausible-looking one.
     ///
     /// The `.minuteDate` name carries no date: publication dates are the app's
     /// own bookkeeping and never appear on a reader-facing surface.
@@ -41,6 +41,12 @@ extension ReadingKey {
             base = "Daily Minute — \(corpus.segment(id: id)?.bookName ?? "A Course in Miracles")"
         case .manual:
             base = "Manual for Teachers"
+        case .manualSection(let n):
+            if let section = corpus.manualSection(n) {
+                base = "Manual for Teachers — \(section.title)"
+            } else {
+                base = "Manual for Teachers"
+            }
         case .textSection(let c, let s):
             let chapter = c == 0 ? "Preface" : "Chapter \(c)"
             if let section = corpus.textSection(chapter: c, section: s) {

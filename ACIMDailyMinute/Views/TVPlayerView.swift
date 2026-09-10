@@ -152,6 +152,29 @@ struct TVPlayerItem: Identifiable, Hashable, Sendable {
         )
     }
 
+    static func manualSection(number: Int) -> TVPlayerItem {
+        guard let reading = CorpusService.shared.manualSection(number) else {
+            return TVPlayerItem(
+                id: "manual-q:\(number)",
+                eyebrow: "Manual",
+                title: nil,
+                text: "",
+                citation: nil,
+                audioURL: nil,
+                artName: "PlayerArtText"
+            )
+        }
+        return TVPlayerItem(
+            id: "manual-q:\(number)",
+            eyebrow: "Manual",
+            title: reading.title,
+            text: reading.body,
+            citation: reading.stem,
+            audioURL: nil,
+            artName: "PlayerArtText"
+        )
+    }
+
     func withAudioURL(_ url: String) -> TVPlayerItem {
         TVPlayerItem(
             id: id,

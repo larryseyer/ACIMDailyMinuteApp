@@ -87,6 +87,7 @@ func count(_ key: String, in rows: [Row]) -> Int {
 let keys = [
     "minute:9f2a4c", "minute:0000ab", "lesson:1", "lesson:45", "lesson:365",
     "lesson:0", "lesson:500", "text:1.2", "text:16.2", "text:31.8", "manual:104",
+    "manual-q:0", "manual-q:4",
 ]
 
 // --- 1. Toggling is an involution, from every starting state ----------------

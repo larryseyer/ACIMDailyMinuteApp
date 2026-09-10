@@ -33,6 +33,9 @@ enum Citation: Hashable, Sendable {
     case reviewIntroduction(number: Int, paragraph: Int)
     /// The fourteen What Is essays that open each ten-lesson group in Part II.
     case whatIsIntroduction(number: Int, paragraph: Int)
+    /// The Manual for Teachers. Number 0 is the Introduction (`M-in`); 1...28
+    /// are the questions; 29 is As for the Rest; 30 is Forget not.
+    case manual(number: Int, paragraph: Int)
 
     var rawValue: String {
         switch self {
@@ -48,6 +51,8 @@ enum Citation: Hashable, Sendable {
             "W-r\(number).in.\(paragraph)"
         case .whatIsIntroduction(let number, let paragraph):
             "W-w\(number).in.\(paragraph)"
+        case .manual(let number, let paragraph):
+            number == 0 ? "M-in.\(paragraph)" : "M-\(number).\(paragraph)"
         }
     }
 
@@ -61,6 +66,7 @@ enum Citation: Hashable, Sendable {
         case .partIntroduction(let part, _): "W-p\(part == 1 ? "I" : "II").in"
         case .reviewIntroduction(let number, _): "W-r\(number).in"
         case .whatIsIntroduction(let number, _): "W-w\(number).in"
+        case .manual(let number, _): number == 0 ? "M-in" : "M-\(number)"
         }
     }
 
@@ -72,6 +78,7 @@ enum Citation: Hashable, Sendable {
         case .partIntroduction(_, let paragraph): paragraph
         case .reviewIntroduction(_, let paragraph): paragraph
         case .whatIsIntroduction(_, let paragraph): paragraph
+        case .manual(_, let paragraph): paragraph
         }
     }
 
@@ -132,6 +139,18 @@ enum Citation: Hashable, Sendable {
                   let paragraph = positive(parts[1])
             else { return nil }
             self = .lesson(number: number, paragraph: paragraph)
+        } else if rawValue.hasPrefix("M-in.") {
+            guard let paragraph = positive(rawValue.dropFirst(5)) else { return nil }
+            self = .manual(number: 0, paragraph: paragraph)
+        } else if rawValue.hasPrefix("M-") {
+            let parts = rawValue.dropFirst(2).split(
+                separator: ".", omittingEmptySubsequences: false
+            )
+            guard parts.count == 2,
+                  let number = positive(parts[0]), number <= 30,
+                  let paragraph = positive(parts[1])
+            else { return nil }
+            self = .manual(number: number, paragraph: paragraph)
         } else {
             return nil
         }

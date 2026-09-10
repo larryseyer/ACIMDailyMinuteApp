@@ -21,7 +21,11 @@ enum ReadingKey: Hashable, Sendable {
     case segment(Int)
     case lesson(Int)
     case textSection(chapter: Int, section: Int)
+    /// A word-count cut of the Manual, kept so a highlight stored against
+    /// `manual:<segmentId>` still opens. New readings use `manualSection`.
     case manual(Int)
+    /// A question (or the Introduction / two closings) of the Manual.
+    case manualSection(Int)
     /// Fallback only: an archived minute whose segment is not yet known.
     /// `AnnotationStore.upgradeDateKeys` promotes these as the mapping arrives.
     case minuteDate(String)
@@ -32,6 +36,7 @@ enum ReadingKey: Hashable, Sendable {
         case .lesson(let n): "lesson:\(n)"
         case .textSection(let c, let s): "text:\(c).\(s)"
         case .manual(let id): "manual:\(id)"
+        case .manualSection(let n): "manual-q:\(n)"
         case .minuteDate(let d): "minute-date:\(d)"
         }
     }
@@ -44,6 +49,7 @@ enum ReadingKey: Hashable, Sendable {
         case "segment": guard let i = Int(value) else { return nil }; self = .segment(i)
         case "lesson": guard let i = Int(value) else { return nil }; self = .lesson(i)
         case "manual": guard let i = Int(value) else { return nil }; self = .manual(i)
+        case "manual-q": guard let i = Int(value), (0...30).contains(i) else { return nil }; self = .manualSection(i)
         case "minute-date": guard !value.isEmpty else { return nil }; self = .minuteDate(value)
         case "text":
             let n = value.split(separator: ".").map(String.init)

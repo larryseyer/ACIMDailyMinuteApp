@@ -106,14 +106,17 @@ let epoch = Date(timeIntervalSinceReferenceDate: 800_000_000)
 
 // MARK: - Which readings can hold a ribbon at all
 
-// ⛔ A Daily Minute is a day the server chose, not a thread through a book, and
-// the Manual has no structure to resume into. Neither may ever set one.
+// ⛔ A Daily Minute is a day the server chose, not a thread through a book.
+// A Manual *cut* is the same shape. A Manual *question* is a book.
 for key: ReadingKey in [.segment(1), .segment(1983), .manual(1), .manual(105), .minuteDate("2026-05-31")] {
     check(ReadingPosition.book(for: key) == nil, "\(key.rawValue) must hold no ribbon")
     check(
         ReadingPosition.make(key: key, startOffset: 0, in: "a passage", at: epoch) == nil,
         "\(key.rawValue) must refuse to make one"
     )
+}
+for n in [0, 1, 28, 30] {
+    check(ReadingPosition.book(for: .manualSection(n)) == .manual, "manual-q:\(n) belongs to the Manual")
 }
 for chapter in 0...31 {
     check(ReadingPosition.book(for: .textSection(chapter: chapter, section: 1)) == .text,
@@ -143,7 +146,7 @@ check(
 )
 // A key no version of this app has written cannot put a ribbon somewhere
 // nothing can open.
-let foreign = Data(#"{"manual":{"readingKey":"manual:3","startOffset":0,"quote":"x","updatedAt":0}}"#.utf8)
+let foreign = Data(#"{"atlas":{"readingKey":"manual:3","startOffset":0,"quote":"x","updatedAt":0}}"#.utf8)
 check(ReadingPosition.decode(foreign) == [:], "an unknown book is no ribbon")
 
 // One book's ribbon never displaces another's.
@@ -251,10 +254,15 @@ for record in fixture.records {
        let position = ReadingPosition.make(
            key: key, startOffset: start, in: record.display, at: epoch
        ) {
+        // Only the defect the repair actually heals: a period run into a
+        // capital. `. [92]` is a review marker, not a missing space.
+        let damagedQuote = position.quote.replacingOccurrences(
+            of: "\\. (?=[A-Z“‘])", with: ".", options: .regularExpression
+        )
         let damaged = ReadingPosition(
             readingKey: position.readingKey,
             startOffset: position.startOffset,
-            quote: position.quote.replacingOccurrences(of: ". ", with: "."),
+            quote: damagedQuote,
             updatedAt: position.updatedAt
         )
         if damaged.quote != position.quote {

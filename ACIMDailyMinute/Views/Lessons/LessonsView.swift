@@ -34,13 +34,13 @@ struct LessonsView: View {
     ) private var archivedLessons: [ArchivedReading]
     @Query private var bookmarks: [Bookmark]
 
-    /// The Workbook and the Text are two of the three books in one volume, so
-    /// they share a tab. A sixth tab would collapse into the iOS "More" list,
-    /// which is the same reason the Saved tab carries three segments. The
-    /// Manual joins as a third shelf when it has a structure to browse.
+    /// The three books in one volume share a tab. A sixth tab would collapse
+    /// into the iOS "More" list, which is the same reason the Saved tab
+    /// carries three segments.
     private enum Shelf: String, CaseIterable, Identifiable {
         case workbook = "Workbook"
         case text = "Text"
+        case manual = "Manual"
 
         var id: String { rawValue }
     }
@@ -81,7 +81,7 @@ struct LessonsView: View {
                 // shelf, and where the reader stopped is not an answer to what
                 // they are searching for.
                 if trimmedQuery.isEmpty {
-                    ContinueReadingRow(book: shelf == .workbook ? .workbook : .text)
+                    ContinueReadingRow(book: ribbonBook)
                         .padding(.horizontal, 20)
                 }
 
@@ -90,6 +90,7 @@ struct LessonsView: View {
                         switch shelf {
                         case .workbook: workbookShelf
                         case .text: TextChaptersView()
+                        case .manual: manualShelf
                         }
                     } else {
                         ReadSearchResultsList(query: trimmedQuery)
@@ -118,6 +119,9 @@ struct LessonsView: View {
             .navigationDestination(for: ManualSegmentRef.self) { ref in
                 ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
             }
+            .navigationDestination(for: ManualSectionRef.self) { ref in
+                ManualSectionView(number: ref.number, spotlight: ref.spotlight)
+            }
             .readingDestinations(path: $path)
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkLesson)) { note in
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
@@ -130,6 +134,52 @@ struct LessonsView: View {
                 path.append(n)
                 #endif
             }
+        }
+    }
+
+    private var ribbonBook: ReadingPosition.Book {
+        switch shelf {
+        case .workbook: .workbook
+        case .text: .text
+        case .manual: .manual
+        }
+    }
+
+    private var manualShelf: some View {
+        let corpus = CorpusService.shared
+        return List {
+            if corpus.manualSections.isEmpty {
+                ContentUnavailableView {
+                    Label("The Manual is unavailable", systemImage: "book.closed")
+                } description: {
+                    Text("The bundled Manual could not be read from this build.")
+                }
+                #if !os(tvOS)
+                .listRowSeparator(.hidden)
+                #endif
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(corpus.manualSections) { section in
+                    NavigationLink(value: ManualSectionRef(number: section.number)) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(section.stem)
+                                .font(.acimCaption2.monospaced())
+                                .foregroundStyle(.secondary)
+                            Text(section.title)
+                                .font(.system(.subheadline, design: .serif).weight(.semibold))
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .readableContentWidth()
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
     }
 

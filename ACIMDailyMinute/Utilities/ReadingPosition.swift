@@ -42,6 +42,7 @@ struct ReadingPosition: Codable, Equatable, Sendable {
     enum Book: String, Codable, CaseIterable, Sendable {
         case text
         case workbook
+        case manual
     }
 
     /// The raw `ReadingKey` — `text:5.3`, `lesson:84`.
@@ -62,13 +63,13 @@ struct ReadingPosition: Codable, Equatable, Sendable {
     ///
     /// ⛔ A Daily Minute is a **day**, not a thread through a book: it is chosen
     /// by the server, it is different tomorrow, and resuming one is not a thing
-    /// a reader can want. The Manual is bundled as 105 word-count cuts with no
-    /// structure to resume *into*; it joins here when piece E gives it one, and
-    /// until then nothing is written as a placeholder for it.
+    /// a reader can want. A Manual *cut* (`manual:<id>`) is the same shape; a
+    /// Manual *question* is a thread through the book and holds a ribbon.
     static func book(for key: ReadingKey) -> Book? {
         switch key {
         case .textSection: .text
         case .lesson: .workbook
+        case .manualSection: .manual
         case .segment, .manual, .minuteDate: nil
         }
     }

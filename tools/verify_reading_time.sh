@@ -48,7 +48,7 @@ for b in load("Workbook365Bodies.json"):
 for i in load("WorkbookIntroductions.json"):
     add("introduction", i["lessonNumber"], i["body"])
 for m in load("ACIMManual.json"):
-    add("manual", m["segmentId"], m["body"])
+    add("manual", m["number"], m["body"])
 for g in load("ACIMSegments.json"):
     add("segment", g["segmentId"], g["body"])
 

@@ -17,6 +17,7 @@ from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
 from workbook_introductions import merge_introductions, split_lessons
 from workbook_paragraphs import display_body as display_lesson
+from manual_sections import SOURCE as MANUAL_SOURCE, recover as recover_manual
 
 DB = Path("/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db")
 OUT = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
@@ -26,7 +27,7 @@ EXPECTED = {
     # 268 extracted, plus the four chapter openings that were dropped whole and
     # have to come back as sections of their own. See `chapter_openings.py`.
     "ACIMTextSections.json": 272,
-    "ACIMManual.json": 105,
+    "ACIMManual.json": 31,
     "ACIMSegments.json": 1983,
     "WorkbookIntroductions.json": 22,
 }
@@ -159,26 +160,24 @@ def main():
     write("Workbook365Bodies.json", lesson_rows)
     write("WorkbookIntroductions.json", introduction_rows)
 
-    write("ACIMManual.json", [
-        {"segmentId": r[0], "body": r[1]}
-        for r in conn.execute(
-            "SELECT id, COALESCE(NULLIF(text_paragraphs, ''), text) FROM segments "
-            "WHERE source_pdf = 'Manual' ORDER BY id"
-        )
-    ])
+    if not MANUAL_SOURCE.exists():
+        sys.exit(f"FAIL: {MANUAL_SOURCE} is not reachable")
+    manual_rows = recover_manual(MANUAL_SOURCE.read_text(encoding="utf-8"))
+    write("ACIMManual.json", manual_rows)
 
     # A segment is a word-count cut: `segments` carries no section and no
     # paragraph column, so its address has to be FOUND rather than read. That
     # locator has no business inside the app, so it runs once, here, and its
-    # answer travels in the bundle. The Manual is bundled as 105 cuts of a
-    # continuous stream with nothing to address, so it is not searched at all.
+    # answer travels in the bundle.
     #
     # Headings come off before the probe: a `l e s s o n 15` sitting between
     # two lessons made the locator slide into the next lesson, citing a
     # paragraph the passage does not begin in.
     for row in segment_rows:
         row["body"] = strip_headings(row["body"])
-    index = addressable_paragraphs(raw_sections, lesson_rows, introduction_rows)
+    index = addressable_paragraphs(
+        raw_sections, lesson_rows, introduction_rows, manual_rows
+    )
     located = 0
     for row in segment_rows:
         family = "Text" if row["sourcePDF"].startswith("Text") else row["sourcePDF"]

@@ -67,8 +67,8 @@ for row in load("Workbook365Bodies.json")[::11]:
 for row in load("ACIMSegments.json")[::29]:
     take(row["body"], "segment:%d" % row["segmentId"], 12)
 
-for row in load("ACIMManual.json")[::9]:
-    take(row["body"], "manual:%d" % row["segmentId"], 40)
+for row in load("ACIMManual.json")[::5]:
+    take(row["body"], "manual-q:%d" % row["number"], 40)
 
 out.write_text(json.dumps(cases, ensure_ascii=False), encoding="utf-8")
 print("%d highlights cut from the shipped corpus" % len(cases))

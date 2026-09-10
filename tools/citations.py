@@ -14,9 +14,9 @@ citations. There is no sentence number: two defensible splitters disagree on
 edition to settle it.
 
 Kept character-for-character equivalent to `Citation` in Swift, which renders
-section, lesson and highlight citations at render time while this module writes
-segment citations at export. `tools/verify_citation_agreement.sh` is what keeps
-them one format and one paragraph rule.
+section, lesson, Manual and highlight citations at render time while this
+module writes segment citations at export. `tools/verify_citation_agreement.sh`
+is what keeps them one format and one paragraph rule.
 """
 import bisect
 import re
@@ -119,13 +119,20 @@ def what_is_citation(number, paragraph):
     return f"W-w{number}.in.{paragraph}"
 
 
-def addressable_paragraphs(sections, lessons, introductions):
-    """Two searchable streams, keyed by the `source_pdf` family that uses them.
+def manual_citation(number, paragraph):
+    """Introduction is `M-in`; questions and the two closings are `M-<n>`."""
+    if number == 0:
+        return f"M-in.{paragraph}"
+    return f"M-{number}.{paragraph}"
 
-    Two streams and not one: a segment from the Text is searched only against
-    the Text, and a Workbook segment only against the Workbook. The Workbook
-    quotes the Text constantly, so one combined stream would manufacture
-    ambiguity that does not exist.
+
+def addressable_paragraphs(sections, lessons, introductions, manuals=None):
+    """Searchable streams, keyed by the `source_pdf` family that uses them.
+
+    Separate streams: a segment from the Text is searched only against the
+    Text, a Workbook segment only against the Workbook, a Manual segment only
+    against the Manual. The Workbook quotes the Text constantly, so one
+    combined stream would manufacture ambiguity that does not exist.
 
     Each value is `(stream, citations, starts)`: `citations[i]` is the citation
     of the paragraph whose normalized text begins at `starts[i]`, so a hit
@@ -157,7 +164,14 @@ def addressable_paragraphs(sections, lessons, introductions):
         for row in lessons
     ]
 
-    return {"Text": build(text_groups), "Workbook": build(workbook_groups)}
+    streams = {"Text": build(text_groups), "Workbook": build(workbook_groups)}
+    if manuals is not None:
+        manual_groups = [
+            ((lambda i, r=row: manual_citation(r["number"], i)), row["body"])
+            for row in manuals
+        ]
+        streams["Manual"] = build(manual_groups)
+    return streams
 
 
 def locate(body, index):

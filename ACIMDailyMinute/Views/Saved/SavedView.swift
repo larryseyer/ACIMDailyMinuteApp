@@ -81,6 +81,8 @@ struct SavedView: View {
                     WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
                 case .manual(let ref):
                     ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
+                case .manualSection(let ref):
+                    ManualSectionView(number: ref.number, spotlight: ref.spotlight)
                 case .segment(let ref):
                     SegmentReadingView(segmentId: ref.segmentId, spotlight: ref.spotlight)
                 }
@@ -216,6 +218,7 @@ enum SavedDestination: Hashable {
     case textSection(TextSectionRef)
     case introduction(IntroductionRef)
     case manual(ManualSegmentRef)
+    case manualSection(ManualSectionRef)
     case segment(SegmentReadingRef)
 }
 
@@ -261,6 +264,9 @@ extension ReadingKey {
         case .manual(let id):
             guard CorpusService.shared.manualSegment(id: id) != nil else { return nil }
             return .manual(ManualSegmentRef(segmentId: id, spotlight: spotlight))
+        case .manualSection(let n):
+            guard CorpusService.shared.manualSection(n) != nil else { return nil }
+            return .manualSection(ManualSectionRef(number: n, spotlight: spotlight))
         }
     }
 }

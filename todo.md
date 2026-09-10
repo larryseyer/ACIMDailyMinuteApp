@@ -39,7 +39,7 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] Chapter 1 Principles of Miracles is 53 numbered paragraphs.
 - [ ] Chapter 1.2 (34,385 characters) scrolls without stutter on the phone.
 - [ ] Previous and Next cross chapter boundaries; the first Preface section offers no Previous.
-- [ ] Highlight and Note work in the Text; Saved rows open the passage; a Manual row still will not navigate, by design.
+- [ ] Highlight and Note work in the Text; Saved rows open the passage; a Manual question opens with Previous and Next.
 - [ ] Spacing repair reads as the book; today's minute on the phone and lock screen is clean.
 - [ ] Part 1 Introduction above Lesson 1; Part 2 Introduction between 180 and 181.
 - [ ] Citations are `T-5.3` Arabic, not the widely-cited edition — that judgement is his to overturn.
@@ -66,7 +66,6 @@ Do not ask him to check any of this until everything below is built. His words: 
 His calls already made: Add note stays at the bottom; one play control, audio-first; tab bar becomes Today | Read | Listen | Video | Saved; Listen becomes activity, not a catalogue.
 
 - [ ] D — Archive becomes Video. App-only; confirm the recast with him before building.
-- [ ] E — Structure the Manual. Its 105 bundled rows are word-count cuts, not the book's questions.
 - [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
 
@@ -100,10 +99,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 - [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.
 - [ ] It must read and write the same backup `.json`.
 - [ ] The rules are ported, never re-invented.
-
-## OPEN — physical-book parity
-
-- [ ] Structure the Manual for Teachers into its question-and-answer form.
 
 ## OPEN — content and pipeline
 

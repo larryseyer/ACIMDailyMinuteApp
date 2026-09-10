@@ -6,6 +6,7 @@ enum ReadingDestination: Hashable {
     case lesson(LessonRef)
     case textSection(TextSectionRef)
     case introduction(IntroductionRef)
+    case manualSection(ManualSectionRef)
 }
 
 /// Pushes a reading onto whichever stack the reader is in. Installed by
@@ -67,6 +68,8 @@ extension View {
                     TextSectionView(chapter: ref.chapter, section: ref.section, spotlight: ref.spotlight)
                 case .introduction(let ref):
                     WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+                case .manualSection(let ref):
+                    ManualSectionView(number: ref.number, spotlight: ref.spotlight)
                 }
             }
             .navigationDestination(for: TextSectionRef.self) { ref in

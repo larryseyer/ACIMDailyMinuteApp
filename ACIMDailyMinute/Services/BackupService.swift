@@ -278,7 +278,7 @@ enum BackupService {
             ).first
             guard let minute = found, !minute.segmentHash.isEmpty else { return bookmark.itemKey }
             return "minute:\(minute.segmentHash)"
-        case .manual, .minuteDate:
+        case .manual, .manualSection, .minuteDate:
             return bookmark.itemKey
         }
     }

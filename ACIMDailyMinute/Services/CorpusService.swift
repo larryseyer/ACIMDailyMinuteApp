@@ -12,11 +12,9 @@ struct CorpusSegment: Decodable, Sendable {
     let body: String
     /// Where this passage begins in the book, derived once at export.
     ///
-    /// Nil for every Manual segment, which is bundled as 105 word-count cuts of
-    /// a continuous stream with nothing to address, and for the 13 passages that
-    /// do not resolve uniquely — front matter and Workbook closing pages that
-    /// are genuinely not in the bundled bodies. An unresolved passage shows its
-    /// book name instead. It is never guessed.
+    /// Nil for the passages that do not resolve uniquely — front matter and
+    /// Workbook closing pages that are genuinely not in the bundled bodies. An
+    /// unresolved passage shows its book name instead. It is never guessed.
     let citation: String?
 }
 
@@ -88,9 +86,19 @@ struct CorpusTextChapter: Identifiable, Sendable {
     var subtitle: String? { number == 0 ? nil : title }
 }
 
-private struct ManualEntry: Decodable {
-    let segmentId: Int
+struct CorpusManualSection: Decodable, Identifiable, Sendable {
+    let number: Int
+    let title: String
     let body: String
+
+    var id: Int { number }
+
+    var wordCount: Int {
+        body.split(whereSeparator: { $0 == " " || $0 == "\n" }).count
+    }
+
+    /// `M-in` for the Introduction; `M-<n>` for a question or a closing.
+    var stem: String { number == 0 ? "M-in" : "M-\(number)" }
 }
 
 final class CorpusService: @unchecked Sendable {
@@ -98,7 +106,7 @@ final class CorpusService: @unchecked Sendable {
 
     let textSections: [CorpusTextSection]
     let textChapters: [CorpusTextChapter]
-    let manual: [CorpusSegment]
+    let manualSections: [CorpusManualSection]
 
     private let segmentsByID: [Int: CorpusSegment]
     private let orderedSegmentIDs: [Int]
@@ -157,15 +165,42 @@ final class CorpusService: @unchecked Sendable {
         orderedSegmentIDs = segments.map(\.segmentId)
         segmentsByID = Dictionary(uniqueKeysWithValues: segments.map { ($0.segmentId, $0) })
 
-        manual = load("ACIMManual.json", as: [ManualEntry].self)
-            .map { CorpusSegment(segmentId: $0.segmentId, sourcePDF: "Manual", body: $0.body, citation: nil) }
+        manualSections = load("ACIMManual.json", as: [CorpusManualSection].self)
     }
 
     func segment(id: Int) -> CorpusSegment? { segmentsByID[id] }
 
-    /// The Manual is 105 rows; a scan is cheaper than a second dictionary.
+    /// A Daily Minute cut from the Manual. The structured book is
+    /// `manualSection`; this is the word-count slice a saved mark on an old
+    /// `manual:<id>` key still names.
     func manualSegment(id: Int) -> CorpusSegment? {
-        manual.first { $0.segmentId == id }
+        guard let segment = segmentsByID[id], segment.sourcePDF == "Manual" else { return nil }
+        return segment
+    }
+
+    func manualSection(_ number: Int) -> CorpusManualSection? {
+        manualSections.first { $0.number == number }
+    }
+
+    func manualSection(containingSegmentId id: Int) -> CorpusManualSection? {
+        guard let citation = segment(id: id)?.parsedCitation,
+              case .manual(let number, _) = citation
+        else { return nil }
+        return manualSection(number)
+    }
+
+    func manualSectionBefore(_ number: Int) -> CorpusManualSection? {
+        guard let offset = manualSections.firstIndex(where: { $0.number == number }),
+              offset > 0
+        else { return nil }
+        return manualSections[offset - 1]
+    }
+
+    func manualSectionAfter(_ number: Int) -> CorpusManualSection? {
+        guard let offset = manualSections.firstIndex(where: { $0.number == number }),
+              offset + 1 < manualSections.count
+        else { return nil }
+        return manualSections[offset + 1]
     }
 
     func textChapter(_ number: Int) -> CorpusTextChapter? {

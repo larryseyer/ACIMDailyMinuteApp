@@ -121,6 +121,11 @@ struct BookmarkRow: View {
             return .manual(ManualSegmentRef(segmentId: id))
         }
 
+        if parsedChannel == "manual-q" {
+            guard let n = Int(parsedToken), CorpusService.shared.manualSection(n) != nil else { return nil }
+            return .manualSection(ManualSectionRef(number: n))
+        }
+
         return nil
     }
 
@@ -168,7 +173,7 @@ struct BookmarkRow: View {
     private var rowIcon: String {
         switch parsedChannel {
         case "lesson": "book.closed.fill"
-        case "text", "manual": "text.book.closed"
+        case "text", "manual", "manual-q": "text.book.closed"
         default: "sun.max.fill"
         }
     }
@@ -183,7 +188,7 @@ struct BookmarkRow: View {
             guard let address = textAddress else { return "Text" }
             return address.chapter == 0 ? "Preface" : "Chapter \(address.chapter)"
         }
-        if parsedChannel == "manual" {
+        if parsedChannel == "manual" || parsedChannel == "manual-q" {
             return "Manual for Teachers"
         }
         return "Daily Minute"
@@ -203,11 +208,14 @@ struct BookmarkRow: View {
         }
 
         if parsedChannel == "manual" {
-            // The Manual has no titles, so unlike a Text section, which shows
-            // its section title, this shows a preview of the passage itself.
             guard let id = Int(parsedToken), let segment = CorpusService.shared.manualSegment(id: id)
             else { return nil }
             return preview(segment.body)
+        }
+
+        if parsedChannel == "manual-q" {
+            guard let n = Int(parsedToken) else { return nil }
+            return CorpusService.shared.manualSection(n)?.title
         }
 
         if parsedChannel == "lesson" {

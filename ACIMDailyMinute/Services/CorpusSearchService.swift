@@ -63,9 +63,13 @@ actor CorpusSearchService {
             addLesson(n)
         }
 
-        for segment in corpus.manual {
-            entries.append(SearchEntry(key: .manual(segment.segmentId), title: "Manual for Teachers", subtitle: nil))
-            bodies.append(segment.body)
+        for section in corpus.manualSections {
+            entries.append(SearchEntry(
+                key: .manualSection(section.number),
+                title: section.title,
+                subtitle: "Manual for Teachers"
+            ))
+            bodies.append(section.body)
         }
 
         self.entries = entries
@@ -118,6 +122,8 @@ actor CorpusSearchService {
                 if SearchFold.fold(entry.title).contains(query) || SearchFold.fold(chapterTitle).contains(query) {
                     result.append(entry)
                 }
+            case .manualSection:
+                if SearchFold.fold(entry.title).contains(query) { result.append(entry) }
             case .manual, .segment, .minuteDate:
                 break
             }

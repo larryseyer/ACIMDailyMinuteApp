@@ -351,7 +351,7 @@ if __name__ == "__main__":
         "ACIMTextSections.json": 272,
         "Workbook365Bodies.json": 365,
         "WorkbookIntroductions.json": 22,
-        "ACIMManual.json": 105,
+        "ACIMManual.json": 31,
         "ACIMSegments.json": 1983,
     }
     write = "--write" in sys.argv

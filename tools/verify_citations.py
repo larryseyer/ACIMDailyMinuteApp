@@ -19,17 +19,17 @@ RESOURCES = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resour
 
 # Measured against the shipping bundle. These are assertions, not estimates: a
 # change in any of them means the corpus moved under the citations.
-EXPECTED_CITED = {"Text": 1263, "Workbook": 612}
+EXPECTED_CITED = {"Text": 1263, "Workbook": 612, "Manual": 105}
 # The three that remain are Workbook closing lessons, where the same words
 # recur and the locator refuses an ambiguous probe rather than guess.
 EXPECTED_UNRESOLVED = 3
-EXPECTED_MANUAL = 105
 # Two minutes may begin in the same paragraph when one long paragraph is cut
 # into several. Pinned rather than tolerated: a change here means the locator
 # moved, and nothing else in the suite would say so.
-EXPECTED_SHARED_CITATIONS = 13
+EXPECTED_SHARED_CITATIONS = 14
 EXPECTED_TEXT_PARAGRAPHS = 2949
 EXPECTED_LESSON_PARAGRAPHS = 2657
+EXPECTED_MANUAL_PARAGRAPHS = 211
 
 
 def load(name):
@@ -40,19 +40,25 @@ def main():
     sections = load("ACIMTextSections.json")
     lessons = load("Workbook365Bodies.json")
     introductions = load("WorkbookIntroductions.json")
+    manuals = load("ACIMManual.json")
     segments = load("ACIMSegments.json")
     failed = False
 
     # 1. Every addressable paragraph produces a citation that parses back.
-    index = addressable_paragraphs(sections, lessons, introductions)
+    index = addressable_paragraphs(sections, lessons, introductions, manuals)
     text_paragraphs = sum(len(display_paragraphs(s["body"])) for s in sections)
     lesson_paragraphs = sum(len(display_paragraphs(r["body"])) for r in lessons)
-    print(f"Text paragraphs: {text_paragraphs}, lesson paragraphs: {lesson_paragraphs}")
+    manual_paragraphs = sum(len(display_paragraphs(r["body"])) for r in manuals)
+    print(f"Text paragraphs: {text_paragraphs}, lesson paragraphs: {lesson_paragraphs}, "
+          f"Manual paragraphs: {manual_paragraphs}")
     if text_paragraphs != EXPECTED_TEXT_PARAGRAPHS:
         print(f"  FAIL: expected {EXPECTED_TEXT_PARAGRAPHS} Text paragraphs")
         failed = True
     if lesson_paragraphs != EXPECTED_LESSON_PARAGRAPHS:
         print(f"  FAIL: expected {EXPECTED_LESSON_PARAGRAPHS} lesson paragraphs")
+        failed = True
+    if manual_paragraphs != EXPECTED_MANUAL_PARAGRAPHS:
+        print(f"  FAIL: expected {EXPECTED_MANUAL_PARAGRAPHS} Manual paragraphs")
         failed = True
 
     # 2. Every stored segment citation points at a paragraph that exists, and is
@@ -62,20 +68,13 @@ def main():
     for family in index.values():
         valid.update(family[1])
 
-    cited = {"Text": 0, "Workbook": 0}
+    cited = {"Text": 0, "Workbook": 0, "Manual": 0}
     unresolved = 0
-    manual = 0
     mismatched = 0
     for segment in segments:
         family = "Text" if segment["sourcePDF"].startswith("Text") else segment["sourcePDF"]
         stored = segment.get("citation")
-        if family == "Manual":
-            manual += 1
-            if stored is not None:
-                print(f"  FAIL: Manual segment {segment['segmentId']} carries a citation")
-                failed = True
-            continue
-        derived = locate(segment["body"], index[family])
+        derived = locate(segment["body"], index[family]) if family in index else None
         if stored != derived:
             mismatched += 1
             if mismatched <= 5:
@@ -89,8 +88,8 @@ def main():
             cited[family] += 1
 
     print(f"segments: {len(segments)} total, {cited['Text']} Text cited, "
-          f"{cited['Workbook']} Workbook cited, {unresolved} unresolved, "
-          f"{manual} Manual by design")
+          f"{cited['Workbook']} Workbook cited, {cited['Manual']} Manual cited, "
+          f"{unresolved} unresolved")
     if mismatched:
         failed = True
     if cited != EXPECTED_CITED:
@@ -98,9 +97,6 @@ def main():
         failed = True
     if unresolved != EXPECTED_UNRESOLVED:
         print(f"  FAIL: expected {EXPECTED_UNRESOLVED} unresolved")
-        failed = True
-    if manual != EXPECTED_MANUAL:
-        print(f"  FAIL: expected {EXPECTED_MANUAL} Manual segments")
         failed = True
 
     # 3. No passage may resolve two ways. The locator refuses an ambiguous probe

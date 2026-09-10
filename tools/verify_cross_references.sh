@@ -51,7 +51,7 @@ for i in load("WorkbookIntroductions.json"):
 for b in load("Workbook365Bodies.json"):
     d = display(b["body"]); records.append({"kind": "lesson", "id": str(b["lessonNumber"]), "display": d, "refs": refs(d)})
 for m in load("ACIMManual.json"):
-    d = display(m["body"]); records.append({"kind": "manual", "id": str(m["segmentId"]), "display": d, "refs": refs(d)})
+    d = display(m["body"]); records.append({"kind": "manual", "id": str(m["number"]), "display": d, "refs": refs(d)})
 for g in load("ACIMSegments.json"):
     d = display(g["body"]); records.append({"kind": "segment", "id": str(g["segmentId"]), "source": g["sourcePDF"], "display": d, "refs": refs(d)})
 

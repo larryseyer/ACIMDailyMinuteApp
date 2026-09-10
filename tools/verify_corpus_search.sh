@@ -43,7 +43,7 @@ for n in range(1, 366):
         records.append({"title": intro["title"], "body": intro["body"]})
     records.append({"title": f"Lesson {n}", "body": bodies[n]})
 for m in load("ACIMManual.json"):
-    records.append({"title": f"Manual {m['segmentId']}", "body": m["body"]})
+    records.append({"title": m["title"], "body": m["body"]})
 
 # Probes: a real run of words at a known character offset, from a spread of
 # records, so check 7 can prove the index finds a passage where it actually is.

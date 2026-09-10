@@ -89,7 +89,7 @@ if __name__ == "__main__":
         "ACIMTextSections.json": 272,
         "Workbook365Bodies.json": 365,
         "ACIMSegments.json": 1983,
-        "ACIMManual.json": 105,
+        "ACIMManual.json": 31,
         "WorkbookIntroductions.json": 22,
     }
 

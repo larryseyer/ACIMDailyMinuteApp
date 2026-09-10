@@ -67,6 +67,14 @@ struct ContinueReadingRow: View {
             NavigationLink(value: LessonRef(lessonNumber: number, presentsVideo: false)) { label }
                 .buttonStyle(.plain)
             #endif
+        case .manualSection(let number):
+            #if os(tvOS)
+            Button { openPlayer(.manualSection(number: number)) } label: { label }
+                .buttonStyle(.plain)
+            #else
+            NavigationLink(value: ManualSectionRef(number: number)) { label }
+                .buttonStyle(.plain)
+            #endif
         case .segment, .manual, .minuteDate, nil:
             EmptyView()
         }
