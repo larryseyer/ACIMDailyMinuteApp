@@ -23,7 +23,7 @@ enum DeepLinkRoute: Sendable, Equatable {
         case "lesson":
             guard let n = segments.first.flatMap(Int.init), (1...365).contains(n) else { return nil }
             return .lesson(n)
-        case "archive":
+        case "video", "archive":
             guard let raw = segments.first else { return nil }
             let f = DateFormatter()
             f.calendar = Calendar(identifier: .gregorian)

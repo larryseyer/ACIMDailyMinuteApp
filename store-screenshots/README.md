@@ -45,7 +45,7 @@ Capture: `tools/capture_store_screenshots.sh` — one simulator at a time. Lesso
 
 ## Still need you
 
-- **Mac** — size the window to a store size and take Today, Read, Archive, Saved, Settings. Automated capture cannot get a CGWindowID through System Events; Today was grabbed once at the current 500×900pt window.
+- **Mac** — size the window to a store size and take Today, Read, Video, Saved, Settings. Automated capture cannot get a CGWindowID through System Events; Today was grabbed once at the current 500×900pt window.
 - **Apple Watch watch face** — circular and rectangular complications. Only a real watch can place those.
 
 Do not upload any shot that still has “Open in app?” or “Would Like to Send You Notifications” on it.

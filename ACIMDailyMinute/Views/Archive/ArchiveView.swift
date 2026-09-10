@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-/// Root of the Archive tab.
+/// Root of the Video tab.
 ///
 /// Two top-level modes, switched by the `.searchable` query:
 ///   * **Calendar mode** (empty query) — graphical `DatePicker` on iOS /
@@ -46,7 +46,7 @@ struct ArchiveView: View {
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
                 }
-                .navigationTitle("Archive")
+                .navigationTitle("Video")
                 #if !os(tvOS)
                 // Same as the Read tab: on tvOS `.searchable` takes over the
                 // screen rather than waiting to be opened.

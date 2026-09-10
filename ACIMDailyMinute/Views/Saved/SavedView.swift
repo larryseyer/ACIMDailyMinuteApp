@@ -97,7 +97,7 @@ struct SavedView: View {
             ContentUnavailableView {
                 Label("No Bookmarks", systemImage: "bookmark")
             } description: {
-                Text("Tap Save on any Daily Minute, Lesson, or Archive entry to keep it here.")
+                Text("Tap Save on any Daily Minute, Lesson, or Video entry to keep it here.")
             }
         } else {
             List {

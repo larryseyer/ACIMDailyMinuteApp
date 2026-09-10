@@ -42,7 +42,7 @@ struct OnboardingView: View {
              "The Workbook for Students\none lesson at a time,\non the day you choose."),
             ("play.circle", "Listen",
              "Every passage and lesson, read aloud.\nListen while you commute, walk, or sit still.\nDaily Minutes and Daily Lessons are added regularly."),
-            ("archivebox", "Archive",
+            ("play.rectangle", "Video",
              "Browse past readings by date.\nReturn to any passage at your choosing.\nYour notes and highlights are stored across all devices."),
             ("bookmark", "Save Your Favorites",
              "Keep the passages you mark as favorites.\nReturn to them anytime, online or off.")

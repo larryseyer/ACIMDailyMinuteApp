@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-/// Renders a single `ArchivedReading` row inside the Archive tab's per-date detail.
+/// Renders a single `ArchivedReading` row inside the Video tab's per-date detail.
 ///
 /// Dispatches on `reading.channel`:
 ///   * `"daily-minute"` — the passage body through `AnnotatableReadingText`,

@@ -35,7 +35,7 @@ FEATURES
 - Today: today's daily minute and Workbook Lesson, refreshed automatically
 - Read: the Workbook spine and the Text; search by number or keyword; jump to any lesson
 - Listen: podcast feeds for daily minutes and lessons, plus embedded YouTube audio
-- Archive: calendar of every past daily minute, searchable by date or text
+- Video: calendar of every past daily minute, searchable by date or text
 - Saved: bookmark any passage; swipe to remove
 - Reminders: a Daily Minute reminder and a Daily Lesson reminder, each at your own time, and practice reminders that follow the Workbook lesson you are on, inside your own waking hours — with a custom chime
 - Widgets: small, medium, and large Home Screen and Mac widgets showing today's minute
@@ -43,7 +43,7 @@ FEATURES
 - Apple Watch: today's minute on the wrist, with three complication styles and phone-to-watch sync
 - Apple TV: today's reading as a player on the television
 - Siri Shortcut: "What's today's reading?"
-- Deep links: today's minute, any lesson, any archive date, or Saved
+- Deep links: today's minute, any lesson, any day on Video, or Saved
 - Optional iCloud: highlights, notes and bookmarks can stay in your own Apple account — off unless you turn it on
 
 LINEAGE
@@ -84,19 +84,19 @@ Screenshots are a manual step — capture these scenes on each required device s
 
 | Device Size | Required | Scene 1 | Scene 2 | Scene 3 | Scene 4 | Scene 5 |
 |---|---|---|---|---|---|---|
-| 6.7-inch iPhone (iPhone 15 Pro Max / 16 Pro Max) | Yes | Today tab with daily minute card | Read tab Workbook spine with search | Lesson detail view | Archive calendar with date selected | Settings with reminder toggle |
+| 6.7-inch iPhone (iPhone 15 Pro Max / 16 Pro Max) | Yes | Today tab with daily minute card | Read tab Workbook spine with search | Lesson detail view | Video calendar with date selected | Settings with reminder toggle |
 | 6.9-inch iPhone (if required at upload) | Confirm in App Store Connect | Same 5 scenes as above | | | | |
-| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Read tab (full width) | Lesson detail (full width) | Archive calendar | Saved bookmarks list |
-| Mac (1280×800 or current Mac App Store size) | Yes for Mac App Store | Today window | Read tab | Archive | Saved | Settings / iCloud |
+| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Read tab (full width) | Lesson detail (full width) | Video calendar | Saved bookmarks list |
+| Mac (1280×800 or current Mac App Store size) | Yes for Mac App Store | Today window | Read tab | Video | Saved | Settings / iCloud |
 | Apple Watch (Series 10) | Yes | Today view with minute card | Circular complication on watch face | Rectangular complication on watch face | | |
-| Apple TV (1920×1080) | Yes for tvOS | Today / player | Read | Listen | Archive | |
+| Apple TV (1920×1080) | Yes for tvOS | Today / player | Read | Listen | Video | |
 
 ### Caption Ideas
 
 1. **Today tab**: "A minute of inspiration, every morning."
 2. **Read tab**: "365 Workbook Lessons at your fingertips."
 3. **Lesson detail**: "Each lesson, exactly as written."
-4. **Archive calendar**: "Browse every past daily minute."
+4. **Video calendar**: "Browse every past daily minute."
 5. **Settings / Reminders**: "Your practice, your schedule."
 6. **Apple Watch**: "Today's minute, on your wrist."
 7. **Mac**: "The same reader, on the desk."

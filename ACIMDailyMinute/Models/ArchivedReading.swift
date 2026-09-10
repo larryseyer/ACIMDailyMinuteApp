@@ -4,7 +4,7 @@ import SwiftData
 /// A single archived ACIM passage from either the Daily Minute or Daily Lesson stream.
 ///
 /// Populated by `ArchiveService` from the rolling `archive[]` array inside each
-/// channel's JSON endpoint, deduplicated by `lineHash`. Drives the Archive tab's
+/// channel's JSON endpoint, deduplicated by `lineHash`. Drives the Video tab's
 /// calendar view and the full-text search UI.
 ///
 /// Search uses `#Predicate` filtering against `searchableText`, which concatenates

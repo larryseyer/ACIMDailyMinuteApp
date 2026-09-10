@@ -67,7 +67,7 @@ iCloud sync is off until you turn it on.
 
 If you never turned iCloud on, a backup file from Settings → Backup & Restore will still carry your marks to the other device.
 
-### A day in the Archive has no reading.
+### A day on the Video tab has no reading.
 
 Some days were missed when the daily passage was first published. Missed days are filled in one per night. The empty day tells you when that one is due. You can also tap **Let it fall open** for another published minute.
 

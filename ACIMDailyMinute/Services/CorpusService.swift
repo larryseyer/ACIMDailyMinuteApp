@@ -29,7 +29,7 @@ extension CorpusSegment {
 
     /// The same mapping, reachable without a segment.
     ///
-    /// The Archive tab needs it: its rows carry the feed's `source_reference`,
+    /// The Video tab needs it: its rows carry the feed's `source_reference`,
     /// which is this identical string, but no segment id to resolve a citation
     /// with. One mapping rather than two that drift.
     ///

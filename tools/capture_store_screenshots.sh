@@ -67,7 +67,7 @@ capture_ios() {
     xcrun simctl status_bar "$udid" override --time "9:41" --batteryState charged --batteryLevel 100 --cellularMode active 2>/dev/null || true
     xcrun simctl privacy "$udid" deny notifications "$BUNDLE" 2>/dev/null || true
     xcrun simctl install "$udid" "$IOS_APP"
-    for pair in "today:01-today" "read:02-read" "lesson:03-lesson" "archive:04-archive" "saved:05-saved" "settings:06-settings"; do
+    for pair in "today:01-today" "read:02-read" "lesson:03-lesson" "video:04-archive" "saved:05-saved" "settings:06-settings"; do
         tab="${pair%%:*}"
         file="${pair##*:}"
         launch_scene "$udid" "$tab"
@@ -94,7 +94,7 @@ xcodebuild -scheme ACIMDailyMinuteTV \
 TV_APP="$BUILD_DIR/Debug-appletvsimulator/ACIMDailyMinuteTV.app"
 only_boot "$TV"
 xcrun simctl install "$TV" "$TV_APP"
-for pair in "today:01-today" "read:02-read" "listen:03-listen" "archive:04-archive"; do
+for pair in "today:01-today" "read:02-read" "listen:03-listen" "video:04-archive"; do
     tab="${pair%%:*}"
     file="${pair##*:}"
     launch_scene "$TV" "$tab"
@@ -138,7 +138,7 @@ mac_shot() {
 }
 mac_shot today "$OUT/mac/01-today.png"
 mac_shot read "$OUT/mac/02-read.png"
-mac_shot archive "$OUT/mac/03-archive.png"
+mac_shot video "$OUT/mac/03-archive.png"
 mac_shot saved "$OUT/mac/04-saved.png"
 mac_shot settings "$OUT/mac/05-settings.png"
 killall ACIMDailyMinute 2>/dev/null || true

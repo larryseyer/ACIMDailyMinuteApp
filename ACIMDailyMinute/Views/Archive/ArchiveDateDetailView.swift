@@ -73,7 +73,7 @@ struct ArchiveDateDetailView: View {
         ContentUnavailableView(
             "No reading for this day",
             systemImage: "calendar.badge.exclamationmark",
-            description: Text(availability.sentence ?? "Pull to refresh on the Archive tab.")
+            description: Text(availability.sentence ?? "Pull to refresh on the Video tab.")
         )
         .safeAreaInset(edge: .bottom) {
             if !nearbyDates.isEmpty {

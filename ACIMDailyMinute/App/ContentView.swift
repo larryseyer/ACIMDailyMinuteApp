@@ -154,7 +154,7 @@ struct ContentView: View {
     #endif
 
     /// Debug-only: `defaults write … ACIM_SCREENSHOT_TAB read` (or listen,
-    /// archive, saved, lesson, settings) opens that surface without going
+    /// video, saved, lesson, settings) opens that surface without going
     /// through a system "Open in app?" alert. The env var
     /// `ACIM_SCREENSHOT_TAB` still works. Release builds ignore this.
     private func applyScreenshotTabIfRequested() {
@@ -165,7 +165,7 @@ struct ContentView: View {
         switch tab {
         case "read": selectedTab = 1
         case "listen": selectedTab = 2
-        case "archive":
+        case "video", "archive":
             selectedTab = 3
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                 NotificationCenter.default.post(
@@ -258,7 +258,7 @@ struct ContentView: View {
                     .tag(2)
 
                 ArchiveView()
-                    .tabItem { Label("Archive", systemImage: "archivebox.fill") }
+                    .tabItem { Label("Video", systemImage: "play.rectangle.fill") }
                     .tag(3)
 
                 // ⛔ **No Saved tab on the television, and it is not a fence
@@ -338,7 +338,7 @@ private struct MacBottomTabBar: View {
         .init(id: 0, title: "Today", systemImage: "sun.max.fill"),
         .init(id: 1, title: "Read", systemImage: "book.closed.fill"),
         .init(id: 2, title: "Listen", systemImage: "play.circle.fill"),
-        .init(id: 3, title: "Archive", systemImage: "archivebox.fill"),
+        .init(id: 3, title: "Video", systemImage: "play.rectangle.fill"),
         .init(id: 4, title: "Saved", systemImage: "bookmark.fill")
     ]
 

@@ -16,12 +16,12 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] Saved tab: a saved lesson opens the lesson, a saved minute opens the passage; swipe either direction deletes — say if the leading edge should require a tap on Delete instead.
 - [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
 - [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
-- [ ] Archive calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
-- [ ] Let it fall open on Archive: a published minute; with no archive, a bundled Text passage.
+- [ ] Video calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
+- [ ] Let it fall open on Video: a published minute; with no archive, a bundled Text passage.
 - [ ] Workbook lesson 84: the circle in the nav marks it done; the row grows a check; a Listen tap does not.
 - [ ] Listen with the network off: the YouTube card says video is unavailable and the list still plays.
 - [ ] acimdailyminute://listen opens the Listen tab.
-- [ ] An archive minute can be highlighted; Save on Today and on that day's Archive row is one Saved row.
+- [ ] An archive minute can be highlighted; Save on Today and on that day's Video row is one Saved row.
 - [ ] Share on the Mac draws bare, like the phone.
 - [ ] Airplane mode, delete and reinstall, cold launch: Today shows a bundled reading with no save, share, or Listen.
 - [ ] Listen swipe Download, then Remove download; a downloaded row plays from disk in airplane mode; look at the swipe at 375pt.
@@ -65,7 +65,6 @@ Do not ask him to check any of this until everything below is built. His words: 
 
 Add note stays at the bottom; one play control, audio-first. He confirmed the Archive *tab* (calendar of past readings) should be named Video. That tab is not archive.org.
 
-- [ ] D — Recast the Archive tab as Video: tab label, navigation title, deep links, store listing, parked test wording. Do not rename `ArchiveService`, `ArchivedReading`, or anything that talks to archive.org.
 - [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
 
@@ -106,7 +105,7 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
-- [ ] HIS — Mac store shots: size the window to 1280×800 and take Today, Read, Archive, Saved, Settings.
+- [ ] HIS — Mac store shots: size the window to 1280×800 and take Today, Read, Video, Saved, Settings.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.

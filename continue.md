@@ -1,8 +1,8 @@
 # continue.md
 
-LIVE: D — Recast the Archive tab as Video: tab label, navigation title, deep links, store listing, parked test wording. Do not rename `ArchiveService`, `ArchivedReading`, or anything that talks to archive.org.
+LIVE: B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 
-NEXT: B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
+NEXT: C — Listen as activity. Needs playback progress, which does not exist yet.
 
 Parked is his phone test pass. Do not ask him to walk it. He is already using the phone and reporting what he finds.
 

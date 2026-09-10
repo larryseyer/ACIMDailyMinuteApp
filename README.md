@@ -12,7 +12,7 @@ A unified Apple-platform surface for reading today's passage, following the 365-
 
 **Listen** — Audio episodes from both podcasts (`podcast-minute.xml`, `podcast-lessons.xml`). AVFoundation playback with lock screen / Control Center controls and a floating MiniPlayer across all tabs. YouTube embed for each segment's video version.
 
-**Archive** — Calendar date browser + full-text search across all archived readings from both channels. Rolling archive prefetched on launch for instant offline access.
+**Video** — Calendar date browser + full-text search across all archived readings from both channels. Rolling archive prefetched on launch for instant offline access.
 
 **Saved** — Bookmark any passage or lesson for later reading. Swipe-to-delete management.
 
