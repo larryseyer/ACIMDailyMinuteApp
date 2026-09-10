@@ -4,6 +4,61 @@ import SwiftData
 // auto-link CloudKit the way iOS does, and the failure mode is sync that works
 // in Debug and silently does nothing in a distributed build.
 import CloudKit
+#if os(macOS)
+import Security
+#endif
+
+#if os(macOS)
+/// The live code signature of this process, not the entitlements file.
+///
+/// ⛔ `containerURL(forSecurityApplicationGroupIdentifier:)` returns the
+/// group path on macOS even when the signature carries no app-group
+/// entitlement. A linker-signed Debug binary launched from Terminal
+/// therefore opened the live `reader.store` — a store that already holds
+/// CloudKit mirroring tables — and `PFCloudKitContainerProvider` trapped
+/// (`EXC_BREAKPOINT` on `com.apple.coredata.cloudkit.queue`, `_os_crash`)
+/// because the team ID was empty. Passing `cloudKitDatabase: .none` does
+/// not skip that setup once the store has `ANSCK*` tables. The file is
+/// not the grant; this is.
+private struct MacCodeSignature: Sendable {
+    let hasAppGroup: Bool
+    let canUseCloudKit: Bool
+
+    static let current = MacCodeSignature.load()
+
+    private static func load() -> MacCodeSignature {
+        let empty = MacCodeSignature(hasAppGroup: false, canUseCloudKit: false)
+        var code: SecCode?
+        guard SecCodeCopySelf(SecCSFlags(), &code) == errSecSuccess, let code else {
+            return empty
+        }
+        var staticCode: SecStaticCode?
+        guard SecCodeCopyStaticCode(code, SecCSFlags(), &staticCode) == errSecSuccess,
+              let staticCode else {
+            return empty
+        }
+        var info: CFDictionary?
+        guard SecCodeCopySigningInformation(
+            staticCode,
+            SecCSFlags(rawValue: kSecCSSigningInformation),
+            &info
+        ) == errSecSuccess, let dict = info as? [String: Any] else {
+            return empty
+        }
+        let team = dict[kSecCodeInfoTeamIdentifier as String] as? String ?? ""
+        let ents = dict[kSecCodeInfoEntitlementsDict as String] as? [String: Any] ?? [:]
+        let groups = ents["com.apple.security.application-groups"] as? [String] ?? []
+        let services = ents["com.apple.developer.icloud-services"] as? [String] ?? []
+        let containers = ents["com.apple.developer.icloud-container-identifiers"] as? [String] ?? []
+        return MacCodeSignature(
+            hasAppGroup: groups.contains(SharedModelContainer.appGroupIdentifier),
+            canUseCloudKit: !team.isEmpty
+                && services.contains("CloudKit")
+                && containers.contains(SharedModelContainer.cloudKitContainerIdentifier)
+        )
+    }
+}
+#endif
 
 /// Where this app's SwiftData stores live, and how every target opens them.
 ///
@@ -62,7 +117,22 @@ enum SharedModelContainer {
     /// convenience: on the TV the bundle and the feed are the only dependable
     /// sources, and a reader's own marks belong to CloudKit or to nothing.
     static var groupURL: URL {
-        if let shared = FileManager.default
+        // ⛔ **A URL is not a grant.** On macOS, `containerURL(forSecurityApplicationGroupIdentifier:)`
+        // returns the group path even when the process is linker-signed and
+        // carries no app-group entitlement. Opening the live `reader.store`
+        // from that path is what killed Mac Debug launched from Terminal:
+        // the store already has CloudKit mirroring tables, and
+        // `PFCloudKitContainerProvider` traps rather than throwing when the
+        // team ID is empty. `cloudKitDatabase: .none` does not skip that
+        // setup. Other platforms return nil here without the entitlement,
+        // so the extra check is a macOS signature check rather than a
+        // second container lookup.
+        #if os(macOS)
+        let groupIsUsable = MacCodeSignature.current.hasAppGroup
+        #else
+        let groupIsUsable = true
+        #endif
+        if groupIsUsable, let shared = FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier) {
             #if os(tvOS)
             // ⛔ **On a television the group container's ROOT IS NOT WRITEABLE,
@@ -131,6 +201,19 @@ enum SharedModelContainer {
 
     static let syncEnabledKey = "iCloudSyncEnabled"
 
+    /// ⛔ On macOS a linker-signed process is not entitled to iCloud even
+    /// when the entitlements *file* names the container. Asking for
+    /// `.private` traps inside CloudKit rather than throwing. Other
+    /// platforms install with a profile, so the file and the grant are
+    /// the same thing there.
+    static var processCanUseCloudKit: Bool {
+        #if os(macOS)
+        MacCodeSignature.current.canUseCloudKit
+        #else
+        true
+        #endif
+    }
+
     /// ⛔ **THE RULE: `allowsSave == false` ⇒ `cloudKitDatabase == .none`.**
     ///
     /// Only the app's one writable container mirrors, and only its reader
@@ -165,7 +248,7 @@ enum SharedModelContainer {
     static func makeContainer(allowsSave: Bool, includeReader: Bool = true) throws -> ModelContainer {
         if !allowsSave { try createStoresIfMissing() }
 
-        let mirrorsReader = allowsSave && includeReader && syncEnabled
+        let mirrorsReader = allowsSave && includeReader && syncEnabled && processCanUseCloudKit
 
         // ⛔ **Both configurations must be NAMED, and that is not cosmetic.**
         // Two unnamed configurations collapse onto the one default
