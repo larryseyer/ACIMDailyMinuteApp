@@ -103,3 +103,31 @@ enum MinuteSchedule {
             .map { $0 }
     }
 }
+
+/// A physical book falling open: a published Daily Minute, or a bundled
+/// passage when none have been fetched yet.
+enum FallOpen {
+    enum Opening: Equatable {
+        case publishedMinute(dateString: String)
+        case bundledSegment(id: Int)
+    }
+
+    static func opening(
+        publishedDates: [String],
+        segmentIDs: [Int],
+        pickIndex: (Int) -> Int
+    ) -> Opening? {
+        let dates = publishedDates.filter { !$0.isEmpty }
+        if !dates.isEmpty {
+            let index = pickIndex(dates.count)
+            guard dates.indices.contains(index) else { return nil }
+            return .publishedMinute(dateString: dates[index])
+        }
+        if !segmentIDs.isEmpty {
+            let index = pickIndex(segmentIDs.count)
+            guard segmentIDs.indices.contains(index) else { return nil }
+            return .bundledSegment(id: segmentIDs[index])
+        }
+        return nil
+    }
+}

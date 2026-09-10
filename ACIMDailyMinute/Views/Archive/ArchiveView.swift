@@ -33,6 +33,9 @@ struct ArchiveView: View {
     @State private var searchText: String = ""
     @State private var archiveCalendar = ArchiveCalendarState.starting(now: Date())
     @State private var isRefreshing = false
+    #if os(tvOS)
+    @Environment(\.openPlayer) private var openPlayer
+    #endif
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -62,6 +65,9 @@ struct ArchiveView: View {
                         availability: availability(of: dateString),
                         archived: datesWithReadings
                     )
+                }
+                .navigationDestination(for: SegmentReadingRef.self) { ref in
+                    SegmentReadingView(segmentId: ref.segmentId, spotlight: ref.spotlight)
                 }
                 .readingDestinations(path: $path)
                 .toolbar {
@@ -115,6 +121,11 @@ struct ArchiveView: View {
             systemImage: "archivebox",
             description: Text("The archive builds up as you open the app each day. Pull to refresh to top it up.")
         )
+        .safeAreaInset(edge: .bottom) {
+            fallOpenRow
+                .padding(20)
+                .readableContentWidth()
+        }
     }
 
     // MARK: - Calendar mode
@@ -126,6 +137,7 @@ struct ArchiveView: View {
                     .frame(maxWidth: .infinity)
 
                 selectedDateRow
+                fallOpenRow
             }
             .padding(20)
             .readableContentWidth()
@@ -179,6 +191,78 @@ struct ArchiveView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
+    }
+
+    /// A physical book falling open: a published Daily Minute if any have
+    /// been fetched, otherwise a bundled Text passage so the gesture still
+    /// has a page.
+    private var fallOpenRow: some View {
+        Button(action: fallOpen) {
+            HStack {
+                Text("Let it fall open")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "book")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(14)
+            .background(Color.acimCard)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        #if os(tvOS)
+        .buttonStyle(.card)
+        #else
+        .buttonStyle(.plain)
+        #endif
+    }
+
+    private var publishedMinuteDates: [String] {
+        var seen = Set<String>()
+        var dates: [String] = []
+        for reading in allReadings where reading.channel == "daily-minute" {
+            let key = reading.dateString
+            if !key.isEmpty, seen.insert(key).inserted {
+                dates.append(key)
+            }
+        }
+        return dates
+    }
+
+    private var textSegmentIDs: [Int] {
+        CorpusService.shared.allSegmentIDs.filter {
+            CorpusService.shared.segment(id: $0)?.bookName == "Text"
+        }
+    }
+
+    private func fallOpen() {
+        let opening = FallOpen.opening(
+            publishedDates: publishedMinuteDates,
+            segmentIDs: textSegmentIDs,
+            pickIndex: { Int.random(in: 0..<$0) }
+        )
+        switch opening {
+        case .publishedMinute(let dateString):
+            #if os(tvOS)
+            if let reading = allReadings.first(where: {
+                $0.dateString == dateString && $0.channel == "daily-minute"
+            }) {
+                openPlayer(.archived(reading))
+                return
+            }
+            #endif
+            path.append(dateString)
+        case .bundledSegment(let id):
+            #if os(tvOS)
+            if let segment = CorpusService.shared.segment(id: id) {
+                openPlayer(.segment(segment))
+            }
+            #else
+            path.append(SegmentReadingRef(segmentId: id))
+            #endif
+        case nil:
+            break
+        }
     }
 
     // MARK: - Earliest-date bound

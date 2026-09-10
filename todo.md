@@ -17,6 +17,7 @@ Do not ask him to check any of this until everything below is built. His words: 
 - [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
 - [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
 - [ ] Archive calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
+- [ ] Let it fall open on Archive: a published minute; with no archive, a bundled Text passage.
 - [ ] Share on the Mac draws bare, like the phone.
 - [ ] Airplane mode, delete and reinstall, cold launch: Today shows a bundled reading with no save, share, or Listen.
 - [ ] Listen swipe Download, then Remove download; a downloaded row plays from disk in airplane mode; look at the swipe at 375pt.
@@ -101,7 +102,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — physical-book parity
 
-- [ ] "Let it fall open" — a random published Daily Minute, falling back to a bundled segment.
 - [ ] Workbook completion tracking — which lessons the reader has done, distinct from listened.
 - [ ] Structure the Manual for Teachers into its question-and-answer form.
 
