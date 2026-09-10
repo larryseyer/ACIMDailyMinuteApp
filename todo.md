@@ -87,7 +87,7 @@ Ranked by his instruction: get it right on the common Apple environment first. t
 - [ ] HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?
 - [ ] HIS CALL — whether plain-and-true is what a complication should say.
 - [ ] HIS CALL — the wrist shows six lines and offers no way to reach the rest.
-- [ ] `.accessoryCircular` and `.accessoryInline` have never been placed; a simulator cannot place them.
+- [ ] `.accessoryCircular` and `.accessoryInline` have never been placed; only a real watch can, and those two store shots are still missing.
 - [ ] HIS CALL — the watch app icon at grid size reads as a photograph.
 - [ ] No Apple Watch is paired to this Mac; WCSession cannot be exercised unpaired.
 
@@ -117,6 +117,7 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — small
 
+- [ ] HIS — Mac store shots: size the window to 1280×800 and take Today, Read, Archive, Saved, Settings.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
