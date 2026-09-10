@@ -88,7 +88,7 @@ Screenshots are a manual step — capture these scenes on each required device s
 |---|---|---|---|---|---|---|
 | 6.7-inch iPhone (iPhone 15 Pro Max / 16 Pro Max) | Yes | Today tab with daily minute card | Read tab Workbook spine with search | Lesson detail view | Archive calendar with date selected | Settings with reminder toggle |
 | 6.9-inch iPhone (if required at upload) | Confirm in App Store Connect | Same 5 scenes as above | | | | |
-| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Read tab (full width, readable column) | Lesson detail (full width) | Archive calendar | Saved bookmarks list |
+| 12.9-inch iPad Pro (6th gen) | Yes | Today tab (landscape or portrait) | Read tab (full width) | Lesson detail (full width) | Archive calendar | Saved bookmarks list |
 | Mac (1280×800 or current Mac App Store size) | Yes for Mac App Store | Today window | Read tab | Archive | Saved | Settings / iCloud |
 | Apple Watch (Series 10) | Yes | Today view with minute card | Circular complication on watch face | Rectangular complication on watch face | | |
 | Apple TV (1920×1080) | Yes for tvOS | Today / player | Read | Listen | Archive | |
