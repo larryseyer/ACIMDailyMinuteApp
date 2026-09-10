@@ -72,15 +72,7 @@ Add note stays at the bottom; one play control, audio-first. He confirmed the Ar
 
 - [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
 
-## OPEN — platform expansion
-
-Ranked by his instruction: get it right on the common Apple environment first. tvOS is a player; Windows and Linux are one web reader over the same JSON.
-
-### Phase 1 — iOS and iPadOS
-
-- [ ] At submission, switch visionOS availability on in App Store Connect. Compatible mode; no code.
-
-### Phase 2 — Apple Watch (shape is his)
+## OPEN — Apple Watch (shape is his)
 
 - [ ] HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?
 - [ ] HIS CALL — whether plain-and-true is what a complication should say.
@@ -89,15 +81,9 @@ Ranked by his instruction: get it right on the common Apple environment first. t
 - [ ] HIS CALL — the watch app icon at grid size reads as a photograph.
 - [ ] No Apple Watch is paired to this Mac; WCSession cannot be exercised unpaired.
 
-### Phase 3 — Apple TV
+## OPEN — Apple TV
 
 The TV is a player, and it carries no annotation. Do not re-open either.
-
-### Phase 4 — Windows and Linux (last)
-
-- [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.
-- [ ] It must read and write the same backup `.json`.
-- [ ] The rules are ported, never re-invented.
 
 ## OPEN — content and pipeline
 
@@ -109,3 +95,24 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 - [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
 - [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
 - [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
+
+## OPEN — after 13 September 2026
+
+Do not start any of this until 1.0 (iPhone, iPad, Mac, Watch, Apple TV) has shipped. Compatible-mode on Vision Pro is not this work.
+
+### Vision OS (first)
+
+- [ ] Native visionOS target sharing the app source list, like tvOS — not iPhone-compatible mode.
+- [ ] Windowed reader with the same five tabs as iPhone/Mac; ornaments for chrome; not immersive.
+- [ ] Highlights, notes, Saved, and iCloud round-trip with the other Apple devices.
+- [ ] YouTube via WKWebView (visionOS has WebKit); Listen uses the same archive.org MP3s.
+- [ ] Home View widgets: small, medium, large — no Live Activity.
+- [ ] `#if os(visionOS)` fences; hover instead of tap emphasis; no WatchConnectivity.
+- [ ] Store shots on the Vision Pro simulator + App Store Connect visionOS destination.
+
+### Windows, Linux, and possibly Android (after Vision OS)
+
+- [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.
+- [ ] It must read and write the same backup `.json`.
+- [ ] The rules are ported, never re-invented.
+- [ ] HIS CALL — whether Android is that same PWA, or a later native app.
