@@ -120,7 +120,9 @@ def main():
     ]
     heads = running_head_keys(raw_sections)
     for row in raw_sections:
-        row["body"] = display_body(row["body"], heads)
+        row["body"] = display_body(
+            row["body"], heads, row["chapterNumber"], row["chapterTitle"]
+        )
 
     # `text_paragraphs` is the published reading; `text` feeds narration. Never
     # cross them. Read before the sections are written, because the openings the

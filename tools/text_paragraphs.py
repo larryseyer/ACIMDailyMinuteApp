@@ -32,6 +32,16 @@ def title_key(text):
     return re.sub(r"[^A-Z0-9]", "", text.upper())
 
 
+def heading_key(text):
+    """title_key, ignoring a leading chapter or page number.
+
+    Chapter 11's running heads are `11 GOD'S PLAN FOR SALVATION`. Matching
+    only the title leaves the number on the line, so `is_shouted_heading`
+    cannot see it, and the line is joined into the sentence.
+    """
+    return title_key(re.sub(r"^\d{1,3}\s+", "", text.strip()))
+
+
 def running_head_keys(rows):
     """Every heading that can appear as a running head, as match keys."""
     keys = {title_key("TEXT"), title_key("MIRACLES")}
@@ -53,7 +63,7 @@ def is_shouted_heading(stripped, keys):
     """
     if any(character.islower() for character in stripped):
         return False
-    return title_key(stripped) in keys
+    return heading_key(stripped) in keys
 
 
 def is_furniture(line, keys):
@@ -68,7 +78,7 @@ def is_furniture(line, keys):
         return False
     if re.fullmatch(r"\d{1,3}|[ivxlcdm]{1,7}", stripped):
         return True
-    return title_key(stripped) in keys
+    return heading_key(stripped) in keys
 
 
 def paragraphs(body, keys):
@@ -111,9 +121,28 @@ def paragraphs(body, keys):
     return [re.sub(r"\s+", " ", p).strip() for p in result if p.strip()]
 
 
-def display_body(body, keys):
+def strip_running_heads(text, chapter_number, chapter_title):
+    """Pull a numbered running head out of a display-form paragraph.
+
+    The line-level skip cannot see a head that has already been joined into
+    a sentence. One of Chapter 11's twelve sits on a line-wrap hyphen
+    (`re-` / `inforcement`); that hyphen is the wrap, not the word.
+    """
+    if not chapter_number or not chapter_title:
+        return text
+    title = re.escape(chapter_title)
+    number = re.escape(str(chapter_number))
+    hyphenated = re.compile(
+        rf"(?<=[A-Za-z])- {number} {title} (?=[A-Za-z])"
+    )
+    spaced = re.compile(rf" {number} {title} ")
+    return spaced.sub(" ", hyphenated.sub("", text))
+
+
+def display_body(body, keys, chapter_number=None, chapter_title=None):
     """The section in display form: what the reader sees, verbatim."""
-    return "\n\n".join(paragraphs(body, keys))
+    text = "\n\n".join(paragraphs(body, keys))
+    return strip_running_heads(text, chapter_number, chapter_title)
 
 
 def display_string(raw):
@@ -135,6 +164,26 @@ def display_string(raw):
 # possessive belongs inside the run: matching single characters alone stops at
 # the `’s` and leaves `’s n o t e` in the body.
 LETTER_SPACED = re.compile(r"(?:(?:['\u2019]s|[^\W\d_]) ){3,}", re.UNICODE)
+
+
+def _self_check():
+    title = "GOD’S PLAN FOR SALVATION"
+    keep = "The Holy Spirit does not need your help in this."
+    if strip_running_heads(keep, 11, title) != keep:
+        raise SystemExit(f"FAIL ate prose: {keep!r}")
+    glued = "God’s answer 11 GOD’S PLAN FOR SALVATION to YOU."
+    got = strip_running_heads(glued, 11, title)
+    if got != "God’s answer to YOU.":
+        raise SystemExit(f"FAIL strip {glued!r} -> {got!r}")
+    wrapped = "this as re- 11 GOD’S PLAN FOR SALVATION inforcement."
+    got = strip_running_heads(wrapped, 11, title)
+    if got != "this as reinforcement.":
+        raise SystemExit(f"FAIL hyphen {wrapped!r} -> {got!r}")
+    keys = {title_key(title), title_key("TEXT")}
+    if not is_shouted_heading("11 GOD’S PLAN FOR SALVATION", keys):
+        raise SystemExit("FAIL numbered running head is not furniture")
+    if is_shouted_heading('To HAVE, GIVE all TO all', keys):
+        raise SystemExit("FAIL quoted title with lowercase was eaten")
 
 
 def verify(rows):
@@ -182,6 +231,21 @@ def verify(rows):
             elif is_shouted_heading(stripped, keys):
                 furniture.append((where, stripped[:60]))
 
+    running = []
+    by_chapter = {}
+    for row in rows:
+        by_chapter.setdefault(row["chapterNumber"], row["chapterTitle"])
+    for row in rows:
+        title = by_chapter.get(row["chapterNumber"])
+        if not title or not row["chapterNumber"]:
+            continue
+        pattern = re.compile(
+            rf"{re.escape(str(row['chapterNumber']))} {re.escape(title)}"
+        )
+        where = f"{row['chapterNumber']}.{row['sectionNumber']}"
+        for match in pattern.finditer(row["body"]):
+            running.append((where, match.group()))
+
     return {
         "sections": len(rows),
         "paragraphs": total,
@@ -189,6 +253,7 @@ def verify(rows):
         "page_furniture": furniture,
         "mid_sentence_breaks": broken,
         "letter_spaced_headings": letter_spaced,
+        "running_heads_in_prose": running,
     }
 
 
@@ -197,15 +262,33 @@ if __name__ == "__main__":
     import sys
     from pathlib import Path
 
+    _self_check()
+
     path = (
         Path(__file__).resolve().parent.parent
         / "ACIMDailyMinute" / "Resources" / "ACIMTextSections.json"
     )
-    report = verify(json.loads(path.read_text(encoding="utf-8")))
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    write = "--write" in sys.argv
+    if write:
+        rewritten = 0
+        for row in rows:
+            cleaned = strip_running_heads(
+                row["body"], row["chapterNumber"], row["chapterTitle"]
+            )
+            if cleaned != row["body"]:
+                row["body"] = cleaned
+                rewritten += 1
+        path.write_text(
+            json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8"
+        )
+        print(f"rewrote {rewritten} sections")
+
+    report = verify(rows)
     print(f"sections: {report['sections']}  paragraphs: {report['paragraphs']}")
     failed = False
     for name in ("not_display_form", "page_furniture", "mid_sentence_breaks",
-                 "letter_spaced_headings"):
+                 "letter_spaced_headings", "running_heads_in_prose"):
         entries = report[name]
         print(f"{name}: {len(entries)}")
         for entry in entries[:10]:
