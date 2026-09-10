@@ -66,9 +66,9 @@ ACIM,A Course in Miracles,daily,lesson,meditation,contemplation,spiritual,mindfu
 
 ## Support URL
 
-https://www.acimdailyminute.org/help.html
+https://www.acimdailyminute.org/support.html
 
-> Help copy lives in `store-support-page.md`. Do not point App Store Connect at `support.html` — that page is currently a donate page.
+> Live help page. Donate is a separate page at `donations.html`. `help.html` is a 404.
 
 ## Marketing URL
 

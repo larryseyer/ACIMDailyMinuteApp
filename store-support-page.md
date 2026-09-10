@@ -1,16 +1,14 @@
-# Help — ACIM Daily Minute
+# Support — ACIM Daily Minute
 
-Publish this as a real help page (not the donate page). Suggested URL:
+Live page (verified 2026-09-10):
 
-`https://www.acimdailyminute.org/help.html`
+`https://www.acimdailyminute.org/support.html`
 
-Then put that URL in App Store Connect as the Support URL.
+Put that URL in App Store Connect as the Support URL. Donate is `donations.html`. `help.html` is a 404.
 
-The current `support.html` page is a donate page. Apple’s Support URL is where a person goes when something is wrong with the app. Keep donate somewhere else (for example `donate.html`).
+The copy below was an earlier draft. The live page is the one that ships.
 
 ---
-
-Use this copy on the page.
 
 ## Title
 
@@ -89,4 +87,4 @@ This app does not represent the Foundation for Inner Peace. It does not use FIP�
 
 ## Donate
 
-The app is free to use. If you want to help with audio, video, and hosting costs, that is a separate page: [Support the work](https://www.acimdailyminute.org/support.html) (the current donate page — move it if you reuse this filename).
+The app is free to use. If you want to help with audio, video, and hosting costs, that is a separate page: [Donations](https://www.acimdailyminute.org/donations.html).
