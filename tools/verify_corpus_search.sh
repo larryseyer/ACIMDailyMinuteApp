@@ -33,13 +33,14 @@ load = lambda n: json.loads((resources / n).read_text(encoding="utf-8"))
 records = []
 for s in load("ACIMTextSections.json"):
     records.append({"title": f"T-{s['chapterNumber']}.{s['sectionNumber']} {s['sectionTitle']}", "body": s["body"]})
-intros = {i["lessonNumber"]: i for i in load("WorkbookIntroductions.json")}
+intros = load("WorkbookIntroductions.json")
+by_before = {}
+for intro in intros:
+    by_before.setdefault(intro["insertBefore"], []).append(intro)
 bodies = {b["lessonNumber"]: b["body"] for b in load("Workbook365Bodies.json")}
-records.append({"title": intros[0]["title"], "body": intros[0]["body"]})
-for n in range(1, 181):
-    records.append({"title": f"Lesson {n}", "body": bodies[n]})
-records.append({"title": intros[500]["title"], "body": intros[500]["body"]})
-for n in range(181, 366):
+for n in range(1, 366):
+    for intro in by_before.get(n, []):
+        records.append({"title": intro["title"], "body": intro["body"]})
     records.append({"title": f"Lesson {n}", "body": bodies[n]})
 for m in load("ACIMManual.json"):
     records.append({"title": f"Manual {m['segmentId']}", "body": m["body"]})

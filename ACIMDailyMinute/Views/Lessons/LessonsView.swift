@@ -288,11 +288,8 @@ private struct FilteredLessonsList: View {
                         .listRowBackground(Color.clear)
                 }
                 ForEach(visible, id: \.self) { n in
-                    if n == 1 {
-                        introductionRow(0)
-                    }
-                    if n == 181 {
-                        introductionRow(500)
+                    ForEach(Self.introductions(before: n), id: \.lessonNumber) { intro in
+                        introductionRow(intro.lessonNumber)
                     }
                     LessonRow(
                         lessonNumber: n,
@@ -319,12 +316,15 @@ private struct FilteredLessonsList: View {
         }
     }
 
-    /// The Workbook opens with an introduction, and Part II opens with its own.
-    /// They ride alongside the lesson they precede rather than being inserted
-    /// into the 1...365 spine, so the list's rows stay plain integers and a
-    /// lesson number is still its own row id. The title comes from the corpus
-    /// rather than from a literal here, so the row and the reading can never
-    /// disagree about its name.
+    /// Introductions ride alongside the lesson they precede rather than being
+    /// inserted into the 1...365 spine, so the list's rows stay plain integers
+    /// and a lesson number is still its own row id. The title comes from the
+    /// corpus rather than from a literal here, so the row and the reading can
+    /// never disagree about its name.
+    private static func introductions(before lessonNumber: Int) -> [WorkbookIntroduction] {
+        WorkbookBodiesCatalog.allIntroductions.filter { $0.insertBefore == lessonNumber }
+    }
+
     @ViewBuilder
     private func introductionRow(_ lessonNumber: Int) -> some View {
         if let intro = WorkbookBodiesCatalog.introduction(for: lessonNumber) {

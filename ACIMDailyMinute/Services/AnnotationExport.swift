@@ -52,8 +52,9 @@ enum AnnotationExport {
         "References like T-5.3.7 are chapter, section and paragraph of the "
         + "edition this app carries — the one whose Text opens with "
         + "\"Introduction to Miracles\" and lists 53 miracle principles. "
-        + "W-45.3 is Workbook lesson and paragraph, Pref.4 is the Preface, and "
-        + "W-pI.in.2 is the introduction to a part of the Workbook."
+        + "W-45.3 is Workbook lesson and paragraph, Pref.4 is the Preface, "
+        + "W-pI.in.2 is a Part Introduction, W-r1.in.2 a Review introduction, "
+        + "and W-w1.in.2 a What Is introduction."
 
     /// The formatter the export reads dates through.
     ///

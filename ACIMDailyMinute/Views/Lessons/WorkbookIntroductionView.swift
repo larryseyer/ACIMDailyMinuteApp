@@ -7,12 +7,12 @@ struct IntroductionRef: Hashable {
     var spotlight: ReadingSpotlight? = nil
 }
 
-/// One of the Workbook's two Part Introductions.
+/// A Workbook introduction outside the 1-365 spine.
 ///
 /// Separate from `LessonDetailView` on purpose: that screen resolves three
 /// states against the feed and names itself "Lesson N", and neither is right for
 /// a reading that has no number and was never published as a daily lesson. The
-/// annotation key is still `.lesson(0)` / `.lesson(500)`, which already stores.
+/// annotation key is still `.lesson(id)`, which already stores.
 struct WorkbookIntroductionView: View {
     let lessonNumber: Int
     var spotlight: ReadingSpotlight? = nil
@@ -27,7 +27,7 @@ struct WorkbookIntroductionView: View {
         bookmarks.contains { $0.itemKey == itemKey }
     }
 
-    private var reading: (title: String, body: String)? {
+    private var reading: WorkbookIntroduction? {
         WorkbookBodiesCatalog.introduction(for: lessonNumber)
     }
 

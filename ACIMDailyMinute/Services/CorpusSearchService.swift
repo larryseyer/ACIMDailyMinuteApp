@@ -11,13 +11,14 @@ struct SearchEntry: Sendable {
 /// record is. `CorpusSearch` stays pure; this is the one place that touches
 /// `CorpusService`, the catalogs and `ReadingText`.
 ///
-/// An actor so the build — `displayString` over 744 bodies, then the fold —
-/// happens off the main thread on the first non-empty query and never again.
+/// An actor so the build — `displayString` over every bundled body, then the
+/// fold — happens off the main thread on the first non-empty query and never
+/// again.
 actor CorpusSearchService {
     static let shared = CorpusSearchService()
 
-    /// Book order: the Text, then the Workbook with its two Part Introductions
-    /// in place, then the Manual. Parallel to `index().records`.
+    /// Book order: the Text, then the Workbook with each introduction in front
+    /// of the lesson it precedes, then the Manual. Parallel to `index().records`.
     nonisolated let entries: [SearchEntry]
     private let bodies: [String]
     private var cached: SearchIndex?
@@ -35,26 +36,32 @@ actor CorpusSearchService {
             bodies.append(section.body)
         }
 
-        func addIntroduction(_ number: Int) {
-            guard let intro = WorkbookBodiesCatalog.introduction(for: number) else { return }
-            entries.append(SearchEntry(key: .lesson(number), title: intro.title, subtitle: "Workbook for Students"))
+        func addIntroduction(_ intro: WorkbookIntroduction) {
+            entries.append(SearchEntry(
+                key: .lesson(intro.lessonNumber),
+                title: intro.title,
+                subtitle: "Workbook for Students"
+            ))
             bodies.append(intro.body)
         }
-        func addLessons(_ range: ClosedRange<Int>) {
-            for n in range {
-                guard let body = WorkbookBodiesCatalog.body(for: n) else { continue }
-                entries.append(SearchEntry(
-                    key: .lesson(n),
-                    title: "Lesson \(n)",
-                    subtitle: WorkbookCatalog.title(for: n)
-                ))
-                bodies.append(body)
-            }
+        func addLesson(_ n: Int) {
+            guard let body = WorkbookBodiesCatalog.body(for: n) else { return }
+            entries.append(SearchEntry(
+                key: .lesson(n),
+                title: "Lesson \(n)",
+                subtitle: WorkbookCatalog.title(for: n)
+            ))
+            bodies.append(body)
         }
-        addIntroduction(0)
-        addLessons(1...180)
-        addIntroduction(500)
-        addLessons(181...365)
+        let intros = WorkbookBodiesCatalog.allIntroductions
+        var nextIntro = 0
+        for n in 1...365 {
+            while nextIntro < intros.count, intros[nextIntro].insertBefore == n {
+                addIntroduction(intros[nextIntro])
+                nextIntro += 1
+            }
+            addLesson(n)
+        }
 
         for segment in corpus.manual {
             entries.append(SearchEntry(key: .manual(segment.segmentId), title: "Manual for Teachers", subtitle: nil))
@@ -102,7 +109,7 @@ actor CorpusSearchService {
         guard let query = SearchFold.normalizedQuery(trimmed) else { return result }
         for entry in entries {
             switch entry.key {
-            case .lesson(let n) where n == 0 || n == 500:
+            case .lesson(let n) where WorkbookBodiesCatalog.isIntroduction(n):
                 if SearchFold.fold(entry.title).contains(query) { result.append(entry) }
             case .lesson:
                 if let subtitle = entry.subtitle, SearchFold.fold(subtitle).contains(query) { result.append(entry) }

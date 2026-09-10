@@ -104,7 +104,7 @@ struct ReadSearchResultsList: View {
         switch key {
         case .textSection(let chapter, let section):
             NavigationLink(value: TextSectionRef(chapter: chapter, section: section, spotlight: spotlight), label: label)
-        case .lesson(let n) where n == 0 || n == 500:
+        case .lesson(let n) where WorkbookBodiesCatalog.isIntroduction(n):
             NavigationLink(value: IntroductionRef(lessonNumber: n, spotlight: spotlight), label: label)
         case .lesson(let n):
             NavigationLink(value: LessonRef(lessonNumber: n, spotlight: spotlight), label: label)

@@ -238,9 +238,9 @@ extension ReadingKey {
     func savedDestination(spotlight: ReadingSpotlight? = nil) -> SavedDestination? {
         switch self {
         case .lesson(let n):
-            // 0 and 500 are the two Part Introductions, which have their own
-            // screen because they have no lesson number to be titled with.
-            if n == 0 || n == 500 {
+            // Introductions have their own screen because they have no lesson
+            // number to be titled with.
+            if WorkbookBodiesCatalog.isIntroduction(n) {
                 return .introduction(IntroductionRef(lessonNumber: n, spotlight: spotlight))
             }
             guard (1...365).contains(n) else { return nil }

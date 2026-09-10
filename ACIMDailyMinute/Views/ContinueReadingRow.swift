@@ -51,7 +51,7 @@ struct ContinueReadingRow: View {
             NavigationLink(value: TextSectionRef(chapter: chapter, section: section)) { label }
                 .buttonStyle(.plain)
             #endif
-        case .lesson(let number) where number == 0 || number == 500:
+        case .lesson(let number) where WorkbookBodiesCatalog.isIntroduction(number):
             #if os(tvOS)
             Button { openPlayer(.workbookLesson(number)) } label: { label }
                 .buttonStyle(.plain)

@@ -27,7 +27,8 @@ sys.path.insert(0, str(repo / "tools"))
 # retyped here. Retyped expectations would agree with a Python renderer that had
 # drifted, the export would write a format Swift cannot parse, every check would
 # still pass, and every Daily Minute would quietly fall back to a book name.
-from citations import introduction_citation, lesson_citation, text_citation
+from citations import (introduction_citation, lesson_citation, review_citation,
+                       text_citation, what_is_citation)
 
 # Every shape of the format, including the ones that must be REFUSED. A parser
 # that accepts "T-5.3" as a citation would silently drop the paragraph.
@@ -43,11 +44,18 @@ for n in (1, 45, 180, 365):
     render.append({"raw": raw, "stem": raw.rsplit(".", 1)[0], "paragraph": 3})
 render.append({"raw": introduction_citation(0, 2), "stem": "W-pI.in", "paragraph": 2})
 render.append({"raw": introduction_citation(500, 1), "stem": "W-pII.in", "paragraph": 1})
+render.append({"raw": review_citation(1, 2), "stem": "W-r1.in", "paragraph": 2})
+render.append({"raw": review_citation(6, 1), "stem": "W-r6.in", "paragraph": 1})
+render.append({"raw": what_is_citation(1, 1), "stem": "W-w1.in", "paragraph": 1})
+render.append({"raw": what_is_citation(10, 1), "stem": "W-w10.in", "paragraph": 1})
+render.append({"raw": what_is_citation(14, 3), "stem": "W-w14.in", "paragraph": 3})
 
 refuse = ["", " ", "T-5.3", "T-5.3.7.1", "T-.3.7", "T-5.3.", "T-a.b.c", "Pref",
           "Pref.", "Pref.0", "W-", "W-45", "W-45.", "W-0.1", "W-366.1",
           "W-45.0", "W-pI.in", "W-pIII.in.1", "M-1.1", "5.3.7", "t-5.3.7",
-          "T-5.0.1", "T--1.1.1", "W-pI.in.0"]
+          "T-5.0.1", "T--1.1.1", "W-pI.in.0", "W-r0.in.1", "W-r7.in.1",
+          "W-rI.in.1", "W-r1.in", "W-r1.in.0", "W-w0.in.1", "W-w15.in.1",
+          "W-w1.in"]
 
 # What actually shipped. The generated cases prove the two renderers agree on
 # the shapes we thought of; this proves Swift can read every citation that is

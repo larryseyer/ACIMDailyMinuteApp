@@ -82,7 +82,7 @@ struct TVPlayerItem: Identifiable, Hashable, Sendable {
             ?? ""
         return TVPlayerItem(
             id: "archive-lesson:\(number)",
-            eyebrow: (number == 0 || number == 500) ? "Introduction" : "Lesson \(number)",
+            eyebrow: WorkbookBodiesCatalog.isIntroduction(number) ? "Introduction" : "Lesson \(number)",
             title: title,
             text: body,
             citation: nil,

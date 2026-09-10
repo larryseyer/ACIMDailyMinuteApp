@@ -94,7 +94,9 @@ struct BookmarkRow: View {
             // for any valid number, so a lesson bookmark always has somewhere
             // to go even when its text has not been fetched on this device.
             guard let n = Int(parsedToken) else { return nil }
-            if n == 0 || n == 500 { return .introduction(IntroductionRef(lessonNumber: n)) }
+            if WorkbookBodiesCatalog.isIntroduction(n) {
+                return .introduction(IntroductionRef(lessonNumber: n))
+            }
             guard (1...365).contains(n) else { return nil }
             return .lesson(LessonRef(lessonNumber: n, presentsVideo: false))
         }
@@ -174,7 +176,7 @@ struct BookmarkRow: View {
     private var headerLabel: String {
         if parsedChannel == "lesson" {
             guard let n = Int(parsedToken) else { return "Lesson" }
-            if n == 0 || n == 500 { return "Introduction" }
+            if WorkbookBodiesCatalog.isIntroduction(n) { return "Introduction" }
             return "Lesson \(n)"
         }
         if parsedChannel == "text" {

@@ -21,15 +21,13 @@ enum CitationResolver {
             // as `citation` is below. A stem that appears for a reading whose
             // address `citation` then refuses is the kind of disagreement that
             // shows up as a heading naming a place no export can cite.
-            switch number {
-            case 0, 500:
-                guard WorkbookBodiesCatalog.introduction(for: number) != nil else { return nil }
-                return number == 0 ? "W-pI.in" : "W-pII.in"
-            case 1...365:
-                guard WorkbookBodiesCatalog.body(for: number) != nil else { return nil }
-                return "W-\(number)"
-            default: return nil
+            if let intro = WorkbookBodiesCatalog.introduction(for: number) {
+                return intro.citationStem
             }
+            guard (1...365).contains(number),
+                  WorkbookBodiesCatalog.body(for: number) != nil
+            else { return nil }
+            return "W-\(number)"
         case .segment(let id):
             return corpus.segment(id: id)?.parsedCitation?.stem
         case .manual, .minuteDate:
@@ -57,12 +55,8 @@ enum CitationResolver {
             return ReadingText.displayString(from: reading.body)
 
         case .lesson(let number):
-            let body: String?
-            switch number {
-            case 0, 500: body = WorkbookBodiesCatalog.introduction(for: number)?.body
-            case 1...365: body = WorkbookBodiesCatalog.body(for: number)
-            default: body = nil
-            }
+            let body = WorkbookBodiesCatalog.introduction(for: number)?.body
+                ?? ((1...365).contains(number) ? WorkbookBodiesCatalog.body(for: number) : nil)
             guard let body else { return nil }
             return ReadingText.displayString(from: body)
 
@@ -95,12 +89,11 @@ enum CitationResolver {
                 : .text(chapter: chapter, section: section, paragraph: paragraph)
 
         case .lesson(let number):
-            switch number {
-            case 0: return .partIntroduction(part: 1, paragraph: paragraph)
-            case 500: return .partIntroduction(part: 2, paragraph: paragraph)
-            case 1...365: return .lesson(number: number, paragraph: paragraph)
-            default: return nil
+            if let intro = WorkbookBodiesCatalog.introduction(for: number) {
+                return Citation(rawValue: "\(intro.citationStem).\(paragraph)")
             }
+            guard (1...365).contains(number) else { return nil }
+            return .lesson(number: number, paragraph: paragraph)
 
         case .segment, .manual, .minuteDate:
             return nil
@@ -151,10 +144,12 @@ enum CitationResolver {
             guard let spotlight = paragraphSpotlight(paragraph, of: .lesson(number), corpus: corpus) else { return nil }
             return .lesson(LessonRef(lessonNumber: number, spotlight: spotlight, presentsVideo: false))
 
-        case .partIntroduction(let part, let paragraph):
-            let lessonNumber = part == 1 ? 0 : 500
-            guard let spotlight = paragraphSpotlight(paragraph, of: .lesson(lessonNumber), corpus: corpus) else { return nil }
-            return .introduction(IntroductionRef(lessonNumber: lessonNumber, spotlight: spotlight))
+        case .partIntroduction, .reviewIntroduction, .whatIsIntroduction:
+            guard let intro = WorkbookBodiesCatalog.introduction(withStem: citation.stem) else { return nil }
+            guard let spotlight = paragraphSpotlight(
+                citation.paragraph, of: .lesson(intro.lessonNumber), corpus: corpus
+            ) else { return nil }
+            return .introduction(IntroductionRef(lessonNumber: intro.lessonNumber, spotlight: spotlight))
         }
     }
 

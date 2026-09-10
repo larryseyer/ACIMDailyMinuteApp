@@ -22,15 +22,14 @@ extension ReadingKey {
     func displayName(corpus: CorpusService = .shared) -> String {
         let base: String
         switch self {
-        case .lesson(0), .lesson(500):
-            // The two Part Introductions are keyed as lessons because that is
-            // where their annotations already store, but they are not lessons and
-            // naming them "Lesson 0" and "Lesson 500" — which this line did — is
-            // wrong on the Saved row and wrong forever in an export. The title
-            // comes from the corpus rather than a literal, so the row and the
-            // screen cannot disagree.
-            let number = if case .lesson(let n) = self { n } else { 0 }
-            base = WorkbookBodiesCatalog.introduction(for: number)?.title
+        case .lesson(let n) where WorkbookBodiesCatalog.isIntroduction(n):
+            // Introductions are keyed as lessons because that is where their
+            // annotations already store, but they are not lessons and naming
+            // them "Lesson 0" — which this line did — is wrong on the Saved
+            // row and wrong forever in an export. The title comes from the
+            // corpus rather than a literal, so the row and the screen cannot
+            // disagree.
+            base = WorkbookBodiesCatalog.introduction(for: n)?.title
                 ?? "Workbook Introduction"
         case .lesson(let n):
             if let title = WorkbookCatalog.title(for: n) {

@@ -14,6 +14,7 @@ from chapter_openings import recovered_sections, splice
 from citations import addressable_paragraphs, locate
 from punctuation_spacing import repair
 from text_paragraphs import display_body, running_head_keys
+from workbook_introductions import merge_introductions, split_lessons
 
 DB = Path("/Volumes/MacLive/Users/larryseyer/acim-daily-minute/data/acim.db")
 OUT = Path(__file__).resolve().parent.parent / "ACIMDailyMinute" / "Resources"
@@ -25,7 +26,7 @@ EXPECTED = {
     "ACIMTextSections.json": 272,
     "ACIMManual.json": 105,
     "ACIMSegments.json": 1983,
-    "WorkbookIntroductions.json": 2,
+    "WorkbookIntroductions.json": 22,
 }
 
 
@@ -91,8 +92,9 @@ def main():
         sys.exit(f"FAIL: {DB} not reachable. Is the MacLive share mounted?")
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 
-    # Workbook bodies 1-365. Ids 0 and 500 are the two Part Introductions and
-    # belong to Spec 2, which handles Workbook content outside the 1-365 spine.
+    # Workbook bodies 1-365. Introductions live outside that spine: the PDF
+    # extractor glued each Review, Part II, and What Is reading to the lesson
+    # before it, and `split_lessons` is what pulls them back out.
     lesson_rows = [
         {"lessonNumber": r[0], "body": r[1]}
         for r in conn.execute(
@@ -101,7 +103,7 @@ def main():
             "ORDER BY id"
         )
     ]
-    write("Workbook365Bodies.json", lesson_rows)
+    lesson_rows, extracted = split_lessons(lesson_rows)
 
     # The Text is the only corpus without a curated `text_paragraphs` column,
     # so its paragraph structure is recovered here rather than in the app.
@@ -134,15 +136,20 @@ def main():
           f"{len(raw_sections)} sections total")
     write("ACIMTextSections.json", raw_sections)
 
-    # Lesson ids 0 and 500 are the two Part Introductions. They sit outside the
-    # 1-365 spine, which is why Workbook365Bodies.json cannot hold them and why
-    # they had nowhere to appear until the Read tab gave them one.
-    introduction_rows = [
-        {"lessonNumber": r[0], "title": r[1], "body": r[2]}
-        for r in conn.execute(
-            "SELECT id, title, text FROM lessons WHERE id IN (0, 500) ORDER BY id"
-        )
-    ]
+    # Lesson ids 0 and 500 are the two Part Introductions in the pipeline
+    # database. Reviews and What Is readings come from the split above; Part 2
+    # takes the extracted body so the two paragraphs the database copy drops
+    # are not missing from the bundle.
+    introduction_rows = merge_introductions(
+        [
+            {"lessonNumber": r[0], "title": r[1], "body": r[2]}
+            for r in conn.execute(
+                "SELECT id, title, text FROM lessons WHERE id IN (0, 500) ORDER BY id"
+            )
+        ],
+        extracted,
+    )
+    write("Workbook365Bodies.json", lesson_rows)
     write("WorkbookIntroductions.json", introduction_rows)
 
     write("ACIMManual.json", [

@@ -107,8 +107,6 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — content and pipeline
 
-- [ ] Every Workbook introduction is glued to the foot of the lesson before it.
-- [ ] `WorkbookIntroductions.json` entry 500 is two paragraphs short.
 - [ ] HIS CALL — `Pref.N` names two paragraphs; fixing it changes a citation already printed into exports.
 - [ ] Letter-spaced headings still sit inside lesson, Manual, and segment text.
 - [ ] Eleven running heads survive inside Chapter 11's prose.

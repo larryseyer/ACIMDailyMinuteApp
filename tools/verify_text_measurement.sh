@@ -68,7 +68,7 @@ take(load("ACIMTextSections.json"), "text", 12)
 take(load("Workbook365Bodies.json"), "lesson", 12)
 take(load("ACIMSegments.json"), "segment", 12)
 take(load("ACIMManual.json"), "manual", 6)
-take(load("WorkbookIntroductions.json"), "introduction", 2)
+take(load("WorkbookIntroductions.json"), "introduction", 6)
 
 # The shortest real body in the bundle, which is where a collapse hides best.
 shortest = min(

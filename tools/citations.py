@@ -93,10 +93,30 @@ def lesson_citation(lesson_number, paragraph):
     return f"W-{lesson_number}.{paragraph}"
 
 
-def introduction_citation(lesson_number, paragraph):
-    """Lesson ids 0 and 500 are the two Part Introductions."""
-    part = "I" if lesson_number == 0 else "II"
-    return f"W-p{part}.in.{paragraph}"
+def introduction_citation(lesson_number, paragraph, stem=None):
+    """An introduction's address. The stem travels with the row.
+
+    Lesson ids 0 and 500 are the two Part Introductions; reviews are
+    `W-rN.in` and the What Is readings are `W-wN.in`. Passing `stem`
+    is the path `addressable_paragraphs` takes, so a new introduction
+    cannot silently inherit Part II's address.
+    """
+    if stem is None:
+        if lesson_number == 0:
+            stem = "W-pI.in"
+        elif lesson_number == 500:
+            stem = "W-pII.in"
+        else:
+            raise ValueError(f"no citation stem for introduction {lesson_number}")
+    return f"{stem}.{paragraph}"
+
+
+def review_citation(number, paragraph):
+    return f"W-r{number}.in.{paragraph}"
+
+
+def what_is_citation(number, paragraph):
+    return f"W-w{number}.in.{paragraph}"
 
 
 def addressable_paragraphs(sections, lessons, introductions):
@@ -129,7 +149,8 @@ def addressable_paragraphs(sections, lessons, introductions):
         for section in sections
     ]
     workbook_groups = [
-        ((lambda i, r=row: introduction_citation(r["lessonNumber"], i)), row["body"])
+        ((lambda i, r=row: introduction_citation(
+            r["lessonNumber"], i, r.get("citationStem"))), row["body"])
         for row in introductions
     ] + [
         ((lambda i, r=row: lesson_citation(r["lessonNumber"], i)), row["body"])

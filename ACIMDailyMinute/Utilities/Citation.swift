@@ -28,6 +28,11 @@ enum Citation: Hashable, Sendable {
     case lesson(number: Int, paragraph: Int)
     /// The two Workbook Part Introductions, which sit outside the 1-365 spine.
     case partIntroduction(part: Int, paragraph: Int)
+    /// Review I...VI. Arabic so the form cannot be mistaken for the
+    /// widely-cited edition's `W-rI.in`.
+    case reviewIntroduction(number: Int, paragraph: Int)
+    /// The fourteen What Is essays that open each ten-lesson group in Part II.
+    case whatIsIntroduction(number: Int, paragraph: Int)
 
     var rawValue: String {
         switch self {
@@ -39,6 +44,10 @@ enum Citation: Hashable, Sendable {
             "W-\(number).\(paragraph)"
         case .partIntroduction(let part, let paragraph):
             "W-p\(part == 1 ? "I" : "II").in.\(paragraph)"
+        case .reviewIntroduction(let number, let paragraph):
+            "W-r\(number).in.\(paragraph)"
+        case .whatIsIntroduction(let number, let paragraph):
+            "W-w\(number).in.\(paragraph)"
         }
     }
 
@@ -50,6 +59,8 @@ enum Citation: Hashable, Sendable {
         case .preface: "Pref"
         case .lesson(let number, _): "W-\(number)"
         case .partIntroduction(let part, _): "W-p\(part == 1 ? "I" : "II").in"
+        case .reviewIntroduction(let number, _): "W-r\(number).in"
+        case .whatIsIntroduction(let number, _): "W-w\(number).in"
         }
     }
 
@@ -59,6 +70,8 @@ enum Citation: Hashable, Sendable {
         case .preface(let paragraph): paragraph
         case .lesson(_, let paragraph): paragraph
         case .partIntroduction(_, let paragraph): paragraph
+        case .reviewIntroduction(_, let paragraph): paragraph
+        case .whatIsIntroduction(_, let paragraph): paragraph
         }
     }
 
@@ -71,8 +84,8 @@ enum Citation: Hashable, Sendable {
             return value
         }
 
-        // Order matters: the Part Introductions share the "W-" prefix and must
-        // be recognised before the lesson form gets a chance to mis-parse them.
+        // Order matters: Part, Review and What Is introductions share the "W-"
+        // prefix and must be recognised before the lesson form.
         if rawValue.hasPrefix("T-") {
             let parts = rawValue.dropFirst(2).split(
                 separator: ".", omittingEmptySubsequences: false
@@ -92,6 +105,24 @@ enum Citation: Hashable, Sendable {
         } else if rawValue.hasPrefix("W-pII.in.") {
             guard let paragraph = positive(rawValue.dropFirst(9)) else { return nil }
             self = .partIntroduction(part: 2, paragraph: paragraph)
+        } else if rawValue.hasPrefix("W-r") {
+            let parts = rawValue.dropFirst(3).split(
+                separator: ".", omittingEmptySubsequences: false
+            )
+            guard parts.count == 3, parts[1] == "in",
+                  let number = positive(parts[0]), (1...6).contains(number),
+                  let paragraph = positive(parts[2])
+            else { return nil }
+            self = .reviewIntroduction(number: number, paragraph: paragraph)
+        } else if rawValue.hasPrefix("W-w") {
+            let parts = rawValue.dropFirst(3).split(
+                separator: ".", omittingEmptySubsequences: false
+            )
+            guard parts.count == 3, parts[1] == "in",
+                  let number = positive(parts[0]), (1...14).contains(number),
+                  let paragraph = positive(parts[2])
+            else { return nil }
+            self = .whatIsIntroduction(number: number, paragraph: paragraph)
         } else if rawValue.hasPrefix("W-") {
             let parts = rawValue.dropFirst(2).split(
                 separator: ".", omittingEmptySubsequences: false

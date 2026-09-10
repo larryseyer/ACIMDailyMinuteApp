@@ -54,7 +54,7 @@ if __name__ == "__main__":
         "Workbook365Bodies.json": 365,
         "ACIMSegments.json": 1983,
         "ACIMManual.json": 105,
-        "WorkbookIntroductions.json": 2,
+        "WorkbookIntroductions.json": 22,
     }
 
     failed = False

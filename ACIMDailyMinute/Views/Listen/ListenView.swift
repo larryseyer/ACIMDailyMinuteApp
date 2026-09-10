@@ -415,7 +415,7 @@ struct ListenView: View {
             let passage = lessonPassage(number: number, fallbackTitle: episode.title)
             openPlayer(TVPlayerItem(
                 id: "listen:\(episode.id)",
-                eyebrow: (number == 0 || number == 500) ? "Introduction" : "Lesson \(number)",
+                eyebrow: WorkbookBodiesCatalog.isIntroduction(number) ? "Introduction" : "Lesson \(number)",
                 title: passage.title,
                 text: passage.body,
                 citation: nil,
