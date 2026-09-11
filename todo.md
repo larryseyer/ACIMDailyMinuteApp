@@ -9,6 +9,9 @@ One sentence per item, two at the most. Current and future only. Git is history.
 - [ ] tvOS Read opens the reading, not the player. Today stays player-first.
 - [ ] Onboarding, App Store listing, and support copy: Video is no longer “browse by date.”
 - [ ] Shared shelf chrome so Read / Listen / Video cannot drift.
+- [ ] iOS/macOS composed player with no MP3 has no Close until the crawl ends (transport is gated on audio).
+- [ ] Mac Video sheets have no min frame; Listen’s YouTube sheet is 720×405.
+- [ ] Unnarrated compose does not stop Listen audio that is already playing.
 
 ## HIS CALL
 
