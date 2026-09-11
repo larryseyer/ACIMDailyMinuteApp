@@ -50,11 +50,6 @@ extension View {
     /// so that ref is declared here too, or reading onward from a linked
     /// section dead-ends.
     func readingDestinations(path: Binding<NavigationPath>) -> some View {
-        #if os(tvOS)
-        self.environment(\.openReading, OpenReadingAction { _ in
-            assertionFailure("A reading link was tapped on the television; Read opens the player, not a pushed reading.")
-        })
-        #else
         self
             .navigationDestination(for: ReadingDestination.self) { destination in
                 switch destination {
@@ -78,6 +73,5 @@ extension View {
             .environment(\.openReading, OpenReadingAction { destination in
                 path.wrappedValue.append(destination)
             })
-        #endif
     }
 }

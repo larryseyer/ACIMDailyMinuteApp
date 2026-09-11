@@ -3,10 +3,10 @@ import SwiftUI
 /// Compact sheet that lets a reader jump directly to any workbook lesson 1–365.
 ///
 /// Reports the number through `onJump` and dismisses. The parent decides what
-/// that number means: on iOS it pushes the lesson; on tvOS it must wait until
-/// this sheet is gone before opening the player. Opening the player from
-/// inside the sheet nested two presentations and crashed
-/// (ACIMDailyMinuteTV-2026-09-09-105807.ips).
+/// that number means: it pushes the lesson. Do not present the player from
+/// inside this sheet — that nested two presentations and crashed
+/// (ACIMDailyMinuteTV-2026-09-09-105807.ips). On tvOS the parent waits until
+/// this sheet is gone, then pushes.
 ///
 /// Validation is strict and silent until the reader has typed something: the
 /// Go button is disabled while the trimmed input isn't a valid 1…365 integer,

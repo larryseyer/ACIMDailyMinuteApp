@@ -21,12 +21,11 @@ import SwiftData
 ///   * `.searchable` — one field for the whole Course; see ReadSearchResultsList.
 ///   * Jump-to-N sheet — toolbar button opens `JumpToLessonSheet`, which
 ///     reports the number. iOS appends it to `NavigationPath`; tvOS holds
-///     it until the sheet has dismissed, then opens the player.
+///     it until the sheet has dismissed, then pushes the lesson. Opening
+///     the player from inside that sheet nested two presentations and
+///     crashed (ACIMDailyMinuteTV-2026-09-09-105807.ips).
 struct LessonsView: View {
     @Environment(AudioManager.self) private var audio
-    #if os(tvOS)
-    @Environment(\.openPlayer) private var openPlayer
-    #endif
     @Query(sort: \DailyLesson.lessonNumber) private var lessons: [DailyLesson]
     @Query(
         filter: #Predicate<ArchivedReading> { $0.channel == "daily-lesson" },
@@ -132,11 +131,7 @@ struct LessonsView: View {
                 // A widget or notification tap on a lesson must never land on a
                 // chapter list.
                 shelf = .lesson
-                #if os(tvOS)
-                openPlayer(.workbookLesson(n))
-                #else
                 path.append(n)
-                #endif
             }
         }
     }
@@ -306,14 +301,15 @@ struct LessonsView: View {
         }
     }
 
-    /// tvOS presents the player as a sheet. Opening it while Jump to Lesson
-    /// is still up nests two sheets; the inner one has no AudioManager and
-    /// TVPlayerView assertionFailure's (ACIMDailyMinuteTV-2026-09-09-105807.ips).
+    /// tvOS must not push while Jump to Lesson is still up. The sheet used
+    /// to present the player on top of itself and crash; waiting for
+    /// dismiss keeps that door closed even though the destination is now
+    /// the reading.
     private func openPendingJump() {
         #if os(tvOS)
         guard let n = pendingJump else { return }
         pendingJump = nil
-        openPlayer(.workbookLesson(n))
+        path.append(n)
         #endif
     }
 
@@ -397,9 +393,6 @@ private struct FilteredLessonsList: View {
     /// fires once per appearance — re-running it on a later redraw would yank
     /// the list out from under someone who has scrolled away.
     @State private var hasScrolledToCurrent = false
-    #if os(tvOS)
-    @Environment(\.openPlayer) private var openPlayer
-    #endif
 
     var body: some View {
         let visible = lessonNumbers()
@@ -464,11 +457,7 @@ private struct FilteredLessonsList: View {
             .padding(.vertical, 4)
             .contentShape(Rectangle())
 
-            #if os(tvOS)
-            Button { openPlayer(.workbookLesson(lessonNumber)) } label: { label }
-            #else
             NavigationLink(value: IntroductionRef(lessonNumber: lessonNumber)) { label }
-            #endif
         }
     }
 

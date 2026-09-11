@@ -19,22 +19,13 @@ struct LessonRow: View {
     let availableOn: Date?
 
     private static let accent = Color.acimGold
-    #if os(tvOS)
-    @Environment(\.openPlayer) private var openPlayer
-    #endif
 
     private var isAvailable: Bool { availableOn == nil }
 
     var body: some View {
-        #if os(tvOS)
-        Button { openPlayer(.workbookLesson(lessonNumber)) } label: {
-            rowLabel
-        }
-        #else
         NavigationLink(value: lessonNumber) {
             rowLabel
         }
-        #endif
     }
 
     @ViewBuilder

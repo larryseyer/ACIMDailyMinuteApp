@@ -5,9 +5,6 @@ struct TextChapterView: View {
     let chapter: Int
 
     @Environment(AudioManager.self) private var audio
-    #if os(tvOS)
-    @Environment(\.openPlayer) private var openPlayer
-    #endif
 
     private let corpus = CorpusService.shared
 
@@ -24,19 +21,11 @@ struct TextChapterView: View {
                         .listRowBackground(Color.clear)
                 }
                 ForEach(found.sections, id: \.sectionNumber) { section in
-                    #if os(tvOS)
-                    Button {
-                        openPlayer(.textSection(chapter: chapter, section: section.sectionNumber))
-                    } label: {
-                        sectionRow(section)
-                    }
-                    #else
                     NavigationLink(
                         value: TextSectionRef(chapter: chapter, section: section.sectionNumber)
                     ) {
                         sectionRow(section)
                     }
-                    #endif
                 }
             } else {
                 ContentUnavailableView {

@@ -9,10 +9,11 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    /// One player for every tab. Installing `openPlayer` on a single
+    /// One player for Today and Video. Installing `openPlayer` on a single
     /// NavigationStack does not reach `navigationDestination` content on
-    /// tvOS — TextChapterView Select then hits the default
-    /// `assertionFailure` (crash ACIMDailyMinuteTV-2026-09-09-104129.ips).
+    /// tvOS — a Video row then hits the default `assertionFailure`
+    /// (crash ACIMDailyMinuteTV-2026-09-09-104129.ips). Read pushes a
+    /// reading instead.
     @State private var playerItem: TVPlayerItem?
     #if os(iOS) || os(tvOS)
     /// The real height of the tab bar the mini player has to clear.
