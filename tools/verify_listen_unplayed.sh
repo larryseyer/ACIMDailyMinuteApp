@@ -13,11 +13,22 @@ set -o pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 LIB="$REPO/ACIMDailyMinute/Utilities/ListenLibrary.swift"
 NARRATION="$REPO/ACIMDailyMinute/Utilities/LessonNarration.swift"
+VIEW="$REPO/ACIMDailyMinute/Views/Listen/ListenView.swift"
 PBX="$REPO/ACIMDailyMinute.xcodeproj/project.pbxproj"
 
 fail() { echo "FAIL: $1"; exit 1; }
 
 [[ -f "$LIB" ]] || fail "ListenLibrary.swift missing"
+
+grep -q 'ForEach(CourseShelf.allCases)' "$VIEW" \
+    || fail "Listen picker is not CourseShelf.allCases"
+grep -q 'shelf: CourseShelf = .lesson' "$VIEW" \
+    || fail "default Listen shelf is not Lesson"
+STRIPPED="$(sed 's://.*::' "$VIEW")"
+echo "$STRIPPED" | grep -q 'LiteYouTubeCard' && fail "ListenView opens LiteYouTubeCard"
+echo "$STRIPPED" | grep -q 'FullScreenVideoCover' && fail "ListenView opens FullScreenVideoCover"
+echo "$STRIPPED" | grep -q 'TVPlayerItem' && fail "ListenView opens TVPlayerView"
+echo "$STRIPPED" | grep -q 'Nothing to resume' && fail "ListenView still has the activity empty state"
 
 count=$(grep -c "ListenLibrary.swift" "$PBX" || true)
 [[ "$count" -ge 6 ]] || fail "ListenLibrary.swift has $count pbxproj lines; need the four build entries plus group child"
