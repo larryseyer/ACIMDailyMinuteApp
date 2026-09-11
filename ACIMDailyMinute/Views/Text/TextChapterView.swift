@@ -26,6 +26,7 @@ struct TextChapterView: View {
                     ) {
                         sectionRow(section)
                     }
+                    .listRowBackground(Color.clear)
                 }
             } else {
                 ContentUnavailableView {
@@ -41,6 +42,7 @@ struct TextChapterView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
         .navigationTitle(corpus.textChapter(chapter)?.displayName ?? "Chapter \(chapter)")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

@@ -332,7 +332,11 @@ struct SelectableReadingText: View {
     /// Deliberately translucent: a highlight sits behind the words, and the
     /// words have to stay readable in both appearances.
     fileprivate static var highlightColor: PlatformColor {
-        PlatformColor.systemYellow.withAlphaComponent(0.28)
+        #if os(iOS) || os(tvOS)
+        UIColor(Color.acimMark)
+        #else
+        NSColor(Color.acimMark)
+        #endif
     }
 
     /// The app's own pointer, and deliberately not the accent colour: this
@@ -342,7 +346,11 @@ struct SelectableReadingText: View {
     /// be yellow outright. A fixed blue reads as neither the reader's mark nor
     /// the app's chrome.
     fileprivate static var spotlightColor: PlatformColor {
-        PlatformColor.systemBlue.withAlphaComponent(0.22)
+        #if os(iOS) || os(tvOS)
+        UIColor(Color.acimFind)
+        #else
+        NSColor(Color.acimFind)
+        #endif
     }
 
     /// The platform's own interactive-text colour, with no underline: the

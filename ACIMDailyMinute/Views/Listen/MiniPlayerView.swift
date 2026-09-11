@@ -63,6 +63,10 @@ struct MiniPlayerView: View {
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 36, alignment: .leading)
 
+            #if os(tvOS)
+            ProgressView(value: displayedTime, total: max(sliderMax, 0.001))
+                .tint(Color.acimGold)
+            #else
             Slider(
                 value: $scrubPosition,
                 in: 0...sliderMax,
@@ -72,6 +76,7 @@ struct MiniPlayerView: View {
             .disabled(audioManager.duration <= 0)
             .accessibilityLabel("Playback position")
             .accessibilityValue(AudioTransport.timeLabel(displayedTime))
+            #endif
 
             Text(AudioTransport.remainingLabel(position: displayedTime, duration: audioManager.duration))
                 .font(.caption2.monospacedDigit())

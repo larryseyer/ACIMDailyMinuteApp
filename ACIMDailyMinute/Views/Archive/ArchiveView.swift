@@ -61,6 +61,7 @@ struct ArchiveView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .acimInkBackground()
             // ⛔ The mini player floats over this screen, so the last row
             // owes it room. Thirteen surfaces reserved it and this one did
             // not, which covered the bottom entry whenever audio was playing.
@@ -122,6 +123,7 @@ struct ArchiveView: View {
             .padding(20)
             .readableContentWidth()
         }
+        .acimInkBackground()
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
@@ -264,10 +266,12 @@ struct ArchiveView: View {
                 #if !os(tvOS)
                 .listRowSeparator(.visible)
                 #endif
+                .listRowBackground(Color.clear)
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button {
@@ -380,11 +384,13 @@ struct ArchiveView: View {
                         .padding(.vertical, 4)
                         .contentShape(Rectangle())
                     }
+                    .listRowBackground(Color.clear)
                 }
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     private var manualShelf: some View {
@@ -414,11 +420,13 @@ struct ArchiveView: View {
                     #if !os(tvOS)
                     .listRowSeparator(.visible)
                     #endif
+                    .listRowBackground(Color.clear)
                 }
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     // MARK: - Open

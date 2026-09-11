@@ -66,6 +66,7 @@ struct TodayView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .readableContentWidth()
             }
+            .acimInkBackground()
             .navigationTitle("Today")
             .readingDestinations(path: $path)
             .toolbar {

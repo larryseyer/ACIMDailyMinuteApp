@@ -107,6 +107,7 @@ struct ListenView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .acimInkBackground()
             .navigationTitle("Listen")
             .navigationDestination(for: ListenTextChapterRef.self) { ref in
                 ListenTextChapterView(
@@ -233,6 +234,7 @@ struct ListenView: View {
             .padding(20)
             .readableContentWidth()
         }
+        .acimInkBackground()
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
@@ -287,10 +289,12 @@ struct ListenView: View {
         List {
             ForEach(lessonCatalogue, id: \.id) { row in
                 listenRow(row)
+                    .listRowBackground(Color.clear)
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     private var lessonCatalogue: [ListenLibrary.Row] {
@@ -414,11 +418,13 @@ struct ListenView: View {
                         .padding(.vertical, 4)
                         .contentShape(Rectangle())
                     }
+                    .listRowBackground(Color.clear)
                 }
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     private var manualShelf: some View {
@@ -442,11 +448,13 @@ struct ListenView: View {
             } else {
                 ForEach(rows, id: \.id) { row in
                     listenRow(row)
+                        .listRowBackground(Color.clear)
                 }
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     // MARK: - Actions

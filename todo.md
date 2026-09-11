@@ -2,36 +2,29 @@
 
 One sentence per item, two at the most. Current and future only. Git is history.
 
+Priority one is the presentation redesign. Everything below LIVE waits.
+
 ---
 
-## LIVE — the presentation redesign
+## LIVE — priority one: the presentation redesign
 
-Plan and exact spec: `docs/superpowers/plans/2026-09-11-ios-presentation-redesign.md`.
-Visual spec: `docs/design/2026-09-11-ios-presentation.html`.
+Plan: `2026-09-11-Design_Plan.md`. Visual: `docs/design/2026-09-11-ios-presentation.html`.
+This plan supersedes every other UI plan. Do not pick up any other section until
+step 10 is on the devices.
 
-- [ ] Step 1 — token layer: `Metric`, `ACIMType`, `CitationLabel`, the `Ink` / `Surface` / `Raised` / `Rule` colorsets.
 - [ ] Step 2 — Today: masthead, passage as a page, citation band, action row, lesson and practice cards.
 - [ ] Step 3 — the practice sheet over `PracticePlanner`.
-- [ ] Step 4 — the Course tab: three shelf implementations collapse to one, five tabs to three, `ACIMTabBar` replaces the system bar and `MacBottomTabBar`.
+- [ ] Step 4 — the Course tab: three shelves collapse to one, five tabs to three, `ACIMTabBar`, onboarding.
 - [ ] Step 5 — the reading and the medium band, through `ReadingScaffold`.
 - [ ] Step 6 — Now Playing, the full player.
 - [ ] Step 7 — Saved as one filtered stream.
-- [ ] Step 8 — iPad and Mac `NavigationSplitView`; decide the iPad reading column.
+- [ ] Step 8 — iPad and Mac `NavigationSplitView`; the two questions in §O.
 - [ ] Step 9 — Apple TV, Watch, widgets.
-- [ ] Step 10 — onboarding copy, `APP_STORE_LISTING.md`, `store-support-page.md`.
+- [ ] Step 10 — `APP_STORE_LISTING.md`, `store-support-page.md`, screenshots.
 
-## CARRIED — still true, now blocked behind the redesign
+## CARRIED — blocked behind the redesign
 
 - [ ] Mac Video sheets have no min frame; Listen's YouTube sheet is 720×405.
-- [ ] Unnarrated compose does not stop Listen audio that is already playing.
-
-## HIS CALL
-
-- [ ] The small label above a reading wraps onto two lines at huge system text sizes and the header grows. Acceptable?
-- [ ] Preface citations: `Pref.4` does not say which of the two Preface parts it is in, and changing it changes backups already exported. Leave it?
-- [ ] Companion note under Settings > About: three wording departures are his to veto.
-- [ ] Import summary wording is his to keep or change.
-- [ ] Citations stay `T-5.3` Arabic unless he overturns that.
 
 ## BEFORE SUBMIT — after the redesign is on the devices
 

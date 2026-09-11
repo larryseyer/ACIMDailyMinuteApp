@@ -24,11 +24,13 @@ struct TextChaptersView: View {
                     NavigationLink(value: TextChapterRef(chapter: chapter.number)) {
                         chapterRow(chapter)
                     }
+                    .listRowBackground(Color.clear)
                 }
             }
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     private func chapterRow(_ chapter: CorpusTextChapter) -> some View {

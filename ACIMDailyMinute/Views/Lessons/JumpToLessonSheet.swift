@@ -54,7 +54,9 @@ struct JumpToLessonSheet: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .listRowBackground(Color.clear)
             .readableContentWidth()
+            .acimInkListBackground()
             .navigationTitle("Jump to Lesson")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)

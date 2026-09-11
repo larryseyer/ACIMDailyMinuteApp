@@ -148,6 +148,7 @@ struct BackupRestoreView: View {
                 .foregroundStyle(.secondary)
             }
         }
+        .acimInkListBackground()
         .readableContentWidth()
         #if os(macOS)
         .formStyle(.grouped)

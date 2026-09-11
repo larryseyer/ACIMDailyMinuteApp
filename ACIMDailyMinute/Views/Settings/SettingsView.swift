@@ -217,6 +217,7 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .acimInkListBackground()
             .readableContentWidth()
             #if os(macOS)
             // The default macOS form is the columns style: it sizes to the

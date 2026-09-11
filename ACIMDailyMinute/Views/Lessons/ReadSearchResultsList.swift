@@ -74,6 +74,7 @@ struct ReadSearchResultsList: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
         .task(id: query) {
             // Cleared up front so a superseded query's rows do not linger
             // while the new one's pause and scan are still running.

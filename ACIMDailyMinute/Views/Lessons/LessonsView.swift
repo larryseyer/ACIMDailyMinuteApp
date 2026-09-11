@@ -113,6 +113,7 @@ struct LessonsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .acimInkBackground()
             .navigationTitle("Read")
             #if !os(tvOS)
             // On tvOS `.searchable` is a permanent a-z keyboard, not a field
@@ -234,6 +235,7 @@ struct LessonsView: View {
             .padding(20)
             .readableContentWidth()
         }
+        .acimInkBackground()
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
@@ -310,6 +312,7 @@ struct LessonsView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
     }
 
     private var workbookShelf: some View {
@@ -327,6 +330,7 @@ struct LessonsView: View {
         )
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button {
@@ -478,6 +482,7 @@ private struct FilteredLessonsList: View {
                             )
                         }
                     )
+                    .listRowBackground(Color.clear)
                 }
             }
             .onAppear { scrollToCurrentLesson(proxy: proxy, visible: visible) }
@@ -487,6 +492,7 @@ private struct FilteredLessonsList: View {
                 // no current lesson to scroll to.
                 scrollToCurrentLesson(proxy: proxy, visible: visible)
             }
+            .acimInkListBackground()
         }
     }
 

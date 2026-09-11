@@ -61,6 +61,9 @@
 		5ECA908CFC68510F2D5B19CE /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
 		5ED569BBC87E74C5DB7DE0C2 /* ReadingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002260 /* ReadingKey.swift */; };
 		66AAECF42CA912EC45F0AA20 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		A7C14E92B0D34F6A8E1B2C3D /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
+		B8D25F03C1E4507B9F2C3D4E /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
+		C9E36A14D2F5618CA03D4E5F /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
 		67EC5EE3E5595CC3BA36FAF8 /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002416 /* ShareButton.swift */; };
 		69A37287F782E66802C33C1D /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
 		6A1D23150B036A8F0DAB0FA7 /* SelectableReadingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002340 /* SelectableReadingText.swift */; };
@@ -293,6 +296,21 @@
 		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		AA000001702 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
 		AA000001703 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		AA000001984 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		AA000001985 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
+		AA000001986 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
+		AA000001987 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
+		AA000001988 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		AA000001989 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
+		AA000001990 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
+		AA000001991 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
+		AA000001992 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
+		AA000001993 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
+		AA000001994 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
+		AA000001995 /* ACIMColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002703 /* ACIMColors.swift */; };
+		AA000001996 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
+		AA000001997 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
+		AA000001998 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
 		AA000001704 /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
 		AA000001705 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
 		AA000001706 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
@@ -594,6 +612,9 @@
 		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 		AA000002702 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
+		AA000002989 /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
+		AA000002990 /* ACIMType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMType.swift; sourceTree = "<group>"; };
+		AA000002991 /* CitationLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationLabel.swift; sourceTree = "<group>"; };
 		AA000002704 /* PracticePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlanner.swift; sourceTree = "<group>"; };
 		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
 		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
@@ -805,6 +826,7 @@
 				AA000002507 /* TVPlayerView.swift */,
 				AA000002623 /* ContinueReadingRow.swift */,
 				AA000002703 /* ACIMColors.swift */,
+				AA000002991 /* CitationLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -851,6 +873,8 @@
 				AA000002760 /* AudioTransport.swift */,
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
+				AA000002989 /* Metric.swift */,
+				AA000002990 /* ACIMType.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
 				AA000002260 /* ReadingKey.swift */,
 				AA000002206 /* HashUtility.swift */,
@@ -1377,6 +1401,9 @@
 				AA000001701 /* PracticeAnchorStore.swift in Sources */,
 				AA000001702 /* Appearance.swift in Sources */,
 				AA000001703 /* ACIMColors.swift in Sources */,
+				AA000001989 /* Metric.swift in Sources */,
+				AA000001990 /* ACIMType.swift in Sources */,
+				AA000001991 /* CitationLabel.swift in Sources */,
 				AA000001704 /* PracticePlanner.swift in Sources */,
 				AA000001706 /* WorkbookPracticeCatalog.swift in Sources */,
 				AA000001707 /* PracticeReminderService.swift in Sources */,
@@ -1408,6 +1435,10 @@
 				AA000001061 /* ACIMDailyMinuteLiveActivity.swift in Sources */,
 				AA000001062 /* ACIMActivityAttributes.swift in Sources */,
 				AA000001351 /* PunctuationSpacing.swift in Sources */,
+				AA000001992 /* Metric.swift in Sources */,
+				AA000001993 /* ACIMType.swift in Sources */,
+				AA000001994 /* CitationLabel.swift in Sources */,
+				AA000001995 /* ACIMColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1434,6 +1465,10 @@
 				AA000001802 /* Citation.swift in Sources */,
 				AA000001803 /* CorpusFallback.swift in Sources */,
 				AA000001804 /* LessonSchedule.swift in Sources */,
+				AA000001996 /* Metric.swift in Sources */,
+				AA000001997 /* ACIMType.swift in Sources */,
+				AA000001998 /* CitationLabel.swift in Sources */,
+				AA000001988 /* ACIMColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1454,6 +1489,10 @@
 				AA000001820 /* Bookmark.swift in Sources */,
 				AA000001821 /* CachedPodcastEpisode.swift in Sources */,
 				AA000001822 /* PunctuationSpacing.swift in Sources */,
+				AA000001987 /* Metric.swift in Sources */,
+				AA000001986 /* ACIMType.swift in Sources */,
+				AA000001985 /* CitationLabel.swift in Sources */,
+				AA000001984 /* ACIMColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1597,6 +1636,9 @@
 				713FA83FC00F90B32FA9A13C /* PracticeAnchorStore.swift in Sources */,
 				70F6B618090B15E757551A37 /* Appearance.swift in Sources */,
 				66AAECF42CA912EC45F0AA20 /* ACIMColors.swift in Sources */,
+				A7C14E92B0D34F6A8E1B2C3D /* Metric.swift in Sources */,
+				B8D25F03C1E4507B9F2C3D4E /* ACIMType.swift in Sources */,
+				C9E36A14D2F5618CA03D4E5F /* CitationLabel.swift in Sources */,
 				ABF27FA2BEED9F34CFB2861E /* PracticePlanner.swift in Sources */,
 				C3012B487039BFCD870DF2FE /* WorkbookPracticeCatalog.swift in Sources */,
 				E480B27D2C45AFAB31CBF47A /* PracticeReminderService.swift in Sources */,

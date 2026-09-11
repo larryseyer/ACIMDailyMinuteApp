@@ -42,6 +42,7 @@ struct SavedView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .acimInkBackground()
             // ⛔ The mini player floats over this screen, so the last row owes
             // it room. Thirteen surfaces reserved it and this one did not, which
             // covered the bottom entry whenever audio was playing.
@@ -120,10 +121,12 @@ struct SavedView: View {
                             deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
                         }
                         #endif
+                        .listRowBackground(Color.clear)
                 }
             }
             .listStyle(.plain)
             .readableContentWidth()
+            .acimInkListBackground()
         }
     }
 
@@ -149,10 +152,12 @@ struct SavedView: View {
                             deleteButton { AnnotationStore.delete(highlight, in: modelContext) }
                         }
                         #endif
+                        .listRowBackground(Color.clear)
                 }
             }
             .listStyle(.plain)
             .readableContentWidth()
+            .acimInkListBackground()
         }
     }
 
@@ -178,10 +183,12 @@ struct SavedView: View {
                             deleteButton { AnnotationStore.delete(note, in: modelContext) }
                         }
                         #endif
+                        .listRowBackground(Color.clear)
                 }
             }
             .listStyle(.plain)
             .readableContentWidth()
+            .acimInkListBackground()
         }
     }
 

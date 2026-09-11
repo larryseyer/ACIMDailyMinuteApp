@@ -32,6 +32,7 @@ struct ListenTextChapterView: View {
                     #if !os(tvOS)
                     .listRowSeparator(.visible)
                     #endif
+                    .listRowBackground(Color.clear)
                 }
             } else {
                 ContentUnavailableView {
@@ -47,6 +48,7 @@ struct ListenTextChapterView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
+        .acimInkListBackground()
         .navigationTitle(corpus.textChapter(chapter)?.displayName ?? "Chapter \(chapter)")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
