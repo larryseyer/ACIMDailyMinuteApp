@@ -1,12 +1,10 @@
 # continue.md
 
-LIVE: B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
+LIVE: C — Listen as activity. Needs playback progress, which does not exist yet.
 
-NEXT: C — Listen as activity. Needs playback progress, which does not exist yet.
+NEXT: reader text size. Design is approved — do not re-ask. iPhone, iPad, and Mac; Settings under Appearance; Default / Large / Larger; body (serif) only; iPad default Large; Mac default Default; multiplier on `preferredFont(.body)`; AppStorage; TV unchanged.
 
-After C: reader text size. Design is approved — do not re-ask. iPhone and iPad only; Settings under Appearance; Default / Large / Larger; body (serif) only; iPad default Large; multiplier on `preferredFont(.body)`; AppStorage; Mac and TV unchanged.
-
-Store submission is stopped. Do not submit and do not recapture shots until B, C, and the parked phone pass are done.
+Store submission is stopped. Do not submit and do not recapture shots until C, reader text size, and the parked phone pass are done.
 
 Parked is his phone test pass. Do not ask him to walk it. He is already using the phone and reporting what he finds.
 

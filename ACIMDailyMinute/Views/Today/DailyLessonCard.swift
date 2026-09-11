@@ -20,17 +20,12 @@ struct DailyLessonCard: View {
                 eyebrow: "Lesson \(lesson.lessonNumber)",
                 footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
             ) {
-                #if !os(tvOS)
-                if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                    ListenButton(
-                        title: "Lesson \(lesson.lessonNumber)",
-                        isActive: audio.isActive(url: audioURL),
-                        isPlaying: audio.isPlaying
-                    ) {
-                        audio.playOrToggle(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                    }
-                }
-                #endif
+                ReadingPlayControl(
+                    title: "Lesson \(lesson.lessonNumber)",
+                    lessonNumber: lesson.lessonNumber,
+                    surfaceAudioURL: lesson.audioURL,
+                    surfaceYouTubeID: lesson.youtubeID
+                )
             } trailing: {
                 ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)

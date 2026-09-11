@@ -58,6 +58,7 @@ struct SegmentReadingView: View {
                             )
                         )
                     ) {
+                        ReadingPlayControl(title: "Daily Minute", segmentId: segmentId)
                     } trailing: {
                         ShareButton(text: ShareTextBuilder.segmentShareText(segment))
                     } titleBlock: {

@@ -376,6 +376,13 @@ struct InlineArchiveMinuteDTO: Codable, Sendable {
     let text: String
     let source_reference: String
     let audio_url: String
+    /// Optional because the live feed still omits it on archive rows.
+    /// When present it is the overlay key that lets a later Course
+    /// reading of this passage find its recording. Never invented here.
+    let segment_id: Int?
+    /// Optional for the same reason. Empty incoming values never
+    /// overwrite a youtube id already recorded on `SegmentMedia`.
+    let youtube_id: String?
 }
 
 /// Top-level shape of `/daily-lesson.json`. The publisher omits

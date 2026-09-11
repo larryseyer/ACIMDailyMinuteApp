@@ -8,9 +8,8 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 Add note stays at the bottom; one play control, audio-first. The calendar tab is named Video. That tab is not archive.org.
 
-- [ ] B — Media index + inline play control. Feed-driven overlay keyed by segment/lesson; needs a pipeline change.
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
-- [ ] Reader text size on iPhone and iPad only: Default / Large / Larger, body only; iPad default is Large.
+- [ ] Reader text size on iPhone, iPad, and Mac: Default / Large / Larger, body only; iPad default is Large; Mac default is Default; TV unchanged.
 
 ## WATCHING — nightly catch-up
 
@@ -18,7 +17,7 @@ Add note stays at the bottom; one play control, audio-first. The calendar tab is
 
 ## PARKED — one test pass, at the end, on his phone
 
-Do not ask him to check any of this until B and C are built. His words: otherwise he will just repeat himself on things that have not been done yet.
+Do not ask him to check any of this until C and reader text size are built. His words: otherwise he will just repeat himself on things that have not been done yet.
 
 - [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
@@ -95,6 +94,7 @@ The TV is a player, and it carries no annotation. Do not re-open either.
 
 ## OPEN — content and pipeline
 
+- [ ] Pipeline must emit `segment_id` and `youtube_id` on `/daily-minute.json` archive rows so historical minutes get the play overlay. The app already records them when present.
 - [ ] HIS CALL — `Pref.N` names two paragraphs; fixing it changes a citation already printed into exports.
 
 ## OPEN — small

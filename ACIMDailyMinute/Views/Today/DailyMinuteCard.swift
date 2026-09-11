@@ -26,17 +26,12 @@ struct DailyMinuteCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             ReadingScaffold(eyebrow: "Daily Minute", footer: footer) {
-                #if !os(tvOS)
-                if let audioURL = minute.audioURL, !audioURL.isEmpty {
-                    ListenButton(
-                        title: "Daily Minute",
-                        isActive: audio.isActive(url: audioURL),
-                        isPlaying: audio.isPlaying
-                    ) {
-                        audio.playOrToggle(url: audioURL, title: "Daily Minute")
-                    }
-                }
-                #endif
+                ReadingPlayControl(
+                    title: "Daily Minute",
+                    segmentId: minute.segmentId,
+                    surfaceAudioURL: minute.audioURL,
+                    surfaceYouTubeID: minute.youtubeID
+                )
             } trailing: {
                 ShareButton(text: ShareTextBuilder.minuteShareText(minute))
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)

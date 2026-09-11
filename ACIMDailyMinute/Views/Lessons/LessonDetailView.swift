@@ -183,15 +183,12 @@ private struct FullLessonView: View {
                 eyebrow: "Lesson \(lesson.lessonNumber)",
                 footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
             ) {
-                if let audioURL = lesson.audioURL, !audioURL.isEmpty {
-                    ListenButton(
-                        title: "Lesson \(lesson.lessonNumber)",
-                        isActive: audio.isActive(url: audioURL),
-                        isPlaying: audio.isPlaying
-                    ) {
-                        audio.playOrToggle(url: audioURL, title: "Lesson \(lesson.lessonNumber)")
-                    }
-                }
+                ReadingPlayControl(
+                    title: "Lesson \(lesson.lessonNumber)",
+                    lessonNumber: lesson.lessonNumber,
+                    surfaceAudioURL: lesson.audioURL,
+                    surfaceYouTubeID: lesson.youtubeID
+                )
             } trailing: {
                 ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)
@@ -258,15 +255,12 @@ private struct MetadataOnlyLessonView: View {
                     }
                 )
             ) {
-                if let audioURL = archive.audioURL, !audioURL.isEmpty {
-                    ListenButton(
-                        title: "Lesson \(lessonNumber)",
-                        isActive: audio.isActive(url: audioURL),
-                        isPlaying: audio.isPlaying
-                    ) {
-                        audio.playOrToggle(url: audioURL, title: "Lesson \(lessonNumber)")
-                    }
-                }
+                ReadingPlayControl(
+                    title: "Lesson \(lessonNumber)",
+                    lessonNumber: lessonNumber,
+                    surfaceAudioURL: archive.audioURL,
+                    surfaceYouTubeID: archive.youtubeID
+                )
             } trailing: {
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {
@@ -345,15 +339,11 @@ private struct AbsentLessonView: View {
                     }
                 )
             ) {
-                if lessonNumber == 0, let audioURL = introAudioURL, !audioURL.isEmpty {
-                    ListenButton(
-                        title: "Introduction",
-                        isActive: audio.isActive(url: audioURL),
-                        isPlaying: audio.isPlaying
-                    ) {
-                        audio.playOrToggle(url: audioURL, title: "Introduction")
-                    }
-                }
+                ReadingPlayControl(
+                    title: lessonNumber == 0 ? "Introduction" : "Lesson \(lessonNumber)",
+                    lessonNumber: lessonNumber,
+                    surfaceAudioURL: lessonNumber == 0 ? introAudioURL : nil
+                )
             } trailing: {
                 SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {

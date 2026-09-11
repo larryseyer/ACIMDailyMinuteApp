@@ -23,7 +23,6 @@ struct ArchivedReadingCard: View {
     let reading: ArchivedReading
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(AudioManager.self) private var audio
     @Query private var bookmarks: [Bookmark]
 
     private var isMinute: Bool { reading.channel == "daily-minute" }
@@ -58,17 +57,12 @@ struct ArchivedReadingCard: View {
 
     var body: some View {
         ReadingScaffold(eyebrow: headerLabel, footer: footer) {
-            #if !os(tvOS)
-            if let audioURL = reading.audioURL, !audioURL.isEmpty {
-                ListenButton(
-                    title: listenTitle,
-                    isActive: audio.isActive(url: audioURL),
-                    isPlaying: audio.isPlaying
-                ) {
-                    audio.playOrToggle(url: audioURL, title: listenTitle)
-                }
-            }
-            #endif
+            ReadingPlayControl(
+                title: listenTitle,
+                lessonNumber: isMinute ? 0 : (reading.lessonNumber ?? 0),
+                surfaceAudioURL: reading.audioURL,
+                surfaceYouTubeID: reading.youtubeID
+            )
         } trailing: {
             ShareButton(text: shareText)
             SaveButton(isSaved: isBookmarked, action: toggleBookmark)

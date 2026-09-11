@@ -51,8 +51,25 @@ final class ArchiveService {
             row.sourceReference = item.source_reference
             row.lessonNumber = nil
             row.audioURL = item.audio_url.isEmpty ? nil : item.audio_url
+            if let youtubeID = item.youtube_id, !youtubeID.isEmpty {
+                row.youtubeID = youtubeID
+            }
             row.searchableText = "\(item.text) \(item.source_reference)"
             if isNew { context.insert(row) }
+
+            // The rolling archive ages out. The overlay key has to outlive
+            // it, and the only durable table is SegmentMedia. No key from
+            // the feed means no row — we do not invent one from the date
+            // or the filename.
+            if let segmentId = MediaOverlay.overlaySegmentId(item.segment_id) {
+                SegmentMedia.record(
+                    segmentId: segmentId,
+                    youtubeID: item.youtube_id,
+                    audioURL: item.audio_url,
+                    publishedDate: item.date,
+                    in: context
+                )
+            }
         }
     }
 
