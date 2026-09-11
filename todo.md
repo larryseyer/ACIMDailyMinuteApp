@@ -14,7 +14,6 @@ step 10 is on the devices.
 
 REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
 
-- [ ] Step 9 — Apple TV, Watch, widgets.
 - [ ] Step 10 — `APP_STORE_LISTING.md`, `store-support-page.md`, screenshots.
 
 ## CARRIED — blocked behind the redesign
@@ -26,7 +25,6 @@ REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THE
 Store record exists (iOS, macOS, tvOS). Do not add a visionOS platform.
 
 - [ ] Deploy the CloudKit schema from Development to Production before any release build.
-- [ ] Remake every store screenshot against the finished redesign.
 - [ ] Tick compatible iPhone/iPad on Vision Pro in App Store Connect, then submit. The support page is already on the site.
 
 ## AFTER 1.0

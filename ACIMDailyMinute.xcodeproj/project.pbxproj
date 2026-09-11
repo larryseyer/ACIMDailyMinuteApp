@@ -333,6 +333,13 @@
 		AA000001803 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
 		AA000001804 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
 		AA000001805 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
+		AA000001770 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
+		AA000001771 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
+		AA000001772 /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
+		AA000001773 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
+		AA000001774 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
+		AA000001775 /* ACIMSegments.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002307 /* ACIMSegments.json */; };
+		AA000001776 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
 		AA000001810 /* ACIMDailyMinuteWatchWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002800 /* ACIMDailyMinuteWatchWidgetBundle.swift */; };
 		AA000001811 /* ACIMDailyMinuteWatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002062 /* ACIMDailyMinuteWatchWidget.swift */; };
 		AA000001812 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002048 /* SharedModelContainer.swift */; };
@@ -1268,6 +1275,8 @@
 			files = (
 				AA000001901 /* PrivacyInfo.xcprivacy in Resources */,
 				AA000001080 /* Assets.xcassets in Resources */,
+				AA000001775 /* ACIMSegments.json in Resources */,
+				AA000001776 /* WorkbookPractice.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1473,6 +1482,11 @@
 				AA000001993 /* ACIMType.swift in Sources */,
 				AA000001994 /* CitationLabel.swift in Sources */,
 				AA000001995 /* ACIMColors.swift in Sources */,
+				AA000001770 /* CorpusService.swift in Sources */,
+				AA000001771 /* Citation.swift in Sources */,
+				AA000001772 /* PracticePlanner.swift in Sources */,
+				AA000001773 /* WorkbookPracticeCatalog.swift in Sources */,
+				AA000001774 /* LessonSchedule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

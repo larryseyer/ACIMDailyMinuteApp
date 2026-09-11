@@ -40,13 +40,7 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
             )
             lessonDescriptor.fetchLimit = 1
             let lessons = try context.fetch(lessonDescriptor)
-
-            let bookmarkKey = "minute:\(minute.segmentHash)"
-            var bookmarkDescriptor = FetchDescriptor<Bookmark>(
-                predicate: #Predicate { $0.itemKey == bookmarkKey }
-            )
-            bookmarkDescriptor.fetchLimit = 1
-            let bookmarks = try context.fetch(bookmarkDescriptor)
+            let lessonNumber = lessons.first?.lessonNumber
 
             return WidgetStoryEntry(
                 date: .now,
@@ -54,12 +48,42 @@ struct ACIMDailyMinuteTimelineProvider: TimelineProvider {
                 // `ReadingText.displayString`, so the spacing repair has to
                 // happen here or `Source,Which` reaches a lock screen.
                 minuteText: PunctuationSpacing.repaired(minute.text),
-                lessonNumber: lessons.first?.lessonNumber,
+                citation: CorpusService.shared.segment(id: minute.segmentId)?.citation,
+                lessonNumber: lessonNumber,
                 publishedAt: minute.publishedAt,
-                isBookmarked: !bookmarks.isEmpty
+                nextPracticeText: Self.nextPracticeText(lessonNumber: lessonNumber)
             )
         } catch {
             return .empty
         }
+    }
+
+    /// Same slot walk `PracticeCard` uses. The widget cannot see the app's
+    /// `UserDefaults.standard` window or own-start lesson, so this uses the
+    /// publisher's lesson and the 7–22 fallback the service uses when those
+    /// keys are unset.
+    private static func nextPracticeText(lessonNumber: Int?) -> String? {
+        guard let lessonNumber,
+              let record = WorkbookPracticeCatalog.record(for: lessonNumber) else {
+            return nil
+        }
+        let parts = Calendar.current.dateComponents([.hour, .minute], from: Date())
+        let now = TimeOfDay(hour: parts.hour ?? 0, minute: parts.minute ?? 0)
+        let window = PracticeWindow(
+            start: TimeOfDay(hour: 7, minute: 0),
+            end: TimeOfDay(hour: 22, minute: 0)
+        )
+        guard let slot = PracticePlanner.slots(for: record, in: window)
+            .first(where: { $0.time >= now }) else {
+            return nil
+        }
+        return timeText(slot.time)
+    }
+
+    private static func timeText(_ time: TimeOfDay) -> String {
+        let hour12 = time.hour % 12 == 0 ? 12 : time.hour % 12
+        let suffix = time.hour < 12 ? "am" : "pm"
+        if time.minute == 0 { return "\(hour12) \(suffix)" }
+        return String(format: "%d:%02d %@", hour12, time.minute, suffix)
     }
 }

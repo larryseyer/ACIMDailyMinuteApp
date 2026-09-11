@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// One reading on the wrist: where it sits in the book, then the words.
+/// One reading on the wrist: the words, then where they sit in the book.
 ///
 /// ⛔ It takes an address rather than a lesson number. The row used to print
 /// `Lesson N` above the Daily Minute's text, and a Daily Minute is a **random**
@@ -11,16 +11,12 @@ struct WatchStoryRow: View {
     let text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let address {
-                Text(address)
-                    .font(.caption2)
-                    .foregroundStyle(.tint)
-            }
+        VStack(alignment: .leading, spacing: Metric.tight) {
             // The watch has no reading surface, so it repairs the feed's
             // spacing where it draws it. No line cap: the list scrolls.
             Text(PunctuationSpacing.repaired(text))
-                .font(.footnote)
+                .font(.acimReading)
+            CitationLabel(raw: address)
         }
     }
 }

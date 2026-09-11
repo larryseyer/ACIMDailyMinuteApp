@@ -5,20 +5,16 @@ struct SmallWidgetView: View {
     let entry: WidgetStoryEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Metric.tight) {
             Text(entry.minuteText)
-                .font(.callout)
-                .lineLimit(4)
+                .font(.acimReading)
+                .lineLimit(3)
                 .truncationMode(.tail)
             Spacer(minLength: 0)
-            if let n = entry.lessonNumber {
-                Text("Lesson \(n)")
-                    .font(.caption2)
-                    .foregroundStyle(.tint)
-            }
+            CitationLabel(raw: entry.citation)
         }
-        .padding(12)
+        .padding(Metric.card)
         .widgetURL(URL(string: "acimdailyminute://today")!)
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(Color.acimInk, for: .widget)
     }
 }

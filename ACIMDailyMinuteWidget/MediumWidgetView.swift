@@ -5,32 +5,25 @@ struct MediumWidgetView: View {
     let entry: WidgetStoryEntry
 
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(entry.minuteText)
-                    .font(.subheadline)
-                    .lineLimit(5)
-                    .truncationMode(.tail)
-            }
-            Divider()
-            VStack(alignment: .leading, spacing: 6) {
-                if let n = entry.lessonNumber {
+        HStack(alignment: .top, spacing: Metric.card) {
+            Text(entry.minuteText)
+                .font(.acimReading)
+                .lineLimit(5)
+                .truncationMode(.tail)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            if let n = entry.lessonNumber {
+                VStack(alignment: .trailing, spacing: 2) {
                     Text("Lesson")
-                        .font(.caption2)
+                        .font(.acimChipText)
                         .foregroundStyle(.secondary)
                     Text("\(n)")
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                        .font(.acimCardTitle)
+                        .foregroundStyle(.primary)
                 }
-                Spacer(minLength: 0)
-                Text("Open today's minute")
-                    .font(.caption)
-                    .foregroundStyle(.tint)
             }
-            .frame(width: 100)
         }
-        .padding(12)
+        .padding(Metric.card)
         .widgetURL(URL(string: "acimdailyminute://today")!)
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(Color.acimInk, for: .widget)
     }
 }

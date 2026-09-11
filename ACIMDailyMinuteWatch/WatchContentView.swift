@@ -14,6 +14,13 @@ struct WatchContentView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Text(Self.dateText)
+                        .font(.acimMasthead)
+                        .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .listRowBackground(Color.clear)
+                }
                 Section(header: Text(minuteSectionTitle)) {
                     if let reading = minuteReading {
                         WatchStoryRow(address: reading.address, text: reading.text)
@@ -25,8 +32,16 @@ struct WatchContentView: View {
                     }
                 }
             }
-            .navigationTitle("ACIM Daily Minute")
+            .acimInkListBackground()
+            .navigationTitle("")
         }
+    }
+
+    private static var dateText: String {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("EEEEdMMMM")
+        return formatter.string(from: Date())
     }
 
     private struct Reading {
@@ -68,10 +83,7 @@ struct WatchContentView: View {
     /// lesson. No phone, no lesson section.
     private var lessonReading: Reading? {
         guard !isLessonStale, let lesson = lessons.first else { return nil }
-        let name = lesson.lessonTitle.isEmpty
-            ? "Lesson \(lesson.lessonNumber)"
-            : "Lesson \(lesson.lessonNumber): \(lesson.lessonTitle)"
-        return Reading(address: name, text: lesson.displayText)
+        return Reading(address: "W-\(lesson.lessonNumber)", text: lesson.displayText)
     }
 
     /// The passage's own address, or the name of the book it came from. ⛔

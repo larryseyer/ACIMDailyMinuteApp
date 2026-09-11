@@ -326,6 +326,7 @@ struct ContentView: View {
                 .tabItem { Label("Course", systemImage: "book.closed.fill") }
                 .tag(1)
         }
+        .acimInkBackground()
         #elseif os(iOS)
         if UIDevice.current.userInterfaceIdiom == .pad {
             splitChrome
