@@ -1,11 +1,11 @@
 import SwiftUI
 import SwiftData
 
-/// A calendar day on the Read tab's Minute shelf.
+/// A calendar day on the Course Minute spine.
 ///
-/// Distinct from a bare `String` on purpose: the Video tab already routes
-/// `yyyy-MM-dd` to `ArchiveDateDetailView` (YouTube on iPhone), and the
-/// Read tab's `NavigationStack` already routes `Int` to a lesson.
+/// Distinct from a bare `String` on purpose: Saved still routes
+/// `yyyy-MM-dd` to `ArchiveDateDetailView`, and Course already routes
+/// `Int` to a lesson.
 struct MinuteDateRef: Hashable {
     let dateString: String
 }
@@ -14,7 +14,7 @@ struct MinuteDateRef: Hashable {
 ///
 /// `DailyMinuteCard` when this date is a stored minute from the feed;
 /// `ArchivedReadingCard` for a past day the archive still holds. Never
-/// `LiteYouTubeCard` — that is the Video tab's job.
+/// a YouTube card — watching is the reading's job, not this spine's.
 struct MinuteReadingView: View {
     let dateString: String
     let availability: MinuteSchedule.Availability

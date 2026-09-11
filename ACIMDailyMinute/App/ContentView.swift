@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var audioManager = AudioManager()
     @State private var connectivity = ConnectivityManager()
     @State private var selectedTab = 0
+    @State private var coursePath = NavigationPath()
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     /// One player for Today and Video. Installing `openPlayer` on a single
@@ -15,20 +16,6 @@ struct ContentView: View {
     /// (crash ACIMDailyMinuteTV-2026-09-09-104129.ips). Read pushes a
     /// reading instead.
     @State private var playerItem: TVPlayerItem?
-    #if os(iOS) || os(tvOS)
-    /// The real height of the tab bar the mini player has to clear.
-    ///
-    /// ⛔ **This used to be the literal `49`, and 49 is only ever right on an
-    /// iPhone at an ordinary text size.** iOS 18 draws iPad a floating tab bar
-    /// of a different height entirely, and on both platforms the bar grows with
-    /// Dynamic Type. A mini player padded by a guess either floats above the bar
-    /// with a gap under it or sits behind it, and neither is visible to any
-    /// check that does not run on the device the guess is wrong for.
-    /// `MiniPlayerView.height` is a different number for a different job — what
-    /// the thirteen reading surfaces reserve so their last line is not covered —
-    /// and the two must not be confused.
-    @State private var tabBarHeight: CGFloat = 49
-    #endif
     #if os(macOS)
     @State private var showAbout = false
     #endif
@@ -171,29 +158,30 @@ struct ContentView: View {
             ?? UserDefaults.standard.string(forKey: "ACIM_SCREENSHOT_TAB")
         UserDefaults.standard.removeObject(forKey: "ACIM_SCREENSHOT_TAB")
         switch tab {
-        case "read": selectedTab = 1
-        case "listen": selectedTab = 2
+        case "read", "listen":
+            selectedTab = 1
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.lesson)
         case "video", "archive":
-            selectedTab = 3
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                NotificationCenter.default.post(
-                    name: .deepLinkArchive,
-                    object: LessonSchedule.day(from: "2026-09-02")
-                )
+            selectedTab = 1
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.minute)
+            if let day = LessonSchedule.day(from: "2026-09-02") {
+                coursePath.append(MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: day)))
             }
         case "saved":
             #if os(tvOS)
             selectedTab = 0
             #else
-            selectedTab = 4
+            selectedTab = 2
             #endif
         case "lesson":
             selectedTab = 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                // Unpublished: bundled text, no YouTube. A recorded lesson
-                // auto-presents video and the store shot becomes the overlay.
-                NotificationCenter.default.post(name: .deepLinkLesson, object: 256)
-            }
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.lesson)
+            // Unpublished: bundled text, no YouTube. A recorded lesson
+            // auto-presents video and the store shot becomes the overlay.
+            coursePath.append(256)
         case "settings":
             showSettings = true
         default:
@@ -208,27 +196,29 @@ struct ContentView: View {
             selectedTab = 0
         case .lessons:
             selectedTab = 1
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.lesson)
+        case .listen:
+            selectedTab = 1
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.lesson)
         case .lesson(let n):
             selectedTab = 1
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .deepLinkLesson, object: n)
-            }
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.lesson)
+            coursePath.append(n)
         case .archive(let d):
-            selectedTab = 3
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: .deepLinkArchive, object: d)
-            }
-        case .listen:
-            selectedTab = 2
+            selectedTab = 1
+            coursePath = NavigationPath()
+            coursePath.append(CourseShelf.minute)
+            coursePath.append(MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: d)))
         case .saved:
-            // ⛔ Tag 4 does not exist on the television, and selecting a tag no
-            // tab carries leaves a `TabView` showing nothing at all. Today is
-            // where a television goes instead — the route is reachable only
-            // from a URL or a notification tap, and tvOS has neither.
+            // Tag 2 does not exist on the television. Selecting a tag no
+            // tab carries leaves a TabView showing nothing at all.
             #if os(tvOS)
             selectedTab = 0
             #else
-            selectedTab = 4
+            selectedTab = 2
             #endif
         }
     }
@@ -250,221 +240,73 @@ struct ContentView: View {
 
     @ViewBuilder
     private var tabContainer: some View {
-        #if os(iOS) || os(tvOS)
+        #if os(tvOS)
+        TabView(selection: $selectedTab) {
+            TodayView()
+                .tabItem { Label("Today", systemImage: "sun.max.fill") }
+                .tag(0)
+            CourseView(path: $coursePath)
+                .tabItem { Label("Course", systemImage: "book.closed.fill") }
+                .tag(1)
+        }
+        #elseif os(iOS)
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedTab) {
                 TodayView()
                     .tabItem { Label("Today", systemImage: "sun.max.fill") }
                     .tag(0)
-
-                LessonsView()
-                    .tabItem { Label("Read", systemImage: "book.closed.fill") }
+                    .toolbar(.hidden, for: .tabBar)
+                CourseView(path: $coursePath)
+                    .tabItem { Label("Course", systemImage: "book.closed.fill") }
                     .tag(1)
-
-                ListenView()
-                    .tabItem { Label("Listen", systemImage: "play.circle.fill") }
-                    .tag(2)
-
-                ArchiveView()
-                    .tabItem { Label("Video", systemImage: "play.rectangle.fill") }
-                    .tag(3)
-
-                // ⛔ **No Saved tab on the television, and it is not a fence
-                // for tidiness.** With highlights, notes and saves all gone
-                // from tvOS — his call — every one of this screen's three
-                // lists falls to a `ContentUnavailableView` telling the reader
-                // to do something the television cannot do. A tab that can
-                // only ever be three apologies is not a tab.
-                #if !os(tvOS)
+                    .toolbar(.hidden, for: .tabBar)
                 SavedView()
                     .tabItem { Label("Saved", systemImage: "bookmark.fill") }
-                    .tag(4)
-                #endif
+                    .tag(2)
+                    .toolbar(.hidden, for: .tabBar)
             }
 
-            // ⛔ The television plays in the full-screen player. A mini player
-            // over the tabs is the phone's bar, and on tvOS it is a focus trap:
-            // its play button holds Select and the cards and Menu cannot be
-            // reached. Absence, not a disabled bar.
-            //
-            // Read is the words. A leftover Today session must not sit on
-            // it; Listen draws this bar itself. Overlay is Today, Video,
-            // and Saved.
-            #if os(iOS)
-            if audioManager.hasActiveAudio && selectedTab != 1 && selectedTab != 2 {
-                MiniPlayerView()
-                    .onTapGesture { selectedTab = 2 }
-                    .padding(.bottom, tabBarHeight)
-                    .transition(.move(edge: .bottom))
-            }
-            #endif
+            floatingChrome
         }
-        .background(TabBarHeightReader { tabBarHeight = $0 })
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: ACIMTabBar.clearance)
+        }
         #else
-        // macOS: skip SwiftUI's TabView (which renders a top segmented
-        // control that looks nothing like iOS) and build the content +
-        // bottom tab bar manually so the macOS app matches the iOS look.
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
-                Group {
-                    switch selectedTab {
-                    case 1: LessonsView()
-                    case 2: ListenView()
-                    case 3: ArchiveView()
-                    case 4: SavedView()
-                    default: TodayView()
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                if audioManager.hasActiveAudio && selectedTab != 1 && selectedTab != 2 {
-                    MiniPlayerView()
-                        .onTapGesture { selectedTab = 2 }
-                        .transition(.move(edge: .bottom))
+        ZStack(alignment: .bottom) {
+            Group {
+                switch selectedTab {
+                case 1: CourseView(path: $coursePath)
+                case 2: SavedView()
+                default: TodayView()
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            MacBottomTabBar(selectedTab: $selectedTab)
+            floatingChrome
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: ACIMTabBar.clearance)
         }
         #endif
     }
-}
 
-#if os(macOS)
-/// iOS-style bottom tab bar for macOS. SwiftUI's native `TabView` on
-/// macOS renders a top segmented control; this component replaces it
-/// so the macOS app matches the iOS layout: icons above labels, gold
-/// tint for the selected tab, 49pt-ish bar height, subtle top divider.
-private struct MacBottomTabBar: View {
-    @Binding var selectedTab: Int
-
-    private static let accent = Color.acimGold
-
-    private struct Item: Identifiable {
-        let id: Int
-        let title: String
-        let systemImage: String
-    }
-
-    private let items: [Item] = [
-        .init(id: 0, title: "Today", systemImage: "sun.max.fill"),
-        .init(id: 1, title: "Read", systemImage: "book.closed.fill"),
-        .init(id: 2, title: "Listen", systemImage: "play.circle.fill"),
-        .init(id: 3, title: "Video", systemImage: "play.rectangle.fill"),
-        .init(id: 4, title: "Saved", systemImage: "bookmark.fill")
-    ]
-
-    var body: some View {
-        VStack(spacing: 0) {
-            Divider().opacity(0.4)
-
-            HStack(spacing: 0) {
-                ForEach(items) { item in
-                    tabButton(item)
-                }
+    #if os(iOS) || os(macOS)
+    /// Tab bar plus, when audio is active, the compact Now Playing bar 8pt
+    /// above it. The television has neither: the composed player is full
+    /// screen, and a mini player on the tabs is a focus trap.
+    private var floatingChrome: some View {
+        VStack(spacing: 8) {
+            if audioManager.hasActiveAudio {
+                MiniPlayerView()
+                    .transition(.move(edge: .bottom))
             }
-            .padding(.vertical, 6)
-            .background(.regularMaterial)
+            ACIMTabBar(selectedTab: $selectedTab)
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 14)
     }
-
-    private func tabButton(_ item: Item) -> some View {
-        let isSelected = selectedTab == item.id
-
-        return Button {
-            selectedTab = item.id
-        } label: {
-            VStack(spacing: 3) {
-                Image(systemName: item.systemImage)
-                    .font(.system(size: 22, weight: .regular))
-                    .frame(height: 26)
-
-                Text(item.title)
-                    .font(.system(size: 10, weight: .medium))
-            }
-            .foregroundStyle(isSelected ? Self.accent : Color.secondary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 4)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(item.title)
-        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
-    }
+    #endif
 }
-#endif
-
-#if os(iOS) || os(tvOS)
-/// Reports the height of the tab bar the view it backs is sitting in.
-///
-/// ⛔ **There is no SwiftUI way to ask this, and the number cannot be assumed.**
-/// A `TabView`'s bar is drawn inside the `TabView`'s own bounds, so the `ZStack`
-/// overlaying the mini player sees only the screen's safe area, never the bar.
-/// The bar's height is 49pt on an iPhone at an ordinary text size and something
-/// else on an iPad under iOS 18's floating bar, at large Dynamic Type, or in a
-/// Slide Over slice.
-///
-/// ⛔ **The mini player must NOT be moved into a `safeAreaInset` on the `TabView`
-/// instead.** SwiftUI would propagate that inset into all thirteen surfaces that
-/// already reserve `MiniPlayerView.height` for themselves, and each would then
-/// add its own reservation on top of the propagated one — every one of the
-/// thirteen would leave a double gap. Reading the bar and padding by it keeps
-/// the reservation exactly where it already is.
-///
-/// It draws nothing. `UIViewRepresentable` is used the way the repo's other
-/// three representables are not — as a probe rather than a content host — so it
-/// reports through a closure and holds no state of its own.
-private struct TabBarHeightReader: UIViewRepresentable {
-    let onChange: (CGFloat) -> Void
-
-    func makeUIView(context: Context) -> ProbeView {
-        let view = ProbeView()
-        view.onChange = onChange
-        return view
-    }
-
-    func updateUIView(_ view: ProbeView, context: Context) {
-        view.onChange = onChange
-        view.report()
-    }
-
-    final class ProbeView: UIView {
-        var onChange: ((CGFloat) -> Void)?
-        private var last: CGFloat = 0
-
-        override func didMoveToWindow() {
-            super.didMoveToWindow()
-            report()
-        }
-
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            report()
-        }
-
-        /// Walks the responder chain to the enclosing tab bar controller. The
-        /// responder chain rather than `superview`: SwiftUI hosts this view
-        /// several container views below the controller, and the chain crosses
-        /// those without caring how many there are.
-        func report() {
-            var responder: UIResponder? = self
-            while let current = responder {
-                if let tabs = current as? UITabBarController {
-                    let height = tabs.tabBar.frame.height
-                    // A bar mid-transition measures zero. Reporting that would
-                    // drop the mini player behind the bar for a frame.
-                    if height > 0, abs(height - last) > 0.5 {
-                        last = height
-                        onChange?(height)
-                    }
-                    return
-                }
-                responder = current.next
-            }
-        }
-    }
-}
-#endif
 
 #Preview {
     ContentView()

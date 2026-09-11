@@ -24,8 +24,11 @@ fail() { echo "FAIL: $1"; failures=$((failures + 1)); }
 if grep -q 'Browse past readings by date' "$ONBOARDING"; then
     fail "onboarding still describes Video as browse-by-date"
 fi
-if ! grep -q 'Watch the Course on the screen' "$ONBOARDING"; then
-    fail "onboarding Video page lost its picture pitch"
+if grep -q '("play.rectangle", "Video"' "$ONBOARDING"; then
+    fail "onboarding still names the Video tab"
+fi
+if ! grep -q 'The Course' "$ONBOARDING"; then
+    fail "onboarding lost the Course page"
 fi
 
 if grep -q 'calendar of every past daily minute' "$LISTING"; then

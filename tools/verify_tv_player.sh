@@ -117,11 +117,7 @@ if ! grep -q 'openPlayer' "$REPO/ACIMDailyMinute/Views/Today/TodayView.swift"; t
     echo "FAIL: Today no longer opens the player — the television landing is player-first"
     exit 1
 fi
-if ! grep -q 'openPlayer' "$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift"; then
-    echo "FAIL: Video no longer opens the composed player"
-    exit 1
-fi
-echo "PASS — ContentView owns the television player; Today and Video still open it"
+echo "PASS — ContentView owns the television player; Today still opens it"
 
 JUMP="$REPO/ACIMDailyMinute/Views/Lessons/JumpToLessonSheet.swift"
 if grep -q 'openPlayer' "$JUMP"; then

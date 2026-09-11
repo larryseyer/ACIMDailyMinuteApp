@@ -1,10 +1,8 @@
 #!/bin/bash
-# Proves Listen shows the Course, including rows with no MP3.
+# Proves the Course shows the books, including rows with no MP3.
 #
-# What this guards is the old activity tab: unplayed, undownloaded audio
-# never appeared, and Text / Manual had no listening home. Play is an
-# overlay. A missing enclosure omits the control; it does not hide the row
-# and it does not invent TTS.
+# Play is an overlay. A missing enclosure omits the control; it does not
+# hide the row and it does not invent TTS.
 #
 #   ./tools/verify_listen_unplayed.sh
 set -e
@@ -13,38 +11,24 @@ set -o pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 LIB="$REPO/ACIMDailyMinute/Utilities/ListenLibrary.swift"
 NARRATION="$REPO/ACIMDailyMinute/Utilities/LessonNarration.swift"
-VIEW="$REPO/ACIMDailyMinute/Views/Listen/ListenView.swift"
+COURSE="$REPO/ACIMDailyMinute/Views/Course/CourseView.swift"
+WORKBOOK="$REPO/ACIMDailyMinute/Views/Course/CourseWorkbookSpine.swift"
+MINUTE="$REPO/ACIMDailyMinute/Views/Course/CourseMinuteSpine.swift"
 PBX="$REPO/ACIMDailyMinute.xcodeproj/project.pbxproj"
 
 fail() { echo "FAIL: $1"; exit 1; }
 
 [[ -f "$LIB" ]] || fail "ListenLibrary.swift missing"
+[[ -f "$COURSE" ]] || fail "CourseView.swift missing"
 
-grep -q 'ForEach(CourseShelf.allCases)' "$VIEW" \
-    || fail "Listen picker is not CourseShelf.allCases"
-grep -q 'shelf: CourseShelf = .lesson' "$VIEW" \
-    || fail "default Listen shelf is not Lesson"
-STRIPPED="$(sed 's://.*::' "$VIEW")"
-echo "$STRIPPED" | grep -q 'LiteYouTubeCard' && fail "ListenView opens LiteYouTubeCard"
-echo "$STRIPPED" | grep -q 'FullScreenVideoCover' && fail "ListenView opens FullScreenVideoCover"
-echo "$STRIPPED" | grep -q 'TVPlayerItem' && fail "ListenView opens TVPlayerView"
-echo "$STRIPPED" | grep -q 'Nothing to resume' && fail "ListenView still has the activity empty state"
-grep -q 'ArchiveCalendarView' "$VIEW" \
-    || fail "Minute shelf does not reuse ArchiveCalendarView"
+grep -q 'CourseShelf.allCases' "$COURSE" \
+    || fail "Course contents is not CourseShelf.allCases"
+STRIPPED="$(sed 's://.*::' "$COURSE" "$WORKBOOK" "$MINUTE")"
+echo "$STRIPPED" | grep -q 'LiteYouTubeCard' && fail "Course opens LiteYouTubeCard"
+echo "$STRIPPED" | grep -q 'FullScreenVideoCover' && fail "Course opens FullScreenVideoCover"
 
-CHAPTER="$REPO/ACIMDailyMinute/Views/Listen/ListenTextChapterView.swift"
-[[ -f "$CHAPTER" ]] || fail "ListenTextChapterView.swift missing"
-chapter_count=$(grep -c "ListenTextChapterView.swift" "$PBX" || true)
-[[ "$chapter_count" -ge 6 ]] || fail "ListenTextChapterView.swift has $chapter_count pbxproj lines"
-
-grep -q 'navigationDestination(for: ListenTextChapterRef.self)' "$VIEW" \
-    || fail "Listen has no ListenTextChapterRef destination"
-if grep -q 'navigationDestination(for: TextChapterRef.self)' "$VIEW"; then
-    fail "Listen must not push Read's TextChapterView"
-fi
-if grep -q 'dismissForTextReading' "$VIEW" "$CHAPTER"; then
-    fail "Listen Text must not dismiss the session"
-fi
+grep -q 'ArchiveCalendarView' "$MINUTE" \
+    || fail "Minute spine does not reuse ArchiveCalendarView"
 
 count=$(grep -c "ListenLibrary.swift" "$PBX" || true)
 [[ "$count" -ge 6 ]] || fail "ListenLibrary.swift has $count pbxproj lines; need the four build entries plus group child"
@@ -182,5 +166,5 @@ SWIFT
 swiftc -O "$LIB" "$NARRATION" "$WORK/main.swift" -o "$WORK/verify"
 "$WORK/verify"
 
-echo "Listen shows unplayed"
+echo "Course shows unplayed"
 echo "OK"

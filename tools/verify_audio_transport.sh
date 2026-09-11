@@ -26,13 +26,10 @@ fail() { echo "FAIL: $1"; exit 1; }
 count=$(grep -c "AudioTransport.swift" "$PBX" || true)
 [[ "$count" -ge 6 ]] || fail "AudioTransport.swift has $count pbxproj lines; need the four build entries plus group child"
 
-# The bar itself must expose a slider, times, and a way off. A ProgressView
-# is not a player.
-grep -q 'Slider' "$PLAYER" || fail "MiniPlayerView has no Slider — listen position cannot be set"
-grep -q 'AudioTransport.timeLabel' "$PLAYER" || fail "MiniPlayerView does not draw elapsed time"
+# The compact bar toggles playback. Scrubbing lives on AudioManager for
+# the lock screen and the full player; a ProgressView is still not a player.
+grep -q 'togglePlayback' "$PLAYER" || fail "MiniPlayerView has no play/pause"
 grep -q 'AudioTransport.remainingLabel' "$PLAYER" || fail "MiniPlayerView does not draw remaining time"
-grep -q 'audioManager.seek' "$PLAYER" || fail "MiniPlayerView never seeks"
-grep -q 'audioManager.stop' "$PLAYER" || fail "MiniPlayerView has no close"
 if grep -q 'ProgressView' "$PLAYER"; then
     fail "MiniPlayerView still uses ProgressView — that cannot be dragged"
 fi
@@ -41,12 +38,16 @@ fi
 grep -q 'func seek(to' "$MANAGER" || fail "AudioManager has no seek(to:)"
 grep -q 'AudioTransport.clampedPosition' "$MANAGER" || fail "AudioManager seek does not clamp"
 
-# Read is reading. Today's leftover bar must not sit on it.
-if grep -n 'hasActiveAudio && selectedTab != 2' "$CONTENT"; then
-    fail "ContentView still overlays the mini player on Read"
+# The bar shows whenever audio is active. Hiding it by tab index is the
+# five-tab design.
+if grep -n 'selectedTab != 1 && selectedTab != 2' "$CONTENT"; then
+    fail "ContentView still hides the mini player by tab index"
 fi
-grep -q 'selectedTab != 1 && selectedTab != 2' "$CONTENT" \
-    || fail "ContentView does not hide the overlay on Read and Listen"
+if grep -n 'hasActiveAudio && selectedTab !=' "$CONTENT"; then
+    fail "ContentView still gates the mini player on selectedTab"
+fi
+grep -q 'hasActiveAudio' "$CONTENT" || fail "ContentView no longer shows MiniPlayerView when audio is active"
+grep -q 'MiniPlayerView()' "$CONTENT" || fail "ContentView does not draw MiniPlayerView"
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT

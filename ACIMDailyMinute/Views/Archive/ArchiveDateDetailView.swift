@@ -126,7 +126,7 @@ struct ArchiveDateDetailView: View {
 
     /// Minute: podcast `<link>` first — the daily JSON can still name
     /// yesterday. Lesson: daily JSON first — the archive row can keep a
-    /// dead re-upload. `LiteYouTubeCard` walks a 404 thumbnail to the next id.
+    /// dead re-upload. The cover walks a 404 thumbnail to the next id.
     private func youtubeIDs(for reading: ArchivedReading) -> [String] {
         if reading.channel == "daily-minute" {
             let day = reading.dateString

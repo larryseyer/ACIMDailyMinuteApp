@@ -26,7 +26,6 @@ check() {
 
 # A missing lesson number is not lesson 0. 0 is the Workbook introduction.
 if grep -n 'lessonNumber ?? 0' \
-    "$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift" \
     "$REPO/ACIMDailyMinute/Views/Saved/BookmarkRow.swift" \
     "$REPO/ACIMDailyMinute/Utilities/ShareTextBuilder.swift"
 then
@@ -35,7 +34,7 @@ then
 fi
 
 if grep -n 'latestPublishedAt ?? Date()' \
-    "$REPO/ACIMDailyMinute/Views/Lessons/LessonsView.swift"
+    "$REPO/ACIMDailyMinute/Views/Course/CourseWorkbookSpine.swift"
 then
     echo "  an availability date is being counted from Date() instead of the publisher's day"
     fail=$((fail + 1))

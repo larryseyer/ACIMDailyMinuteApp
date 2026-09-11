@@ -110,7 +110,7 @@ swiftc -O \
 
 "$WORK/verify"
 
-if ! grep -q 'FallOpen.opening' "$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift"; then
-    echo "ArchiveView never lets the book fall open"
+if ! grep -q 'FallOpen.opening' "$REPO/ACIMDailyMinute/Views/Course/CourseView.swift"; then
+    echo "CourseView never lets the book fall open"
     exit 1
 fi

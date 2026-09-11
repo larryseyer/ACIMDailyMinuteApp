@@ -16,16 +16,18 @@ set -o pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 FILE="$REPO/ACIMDailyMinute/Views/Archive/ArchiveDateDetailView.swift"
 IDS="$REPO/ACIMDailyMinute/Utilities/YouTubeID.swift"
-ARCHIVE="$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift"
 DETAIL="$REPO/ACIMDailyMinute/Views/Archive/ArchiveDateDetailView.swift"
 PLAYER="$REPO/ACIMDailyMinute/Views/TVPlayerView.swift"
 CONTENT="$REPO/ACIMDailyMinute/App/ContentView.swift"
+COURSE="$REPO/ACIMDailyMinute/Views/Course/CourseView.swift"
 SHELF="$REPO/ACIMDailyMinute/Utilities/CourseShelf.swift"
 PBX="$REPO/ACIMDailyMinute.xcodeproj/project.pbxproj"
 
 fail() { echo "FAIL: $1"; exit 1; }
 
 [[ -f "$FILE" ]] || fail "ArchiveDateDetailView.swift missing"
+[[ -f "$SHELF" ]] || fail "CourseShelf.swift missing"
+[[ -f "$COURSE" ]] || fail "CourseView.swift missing"
 
 # Television: still the MP3-built player. No YouTube embed.
 grep -q 'openPlayer' "$FILE" \
@@ -36,16 +38,11 @@ grep -q 'openPlayer' "$FILE" \
 grep -q 'FullScreenVideoCover' "$FILE" \
     || fail "iOS Video day has no full-screen YouTube cover"
 
-[[ -f "$SHELF" ]] || fail "CourseShelf.swift missing"
-
-grep -q 'shelf: CourseShelf = .lesson' "$ARCHIVE" \
-    || fail "default Video shelf is not Lesson"
-grep -q 'ForEach(CourseShelf.allCases)' "$ARCHIVE" \
-    || fail "Video picker is not CourseShelf.allCases"
-grep -q 'VideoTextChapterView' "$ARCHIVE" \
-    || fail "Video has no Text chapter destination"
-grep -q 'openPlayer' "$ARCHIVE" \
-    || fail "Video no longer opens the composed player"
+grep -q 'CourseShelf.allCases' "$COURSE" \
+    || fail "Course contents is not CourseShelf.allCases"
+if grep -q 'LiteYouTubeCard' "$COURSE"; then
+    fail "Course still embeds LiteYouTubeCard"
+fi
 grep -q 'FullScreenVideoCover' "$DETAIL" \
     || fail "iOS Video day has no full-screen YouTube cover"
 grep -q 'openPlayer' "$DETAIL" \
@@ -53,19 +50,6 @@ grep -q 'openPlayer' "$DETAIL" \
 
 if grep -q 'No video for this day' "$DETAIL"; then
     fail "published day without YouTube is still an empty state"
-fi
-
-# Comments stripped: naming a forbidden type in prose is the guard.
-STRIPPED_ARCHIVE="$(sed 's://.*::' "$ARCHIVE")"
-for forbidden in TextSectionView LessonDetailView MinuteReadingView SegmentReadingView ManualSectionView playOrToggle; do
-    echo "$STRIPPED_ARCHIVE" | grep -q "$forbidden" \
-        && fail "Video tab opens $forbidden"
-done
-if echo "$STRIPPED_ARCHIVE" | grep -q 'readingDestinations'; then
-    fail "Video installs readingDestinations — that is Read"
-fi
-if echo "$STRIPPED_ARCHIVE" | grep -q 'TextChaptersView'; then
-    fail "Video reused Read's TextChaptersView"
 fi
 
 # Whole-file tvOS fence is gone; remote chrome stays wrapped.
@@ -91,7 +75,7 @@ else
     fail "TVPlayerView cover is not given AudioManager"
 fi
 
-for name in VideoLibrary.swift VideoPlayableRow.swift VideoTextChapterView.swift; do
+for name in VideoLibrary.swift VideoPlayableRow.swift; do
     count=$(grep -c "$name" "$PBX" || true)
     [[ "$count" -ge 6 ]] || fail "$name has $count pbxproj lines"
 done

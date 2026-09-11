@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA000001806 /* ACIMTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002806 /* ACIMTabBar.swift */; };
+		AA000001807 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002807 /* CourseView.swift */; };
+		AA000001808 /* CourseMinuteSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002808 /* CourseMinuteSpine.swift */; };
+		AA000001809 /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
+		AA000001824 /* CourseTextSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002824 /* CourseTextSpine.swift */; };
+		AA000001825 /* CourseManualSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002825 /* CourseManualSpine.swift */; };
+		C4A1B2C3D4E5F60718293A4B /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002807 /* CourseView.swift */; };
+		D5B2C3D4E5F60718293A4B5C /* CourseMinuteSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002808 /* CourseMinuteSpine.swift */; };
+		E6C3D4E5F60718293A4B5C6D /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
+		F7D4E5F60718293A4B5C6D7E /* CourseTextSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002824 /* CourseTextSpine.swift */; };
+		A8E5F60718293A4B5C6D7E8F /* CourseManualSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002825 /* CourseManualSpine.swift */; };
 		00D41811AAA4D849DDA89F39 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
 		AA000001900 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
 		AA000001901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
@@ -15,7 +26,6 @@
 		AA000001904 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
 		00DB89897C46AD26D5F02642 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002053 /* SavedView.swift */; };
 		04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
-		04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
 		05DAEA537206B7647F1337E3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002025 /* SettingsView.swift */; };
 		06496C1352191AA792B96A0C /* FolderCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002414 /* FolderCopy.swift */; };
 		070C4665BFADE319997EF23A /* WorkbookCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002301 /* WorkbookCatalog.swift */; };
@@ -70,7 +80,6 @@
 		6A317AB3A8F7C34B78A66A04 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		6BF36E0F5084D09D2ACE3140 /* YouTubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002016 /* YouTubePlayerView.swift */; };
 		6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002617 /* CitationButton.swift */; };
-		70C64140C976D1B6BF01B97A /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
 		70F6B618090B15E757551A37 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
 		713FA83FC00F90B32FA9A13C /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		71A8BB33786DB49CE02E2542 /* Workbook365Bodies.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002305 /* Workbook365Bodies.json */; };
@@ -78,10 +87,8 @@
 		738248A25EF9F3C7A7EE2E4A /* ReadingScaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002619 /* ReadingScaffold.swift */; };
 		739FA3EC8449547330463BC6 /* WorkbookPractice.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002705 /* WorkbookPractice.json */; };
 		74D17369D02542AE9F41B755 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002321 /* Note.swift */; };
-		7BB77B54BEF61504D2D5FF99 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
 		7DC168BF6E4E1CC0D617F8A4 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
 		7F8C0AE74B56A986256144F0 /* CorpusSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002610 /* CorpusSearch.swift */; };
-		80FAE54A5AA1B51D2347B019 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
 		816217340D292C35BE723810 /* CitationResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002361 /* CitationResolver.swift */; };
 		81D475D3B411E616189618E1 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002035 /* Bookmark.swift */; };
 		845AE2A00491471B4FF95822 /* ReadingTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002618 /* ReadingTime.swift */; };
@@ -97,7 +104,6 @@
 		8FC808A4792C964B5F26A22B /* ConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002029 /* ConnectivityManager.swift */; };
 		92C603BB97F15FE6E14D14A9 /* ACIMDailyMinuteShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002058 /* ACIMDailyMinuteShortcuts.swift */; };
 		95A9DEA4BF789F568FBF8A75 /* SaveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002999 /* SaveButton.swift */; };
-		95F04C7093469EB14C80C9FC /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
 		9608388FEBFF171EA2854DC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		96EC8F7C5C54011A6A4F68D5 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002019 /* MiniPlayerView.swift */; };
 		9745A63C14416AF0A848B477 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
@@ -113,13 +119,9 @@
 		C0DE0001A11CE0B1000010 /* CourseShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002730 /* CourseShelf.swift */; };
 		C0DE0001A11CE0B1000011 /* MinuteReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002731 /* MinuteReadingView.swift */; };
 		C0DE0001A11CE0B1000012 /* ListenLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002740 /* ListenLibrary.swift */; };
-		C0DE0001A11CE0B1000013 /* ListenResumeRibbon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002741 /* ListenResumeRibbon.swift */; };
-		C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
-		C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
 		C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
 		C0DE0001A11CE0B1000019 /* AudioTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002760 /* AudioTransport.swift */; };
 		C0DE0001A11CE0B1000017 /* VideoPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002751 /* VideoPlayableRow.swift */; };
-		C0DE0001A11CE0B1000018 /* VideoTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002752 /* VideoTextChapterView.swift */; };
 		C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		C0DE0001A11CE0B1000002 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
 		C0DE0001A11CE0B1000003 /* ReaderTextSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002627 /* ReaderTextSize.swift */; };
@@ -127,7 +129,6 @@
 		C0DE0001A11CE0B1000005 /* PlaybackProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002629 /* PlaybackProgressStore.swift */; };
 		AA000001001 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
 		AA000001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
-		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
 		AA000001009 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002009 /* Channel.swift */; };
 		AA000001011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000002011 /* Assets.xcassets */; };
 		AA000001012 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002012 /* DataService.swift */; };
@@ -193,10 +194,8 @@
 		AA000001206 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
 		AA000001210 /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
 		AA000001211 /* LessonRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002211 /* LessonRow.swift */; };
-		AA000001212 /* LessonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002212 /* LessonsView.swift */; };
 		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
 		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
-		AA000001215 /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
 
 		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
 		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
@@ -247,7 +246,6 @@
 		AA000001399 /* ReadingTextMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002399 /* ReadingTextMeasurement.swift */; };
 		AA000001400 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002400 /* BackupDocument.swift */; };
 		AA000001401 /* TextNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002401 /* TextNavigation.swift */; };
-		AA000001402 /* TextChaptersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002402 /* TextChaptersView.swift */; };
 		AA000001403 /* TextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002403 /* TextChapterView.swift */; };
 		AA000001404 /* TextSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002404 /* TextSectionView.swift */; };
 		AA000001405 /* WorkbookIntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002405 /* WorkbookIntroductionView.swift */; };
@@ -271,7 +269,6 @@
 		AA000001601 /* LessonSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002601 /* LessonSchedule.swift */; };
 		AA000001602 /* YouTubeID.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002602 /* YouTubeID.swift */; };
 		AA000001603 /* PlaybackHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002603 /* PlaybackHistory.swift */; };
-		AA000001604 /* LiteYouTubeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002604 /* LiteYouTubeCard.swift */; };
 		AA000001610 /* CorpusSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002610 /* CorpusSearch.swift */; };
 		AA000001611 /* CorpusSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002611 /* CorpusSearchService.swift */; };
 		AA000001612 /* ReadingSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002612 /* ReadingSpotlight.swift */; };
@@ -285,7 +282,6 @@
 		AA000001620 /* ReadingPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002620 /* ReadingPosition.swift */; };
 		AA000001621 /* ReadingKeyNaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002621 /* ReadingKeyNaming.swift */; };
 		AA000001622 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
-		AA000001623 /* ContinueReadingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002623 /* ContinueReadingRow.swift */; };
 		AA000001624 /* ArchiveCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002624 /* ArchiveCalendar.swift */; };
 		AA000001625 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		AA000001626 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
@@ -325,13 +321,9 @@
 		AA000001730 /* CourseShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002730 /* CourseShelf.swift */; };
 		AA000001731 /* MinuteReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002731 /* MinuteReadingView.swift */; };
 		AA000001740 /* ListenLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002740 /* ListenLibrary.swift */; };
-		AA000001741 /* ListenResumeRibbon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002741 /* ListenResumeRibbon.swift */; };
-		AA000001742 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
-		AA000001743 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
 		AA000001750 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
 		AA000001760 /* AudioTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002760 /* AudioTransport.swift */; };
 		AA000001751 /* VideoPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002751 /* VideoPlayableRow.swift */; };
-		AA000001752 /* VideoTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002752 /* VideoTextChapterView.swift */; };
 		AA000001801 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
 		AA000001802 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
 		AA000001803 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
@@ -356,7 +348,6 @@
 		AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
 		ABF27FA2BEED9F34CFB2861E /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
 
-		B16FB1B18A0560706DEEA3A7 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
 		B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
 		B579FDB9F261CC5F958EE305 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002411 /* BookmarkStore.swift */; };
 		B5E711DEAA4BCE9A6CD549F1 /* FullScreenVideoCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002251 /* FullScreenVideoCover.swift */; };
@@ -457,13 +448,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA000002806 /* ACIMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMTabBar.swift; sourceTree = "<group>"; };
+		AA000002807 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
+		AA000002808 /* CourseMinuteSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseMinuteSpine.swift; sourceTree = "<group>"; };
+		AA000002809 /* CourseWorkbookSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseWorkbookSpine.swift; sourceTree = "<group>"; };
+		AA000002824 /* CourseTextSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseTextSpine.swift; sourceTree = "<group>"; };
+		AA000002825 /* CourseManualSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseManualSpine.swift; sourceTree = "<group>"; };
 		0CDFC301C7300FDDF3A05542 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PracticeReminderKeys.swift; sourceTree = "<group>"; };
 		5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinuteTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EC2D377E570A3382CB13A1A /* NotificationNames.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		AA000002001 /* ACIMDailyMinuteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMDailyMinuteApp.swift; sourceTree = "<group>"; };
 		AA000002002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		AA000002005 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		AA000002009 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		AA000002011 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002012 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -526,10 +522,8 @@
 		AA000002206 /* HashUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashUtility.swift; sourceTree = "<group>"; };
 		AA000002210 /* LessonMeta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonMeta.swift; sourceTree = "<group>"; };
 		AA000002211 /* LessonRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonRow.swift; sourceTree = "<group>"; };
-		AA000002212 /* LessonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonsView.swift; sourceTree = "<group>"; };
 		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
 		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
-		AA000002215 /* ListenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenView.swift; sourceTree = "<group>"; };
 
 		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
 		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
@@ -570,7 +564,6 @@
 		AA000002399 /* ReadingTextMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingTextMeasurement.swift; sourceTree = "<group>"; };
 		AA000002400 /* BackupDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDocument.swift; sourceTree = "<group>"; };
 		AA000002401 /* TextNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNavigation.swift; sourceTree = "<group>"; };
-		AA000002402 /* TextChaptersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChaptersView.swift; sourceTree = "<group>"; };
 		AA000002403 /* TextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChapterView.swift; sourceTree = "<group>"; };
 		AA000002404 /* TextSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextSectionView.swift; sourceTree = "<group>"; };
 		AA000002405 /* WorkbookIntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookIntroductionView.swift; sourceTree = "<group>"; };
@@ -594,7 +587,6 @@
 		AA000002601 /* LessonSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonSchedule.swift; sourceTree = "<group>"; };
 		AA000002602 /* YouTubeID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeID.swift; sourceTree = "<group>"; };
 		AA000002603 /* PlaybackHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackHistory.swift; sourceTree = "<group>"; };
-		AA000002604 /* LiteYouTubeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiteYouTubeCard.swift; sourceTree = "<group>"; };
 		AA000002610 /* CorpusSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearch.swift; sourceTree = "<group>"; };
 		AA000002611 /* CorpusSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpusSearchService.swift; sourceTree = "<group>"; };
 		AA000002612 /* ReadingSpotlight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpotlight.swift; sourceTree = "<group>"; };
@@ -608,7 +600,6 @@
 		AA000002620 /* ReadingPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPosition.swift; sourceTree = "<group>"; };
 		AA000002621 /* ReadingKeyNaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingKeyNaming.swift; sourceTree = "<group>"; };
 		AA000002622 /* ReadingPositionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPositionStore.swift; sourceTree = "<group>"; };
-		AA000002623 /* ContinueReadingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueReadingRow.swift; sourceTree = "<group>"; };
 		AA000002624 /* ArchiveCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendar.swift; sourceTree = "<group>"; };
 		AA000002625 /* MediaOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaOverlay.swift; sourceTree = "<group>"; };
 		AA000002626 /* ReadingPlayControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPlayControl.swift; sourceTree = "<group>"; };
@@ -633,13 +624,9 @@
 		AA000002730 /* CourseShelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseShelf.swift; sourceTree = "<group>"; };
 		AA000002731 /* MinuteReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteReadingView.swift; sourceTree = "<group>"; };
 		AA000002740 /* ListenLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenLibrary.swift; sourceTree = "<group>"; };
-		AA000002741 /* ListenResumeRibbon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenResumeRibbon.swift; sourceTree = "<group>"; };
-		AA000002742 /* ListenPlayableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenPlayableRow.swift; sourceTree = "<group>"; };
-		AA000002743 /* ListenTextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenTextChapterView.swift; sourceTree = "<group>"; };
 		AA000002750 /* VideoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibrary.swift; sourceTree = "<group>"; };
 		AA000002760 /* AudioTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTransport.swift; sourceTree = "<group>"; };
 		AA000002751 /* VideoPlayableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayableRow.swift; sourceTree = "<group>"; };
-		AA000002752 /* VideoTextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTextChapterView.swift; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -687,6 +674,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA000005026 /* Course */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002807 /* CourseView.swift */,
+				AA000002808 /* CourseMinuteSpine.swift */,
+				AA000002809 /* CourseWorkbookSpine.swift */,
+				AA000002824 /* CourseTextSpine.swift */,
+				AA000002825 /* CourseManualSpine.swift */,
+			);
+			path = Course;
+			sourceTree = "<group>";
+		};
 		1CE45C1A29E09A4473DF8253 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -812,6 +811,7 @@
 			children = (
 				AA000005020 /* Today */,
 				AA000005021 /* Practice */,
+				AA000005026 /* Course */,
 				AA000005022 /* Lessons */,
 				AA000005023 /* Text */,
 				AA000005024 /* Manual */,
@@ -835,8 +835,8 @@
 				AA000002619 /* ReadingScaffold.swift */,
 				AA000002626 /* ReadingPlayControl.swift */,
 				AA000002507 /* TVPlayerView.swift */,
-				AA000002623 /* ContinueReadingRow.swift */,
 				AA000002703 /* ACIMColors.swift */,
+				AA000002806 /* ACIMTabBar.swift */,
 				AA000002991 /* CitationLabel.swift */,
 			);
 			path = Views;
@@ -845,11 +845,6 @@
 		AA000005008 /* Listen */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002604 /* LiteYouTubeCard.swift */,
-				AA000002215 /* ListenView.swift */,
-				AA000002741 /* ListenResumeRibbon.swift */,
-				AA000002742 /* ListenPlayableRow.swift */,
-				AA000002743 /* ListenTextChapterView.swift */,
 
 				AA000002016 /* YouTubePlayerView.swift */,
 				AA000002019 /* MiniPlayerView.swift */,
@@ -912,12 +907,10 @@
 		AA000005011 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
-				AA000002005 /* ArchiveView.swift */,
 				AA000002069 /* ArchiveCalendarView.swift */,
 				AA000002217 /* ArchiveDateDetailView.swift */,
 				AA000002218 /* ArchivedReadingCard.swift */,
 				AA000002751 /* VideoPlayableRow.swift */,
-				AA000002752 /* VideoTextChapterView.swift */,
 			);
 			path = Archive;
 			sourceTree = "<group>";
@@ -1044,7 +1037,6 @@
 			children = (
 				AA000002210 /* LessonMeta.swift */,
 				AA000002211 /* LessonRow.swift */,
-				AA000002212 /* LessonsView.swift */,
 				AA000002213 /* LessonDetailView.swift */,
 				AA000002214 /* JumpToLessonSheet.swift */,
 				AA000002405 /* WorkbookIntroductionView.swift */,
@@ -1058,7 +1050,6 @@
 			isa = PBXGroup;
 			children = (
 				AA000002401 /* TextNavigation.swift */,
-				AA000002402 /* TextChaptersView.swift */,
 				AA000002403 /* TextChapterView.swift */,
 				AA000002404 /* TextSectionView.swift */,
 			);
@@ -1289,7 +1280,12 @@
 			files = (
 				AA000001001 /* ACIMDailyMinuteApp.swift in Sources */,
 				AA000001002 /* ContentView.swift in Sources */,
-				AA000001005 /* ArchiveView.swift in Sources */,
+				AA000001806 /* ACIMTabBar.swift in Sources */,
+				AA000001807 /* CourseView.swift in Sources */,
+				AA000001808 /* CourseMinuteSpine.swift in Sources */,
+				AA000001809 /* CourseWorkbookSpine.swift in Sources */,
+				AA000001824 /* CourseTextSpine.swift in Sources */,
+				AA000001825 /* CourseManualSpine.swift in Sources */,
 				AA000001100 /* DailyMinute.swift in Sources */,
 				AA000001103 /* DailyLesson.swift in Sources */,
 				AA000001106 /* ArchivedReading.swift in Sources */,
@@ -1304,7 +1300,6 @@
 				AA000001016 /* YouTubePlayerView.swift in Sources */,
 				AA000001018 /* AudioManager.swift in Sources */,
 				AA000001019 /* MiniPlayerView.swift in Sources */,
-				AA000001215 /* ListenView.swift in Sources */,
 
 				AA000001020 /* ArchiveService.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,
@@ -1333,7 +1328,6 @@
 				AA000001399 /* ReadingTextMeasurement.swift in Sources */,
 				AA000001341 /* AnnotatableReadingText.swift in Sources */,
 				AA000001401 /* TextNavigation.swift in Sources */,
-				AA000001402 /* TextChaptersView.swift in Sources */,
 				AA000001403 /* TextChapterView.swift in Sources */,
 				AA000001404 /* TextSectionView.swift in Sources */,
 				AA000001405 /* WorkbookIntroductionView.swift in Sources */,
@@ -1362,11 +1356,9 @@
 				C3F8A91B4E2D6C7A8B0D1E5F /* PracticeSheet.swift in Sources */,
 				AA000001210 /* LessonMeta.swift in Sources */,
 				AA000001211 /* LessonRow.swift in Sources */,
-				AA000001212 /* LessonsView.swift in Sources */,
 				AA000001213 /* LessonDetailView.swift in Sources */,
 				AA000001214 /* JumpToLessonSheet.swift in Sources */,
 				AA000001260 /* ReadingKey.swift in Sources */,
-				AA000001604 /* LiteYouTubeCard.swift in Sources */,
 				AA000001603 /* PlaybackHistory.swift in Sources */,
 				AA000001602 /* YouTubeID.swift in Sources */,
 				AA000001601 /* LessonSchedule.swift in Sources */,
@@ -1402,13 +1394,9 @@
 				AA000001730 /* CourseShelf.swift in Sources */,
 				AA000001731 /* MinuteReadingView.swift in Sources */,
 				AA000001740 /* ListenLibrary.swift in Sources */,
-				AA000001741 /* ListenResumeRibbon.swift in Sources */,
-				AA000001742 /* ListenPlayableRow.swift in Sources */,
-				AA000001743 /* ListenTextChapterView.swift in Sources */,
 				AA000001750 /* VideoLibrary.swift in Sources */,
 				AA000001760 /* AudioTransport.swift in Sources */,
 				AA000001751 /* VideoPlayableRow.swift in Sources */,
-				AA000001752 /* VideoTextChapterView.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
 				AA000001616 /* ReadingNavigation.swift in Sources */,
 				AA000001617 /* CitationButton.swift in Sources */,
@@ -1417,7 +1405,6 @@
 				AA000001620 /* ReadingPosition.swift in Sources */,
 				AA000001621 /* ReadingKeyNaming.swift in Sources */,
 				AA000001622 /* ReadingPositionStore.swift in Sources */,
-				AA000001623 /* ContinueReadingRow.swift in Sources */,
 				AA000001624 /* ArchiveCalendar.swift in Sources */,
 				AA000001625 /* MediaOverlay.swift in Sources */,
 				AA000001626 /* ReadingPlayControl.swift in Sources */,
@@ -1528,7 +1515,11 @@
 			files = (
 				CECB16E77047DCBDA7BED5B6 /* ACIMDailyMinuteApp.swift in Sources */,
 				9745A63C14416AF0A848B477 /* ContentView.swift in Sources */,
-				B16FB1B18A0560706DEEA3A7 /* ArchiveView.swift in Sources */,
+				C4A1B2C3D4E5F60718293A4B /* CourseView.swift in Sources */,
+				D5B2C3D4E5F60718293A4B5C /* CourseMinuteSpine.swift in Sources */,
+				E6C3D4E5F60718293A4B5C6D /* CourseWorkbookSpine.swift in Sources */,
+				F7D4E5F60718293A4B5C6D7E /* CourseTextSpine.swift in Sources */,
+				A8E5F60718293A4B5C6D7E8F /* CourseManualSpine.swift in Sources */,
 				E01D81AFF75DE4CECD830551 /* DailyMinute.swift in Sources */,
 				12010653E7E440A0DB51F8F8 /* DailyLesson.swift in Sources */,
 				B8F4C3D789C48924B38D5408 /* ArchivedReading.swift in Sources */,
@@ -1543,7 +1534,6 @@
 				6BF36E0F5084D09D2ACE3140 /* YouTubePlayerView.swift in Sources */,
 				DBC69AF82BE814936B9810F7 /* AudioManager.swift in Sources */,
 				96EC8F7C5C54011A6A4F68D5 /* MiniPlayerView.swift in Sources */,
-				95F04C7093469EB14C80C9FC /* ListenView.swift in Sources */,
 
 				E8BDBBDBE685E353D220DD84 /* ArchiveService.swift in Sources */,
 				05DAEA537206B7647F1337E3 /* SettingsView.swift in Sources */,
@@ -1573,7 +1563,6 @@
 				37C827CB2E78E0D330F51602 /* ReadingTextMeasurement.swift in Sources */,
 				995B06F9863BB659B6262DB2 /* AnnotatableReadingText.swift in Sources */,
 				BB5E039943D9D50BE8163500 /* TextNavigation.swift in Sources */,
-				80FAE54A5AA1B51D2347B019 /* TextChaptersView.swift in Sources */,
 				8628C399075BCEE178ACB4D6 /* TextChapterView.swift in Sources */,
 				7DC168BF6E4E1CC0D617F8A4 /* TextSectionView.swift in Sources */,
 				F9967E38BBC2D787D311CEB3 /* WorkbookIntroductionView.swift in Sources */,
@@ -1600,11 +1589,9 @@
 				D7A11A92B0D34F6A8E1B2993 /* TodayActionRow.swift in Sources */,
 				B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */,
 				04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */,
-				04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */,
 				BE825B05E3C3D7202C07CFC7 /* LessonDetailView.swift in Sources */,
 				10E15B2FBF3553B0BD532DA1 /* JumpToLessonSheet.swift in Sources */,
 				5ED569BBC87E74C5DB7DE0C2 /* ReadingKey.swift in Sources */,
-				70C64140C976D1B6BF01B97A /* LiteYouTubeCard.swift in Sources */,
 				9D536BFD7367CB31DF5317B9 /* PlaybackHistory.swift in Sources */,
 				69A37287F782E66802C33C1D /* YouTubeID.swift in Sources */,
 				5ECA908CFC68510F2D5B19CE /* LessonSchedule.swift in Sources */,
@@ -1640,13 +1627,9 @@
 				C0DE0001A11CE0B1000010 /* CourseShelf.swift in Sources */,
 				C0DE0001A11CE0B1000011 /* MinuteReadingView.swift in Sources */,
 				C0DE0001A11CE0B1000012 /* ListenLibrary.swift in Sources */,
-				C0DE0001A11CE0B1000013 /* ListenResumeRibbon.swift in Sources */,
-				C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */,
-				C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */,
 				C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */,
 				C0DE0001A11CE0B1000019 /* AudioTransport.swift in Sources */,
 				C0DE0001A11CE0B1000017 /* VideoPlayableRow.swift in Sources */,
-				C0DE0001A11CE0B1000018 /* VideoTextChapterView.swift in Sources */,
 				F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */,
 				F49A219ED0FD25EE8D11715B /* ReadingNavigation.swift in Sources */,
 				6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */,
@@ -1660,7 +1643,6 @@
 				849092876F974290EF99C25F /* ReadingKeyNaming.swift in Sources */,
 				AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */,
 				C0DE0001A11CE0B1000005 /* PlaybackProgressStore.swift in Sources */,
-				7BB77B54BEF61504D2D5FF99 /* ContinueReadingRow.swift in Sources */,
 				713FA83FC00F90B32FA9A13C /* PracticeAnchorStore.swift in Sources */,
 				70F6B618090B15E757551A37 /* Appearance.swift in Sources */,
 				66AAECF42CA912EC45F0AA20 /* ACIMColors.swift in Sources */,

@@ -1,76 +1,81 @@
 import SwiftUI
 
-/// Single row in the Lessons workbook list.
+/// One Workbook spine row. Number, title, sub, media glyphs.
 ///
-/// Every lesson taps through a `NavigationLink(value: Int)` to the matching
-/// `.navigationDestination(for: Int.self)` on `LessonsView`. A lesson the
-/// publisher has not reached yet renders dimmed, with the date its recording is
-/// due on the second line — and still opens, because its text is bundled and
-/// readable now; only the audio and video are still to come. The screen it
-/// opens repeats the date, so a tap is answered rather than ignored.
+/// An unpublished lesson is inert: the text is bundled, but the row does
+/// not open until `LessonSchedule` says it is due. The current lesson is
+/// the highlighted row — gold at 9%, bled 12pt into the gutters.
 struct LessonRow: View {
     let lessonNumber: Int
     let meta: LessonMeta?
     let isBookmarked: Bool
     let isCompleted: Bool
-
-    /// `nil` once the lesson has been recorded. Non-nil is what makes the row
-    /// dim and inert, so the two states cannot drift apart.
     let availableOn: Date?
-
-    private static let accent = Color.acimGold
+    var isCurrent: Bool = false
+    var practiceLine: String? = nil
 
     private var isAvailable: Bool { availableOn == nil }
 
     var body: some View {
-        NavigationLink(value: lessonNumber) {
-            rowLabel
+        Group {
+            if isAvailable {
+                NavigationLink(value: lessonNumber) { rowLabel }
+                    .buttonStyle(.plain)
+            } else {
+                rowLabel
+                    .opacity(0.42)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(unavailableAccessibilityLabel)
+            }
         }
+        .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 13))
+        .listRowBackground(Color.clear)
+        #if !os(tvOS)
+        .listRowSeparator(.hidden)
+        #endif
     }
 
-    @ViewBuilder
     private var rowLabel: some View {
-        if isAvailable {
-            rowContent
-        } else {
-            rowContent
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel(unavailableAccessibilityLabel)
-        }
-    }
+        HStack(alignment: .firstTextBaseline, spacing: 13) {
+            Text("\(lessonNumber)")
+                .font(.acimRowNumber)
+                .foregroundStyle(Color.acimGold)
+                .frame(width: 34, alignment: .leading)
+                .accessibilityLabel("Lesson \(lessonNumber)")
 
-    private var rowContent: some View {
-        HStack(spacing: 12) {
-            numberBadge
-            titleColumn
-            Spacer(minLength: 8)
-            if isCompleted {
-                Image(systemName: "checkmark")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Self.accent)
-                    .accessibilityLabel("Done")
+            VStack(alignment: .leading, spacing: 2) {
+                Text(resolvedTitle ?? "Lesson \(lessonNumber)")
+                    .font(.acimRowTitle)
+                    .foregroundStyle(titleColor)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                if let sub = subtitle {
+                    Text(sub)
+                        .font(.acimRowSub)
+                        .foregroundStyle(isCurrent ? Color.acimGold : Color.secondary)
+                }
             }
-            if isBookmarked {
-                Image(systemName: "bookmark.fill")
-                    .font(.caption2)
-                    .foregroundStyle(Self.accent)
-                    .accessibilityLabel("Bookmarked")
+
+            Spacer(minLength: 8)
+
+            CourseSpineGlyphs(hasAudio: meta?.hasAudio == true, hasVideo: meta?.hasVideo == true)
+        }
+        .padding(.vertical, Metric.row)
+        .padding(.horizontal, 12)
+        .background {
+            if isCurrent {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.acimGold.opacity(0.09))
+                    .padding(.horizontal, -12)
             }
         }
-        .padding(.vertical, 4)
         .contentShape(Rectangle())
     }
 
-    private var numberBadge: some View {
-        Text("\(lessonNumber)")
-            .font(.system(size: 13, weight: .semibold, design: .rounded))
-            .monospacedDigit()
-            .foregroundStyle(isAvailable ? Color.acimOnGold : Color.secondary)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(isAvailable ? AnyShapeStyle(Self.accent) : AnyShapeStyle(.tertiary))
-            .clipShape(Capsule())
-            .accessibilityLabel("Lesson \(lessonNumber)")
+    private var titleColor: Color {
+        if !isAvailable { return .primary }
+        if isCompleted { return .secondary }
+        return .primary
     }
 
     private var resolvedTitle: String? {
@@ -78,27 +83,15 @@ struct LessonRow: View {
         return WorkbookCatalog.title(for: lessonNumber)
     }
 
-    @ViewBuilder
-    private var titleColumn: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            if let title = resolvedTitle {
-                Text(title)
-                    .font(.system(.subheadline, design: .serif))
-                    .foregroundStyle(isAvailable ? .primary : .secondary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else {
-                Text("Not yet read")
-                    .font(.system(.subheadline, design: .serif).italic())
-                    .foregroundStyle(.secondary)
-            }
-
-            if let availableOn {
-                Text("Available \(LessonSchedule.formatted(availableOn))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-            }
+    private var subtitle: String? {
+        if isCurrent, let practiceLine, !practiceLine.isEmpty {
+            return practiceLine
         }
+        if let availableOn {
+            return "Available \(LessonSchedule.formatted(availableOn))"
+        }
+        if isBookmarked { return nil }
+        return nil
     }
 
     private var unavailableAccessibilityLabel: String {

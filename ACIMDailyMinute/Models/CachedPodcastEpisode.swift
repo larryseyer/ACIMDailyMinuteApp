@@ -8,7 +8,7 @@ import SwiftData
 /// fresh episodes in the background.
 ///
 /// The `channel` string ("minute" | "lesson") mirrors `PodcastFeed.rawValue`
-/// in `ListenView` — both feeds share one SQLite table, filtered at query
+/// in `PodcastService` — both feeds share one SQLite table, filtered at query
 /// time rather than split into two models. `lastSeenAt` drives a 30-day
 /// TTL purge in `PodcastService.persist` so feeds that drop an episode
 /// (or rename its GUID) don't accumulate ghosts.

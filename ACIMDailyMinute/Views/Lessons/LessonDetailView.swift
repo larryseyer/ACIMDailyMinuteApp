@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 /// Detail screen for a single workbook lesson (1–365), landed on via
-/// `.navigationDestination(for: Int.self)` declared in `LessonsView`.
+/// `.navigationDestination(for: Int.self)` declared in `CourseView`.
 ///
 /// Three render states, resolved locally (no network on initial render):
 /// 1. **Full** — a `DailyLesson` row exists for this `lessonNumber`. Full body,
@@ -26,7 +26,7 @@ struct LessonDetailView: View {
     @Query private var bookmarks: [Bookmark]
 
     /// Everything recorded, for the anchor `LessonSchedule` counts weekdays
-    /// from — the same candidates `LessonsView` hands it, so the date this
+    /// from — the same candidates `CourseWorkbookSpine` hands it, so the date this
     /// screen prints is the date the row printed.
     @Query(sort: \DailyLesson.lessonNumber) private var allLessons: [DailyLesson]
     @Query(

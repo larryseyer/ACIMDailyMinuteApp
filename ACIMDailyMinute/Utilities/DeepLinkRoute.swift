@@ -36,8 +36,3 @@ enum DeepLinkRoute: Sendable, Equatable {
         }
     }
 }
-
-extension Notification.Name {
-    static let deepLinkLesson = Notification.Name("acim.deepLink.lesson")
-    static let deepLinkArchive = Notification.Name("acim.deepLink.archive")
-}

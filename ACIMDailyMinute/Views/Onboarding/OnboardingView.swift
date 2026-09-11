@@ -40,10 +40,8 @@ struct OnboardingView: View {
              "A short passage from\nA Course in Miracles,\ndelivered daily."),
             ("book.closed", "Today's Lesson",
              "The Workbook for Students\none lesson at a time,\non the day you choose."),
-            ("play.circle", "Listen",
-             "Every passage and lesson, read aloud.\nListen while you commute, walk, or sit still.\nDaily Minutes and Daily Lessons are added regularly."),
-            ("play.rectangle", "Video",
-             "Watch the Course on the screen.\nMinutes, lessons, the Text, and the Manual.\nSit with it, or put it on the television."),
+            ("book.closed.fill", "The Course",
+             "The Workbook, the Text, and the Manual\nin one place.\nRead, listen, or watch from any passage."),
             ("bookmark", "Save Your Favorites",
              "Keep the passages you mark as favorites.\nReturn to them anytime, online or off.")
         ]

@@ -4,9 +4,8 @@ import Foundation
 /// the publisher's own records use: `youtube.com/embed/ID`, `watch?v=ID`, and
 /// `youtu.be/ID`.
 ///
-/// Shared by `YouTubePlayerView` (which needs it to build an embed URL) and
-/// `LiteYouTubeCard` (which needs it to build a thumbnail URL) so the two cannot
-/// disagree about what a given feed link points at.
+/// Shared by `YouTubePlayerView` so an embed URL and a feed link cannot
+/// disagree about what a given recording points at.
 enum YouTubeID {
     /// Which catalogue a Video-tab day is reading.
     ///

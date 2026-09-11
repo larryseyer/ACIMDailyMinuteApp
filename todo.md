@@ -14,7 +14,6 @@ step 10 is on the devices.
 
 REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
 
-- [ ] Step 4 — the Course tab: three shelves collapse to one, five tabs to three, `ACIMTabBar`, onboarding.
 - [ ] Step 5 — the reading and the medium band, through `ReadingScaffold`.
 - [ ] Step 6 — Now Playing, the full player.
 - [ ] Step 7 — Saved as one filtered stream.

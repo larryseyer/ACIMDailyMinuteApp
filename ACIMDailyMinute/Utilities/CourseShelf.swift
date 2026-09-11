@@ -1,10 +1,10 @@
 import Foundation
 
-/// The four books of the Course, as one picker on Read, Listen, and Video.
+/// The four books of the Course.
 ///
-/// Case order is picker order: Minute first, then Lesson, Text, Manual.
-/// The default on Read is still Lesson, so the Workbook landing does not
-/// jump to a calendar.
+/// Case order is contents order: Minute first, then Lesson, Text, Manual.
+/// Raw values stay the short labels so existing compile checks on order
+/// still mean the same four books. The contents page draws `bookName`.
 enum CourseShelf: String, CaseIterable, Identifiable, Sendable {
     case minute = "Minute"
     case lesson = "Lesson"
@@ -12,4 +12,13 @@ enum CourseShelf: String, CaseIterable, Identifiable, Sendable {
     case manual = "Manual"
 
     var id: String { rawValue }
+
+    var bookName: String {
+        switch self {
+        case .minute: "Daily Minute"
+        case .lesson: "Workbook"
+        case .text: "Text"
+        case .manual: "Manual"
+        }
+    }
 }

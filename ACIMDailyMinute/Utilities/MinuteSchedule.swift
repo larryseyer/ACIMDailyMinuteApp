@@ -131,3 +131,40 @@ enum FallOpen {
         return nil
     }
 }
+
+extension MinuteSchedule {
+    /// Midnight-UTC for `now`, matching ingestion timezone
+    /// (`DataService.parseISODate`). The calendar grid uses the reader's
+    /// zone; feed keys do not.
+    static func utcToday(now: Date) -> Date {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        return cal.startOfDay(for: now)
+    }
+
+    /// `Date → "yyyy-MM-dd"` in UTC, symmetric with `DataService.parseISODate`.
+    static func utcDateString(from date: Date) -> String {
+        utcDay.string(from: date)
+    }
+
+    /// `Date → "Thursday, April 10, 2026"` in the reader's locale.
+    static func longDateString(from date: Date) -> String {
+        longDay.string(from: date)
+    }
+
+    private static let utcDay: DateFormatter = {
+        let f = DateFormatter()
+        f.calendar = Calendar(identifier: .gregorian)
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.timeZone = TimeZone(secondsFromGMT: 0)
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+
+    private static let longDay: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .full
+        f.timeStyle = .none
+        return f
+    }()
+}

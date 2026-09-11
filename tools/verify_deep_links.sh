@@ -84,39 +84,35 @@ swiftc -O \
 "$WORK/verify"
 
 if ! grep -q 'case .listen' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
-    echo "ContentView never opens the Listen tab from a URL"
+    echo "ContentView never opens Course from a listen URL"
     exit 1
 fi
 if ! grep -q 'case .archive' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
-    echo "ContentView never opens the Video tab from a URL"
+    echo "ContentView never opens Course from an archive URL"
     exit 1
 fi
-if ! grep -q 'Label("Video"' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
-    echo "the Video tab is not labelled Video"
+if grep -q 'Label("Video"' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
+    echo "the Video tab is still labelled Video"
     exit 1
 fi
 if grep -q 'Label("Archive"' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
-    echo "the Video tab is still labelled Archive"
+    echo "the Archive tab is still labelled Archive"
     exit 1
 fi
-if ! grep -q 'title: "Video"' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
-    echo "the Mac tab bar does not name Video"
+if ! grep -q 'Label("Course"' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
+    echo "the Course tab is not labelled Course"
     exit 1
 fi
-if ! grep -q 'navigationTitle("Video")' "$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift"; then
-    echo "the Video tab's navigation title is not Video"
-    exit 1
-fi
-if grep -q 'navigationTitle("Archive")' "$REPO/ACIMDailyMinute/Views/Archive/ArchiveView.swift"; then
-    echo "the Video tab's navigation title is still Archive"
-    exit 1
-fi
-if ! grep -q '("play.rectangle", "Video"' "$REPO/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift"; then
-    echo "the introduction never names the Video tab"
+if grep -q '("play.rectangle", "Video"' "$REPO/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift"; then
+    echo "the introduction still names the Video tab"
     exit 1
 fi
 if grep -q '"Archive"' "$REPO/ACIMDailyMinute/Views/Onboarding/OnboardingView.swift"; then
     echo "the introduction still names the Archive tab"
+    exit 1
+fi
+if ! grep -q 'CourseView' "$REPO/ACIMDailyMinute/App/ContentView.swift"; then
+    echo "ContentView does not present CourseView"
     exit 1
 fi
 if ! grep -q 'final class ArchiveService' "$REPO/ACIMDailyMinute/Services/ArchiveService.swift"; then
