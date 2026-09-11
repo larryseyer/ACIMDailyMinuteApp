@@ -71,6 +71,19 @@ struct ListenView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
+                if let item = resumeItem {
+                    ListenResumeRibbon(
+                        item: item,
+                        isActive: audio.isActive(url: item.audioURL)
+                            || (!item.episodeID.isEmpty && audio.currentEpisodeID == item.episodeID),
+                        isPlaying: audio.isPlaying,
+                        onTap: {
+                            play(url: item.audioURL, title: item.title, episodeID: item.episodeID)
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                }
+
                 Group {
                     switch shelf {
                     case .minute: EmptyView()
@@ -109,6 +122,60 @@ struct ListenView: View {
             }
         }
         #endif
+    }
+
+    // MARK: - Resume
+
+    private var resumeItem: ListenLibrary.Resume? {
+        _ = downloadRevision
+        let inProgress: [(title: String, audioURL: String, episodeID: String, updatedAt: Date)] =
+            resumeCandidates.compactMap { row in
+                let classified = ListenActivity.classify(
+                    isActive: isActive(row),
+                    progress: progress(for: row),
+                    listenedAt: listenedEpisodes[row.episodeID],
+                    isDownloaded: AudioDownloadStore.isDownloaded(row.episodeID)
+                )
+                guard classified == .inProgress,
+                      let updated = progress(for: row)?.updatedAt
+                else { return nil }
+                return (row.title, row.audioURL, row.episodeID, updated)
+            }
+        return ListenLibrary.resume(
+            hasActiveAudio: audio.hasActiveAudio,
+            nowPlayingTitle: audio.currentTitle,
+            nowPlayingURL: audio.currentURL,
+            nowPlayingEpisodeID: audio.currentEpisodeID,
+            inProgress: inProgress
+        )
+    }
+
+    private var resumeCandidates: [ListenLibrary.Row] {
+        let minutes = cachedMinutes.map { cached in
+            ListenLibrary.Row(
+                id: cached.id,
+                title: cached.title,
+                audioURL: cached.audioURL,
+                episodeID: cached.id
+            )
+        }
+        let lessons = cachedLessons.map { cached -> ListenLibrary.Row in
+            let number = LessonNarration.number(fromGUID: cached.id)
+                ?? LessonNarration.number(fromTitle: cached.title)
+            let title: String
+            if let number, let canonical = WorkbookCatalog.title(for: number) {
+                title = canonical
+            } else {
+                title = cached.title
+            }
+            return ListenLibrary.Row(
+                id: cached.id,
+                title: title,
+                audioURL: cached.audioURL,
+                episodeID: cached.id
+            )
+        }
+        return minutes + lessons
     }
 
     // MARK: - Actions
