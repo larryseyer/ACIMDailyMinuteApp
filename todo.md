@@ -6,7 +6,7 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ## LIVE — #1
 
-- [ ] Listen tab: same four shelves (Minute / Lesson / Text / Manual), resume ribbon on top; unplayed audio is visible. Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`.
+- [ ] Listen tab: same four shelves (Minute / Lesson / Text / Manual), resume ribbon on top; unplayed audio is visible. Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`. Plan first; no builds until that plan is finished.
 - [ ] Video tab: same four shelves; YouTube when a recording exists, composed player otherwise (Apple TV always composes).
 - [ ] tvOS Read opens the reading, not the player. Today stays player-first.
 - [ ] Onboarding, App Store listing, and support copy: Video is no longer “browse by date.”
