@@ -102,13 +102,22 @@ struct ListenView: View {
                     switch shelf {
                     case .minute: minuteShelf
                     case .lesson: lessonShelf
-                    case .text: EmptyView()
-                    case .manual: EmptyView()
+                    case .text: textShelf
+                    case .manual: manualShelf
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .navigationTitle("Listen")
+            .navigationDestination(for: ListenTextChapterRef.self) { ref in
+                ListenTextChapterView(
+                    chapter: ref.chapter,
+                    played: listenedEpisodes,
+                    isPlaying: audio.isPlaying,
+                    isActive: { isActive($0) },
+                    onPlay: { play(url: $0.audioURL, title: $0.title, episodeID: $0.episodeID) }
+                )
+            }
             #if !os(tvOS)
             .refreshable {
                 await reload(force: true)
@@ -365,6 +374,76 @@ struct ListenView: View {
         }
         #endif
         .id("\(row.id)-\(downloadRevision)")
+    }
+
+    // MARK: - Text and Manual shelves
+
+    private var textShelf: some View {
+        let corpus = CorpusService.shared
+        return List {
+            if corpus.textChapters.isEmpty {
+                ContentUnavailableView {
+                    Label("The Text is unavailable", systemImage: "book.closed")
+                } description: {
+                    Text("The bundled Text could not be read from this build.")
+                }
+                #if !os(tvOS)
+                .listRowSeparator(.hidden)
+                #endif
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(corpus.textChapters) { chapter in
+                    NavigationLink(value: ListenTextChapterRef(chapter: chapter.number)) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(chapter.displayName)
+                                .font(.system(.subheadline, design: .serif).weight(.semibold))
+                            if let subtitle = chapter.subtitle {
+                                Text(subtitle)
+                                    .font(.acimCaption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                            Text(chapter.sections.count == 1 ? "1 section" : "\(chapter.sections.count) sections")
+                                .font(.acimCaption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
+                    }
+                }
+            }
+        }
+        .listStyle(.plain)
+        .readableContentWidth()
+    }
+
+    private var manualShelf: some View {
+        let corpus = CorpusService.shared
+        let rows = ListenLibrary.manualSectionRows(
+            sections: corpus.manualSections.map { (number: $0.number, title: $0.title) },
+            audioByNumber: [:],
+            episodeIDByNumber: [:]
+        )
+        return List {
+            if rows.isEmpty {
+                ContentUnavailableView {
+                    Label("The Manual is unavailable", systemImage: "book.closed")
+                } description: {
+                    Text("The bundled Manual could not be read from this build.")
+                }
+                #if !os(tvOS)
+                .listRowSeparator(.hidden)
+                #endif
+                .listRowBackground(Color.clear)
+            } else {
+                ForEach(rows, id: \.id) { row in
+                    listenRow(row)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .readableContentWidth()
     }
 
     // MARK: - Actions

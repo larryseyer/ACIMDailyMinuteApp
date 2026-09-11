@@ -32,6 +32,20 @@ echo "$STRIPPED" | grep -q 'Nothing to resume' && fail "ListenView still has the
 grep -q 'ArchiveCalendarView' "$VIEW" \
     || fail "Minute shelf does not reuse ArchiveCalendarView"
 
+CHAPTER="$REPO/ACIMDailyMinute/Views/Listen/ListenTextChapterView.swift"
+[[ -f "$CHAPTER" ]] || fail "ListenTextChapterView.swift missing"
+chapter_count=$(grep -c "ListenTextChapterView.swift" "$PBX" || true)
+[[ "$chapter_count" -ge 6 ]] || fail "ListenTextChapterView.swift has $chapter_count pbxproj lines"
+
+grep -q 'navigationDestination(for: ListenTextChapterRef.self)' "$VIEW" \
+    || fail "Listen has no ListenTextChapterRef destination"
+if grep -q 'navigationDestination(for: TextChapterRef.self)' "$VIEW"; then
+    fail "Listen must not push Read's TextChapterView"
+fi
+if grep -q 'dismissForTextReading' "$VIEW" "$CHAPTER"; then
+    fail "Listen Text must not dismiss the session"
+fi
+
 count=$(grep -c "ListenLibrary.swift" "$PBX" || true)
 [[ "$count" -ge 6 ]] || fail "ListenLibrary.swift has $count pbxproj lines; need the four build entries plus group child"
 
