@@ -15,7 +15,7 @@ set -e
 set -o pipefail
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-ROW="$REPO/ACIMDailyMinute/Views/Listen/PodcastEpisodeRow.swift"
+ROW="$REPO/ACIMDailyMinute/Views/Listen/ListenPlayableRow.swift"
 VIEW="$REPO/ACIMDailyMinute/Views/Listen/ListenView.swift"
 CONTENT="$REPO/ACIMDailyMinute/App/ContentView.swift"
 
@@ -23,7 +23,7 @@ fail() { echo "FAIL: $1"; exit 1; }
 
 # 1. Each audio row uses the shared Listen/Play/Pause control. Hand-rolling
 #    a Pause label is already forbidden by verify_card_header.sh.
-grep -q 'ListenButton(' "$ROW" || fail "PodcastEpisodeRow does not use ListenButton"
+grep -q 'ListenButton(' "$ROW" || fail "ListenPlayableRow does not use ListenButton"
 
 # 2. A waveform cannot be paused. Playing is Pause, paused is Play.
 if grep -q '"waveform"' "$ROW"; then
