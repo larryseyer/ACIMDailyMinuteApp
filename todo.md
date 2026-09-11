@@ -6,7 +6,7 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ## LIVE — #1
 
-- [ ] Video tab plays YouTube on iPhone, iPad, and Mac. Opening a day plays the video. Apple TV already rebuilds video from the MP3s — leave that path.
+- [ ] Video tab YouTube is on the iPhone, Mac, and iPad sim — he is checking that a day plays the video. Apple TV still rebuilds from the MP3s.
 
 ## HIS CALL
 
