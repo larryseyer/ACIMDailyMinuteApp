@@ -58,6 +58,9 @@ struct ArchiveView: View {
                         await refresh()
                     }
                 }
+                .task {
+                    await refreshPodcasts(force: false)
+                }
                 #endif
                 .navigationDestination(for: String.self) { dateString in
                     ArchiveDateDetailView(
@@ -177,7 +180,13 @@ struct ArchiveView: View {
                     Text(Self.longDateString(from: archiveCalendar.selection))
                         .font(.body.weight(.medium))
                         .foregroundStyle(.primary)
-                    Text(sentence ?? "Open readings")
+                    Text(sentence ?? {
+                        #if os(tvOS)
+                        "Open readings"
+                        #else
+                        "Open video"
+                        #endif
+                    }())
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -303,6 +312,23 @@ struct ArchiveView: View {
             // Offline or transient error — fall through silently; cached rows
             // remain visible. No separate error UX in this phase (matches the
             // Today-tab behavior).
+        }
+        await refreshPodcasts(force: true)
+    }
+
+    /// Historical Daily Minute JSON has no `youtube_id`. The podcast feed's
+    /// `<link>` does. The Video tab plays those, so it cannot wait for the
+    /// Listen tab to have been opened first.
+    private func refreshPodcasts(force: Bool) async {
+        let service = PodcastService()
+        do {
+            async let minutes = service.fetchMinuteEpisodes(force: force)
+            async let lessons = service.fetchLessonEpisodes(force: force)
+            let (m, l) = try await (minutes, lessons)
+            try PodcastService.persist(m, channel: "minute", in: modelContext)
+            try PodcastService.persist(l, channel: "lesson", in: modelContext)
+        } catch {
+            // Cached episodes, if any, still resolve a video.
         }
     }
 

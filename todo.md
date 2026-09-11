@@ -6,7 +6,7 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ## LIVE — #1
 
-- [ ] Video tab: a day must show the YouTube video, not only the reading text and the MP3. Right now the tab is the old Archive calendar; Listen is tap, Watch is a long-press, and many rows have no `youtube_id`.
+- [ ] Video tab plays YouTube on iPhone, iPad, and Mac. Opening a day plays the video. Apple TV already rebuilds video from the MP3s — leave that path.
 
 ## HIS CALL
 

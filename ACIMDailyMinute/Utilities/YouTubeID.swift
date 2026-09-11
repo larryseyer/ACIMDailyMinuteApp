@@ -8,6 +8,19 @@ import Foundation
 /// `LiteYouTubeCard` (which needs it to build a thumbnail URL) so the two cannot
 /// disagree about what a given feed link points at.
 enum YouTubeID {
+    /// A video id from whatever shape the feed stored: a watch URL, a
+    /// youtu.be link, an embed URL, or the bare 11-character id itself.
+    static func resolve(_ raw: String?) -> String? {
+        guard let raw else { return nil }
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        if let id = extract(from: trimmed) { return id }
+        guard trimmed.count == 11 else { return nil }
+        let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
+        guard trimmed.unicodeScalars.allSatisfy({ allowed.contains($0) }) else { return nil }
+        return trimmed
+    }
+
     static func extract(from url: String) -> String? {
         if url.contains("youtube.com/embed/") {
             return normalise(url.components(separatedBy: "embed/").last?.components(separatedBy: "?").first)

@@ -1,16 +1,15 @@
 import SwiftUI
 import SwiftData
 
-/// Renders every `ArchivedReading` row for a single calendar date.
+/// One calendar day's Video tab.
 ///
 /// Landed on via `.navigationDestination(for: String.self)` from `ArchiveView`;
-/// the destination value is `dateString` in `"YYYY-MM-DD"` form. The view seeds
-/// its own parameterized `@Query` in `init` — same pattern as `LessonDetailView`
-/// — so SwiftData updates reach the render path without relying on an upstream
-/// fetch.
+/// the destination value is `dateString` in `"YYYY-MM-DD"` form.
 ///
-/// Sort: `channel` descending so `"daily-minute"` sorts before `"daily-lesson"`
-/// (`m` > `l`), which matches the Today-tab reading order.
+/// ⛔ **On iPhone, iPad, and Mac this tab plays YouTube.** The reading and the
+/// MP3 live on Read and Listen. A day that opens as `ArchivedReadingCard` is
+/// the old Archive tab wearing a Video label. The television has no WebKit:
+/// it still builds the picture from the MP3.
 struct ArchiveDateDetailView: View {
     let dateString: String
     /// Decided by `ArchiveView`, which already holds every archived date; a
@@ -22,6 +21,9 @@ struct ArchiveDateDetailView: View {
     let archived: Set<String>
 
     @Query private var readings: [ArchivedReading]
+    @Query private var minutes: [DailyMinute]
+    @Query private var lessons: [DailyLesson]
+    @Query private var podcasts: [CachedPodcastEpisode]
     #if os(tvOS)
     @Environment(\.openPlayer) private var openPlayer
     #endif
@@ -45,22 +47,11 @@ struct ArchiveDateDetailView: View {
             if readings.isEmpty {
                 empty
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(readings) { reading in
-                            #if os(tvOS)
-                            Button { openPlayer(.archived(reading)) } label: {
-                                ArchivedReadingCard(reading: reading)
-                            }
-                            .buttonStyle(.card)
-                            #else
-                            ArchivedReadingCard(reading: reading)
-                            #endif
-                        }
-                    }
-                    .padding(20)
-                    .readableContentWidth()
-                }
+                #if os(tvOS)
+                tvList
+                #else
+                videoList
+                #endif
             }
         }
         .navigationTitle(formattedTitle)
@@ -68,6 +59,90 @@ struct ArchiveDateDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
     }
+
+    #if os(tvOS)
+    private var tvList: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(readings) { reading in
+                    Button { openPlayer(.archived(reading)) } label: {
+                        ArchivedReadingCard(reading: reading)
+                    }
+                    .buttonStyle(.card)
+                }
+            }
+            .padding(20)
+            .readableContentWidth()
+        }
+    }
+    #endif
+
+    #if os(iOS) || os(macOS)
+    private var videoList: some View {
+        let items = videoItems
+        return Group {
+            if items.isEmpty {
+                noVideo
+            } else {
+                VideoDayStack(items: items)
+            }
+        }
+    }
+
+    private var noVideo: some View {
+        ContentUnavailableView(
+            "No video for this day",
+            systemImage: "play.slash",
+            description: Text("Pull to refresh on the Video tab.")
+        )
+    }
+
+    private var videoItems: [VideoDayItem] {
+        readings.compactMap { reading in
+            guard let id = youtubeID(for: reading) else { return nil }
+            return VideoDayItem(
+                id: reading.lineHash,
+                title: title(for: reading),
+                videoID: id
+            )
+        }
+    }
+
+    private func title(for reading: ArchivedReading) -> String {
+        if reading.channel == "daily-minute" { return "Daily Minute" }
+        if let n = reading.lessonNumber { return "Lesson \(n)" }
+        return "Lesson"
+    }
+
+    /// Archive row, then today's stored minute/lesson, then the podcast
+    /// `<link>`. Minute archive JSON ships no `youtube_id`; the podcast
+    /// feed does.
+    private func youtubeID(for reading: ArchivedReading) -> String? {
+        if let id = YouTubeID.resolve(reading.youtubeID) { return id }
+        if reading.channel == "daily-minute" {
+            if let id = YouTubeID.resolve(
+                minutes.first(where: { $0.date == reading.dateString })?.youtubeID
+            ) { return id }
+            let day = reading.dateString
+            return podcasts.compactMap { episode -> String? in
+                guard episode.channel == "minute" else { return nil }
+                guard LessonSchedule.formatted(episode.publishedAt) == day else { return nil }
+                return YouTubeID.resolve(episode.youtubeURL)
+            }.first
+        }
+        if let number = reading.lessonNumber {
+            if let id = YouTubeID.resolve(
+                lessons.first(where: { $0.lessonNumber == number })?.youtubeID
+            ) { return id }
+            return podcasts.compactMap { episode -> String? in
+                guard episode.channel == "lesson" else { return nil }
+                guard LessonNarration.number(fromTitle: episode.title) == number else { return nil }
+                return YouTubeID.resolve(episode.youtubeURL)
+            }.first
+        }
+        return nil
+    }
+    #endif
 
     private var empty: some View {
         ContentUnavailableView(
@@ -142,10 +217,46 @@ struct ArchiveDateDetailView: View {
     }
 }
 
+#if os(iOS) || os(macOS)
+private struct VideoDayItem: Identifiable {
+    let id: String
+    let title: String
+    let videoID: String
+    var playerURL: String { "https://www.youtube.com/embed/\(videoID)" }
+}
+
+private struct VideoDayStack: View {
+    let items: [VideoDayItem]
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 20) {
+                ForEach(items) { item in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(item.title)
+                            .font(.headline)
+                        LiteYouTubeCard(
+                            videoID: item.videoID,
+                            playerURL: item.playerURL,
+                            accessibilityTitle: item.title
+                        )
+                    }
+                }
+            }
+            .padding(20)
+            .readableContentWidth()
+        }
+    }
+}
+#endif
+
 #Preview {
     NavigationStack {
         ArchiveDateDetailView(dateString: "2026-04-10", availability: .unknown)
     }
     .preferredColorScheme(.dark)
-    .modelContainer(for: [ArchivedReading.self, Bookmark.self], inMemory: true)
+    .modelContainer(
+        for: [ArchivedReading.self, Bookmark.self, DailyMinute.self, DailyLesson.self, CachedPodcastEpisode.self],
+        inMemory: true
+    )
 }

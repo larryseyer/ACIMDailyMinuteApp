@@ -1,7 +1,7 @@
 // ⛔ A YouTube embed is a WKWebView and tvOS has no WebKit, so this whole
-// card is iOS only. On the TV the Listen tab is audio: the archive.org
-// MP3s stream there exactly as they do to a phone.
-#if os(iOS)
+// card is iPhone, iPad, and Mac. On the TV the picture is rebuilt from
+// the archive.org MP3s.
+#if os(iOS) || os(macOS)
 import SwiftUI
 
 /// A YouTube embed that shows *our* thumbnail until it is played.
