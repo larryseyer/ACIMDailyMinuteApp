@@ -52,7 +52,11 @@ struct MinuteReadingView: View {
                     segmentId: minute.segmentId,
                     surfaceAudioURL: minute.audioURL,
                     surfaceYouTubeID: minute.youtubeID,
-                    composeItem: .minute(minute)
+                    composeItem: .minute(minute),
+                    artworkText: minute.text,
+                    shareText: ShareTextBuilder.minuteShareText(minute),
+                    bookmarkKey: "minute:\(ArchiveService.minuteLineHash(date: minute.date))",
+                    bookmarkChannel: "daily-minute"
                 )
             } else if let reading = readings.first {
                 readingScroll {
@@ -62,7 +66,11 @@ struct MinuteReadingView: View {
                     title: "Daily Minute",
                     surfaceAudioURL: reading.audioURL,
                     surfaceYouTubeID: reading.youtubeID,
-                    composeItem: .archived(reading)
+                    composeItem: .archived(reading),
+                    artworkText: reading.text,
+                    shareText: ShareTextBuilder.archivedMinuteShareText(reading),
+                    bookmarkKey: "minute:\(reading.lineHash)",
+                    bookmarkChannel: reading.channel
                 )
             } else {
                 empty

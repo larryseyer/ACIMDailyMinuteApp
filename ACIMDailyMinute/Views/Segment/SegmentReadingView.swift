@@ -64,7 +64,9 @@ struct SegmentReadingView: View {
                 .readingMediumBand(
                     title: "Daily Minute",
                     segmentId: segmentId,
-                    composeItem: .segment(segment)
+                    composeItem: .segment(segment),
+                    artworkText: segment.body,
+                    shareText: ShareTextBuilder.segmentShareText(segment)
                 )
                 #if !os(tvOS)
                 .toolbar {

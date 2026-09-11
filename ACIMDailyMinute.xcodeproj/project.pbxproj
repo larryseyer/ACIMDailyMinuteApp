@@ -14,6 +14,7 @@
 		AA000001824 /* CourseTextSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002824 /* CourseTextSpine.swift */; };
 		AA000001825 /* CourseManualSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002825 /* CourseManualSpine.swift */; };
 		AA000001826 /* MediumBand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002826 /* MediumBand.swift */; };
+		AA000001827 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002827 /* NowPlayingView.swift */; };
 		C4A1B2C3D4E5F60718293A4B /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002807 /* CourseView.swift */; };
 		D5B2C3D4E5F60718293A4B5C /* CourseMinuteSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002808 /* CourseMinuteSpine.swift */; };
 		E6C3D4E5F60718293A4B5C6D /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
@@ -471,6 +472,7 @@
 		AA000002016 /* YouTubePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubePlayerView.swift; sourceTree = "<group>"; };
 		AA000002018 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		AA000002019 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		AA000002827 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		AA000002020 /* ArchiveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveService.swift; sourceTree = "<group>"; };
 		AA000002025 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AA000002027 /* BackgroundRefreshManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshManager.swift; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 
 				AA000002016 /* YouTubePlayerView.swift */,
 				AA000002019 /* MiniPlayerView.swift */,
+				AA000002827 /* NowPlayingView.swift */,
 				AA000002251 /* FullScreenVideoCover.swift */,
 			);
 			path = Listen;
@@ -1313,6 +1316,7 @@
 				AA000001016 /* YouTubePlayerView.swift in Sources */,
 				AA000001018 /* AudioManager.swift in Sources */,
 				AA000001019 /* MiniPlayerView.swift in Sources */,
+				AA000001827 /* NowPlayingView.swift in Sources */,
 
 				AA000001020 /* ArchiveService.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,

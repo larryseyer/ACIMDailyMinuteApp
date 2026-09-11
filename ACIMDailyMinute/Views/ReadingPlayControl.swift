@@ -29,6 +29,13 @@ struct ReadingPlayControl: View {
     var surfaceYouTubeID: String? = nil
     var placement: Placement = .header
     var composeItem: TVPlayerItem? = nil
+    #if !os(tvOS)
+    var artworkText: String = ""
+    var subtitle: String = ""
+    var shareText: String = ""
+    var bookmarkKey: String = ""
+    var bookmarkChannel: String = ""
+    #endif
 
     @Environment(AudioManager.self) private var audio
     @Environment(\.openPlayer) private var openPlayer
@@ -45,7 +52,12 @@ struct ReadingPlayControl: View {
         surfaceAudioURL: String? = nil,
         surfaceYouTubeID: String? = nil,
         placement: Placement = .header,
-        composeItem: TVPlayerItem? = nil
+        composeItem: TVPlayerItem? = nil,
+        artworkText: String = "",
+        subtitle: String = "",
+        shareText: String = "",
+        bookmarkKey: String = "",
+        bookmarkChannel: String = ""
     ) {
         self.title = title
         self.segmentId = segmentId
@@ -54,6 +66,15 @@ struct ReadingPlayControl: View {
         self.surfaceYouTubeID = surfaceYouTubeID
         self.placement = placement
         self.composeItem = composeItem
+        #if !os(tvOS)
+        self.artworkText = artworkText
+        self.subtitle = subtitle
+        self.shareText = shareText
+        self.bookmarkKey = bookmarkKey
+        self.bookmarkChannel = bookmarkChannel
+        #else
+        _ = (artworkText, subtitle, shareText, bookmarkKey, bookmarkChannel)
+        #endif
         _segmentRows = Query(
             filter: #Predicate<SegmentMedia> { $0.segmentId == segmentId }
         )
@@ -134,7 +155,8 @@ struct ReadingPlayControl: View {
                         audio.playOrToggle(
                             url: hit.audioURL,
                             title: title,
-                            episodeID: episodeID(for: hit.audioURL)
+                            episodeID: episodeID(for: hit.audioURL),
+                            context: nowPlayingContext
                         )
                     },
                     onWatch: watch
@@ -182,7 +204,12 @@ struct ReadingPlayControl: View {
             isPlaying: audio.isPlaying,
             style: placement == .today ? .gold : .chip
         ) {
-            audio.playOrToggle(url: hit.audioURL, title: title, episodeID: episodeID(for: hit.audioURL))
+            audio.playOrToggle(
+                url: hit.audioURL,
+                title: title,
+                episodeID: episodeID(for: hit.audioURL),
+                context: nowPlayingContext
+            )
         }
         .contextMenu {
             if placement == .header, hit.showsWatch {
@@ -218,6 +245,45 @@ struct ReadingPlayControl: View {
         let resolved = AudioManager.resolve(audioURL)
         return podcasts.first { AudioManager.resolve($0.audioURL) == resolved }?.id ?? ""
     }
+
+    #if !os(tvOS)
+    private var nowPlayingContext: NowPlayingContext {
+        var ctx = NowPlayingContext(
+            artworkText: artworkText,
+            subtitle: subtitle,
+            shareText: shareText,
+            bookmarkKey: bookmarkKey,
+            bookmarkChannel: bookmarkChannel
+        )
+        let isLesson = lessonNumber > 0 || (lessonNumber == 0 && title == "Introduction")
+        if ctx.artworkText.isEmpty {
+            if isLesson {
+                ctx.artworkText = WorkbookBodiesCatalog.body(for: lessonNumber)
+                    ?? lessonRows.first?.text
+                    ?? WorkbookBodiesCatalog.introduction(for: lessonNumber)?.body
+                    ?? ""
+            } else if segmentId > 0, let segment = CorpusService.shared.segment(id: segmentId) {
+                ctx.artworkText = segment.body
+            }
+        }
+        if ctx.subtitle.isEmpty, isLesson {
+            ctx.subtitle = WorkbookBodiesCatalog.reviewTitle(for: lessonNumber)
+                ?? WorkbookCatalog.title(for: lessonNumber)
+                ?? lessonRows.first?.lessonTitle
+                ?? ""
+        }
+        if ctx.bookmarkKey.isEmpty, isLesson {
+            ctx.bookmarkKey = "lesson:\(lessonNumber)"
+            if ctx.bookmarkChannel.isEmpty {
+                ctx.bookmarkChannel = "daily-lesson"
+            }
+        }
+        if ctx.shareText.isEmpty, let lesson = lessonRows.first {
+            ctx.shareText = ShareTextBuilder.lessonShareText(lesson)
+        }
+        return ctx
+    }
+    #endif
 }
 
 extension View {
@@ -228,10 +294,18 @@ extension View {
         lessonNumber: Int = 0,
         surfaceAudioURL: String? = nil,
         surfaceYouTubeID: String? = nil,
-        composeItem: TVPlayerItem? = nil
+        composeItem: TVPlayerItem? = nil,
+        artworkText: String = "",
+        subtitle: String = "",
+        shareText: String = "",
+        bookmarkKey: String = "",
+        bookmarkChannel: String = ""
     ) -> some View {
         #if os(tvOS)
-        _ = (title, segmentId, lessonNumber, surfaceAudioURL, surfaceYouTubeID, composeItem)
+        _ = (
+            title, segmentId, lessonNumber, surfaceAudioURL, surfaceYouTubeID, composeItem,
+            artworkText, subtitle, shareText, bookmarkKey, bookmarkChannel
+        )
         return self
         #else
         return safeAreaInset(edge: .bottom, spacing: 0) {
@@ -242,7 +316,12 @@ extension View {
                 surfaceAudioURL: surfaceAudioURL,
                 surfaceYouTubeID: surfaceYouTubeID,
                 placement: .medium,
-                composeItem: composeItem
+                composeItem: composeItem,
+                artworkText: artworkText,
+                subtitle: subtitle,
+                shareText: shareText,
+                bookmarkKey: bookmarkKey,
+                bookmarkChannel: bookmarkChannel
             )
             .padding(.horizontal, 16)
             .padding(.bottom, 8)

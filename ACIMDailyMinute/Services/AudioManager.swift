@@ -2,11 +2,22 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 
+/// Display payload for the full player. Playback identity stays the URL
+/// and episode id; this is the passage, the share text and the save key.
+struct NowPlayingContext: Equatable, Sendable {
+    var artworkText: String = ""
+    var subtitle: String = ""
+    var shareText: String = ""
+    var bookmarkKey: String = ""
+    var bookmarkChannel: String = ""
+}
+
 @Observable
 @MainActor
 final class AudioManager {
     var isPlaying = false
     var currentTitle = ""
+    var context = NowPlayingContext()
     /// The resolved URL of the item in the mini player. Header Listen buttons
     /// match on this, not on `currentTitle`: every Daily Minute is titled
     /// "Daily Minute", and a title match would paint Pause on a different day's
@@ -37,12 +48,18 @@ final class AudioManager {
     /// fires twice a second; the store is not a telemetry log.
     private var lastPersistedTime: Double = -1
 
-    func play(url: String, title: String, episodeID: String = "") {
+    func play(
+        url: String,
+        title: String,
+        episodeID: String = "",
+        context: NowPlayingContext = NowPlayingContext()
+    ) {
         stop()
         lastError = nil
+        self.context = context
 
         let resolved = Self.resolve(url)
-        guard let audioURL = URL(string: resolved) else { return }
+        guard let remoteURL = URL(string: resolved) else { return }
 
         #if os(iOS) || os(watchOS) || os(tvOS)
         do {
@@ -59,7 +76,8 @@ final class AudioManager {
         currentEpisodeID = identity
         pendingSeek = Self.resumePosition(for: identity, resolvedURL: resolved)
 
-        let item = AVPlayerItem(url: audioURL)
+        let source = (!identity.isEmpty ? AudioDownloadStore.localURL(for: identity) : nil) ?? remoteURL
+        let item = AVPlayerItem(url: source)
         statusObservation = item.observe(\.status, options: [.new]) { [weak self] playerItem, _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
@@ -108,11 +126,16 @@ final class AudioManager {
     /// Header Listen/Pause/Play: start this reading, or toggle pause/resume
     /// if it already owns the mini player — the same job as the mini player's
     /// play/pause control.
-    func playOrToggle(url: String, title: String, episodeID: String = "") {
+    func playOrToggle(
+        url: String,
+        title: String,
+        episodeID: String = "",
+        context: NowPlayingContext = NowPlayingContext()
+    ) {
         if isActive(url: url) {
             togglePlayback()
         } else {
-            play(url: url, title: title, episodeID: episodeID)
+            play(url: url, title: title, episodeID: episodeID, context: context)
         }
     }
 
@@ -189,6 +212,7 @@ final class AudioManager {
         currentTitle = ""
         currentURL = ""
         currentEpisodeID = ""
+        context = NowPlayingContext()
         pendingSeek = nil
         lastPersistedTime = -1
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil

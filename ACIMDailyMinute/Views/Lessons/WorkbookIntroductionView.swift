@@ -71,7 +71,11 @@ struct WorkbookIntroductionView: View {
                 .readingMediumBand(
                     title: reading.title,
                     lessonNumber: lessonNumber,
-                    composeItem: .workbookLesson(lessonNumber)
+                    composeItem: .workbookLesson(lessonNumber),
+                    artworkText: reading.body,
+                    shareText: ShareTextBuilder.introductionShareText(
+                        title: reading.title, body: reading.body
+                    )
                 )
                 #if !os(tvOS)
                 .toolbar {

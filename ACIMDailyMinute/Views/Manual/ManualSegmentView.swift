@@ -76,7 +76,14 @@ struct ManualSegmentView: View {
                 }
                 .readingMediumBand(
                     title: section?.title ?? "Manual",
-                    composeItem: .manual(segmentId)
+                    composeItem: .manual(segmentId),
+                    artworkText: reading.body,
+                    shareText: ShareTextBuilder.manualShareText(
+                        body: reading.body,
+                        citation: reading.citation
+                    ),
+                    bookmarkKey: itemKey,
+                    bookmarkChannel: "manual"
                 )
                 #if !os(tvOS)
                 .toolbar {
@@ -188,7 +195,11 @@ struct ManualSectionView: View {
         }
         .readingMediumBand(
             title: reading.title,
-            composeItem: .manualSection(number: number)
+            composeItem: .manualSection(number: number),
+            artworkText: reading.body,
+            shareText: ShareTextBuilder.manualSectionShareText(reading),
+            bookmarkKey: itemKey,
+            bookmarkChannel: "manual"
         )
         #if !os(tvOS)
         .toolbar {

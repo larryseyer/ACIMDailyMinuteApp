@@ -16,6 +16,7 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$REPO/ACIMDailyMinute/Utilities/AudioTransport.swift"
 PBX="$REPO/ACIMDailyMinute.xcodeproj/project.pbxproj"
 PLAYER="$REPO/ACIMDailyMinute/Views/Listen/MiniPlayerView.swift"
+FULL="$REPO/ACIMDailyMinute/Views/Listen/NowPlayingView.swift"
 MANAGER="$REPO/ACIMDailyMinute/Services/AudioManager.swift"
 CONTENT="$REPO/ACIMDailyMinute/App/ContentView.swift"
 
@@ -33,6 +34,18 @@ grep -q 'AudioTransport.remainingLabel' "$PLAYER" || fail "MiniPlayerView does n
 if grep -q 'ProgressView' "$PLAYER"; then
     fail "MiniPlayerView still uses ProgressView — that cannot be dragged"
 fi
+
+[[ -f "$FULL" ]] || fail "NowPlayingView.swift missing — there is no full player"
+grep -q 'seek(to' "$FULL" || fail "NowPlayingView does not seek"
+grep -q 'skip(by: 15)' "$FULL" || fail "NowPlayingView has no +15"
+grep -q 'skip(by: -15)' "$FULL" || fail "NowPlayingView has no -15"
+if grep -q 'ProgressView' "$FULL"; then
+    fail "NowPlayingView still uses ProgressView — that cannot be dragged"
+fi
+if grep -q 'Slider' "$FULL"; then
+    fail "NowPlayingView uses Slider — the spec is a 3pt gold track"
+fi
+grep -q 'NowPlayingView()' "$CONTENT" || fail "ContentView does not present NowPlayingView"
 
 # The manager must honour an absolute seek, not only skip-by.
 grep -q 'func seek(to' "$MANAGER" || fail "AudioManager has no seek(to:)"

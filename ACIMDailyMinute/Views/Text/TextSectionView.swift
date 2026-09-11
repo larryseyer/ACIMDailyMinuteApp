@@ -94,7 +94,11 @@ struct TextSectionView: View {
         }
         .readingMediumBand(
             title: reading.sectionTitle,
-            composeItem: .textSection(chapter: chapter, section: section)
+            composeItem: .textSection(chapter: chapter, section: section),
+            artworkText: reading.body,
+            shareText: ShareTextBuilder.textSectionShareText(reading),
+            bookmarkKey: itemKey,
+            bookmarkChannel: "text"
         )
         #if !os(tvOS)
         .toolbar {

@@ -16,6 +16,9 @@ struct ContentView: View {
     /// (crash ACIMDailyMinuteTV-2026-09-09-104129.ips). Read pushes a
     /// reading instead.
     @State private var playerItem: TVPlayerItem?
+    #if os(iOS) || os(macOS)
+    @State private var showNowPlaying = false
+    #endif
     #if os(macOS)
     @State private var showAbout = false
     #endif
@@ -25,6 +28,24 @@ struct ContentView: View {
             .environment(audioManager)
             .environment(connectivity)
             .environment(\.openPlayer, OpenPlayerAction { presentPlayer($0) })
+            #if os(iOS) || os(macOS)
+            .environment(\.openNowPlaying, OpenNowPlayingAction { showNowPlaying = true })
+            .sheet(isPresented: $showNowPlaying) {
+                NowPlayingView()
+                    .environment(audioManager)
+                    #if os(iOS)
+                    .presentationDetents([.large])
+                    .presentationDragIndicator(.hidden)
+                    #endif
+                    #if os(macOS)
+                    .background(QuittableSheet())
+                    .frame(minWidth: 420, minHeight: 680)
+                    #endif
+            }
+            .onChange(of: audioManager.hasActiveAudio) { _, active in
+                if !active { showNowPlaying = false }
+            }
+            #endif
             #if os(iOS) || os(tvOS)
             .fullScreenCover(item: $playerItem) { item in
                 // The cover is a new presentation. On tvOS it does not
@@ -296,7 +317,7 @@ struct ContentView: View {
     /// screen, and a mini player on the tabs is a focus trap.
     private var floatingChrome: some View {
         VStack(spacing: 8) {
-            if audioManager.hasActiveAudio {
+            if audioManager.hasActiveAudio && !showNowPlaying {
                 MiniPlayerView()
                     .transition(.move(edge: .bottom))
             }

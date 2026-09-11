@@ -205,7 +205,9 @@ private struct FullLessonView: View {
             lessonNumber: lesson.lessonNumber,
             surfaceAudioURL: lesson.audioURL,
             surfaceYouTubeID: lesson.youtubeID,
-            composeItem: .lesson(lesson)
+            composeItem: .lesson(lesson),
+            artworkText: lesson.text,
+            shareText: ShareTextBuilder.lessonShareText(lesson)
         )
         #if !os(tvOS)
         .toolbar {
@@ -274,7 +276,8 @@ private struct MetadataOnlyLessonView: View {
             lessonNumber: lessonNumber,
             surfaceAudioURL: archive.audioURL,
             surfaceYouTubeID: archive.youtubeID,
-            composeItem: .archived(archive)
+            composeItem: .archived(archive),
+            artworkText: bundledBody ?? archive.text
         )
         #if !os(tvOS)
         .toolbar {

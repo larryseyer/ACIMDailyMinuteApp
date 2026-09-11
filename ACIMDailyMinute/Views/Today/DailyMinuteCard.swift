@@ -59,7 +59,11 @@ struct DailyMinuteCard: View {
                     surfaceYouTubeID: minute.youtubeID,
                     shareText: ShareTextBuilder.minuteShareText(minute),
                     isSaved: isBookmarked,
-                    onSave: toggleBookmark
+                    onSave: toggleBookmark,
+                    artworkText: minute.text,
+                    subtitle: segment?.bookName ?? "",
+                    bookmarkKey: itemKey,
+                    bookmarkChannel: "daily-minute"
                 )
             }
             if let error = audio.lastError {

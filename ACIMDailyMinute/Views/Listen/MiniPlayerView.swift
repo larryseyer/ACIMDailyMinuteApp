@@ -8,21 +8,31 @@ struct MiniPlayerView: View {
     public static let height: CGFloat = 64
 
     @Environment(AudioManager.self) private var audioManager
+    @Environment(\.openNowPlaying) private var openNowPlaying
 
     var body: some View {
         HStack(spacing: 10) {
-            art
-            VStack(alignment: .leading, spacing: 1) {
-                Text(audioManager.currentTitle)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                Text(subtitle)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+            Button {
+                openNowPlaying()
+            } label: {
+                HStack(spacing: 10) {
+                    art
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(audioManager.currentTitle)
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                        Text(subtitle)
+                            .font(.system(size: 11))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                    Spacer(minLength: 8)
+                }
+                .contentShape(Rectangle())
             }
-            Spacer(minLength: 8)
+            .buttonStyle(.plain)
+            .accessibilityHint("Opens the full player")
             Button {
                 audioManager.togglePlayback()
             } label: {
@@ -72,5 +82,26 @@ struct MiniPlayerView: View {
             )
         }
         return "Now playing"
+    }
+}
+
+struct OpenNowPlayingAction: Sendable {
+    private let handler: @Sendable () -> Void
+
+    init(handler: @escaping @Sendable () -> Void) {
+        self.handler = handler
+    }
+
+    func callAsFunction() { handler() }
+}
+
+private struct OpenNowPlayingKey: EnvironmentKey {
+    static let defaultValue = OpenNowPlayingAction { }
+}
+
+extension EnvironmentValues {
+    var openNowPlaying: OpenNowPlayingAction {
+        get { self[OpenNowPlayingKey.self] }
+        set { self[OpenNowPlayingKey.self] = newValue }
     }
 }

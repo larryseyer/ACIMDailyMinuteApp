@@ -14,6 +14,10 @@ struct TodayActionRow: View {
     let shareText: String
     let isSaved: Bool
     let onSave: () -> Void
+    var artworkText: String = ""
+    var subtitle: String = ""
+    var bookmarkKey: String = ""
+    var bookmarkChannel: String = ""
 
     var body: some View {
         #if os(tvOS)
@@ -26,7 +30,12 @@ struct TodayActionRow: View {
                 lessonNumber: lessonNumber,
                 surfaceAudioURL: surfaceAudioURL,
                 surfaceYouTubeID: surfaceYouTubeID,
-                placement: .today
+                placement: .today,
+                artworkText: artworkText,
+                subtitle: subtitle,
+                shareText: shareText,
+                bookmarkKey: bookmarkKey,
+                bookmarkChannel: bookmarkChannel
             )
             savePill
             sharePill

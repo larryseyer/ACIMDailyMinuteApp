@@ -69,7 +69,11 @@ struct ArchivedReadingCard: View {
                     title: listenTitle,
                     lessonNumber: isMinute ? 0 : (reading.lessonNumber ?? 0),
                     surfaceAudioURL: reading.audioURL,
-                    surfaceYouTubeID: reading.youtubeID
+                    surfaceYouTubeID: reading.youtubeID,
+                    artworkText: isMinute ? reading.text : (WorkbookBodiesCatalog.body(for: reading.lessonNumber ?? 0) ?? reading.text),
+                    shareText: shareText,
+                    bookmarkKey: itemKey,
+                    bookmarkChannel: reading.channel
                 )
             }
         } trailing: {
