@@ -6,10 +6,11 @@ import SwiftData
 /// Landed on via `.navigationDestination(for: String.self)` from `ArchiveView`;
 /// the destination value is `dateString` in `"YYYY-MM-DD"` form.
 ///
-/// ⛔ **On iPhone, iPad, and Mac this tab plays YouTube.** The reading and the
-/// MP3 live on Read and Listen. A day that opens as `ArchivedReadingCard` is
-/// the old Archive tab wearing a Video label. The television has no WebKit:
-/// it still builds the picture from the MP3.
+/// ⛔ **On iPhone, iPad, and Mac this tab plays YouTube when an id exists.**
+/// A published day without an id still belongs: the composed player. The
+/// reading and the MP3 live on Read and Listen. The television has no WebKit:
+/// it always builds the picture from the MP3. An unpublished day is told when
+/// its reading will exist — that is not "no recording."
 struct ArchiveDateDetailView: View {
     let dateString: String
     /// Decided by `ArchiveView`, which already holds every archived date; a
@@ -24,9 +25,7 @@ struct ArchiveDateDetailView: View {
     @Query private var minutes: [DailyMinute]
     @Query private var lessons: [DailyLesson]
     @Query private var podcasts: [CachedPodcastEpisode]
-    #if os(tvOS)
     @Environment(\.openPlayer) private var openPlayer
-    #endif
 
     init(
         dateString: String,
@@ -79,32 +78,18 @@ struct ArchiveDateDetailView: View {
 
     #if os(iOS) || os(macOS)
     private var videoList: some View {
-        let items = videoItems
-        return Group {
-            if items.isEmpty {
-                noVideo
-            } else {
-                VideoDayStack(items: items)
-            }
+        VideoDayStack(items: videoItems) { reading in
+            openPlayer(.archived(reading))
         }
     }
 
-    private var noVideo: some View {
-        ContentUnavailableView(
-            "No video for this day",
-            systemImage: "play.slash",
-            description: Text("Pull to refresh on the Video tab.")
-        )
-    }
-
     private var videoItems: [VideoDayItem] {
-        readings.compactMap { reading in
-            let ids = youtubeIDs(for: reading)
-            guard !ids.isEmpty else { return nil }
-            return VideoDayItem(
+        readings.map { reading in
+            VideoDayItem(
                 id: reading.lineHash,
                 title: title(for: reading),
-                videoIDs: ids
+                videoIDs: youtubeIDs(for: reading),
+                reading: reading
             )
         }
     }
@@ -233,22 +218,31 @@ private struct VideoDayItem: Identifiable {
     let id: String
     let title: String
     let videoIDs: [String]
+    let reading: ArchivedReading
 }
 
 private struct VideoDayStack: View {
     let items: [VideoDayItem]
+    let onCompose: (ArchivedReading) -> Void
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 20) {
                 ForEach(items) { item in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(item.title)
-                            .font(.headline)
-                        LiteYouTubeCard(
-                            videoIDs: item.videoIDs,
-                            accessibilityTitle: item.title
-                        )
+                    switch VideoLibrary.play(videoIDs: item.videoIDs, youtubeAvailable: true) {
+                    case .youtube:
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(item.title)
+                                .font(.headline)
+                            LiteYouTubeCard(
+                                videoIDs: item.videoIDs,
+                                accessibilityTitle: item.title
+                            )
+                        }
+                    case .compose:
+                        VideoPlayableRow(title: item.title) {
+                            onCompose(item.reading)
+                        }
                     }
                 }
             }
