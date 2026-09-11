@@ -1,7 +1,8 @@
 # continue.md
 
 LIVE: `2026-09-11-Design_Plan.md` step 9 — Apple TV, Watch, widgets.
-Work on `main` only. No feature branch. No subagent. No worktree.
+HEAD is `9c1bbae` on `main`. Work on `main` only. No feature branch.
+No subagent. No worktree.
 
 REMEMBER THIS: ALWAYS WORK ON MAIN — NO BRANCHES EVER UNLESS THE USER
 ASKS FOR THEM.
@@ -17,11 +18,27 @@ step, present the approach, wait for approval, then edit.
 
 ## Step 9
 
-tvOS to two system tabs (Today · Course). No Saved, no medium band, no
-floating tab bar. Select opens `TVPlayerView`, which is not rebuilt.
-Watch is Today only: date 17 serif, passage 15 serif, citation 11 serif
-gold. Widgets take the masthead / passage / citation stack at three
-sizes. All keep `widgetURL(acimdailyminute://today)`.
+tvOS, Watch, and the three widget sizes take the redesign tokens. Do not
+rebuild `TVPlayerView`. Do not invent a second type table.
+
+tvOS `ContentView` is already two system tabs (Today · Course). Saved is
+absent. No medium band, no `ACIMTabBar`. Select still opens `TVPlayerView`.
+What is left is the look: citation, masthead, spine highlight. `Metric` is
+already ×1.6 on tvOS.
+
+Watch is Today only. `WatchContentView` is still a `List` of story rows.
+§S7: date 17 serif, passage 15 serif, citation 11 serif gold. Those sizes
+are already `acimMasthead` / `acimReading` / `acimAddress` under
+`#if os(watchOS)` in `Utilities/ACIMType.swift`. `Metric` is already ×0.7.
+Restyle the surface; do not change how it chooses the minute or the lesson
+(`CorpusFallback.isStale`, phone-pushed lesson only).
+
+Widgets: `SmallWidgetView`, `MediumWidgetView`, `LargeWidgetView` still use
+`.callout` / `.caption2`. Same masthead / passage / citation stack. Small:
+three lines of passage over a citation. Medium: passage with the lesson
+trailing. Large: masthead, passage, citation, next practice slot. Keep
+`widgetURL(acimdailyminute://today)` on all three. `ACIMColors` already
+compiles into both widget extensions.
 
 Spec: §5 step 9, §S7 Apple TV / Watch / widgets, §S2 Watch sizes.
 Mockup: iPhone intent only.
@@ -30,6 +47,26 @@ Confirm unused serials with `python3` against `project.pbxproj` before
 taking one. App build-file `AA000001NNN` serials 980–999, 806–809,
 824–828 are taken. New directories need a new `PBXGroup`. Then
 `./clean.sh`.
+
+## Do not reopen step 8
+
+§O is closed, against a running iPad and Mac:
+
+1. Sidebar is Today, the four books, Let it fall open, Saved — not three
+   destinations.
+2. iPad reading column clamps at 672 when the split sets
+   `clampsReadableColumn`. Phone stays fill-parent. Gate:
+   `tools/verify_ipad_reading_width.sh` (fill-parent battery plus clamp
+   battery).
+
+iPhone keeps three tabs via idiom `.phone`, not size class. iPad uses
+`NavigationSplitView(columnVisibility: .constant(.all))`. Mac default
+window is 960×740; below 720pt it collapses to the reading; minWidth stays
+420. A restored `NSWindow Frame …ContentView…-1-AppWindow-1` of 500×900
+will still open narrow — collapse handles that; delete that defaults key
+only when you need to see the 960 default. `MacWindowWidthReader` is
+AppKit and stays inside `#if os(macOS)`. The iOS/macOS split of
+`splitView` is compile-time `#if os`, same target.
 
 ## Done when
 
