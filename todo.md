@@ -2,19 +2,25 @@
 
 One sentence per item, two at the most. Current and future only. Git is history.
 
-Priority one is the presentation redesign. Everything below LIVE waits.
+LIVE is REVIEW. Newest first. Everything below it waits.
 
 ---
 
-## LIVE — priority one: the presentation redesign
+## LIVE — REVIEW, newest first
+
+- [ ] iPad portrait video: landscape 1920×1080 PlayerArt is stretched; there is no portrait art.
+- [ ] Apple TV: Today text size looks small.
+- [ ] Mac: sidebar is ink blue while the reading pane is black; pick one globally, or a setting for black vs blue.
+- [ ] Mac: playing a video has no way to exit.
+
+## NEXT — after REVIEW
 
 Plan: `2026-09-11-Design_Plan.md`. Visual: `docs/design/2026-09-11-ios-presentation.html`.
-This plan supersedes every other UI plan. Do not pick up any other section until
-step 10 is on the devices.
 
-REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
+REMEMBER THIS: ALWAYS WORK ON MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
 
-- [ ] Step 10 — `APP_STORE_LISTING.md`, `store-support-page.md`, screenshots.
+- [ ] Commit `APP_STORE_LISTING.md`, `store-support-page.md`, and `tools/verify_copy.sh` only.
+- [ ] Screenshots wait on Larry seeing the REVIEW fixes and approving iPhone, iPad, Mac, Watch, and Apple TV.
 
 ## CARRIED — blocked behind the redesign
 
