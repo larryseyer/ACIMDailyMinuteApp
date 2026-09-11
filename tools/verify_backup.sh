@@ -93,6 +93,7 @@ swiftc -O \
     "$REPO/ACIMDailyMinute/Services/BackupDocument.swift" \
     "$REPO/ACIMDailyMinute/Services/BackupMerge.swift" \
     "$REPO/ACIMDailyMinute/Utilities/ReadingPosition.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/PlaybackProgress.swift" \
     "$REPO/ACIMDailyMinute/Utilities/ReadingKey.swift" \
     "$REPO/ACIMDailyMinute/Services/AnchorResolver.swift" \
     "$REPO/ACIMDailyMinute/Utilities/PunctuationSpacing.swift" \

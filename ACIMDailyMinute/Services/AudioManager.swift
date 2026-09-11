@@ -12,6 +12,11 @@ final class AudioManager {
     /// "Daily Minute", and a title match would paint Pause on a different day's
     /// card.
     var currentURL = ""
+    /// The Listen identity of the item in the mini player: the feed episode id
+    /// when the caller has one, otherwise the resolved remote URL. Empty when
+    /// a file:// URL was played with no episode id — that session cannot be
+    /// found again, so it is not recorded.
+    var currentEpisodeID = ""
     var currentTime: Double = 0
     var duration: Double = 0
     var hasActiveAudio = false
@@ -25,8 +30,14 @@ final class AudioManager {
     private var timeObserver: Any?
     private var statusObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
+    /// Seconds to seek once the item is ready, taken from stored progress.
+    /// Nil means start at the beginning.
+    private var pendingSeek: Double?
+    /// Last `currentTime` written to `PlaybackProgressStore`. The time observer
+    /// fires twice a second; the store is not a telemetry log.
+    private var lastPersistedTime: Double = -1
 
-    func play(url: String, title: String) {
+    func play(url: String, title: String, episodeID: String = "") {
         stop()
         lastError = nil
 
@@ -44,6 +55,10 @@ final class AudioManager {
         }
         #endif
 
+        let identity = Self.identity(episodeID: episodeID, resolvedURL: resolved)
+        currentEpisodeID = identity
+        pendingSeek = Self.resumePosition(for: identity, resolvedURL: resolved)
+
         let item = AVPlayerItem(url: audioURL)
         statusObservation = item.observe(\.status, options: [.new]) { [weak self] playerItem, _ in
             Task { @MainActor [weak self] in
@@ -58,6 +73,7 @@ final class AudioManager {
                     self.lastError = message
                 case .readyToPlay:
                     self.lastError = nil
+                    self.seekIfNeeded()
                 default:
                     break
                 }
@@ -73,7 +89,11 @@ final class AudioManager {
         setupTimeObserver()
         setupRemoteCommands()
 
-        player?.play()
+        // A resume waits for readyToPlay so the seek is not a no-op on an
+        // empty item. Starting from the beginning plays immediately, as before.
+        if pendingSeek == nil {
+            player?.play()
+        }
         isPlaying = true
         updateNowPlayingInfo()
     }
@@ -88,11 +108,11 @@ final class AudioManager {
     /// Header Listen/Pause/Play: start this reading, or toggle pause/resume
     /// if it already owns the mini player — the same job as the mini player's
     /// play/pause control.
-    func playOrToggle(url: String, title: String) {
+    func playOrToggle(url: String, title: String, episodeID: String = "") {
         if isActive(url: url) {
             togglePlayback()
         } else {
-            play(url: url, title: title)
+            play(url: url, title: title, episodeID: episodeID)
         }
     }
 
@@ -108,11 +128,21 @@ final class AudioManager {
         guard let player else { return }
         if isPlaying {
             player.pause()
+            isPlaying = false
+            persistProgress()
         } else {
             player.play()
+            isPlaying = true
         }
-        isPlaying.toggle()
         updateNowPlayingInfo()
+    }
+
+    /// Writes the current place if this session has an identity. Safe to call
+    /// from a scene-phase change; a session with no identity is a no-op, which
+    /// is what lets the listen-session harness call `stop()` without touching
+    /// `UserDefaults`.
+    func persistProgress() {
+        persistProgress(force: true)
     }
 
     func skip(by seconds: Double) {
@@ -122,6 +152,7 @@ final class AudioManager {
     }
 
     func stop() {
+        persistProgress()
         statusObservation?.invalidate()
         statusObservation = nil
         if let observer = timeObserver {
@@ -141,6 +172,9 @@ final class AudioManager {
         duration = 0
         currentTitle = ""
         currentURL = ""
+        currentEpisodeID = ""
+        pendingSeek = nil
+        lastPersistedTime = -1
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
     }
 
@@ -160,6 +194,7 @@ final class AudioManager {
                 if self.duration > 0 {
                     self.currentTime = self.duration
                 }
+                self.persistProgress()
                 self.updateNowPlayingInfo()
             }
         }
@@ -201,6 +236,59 @@ final class AudioManager {
         return url.hasPrefix("/") ? "\(host)\(url)" : "\(host)/\(url)"
     }
 
+    /// The key `PlaybackProgressStore` writes. An episode id is stable across
+    /// CDN changes; a file:// URL is not a key, because the same recording
+    /// streamed remotely would then be a different place.
+    nonisolated static func identity(episodeID: String, resolvedURL: String) -> String {
+        let trimmed = episodeID.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty { return trimmed }
+        if resolvedURL.hasPrefix("file://") { return "" }
+        return resolvedURL
+    }
+
+    private static func resumePosition(for identity: String, resolvedURL: String) -> Double? {
+        if !identity.isEmpty,
+           let resume = PlaybackProgress.resumePosition(PlaybackProgressStore.progress(for: identity)) {
+            return resume
+        }
+        if !resolvedURL.hasPrefix("file://"), resolvedURL != identity,
+           let resume = PlaybackProgress.resumePosition(PlaybackProgressStore.progress(for: resolvedURL)) {
+            return resume
+        }
+        return nil
+    }
+
+    private func seekIfNeeded() {
+        guard let seek = pendingSeek else { return }
+        pendingSeek = nil
+        let time = CMTime(seconds: seek, preferredTimescale: 600)
+        player?.seek(to: time) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if self.isPlaying { self.player?.play() }
+                self.updateNowPlayingInfo()
+            }
+        }
+    }
+
+    private func persistProgress(force: Bool) {
+        guard !currentEpisodeID.isEmpty else { return }
+        guard currentTime.isFinite else { return }
+        let length = duration.isFinite ? duration : 0
+        let position = didFinishPlayback && length > 0 ? length : currentTime
+        // A failed load, or a tap that never got a second in, is not a place.
+        if !didFinishPlayback, position < PlaybackProgress.startedThreshold { return }
+        if !force, abs(position - lastPersistedTime) < 5 { return }
+        guard let progress = PlaybackProgress.make(
+            episodeID: currentEpisodeID,
+            position: position,
+            duration: length,
+            at: Date()
+        ) else { return }
+        lastPersistedTime = position
+        PlaybackProgressStore.record(progress)
+    }
+
     // MARK: - Time Observer
 
     private func setupTimeObserver() {
@@ -215,6 +303,7 @@ final class AudioManager {
                     let dur = item.duration.seconds
                     if dur.isFinite { self.duration = dur }
                 }
+                self.persistProgress(force: false)
             }
         }
     }

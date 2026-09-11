@@ -300,6 +300,7 @@ enum BackupService {
         let listened = PlaybackHistory.entries
         let completed = WorkbookCompletion.entries
         let positions = ReadingPositionStore.entries
+        let progress = PlaybackProgressStore.entries
 
         return BackupDocument.Settings(
             listenedEpisodes: listened.isEmpty ? nil : listened,
@@ -320,7 +321,8 @@ enum BackupService {
             readerTextSize: defaults.string(forKey: ReaderKey.readerTextSize),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
                 == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex),
-            readingPositions: positions.isEmpty ? nil : positions
+            readingPositions: positions.isEmpty ? nil : positions,
+            playbackProgress: progress.isEmpty ? nil : progress
         )
     }
 
@@ -336,6 +338,7 @@ enum BackupService {
         // where the reader actually got to, and that is an answer neither
         // device has to be asked for.
         if let incoming = settings.readingPositions { ReadingPositionStore.merge(incoming) }
+        if let incoming = settings.playbackProgress { PlaybackProgressStore.merge(incoming) }
 
         guard restoreScalars else { return }
         let defaults = UserDefaults.standard

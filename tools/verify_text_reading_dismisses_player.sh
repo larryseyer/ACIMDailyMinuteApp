@@ -64,6 +64,8 @@ SWIFT
 swiftc -O -parse-as-library \
     -framework AVFoundation \
     -framework MediaPlayer \
+    "$REPO/ACIMDailyMinute/Utilities/PlaybackProgress.swift" \
+    "$REPO/ACIMDailyMinute/Services/PlaybackProgressStore.swift" \
     "$REPO/ACIMDailyMinute/Services/AudioManager.swift" \
     "$WORK/main.swift" \
     -o "$WORK/verify"

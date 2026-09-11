@@ -149,6 +149,13 @@ struct BackupDocument: Codable, Equatable, Sendable {
         /// to the later of them, so it moves on an ordinary import rather than
         /// waiting for the reader to ask for their settings back.
         var readingPositions: [String: ReadingPosition]?
+        /// Where the reader got to in each recording, episode id → place.
+        ///
+        /// A listen place cannot be recomputed, which is the test for what
+        /// belongs in this file. It **merges**: two devices' places for one
+        /// episode resolve to the later of them, so a part-finished reading
+        /// does not rewind when a backup is imported.
+        var playbackProgress: [String: PlaybackProgress]? = nil
 
         static let empty = Settings()
     }

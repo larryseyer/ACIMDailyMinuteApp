@@ -138,6 +138,11 @@ func roundTripCases() -> [BackupDocument] {
                     readingKey: "lesson:84", startOffset: 0,
                     quote: "another passage entirely", updatedAt: date(11)
                 ),
+            ],
+            playbackProgress: [
+                "ep-1": PlaybackProgress(
+                    episodeID: "ep-1", position: 18.5, duration: 90, updatedAt: date(12)
+                )
             ]
         )
     )

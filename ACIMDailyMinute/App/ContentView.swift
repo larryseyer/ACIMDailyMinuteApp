@@ -3,6 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @State private var audioManager = AudioManager()
     @State private var connectivity = ConnectivityManager()
     @State private var selectedTab = 0
@@ -53,6 +54,11 @@ struct ContentView: View {
             .onAppear {
                 connectivity.start()
                 applyScreenshotTabIfRequested()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase != .active {
+                    audioManager.persistProgress()
+                }
             }
             .onReceive(NotificationCenter.default.publisher(for: .openSettingsRequested)) { _ in
                 showSettings = true

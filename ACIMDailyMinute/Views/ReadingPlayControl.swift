@@ -49,9 +49,7 @@ struct ReadingPlayControl: View {
                 $0.channel == "daily-lesson" && $0.lessonNumber == lessonNumber
             }
         )
-        _podcasts = Query(
-            filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" }
-        )
+        _podcasts = Query()
     }
 
     private var hit: MediaOverlay.Hit? {
@@ -112,7 +110,7 @@ struct ReadingPlayControl: View {
                 isActive: audio.isActive(url: hit.audioURL),
                 isPlaying: audio.isPlaying
             ) {
-                audio.playOrToggle(url: hit.audioURL, title: title)
+                audio.playOrToggle(url: hit.audioURL, title: title, episodeID: episodeID(for: hit.audioURL))
             }
             .contextMenu {
                 if hit.showsWatch {
@@ -141,5 +139,12 @@ struct ReadingPlayControl: View {
         if let a, !a.isEmpty { return a }
         if let b, !b.isEmpty { return b }
         return nil
+    }
+
+    /// The feed's own episode id for this audio, so a Listen started on a
+    /// reading is the same session Listen's activity list can resume.
+    private func episodeID(for audioURL: String) -> String {
+        let resolved = AudioManager.resolve(audioURL)
+        return podcasts.first { AudioManager.resolve($0.audioURL) == resolved }?.id ?? ""
     }
 }

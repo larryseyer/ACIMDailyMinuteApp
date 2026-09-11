@@ -4,33 +4,28 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
-## LIVE — standardized reading layout
-
-Add note stays at the bottom; one play control, audio-first. The calendar tab is named Video. That tab is not archive.org.
-
-- [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
-
 ## WATCHING — nightly catch-up
 
 - [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
 
 ## PARKED — one test pass, at the end, on his phone
 
-Do not ask him to check any of this until C is built. His words: otherwise he will just repeat himself on things that have not been done yet.
+C is in. Do not ask him to walk this list. He is already using the phone and reporting what he finds.
 
 - [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
 - [ ] Settings > Appearance > Text size: Default / Large / Larger resizes the serif body on the phone, iPad, and Mac; titles stay put; a fresh iPad is Large.
 - [ ] The watch on a wrist: today's Daily Minute under **Today**, bundled fallback under **From the Course** with the phone off; place the complication in all three shapes.
-- [ ] Listen rows: no `01:00` chips; tap leaves a check and `Listened <date>`; swipe offers Mark unplayed; unlistened rows show no date.
-- [ ] Listen Minute and Lessons: the row control is Listen, then Pause while playing and Play while paused; the mini player on this tab pauses too.
+- [ ] Listen is activity: now playing, part finished, downloaded, finished; an unplayed undownloaded reading is not in the list.
+- [ ] Listen rows: no `01:00` chips; a finished row says `Listened <date>`; swipe offers Mark unplayed; downloaded and part-finished rows show no date.
+- [ ] Listen activity rows: the row control is Listen, then Pause while playing and Play while paused; the mini player on this tab pauses too.
 - [ ] Saved tab: a saved lesson opens the lesson, a saved minute opens the passage; swipe either direction deletes — say if the leading edge should require a tap on Delete instead.
 - [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
 - [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
 - [ ] Video calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
 - [ ] Let it fall open on Video: a published minute; with no archive, a bundled Text passage.
 - [ ] Workbook lesson 84: the circle in the nav marks it done; the row grows a check; a Listen tap does not.
-- [ ] Listen with the network off: the YouTube card says video is unavailable and the list still plays.
+- [ ] Listen with the network off: activity rows still play; video is on the Video tab.
 - [ ] acimdailyminute://listen opens the Listen tab.
 - [ ] An archive minute can be highlighted; Save on Today and on that day's Video row is one Saved row.
 - [ ] Share on the Mac draws bare, like the phone.
