@@ -65,9 +65,13 @@ iCloud sync is off until you turn it on.
 
 If you never turned iCloud on, a backup file from Settings → Backup & Restore will still carry your marks to the other device.
 
-### A day on the Video tab has no reading.
+### A day on the Minute shelf is empty.
 
-Some days were missed when the daily passage was first published. Missed days are filled in one per night. The empty day tells you when that one is due. You can also tap **Let it fall open** for another published minute.
+On Video’s Minute shelf, some days were missed when the daily passage was first published. Missed days are filled in one per night. The empty day tells you when that one is due. You can also tap **Let it fall open** for another published minute.
+
+### A Video row has no YouTube recording.
+
+The row still plays. The app shows the passage on the screen — the art and the words, with narration when there is audio. Apple TV always does that; it has no YouTube player.
 
 ### Video on the Listen tab will not play.
 

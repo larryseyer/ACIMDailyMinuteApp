@@ -43,7 +43,7 @@ struct OnboardingView: View {
             ("play.circle", "Listen",
              "Every passage and lesson, read aloud.\nListen while you commute, walk, or sit still.\nDaily Minutes and Daily Lessons are added regularly."),
             ("play.rectangle", "Video",
-             "Browse past readings by date.\nReturn to any passage at your choosing.\nYour notes and highlights are stored across all devices."),
+             "Watch the Course on the screen.\nMinutes, lessons, the Text, and the Manual.\nSit with it, or put it on the television."),
             ("bookmark", "Save Your Favorites",
              "Keep the passages you mark as favorites.\nReturn to them anytime, online or off.")
         ]
