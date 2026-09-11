@@ -113,6 +113,7 @@
 		C0DE0001A11CE0B1000013 /* ListenResumeRibbon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002741 /* ListenResumeRibbon.swift */; };
 		C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
 		C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
+		C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
 		C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		C0DE0001A11CE0B1000002 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
 		C0DE0001A11CE0B1000003 /* ReaderTextSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002627 /* ReaderTextSize.swift */; };
@@ -300,6 +301,7 @@
 		AA000001741 /* ListenResumeRibbon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002741 /* ListenResumeRibbon.swift */; };
 		AA000001742 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
 		AA000001743 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
+		AA000001750 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
 		AA000001801 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
 		AA000001802 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
 		AA000001803 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
@@ -597,6 +599,7 @@
 		AA000002741 /* ListenResumeRibbon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenResumeRibbon.swift; sourceTree = "<group>"; };
 		AA000002742 /* ListenPlayableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenPlayableRow.swift; sourceTree = "<group>"; };
 		AA000002743 /* ListenTextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenTextChapterView.swift; sourceTree = "<group>"; };
+		AA000002750 /* VideoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibrary.swift; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -835,6 +838,7 @@
 				AA000002624 /* ArchiveCalendar.swift */,
 				AA000002730 /* CourseShelf.swift */,
 				AA000002740 /* ListenLibrary.swift */,
+				AA000002750 /* VideoLibrary.swift */,
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
@@ -1339,6 +1343,7 @@
 				AA000001741 /* ListenResumeRibbon.swift in Sources */,
 				AA000001742 /* ListenPlayableRow.swift in Sources */,
 				AA000001743 /* ListenTextChapterView.swift in Sources */,
+				AA000001750 /* VideoLibrary.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
 				AA000001616 /* ReadingNavigation.swift in Sources */,
 				AA000001617 /* CitationButton.swift in Sources */,
@@ -1556,6 +1561,7 @@
 				C0DE0001A11CE0B1000013 /* ListenResumeRibbon.swift in Sources */,
 				C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */,
 				C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */,
+				C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */,
 				F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */,
 				F49A219ED0FD25EE8D11715B /* ReadingNavigation.swift in Sources */,
 				6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */,
