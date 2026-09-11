@@ -190,7 +190,7 @@
 		AA000001213 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002213 /* LessonDetailView.swift */; };
 		AA000001214 /* JumpToLessonSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002214 /* JumpToLessonSheet.swift */; };
 		AA000001215 /* ListenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002215 /* ListenView.swift */; };
-		AA000001216 /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
+
 		AA000001217 /* ArchiveDateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002217 /* ArchiveDateDetailView.swift */; };
 		AA000001218 /* ArchivedReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002218 /* ArchivedReadingCard.swift */; };
 		AA000001219 /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
@@ -323,7 +323,7 @@
 		AA90AE2EBF10DAF1A9864B1E /* CachedPodcastEpisode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002219 /* CachedPodcastEpisode.swift */; };
 		AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002622 /* ReadingPositionStore.swift */; };
 		ABF27FA2BEED9F34CFB2861E /* PracticePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002704 /* PracticePlanner.swift */; };
-		ACCEF3854DE87F2863E6298B /* PodcastEpisodeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002216 /* PodcastEpisodeRow.swift */; };
+
 		B16FB1B18A0560706DEEA3A7 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
 		B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002210 /* LessonMeta.swift */; };
 		B579FDB9F261CC5F958EE305 /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002411 /* BookmarkStore.swift */; };
@@ -498,7 +498,7 @@
 		AA000002213 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
 		AA000002214 /* JumpToLessonSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JumpToLessonSheet.swift; sourceTree = "<group>"; };
 		AA000002215 /* ListenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenView.swift; sourceTree = "<group>"; };
-		AA000002216 /* PodcastEpisodeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastEpisodeRow.swift; sourceTree = "<group>"; };
+
 		AA000002217 /* ArchiveDateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveDateDetailView.swift; sourceTree = "<group>"; };
 		AA000002218 /* ArchivedReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedReadingCard.swift; sourceTree = "<group>"; };
 		AA000002219 /* CachedPodcastEpisode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedPodcastEpisode.swift; sourceTree = "<group>"; };
@@ -805,7 +805,7 @@
 				AA000002741 /* ListenResumeRibbon.swift */,
 				AA000002742 /* ListenPlayableRow.swift */,
 				AA000002743 /* ListenTextChapterView.swift */,
-				AA000002216 /* PodcastEpisodeRow.swift */,
+
 				AA000002016 /* YouTubePlayerView.swift */,
 				AA000002019 /* MiniPlayerView.swift */,
 				AA000002251 /* FullScreenVideoCover.swift */,
@@ -1243,7 +1243,7 @@
 				AA000001018 /* AudioManager.swift in Sources */,
 				AA000001019 /* MiniPlayerView.swift in Sources */,
 				AA000001215 /* ListenView.swift in Sources */,
-				AA000001216 /* PodcastEpisodeRow.swift in Sources */,
+
 				AA000001020 /* ArchiveService.swift in Sources */,
 				AA000001025 /* SettingsView.swift in Sources */,
 				AA000001027 /* BackgroundRefreshManager.swift in Sources */,
@@ -1459,7 +1459,7 @@
 				DBC69AF82BE814936B9810F7 /* AudioManager.swift in Sources */,
 				96EC8F7C5C54011A6A4F68D5 /* MiniPlayerView.swift in Sources */,
 				95F04C7093469EB14C80C9FC /* ListenView.swift in Sources */,
-				ACCEF3854DE87F2863E6298B /* PodcastEpisodeRow.swift in Sources */,
+
 				E8BDBBDBE685E353D220DD84 /* ArchiveService.swift in Sources */,
 				05DAEA537206B7647F1337E3 /* SettingsView.swift in Sources */,
 				E9F8261B56B8AC8E1886ABF7 /* BackgroundRefreshManager.swift in Sources */,
