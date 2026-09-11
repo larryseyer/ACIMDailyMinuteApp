@@ -6,10 +6,16 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ## LIVE — #1
 
-- [ ] Video tab YouTube is on the iPhone, Mac, and iPad sim — he is checking that a day plays the video. Apple TV still rebuilds from the MP3s.
+- [ ] Read tab: add Minute shelf (calendar of past minutes as readings). Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`.
+- [ ] Listen tab: same four shelves (Minute / Lesson / Text / Manual), resume ribbon on top; unplayed audio is visible.
+- [ ] Video tab: same four shelves; YouTube when a recording exists, composed player otherwise (Apple TV always composes).
+- [ ] tvOS Read opens the reading, not the player. Today stays player-first.
+- [ ] Onboarding, App Store listing, and support copy: Video is no longer “browse by date.”
+- [ ] Shared shelf chrome so Read / Listen / Video cannot drift.
 
 ## HIS CALL
 
+- [ ] Video tab YouTube on iPhone, Mac, and iPad sim — he is checking that a day plays the video (thumbnail, tap to play).
 - [ ] The small label above a reading ("Daily Minute", "Lesson 84") wraps onto two lines when system text is huge, and the header gets taller. Is that OK?
 - [ ] Preface citations: `Pref.4` does not say which of the two Preface parts it is in. Changing that changes backups already exported. Leave it?
 - [ ] Companion note under Settings > About: three wording departures are his to veto.

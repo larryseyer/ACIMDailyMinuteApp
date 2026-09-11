@@ -1,11 +1,13 @@
 # continue.md
 
-LIVE: Video tab YouTube is on the iPhone, this Mac, and the iPad sim. He is checking that a day plays the video (thumbnail, tap to play). If he says it looks great, delete that item.
+LIVE: Read tab — add Minute shelf (calendar of past minutes as readings). Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`. He approved it.
 
-NEXT: HIS CALL items wait on him. Then CloudKit Development → Production before any release build. Screenshots after iPhone, iPad, Watch, Apple TV, and widgets are finished.
+NEXT: Listen four shelves, then Video four shelves, then tvOS Read opens the reading. Copy last.
 
-Do not rebuild text size. Watch is done. Do not touch the backend, prd.json, or native visionOS. Apple TV still rebuilds video from the MP3s — leave that path.
+Do not rebuild text size. Watch is done. Do not touch the backend, prd.json, or native visionOS. Do not invent TTS. Do not host MP4s. Do not rebuild `TVPlayerView` — reuse it for Video when there is no YouTube. Apple TV still composes from the MP3s.
 
-Video tab: `ArchiveDateDetailView` shows `LiteYouTubeCard`. Minute ids come from the podcast `<link>` first (`ArchiveView.refreshPodcasts`); lesson ids come from `DailyLesson` first. `LiteYouTubeCard` walks a 404 thumbnail to the next id. Prove with `./tools/verify_video_tab.sh`.
+Start at `LessonsView`: fourth shelf `Minute`, reuse `ArchiveCalendarView`. Destination is a `MinuteDateRef` (not `String` — lesson numbers are `Int`). Open `DailyMinuteCard` or `ArchivedReadingCard`, never `LiteYouTubeCard`. From the Read lesson spine, pass `presentsVideo: false`. Default shelf stays Lesson.
 
-Branch `ralph/acim-3.9-to-5-finish-2026-04-14`. HEAD `a5b611d`.
+New Swift files need four `project.pbxproj` lines each, both app and tvOS Sources phases. Pattern: `SegmentReadingView.swift`.
+
+Branch `ralph/acim-3.9-to-5-finish-2026-04-14`.
