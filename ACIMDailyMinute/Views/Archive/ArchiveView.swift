@@ -92,23 +92,13 @@ struct ArchiveView: View {
             .navigationDestination(for: VideoTextChapterRef.self) { ref in
                 VideoTextChapterView(chapter: ref.chapter, onOpen: { openRow($0) })
             }
-            #if os(iOS) || os(macOS)
+            #if os(iOS)
             .fullScreenCover(item: $youtubeClip) { clip in
-                NavigationStack {
-                    ScrollView {
-                        LiteYouTubeCard(videoIDs: clip.videoIDs, accessibilityTitle: clip.title)
-                            .padding(20)
-                    }
-                    .navigationTitle(clip.title)
-                    #if os(iOS)
-                    .navigationBarTitleDisplayMode(.inline)
-                    #endif
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Done") { youtubeClip = nil }
-                        }
-                    }
-                }
+                youtubeClipCover(clip)
+            }
+            #elseif os(macOS)
+            .sheet(item: $youtubeClip) { clip in
+                youtubeClipCover(clip)
             }
             #endif
             .onReceive(NotificationCenter.default.publisher(for: .deepLinkArchive)) { note in
@@ -441,6 +431,27 @@ struct ArchiveView: View {
         true
         #endif
     }
+
+    #if os(iOS) || os(macOS)
+    @ViewBuilder
+    private func youtubeClipCover(_ clip: VideoYouTubeClip) -> some View {
+        NavigationStack {
+            ScrollView {
+                LiteYouTubeCard(videoIDs: clip.videoIDs, accessibilityTitle: clip.title)
+                    .padding(20)
+            }
+            .navigationTitle(clip.title)
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Done") { youtubeClip = nil }
+                }
+            }
+        }
+    }
+    #endif
 
     private func openRow(_ row: VideoLibrary.Row) {
         switch VideoLibrary.play(videoIDs: row.videoIDs, youtubeAvailable: youtubeAvailable) {

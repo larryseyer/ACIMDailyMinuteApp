@@ -37,6 +37,7 @@ struct ContentView: View {
             .environment(audioManager)
             .environment(connectivity)
             .environment(\.openPlayer, OpenPlayerAction { presentPlayer($0) })
+            #if os(iOS) || os(tvOS)
             .fullScreenCover(item: $playerItem) { item in
                 // The cover is a new presentation. On tvOS it does not
                 // inherit @Environment(AudioManager.self) from the tabs —
@@ -45,6 +46,12 @@ struct ContentView: View {
                 TVPlayerView(item: item)
                     .environment(audioManager)
             }
+            #else
+            .sheet(item: $playerItem) { item in
+                TVPlayerView(item: item)
+                    .environment(audioManager)
+            }
+            #endif
             .task { await warmPodcastCache() }
             .animation(.easeInOut(duration: 0.2), value: audioManager.hasActiveAudio)
             .onAppear {
