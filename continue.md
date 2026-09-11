@@ -1,12 +1,13 @@
 # continue.md
 
-LIVE: `2026-09-11-Design_Plan.md` step 6 — Now Playing, the full player.
+LIVE: `2026-09-11-Design_Plan.md` step 7 — Saved as one filtered stream.
 Work on `main` only. No feature branch. No subagent. No worktree.
 
 REMEMBER THIS: ALWAYS WORK ON MAIN — NO BRANCHES EVER UNLESS THE USER
 ASKS FOR THEM.
 
-NEXT after that: step 7, Saved as one filtered stream.
+NEXT after that: step 8, iPad and Mac `NavigationSplitView`; the two
+questions in §O.
 
 The design file is the spec. Visual intent:
 `docs/design/2026-09-11-ios-presentation.html`. The Design Plan wins
@@ -15,19 +16,21 @@ wherever they differ. Do not build from
 renders Lesson 84 as `W·r2·84`). Plan mode at the top of the numbered
 step, present the approach, wait for approval, then edit.
 
-## Step 6
+## Step 7
 
-The full player. Absorbs controls currently spread across `MiniPlayerView`,
-`ListenButton` and the Listen swipe actions. Artwork is the passage itself
-in a 232pt box — no stock image, no app icon. Do not rebuild `TVPlayerView`.
+Three segmented lists become one filtered stream. Filter chips at the
+top — All / Highlights / Notes / Bookmarks. A highlight is shown as a
+highlight; a note sits under its passage in italic. Orphaned highlights
+render at 50% opacity. Export stays in the toolbar. Order is when the
+reader marked them, newest first.
 
-Spec: §5 step 6, §S5 Now Playing, §S4 Now Playing bar (already 64pt).
-Mockup: the Listen / full player figure in `docs/design/`.
+Spec: §5 step 7, §S5 Saved.
+Mockup: the Saved figure in `docs/design/`.
 
 Confirm unused serials with `python3` against `project.pbxproj` before
 taking one. App build-file `AA000001NNN` serials 980–999, 806–809,
-824–826 are taken. New directories need a new `PBXGroup`. Then
-`./clean.sh`. `Views/Listen/NowPlayingView.swift` is app target only.
+824–827 are taken. New directories need a new `PBXGroup`. Then
+`./clean.sh`.
 
 ## Done when
 
