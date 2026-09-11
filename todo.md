@@ -14,7 +14,6 @@ step 10 is on the devices.
 
 REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
 
-- [ ] Step 8 — iPad and Mac `NavigationSplitView`; the two questions in §O.
 - [ ] Step 9 — Apple TV, Watch, widgets.
 - [ ] Step 10 — `APP_STORE_LISTING.md`, `store-support-page.md`, screenshots.
 

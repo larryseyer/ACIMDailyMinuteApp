@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AA000001806 /* ACIMTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002806 /* ACIMTabBar.swift */; };
+		AA000001828 /* ACIMSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002828 /* ACIMSplitView.swift */; };
 		AA000001807 /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002807 /* CourseView.swift */; };
 		AA000001808 /* CourseMinuteSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002808 /* CourseMinuteSpine.swift */; };
 		AA000001809 /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
@@ -452,6 +453,7 @@
 
 /* Begin PBXFileReference section */
 		AA000002806 /* ACIMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMTabBar.swift; sourceTree = "<group>"; };
+		AA000002828 /* ACIMSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMSplitView.swift; sourceTree = "<group>"; };
 		AA000002807 /* CourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseView.swift; sourceTree = "<group>"; };
 		AA000002808 /* CourseMinuteSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseMinuteSpine.swift; sourceTree = "<group>"; };
 		AA000002809 /* CourseWorkbookSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseWorkbookSpine.swift; sourceTree = "<group>"; };
@@ -851,6 +853,7 @@
 				AA000002507 /* TVPlayerView.swift */,
 				AA000002703 /* ACIMColors.swift */,
 				AA000002806 /* ACIMTabBar.swift */,
+				AA000002828 /* ACIMSplitView.swift */,
 				AA000002991 /* CitationLabel.swift */,
 			);
 			path = Views;
@@ -1296,6 +1299,7 @@
 				AA000001001 /* ACIMDailyMinuteApp.swift in Sources */,
 				AA000001002 /* ContentView.swift in Sources */,
 				AA000001806 /* ACIMTabBar.swift in Sources */,
+				AA000001828 /* ACIMSplitView.swift in Sources */,
 				AA000001807 /* CourseView.swift in Sources */,
 				AA000001808 /* CourseMinuteSpine.swift in Sources */,
 				AA000001809 /* CourseWorkbookSpine.swift in Sources */,

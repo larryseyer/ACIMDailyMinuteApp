@@ -1,13 +1,12 @@
 # continue.md
 
-LIVE: `2026-09-11-Design_Plan.md` step 8 — iPad and Mac `NavigationSplitView`;
-the two questions in §O.
+LIVE: `2026-09-11-Design_Plan.md` step 9 — Apple TV, Watch, widgets.
 Work on `main` only. No feature branch. No subagent. No worktree.
 
 REMEMBER THIS: ALWAYS WORK ON MAIN — NO BRANCHES EVER UNLESS THE USER
 ASKS FOR THEM.
 
-NEXT after that: step 9, Apple TV, Watch, widgets.
+NEXT after that: step 10, `APP_STORE_LISTING.md`, support page, screenshots.
 
 The design file is the spec. Visual intent:
 `docs/design/2026-09-11-ios-presentation.html`. The Design Plan wins
@@ -16,23 +15,20 @@ wherever they differ. Do not build from
 renders Lesson 84 as `W·r2·84`). Plan mode at the top of the numbered
 step, present the approach, wait for approval, then edit.
 
-## Step 8
+## Step 9
 
-iPad and Mac leave the phone's three tabs. `NavigationSplitView`: sidebar
-holds Today, the four books, and Saved; the detail column is the reading.
-No tab bar, no `ACIMTabBar` on these two. Mac keeps its 420pt minimum
-width. Revisit `ReadableContentWidth` — 672pt is macOS-only today and
-the iPad needs its own answer once a sidebar takes width.
+tvOS to two system tabs (Today · Course). No Saved, no medium band, no
+floating tab bar. Select opens `TVPlayerView`, which is not rebuilt.
+Watch is Today only: date 17 serif, passage 15 serif, citation 11 serif
+gold. Widgets take the masthead / passage / citation stack at three
+sizes. All keep `widgetURL(acimdailyminute://today)`.
 
-The two remaining decisions are in §O. Decide them against a running
-build, not on paper. They are the only two. Do not invent a third.
-
-Spec: §5 step 8, §S7 iPad and Mac, §O.
-Mockup: intent only; sidebar chrome is specified here, not in the drawing.
+Spec: §5 step 9, §S7 Apple TV / Watch / widgets, §S2 Watch sizes.
+Mockup: iPhone intent only.
 
 Confirm unused serials with `python3` against `project.pbxproj` before
 taking one. App build-file `AA000001NNN` serials 980–999, 806–809,
-824–827 are taken. New directories need a new `PBXGroup`. Then
+824–828 are taken. New directories need a new `PBXGroup`. Then
 `./clean.sh`.
 
 ## Done when

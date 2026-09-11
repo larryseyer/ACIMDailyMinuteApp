@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// Compact Now Playing bar. Sits 8pt above `ACIMTabBar`.
+/// Compact Now Playing bar. On iPhone it sits 8pt above `ACIMTabBar`.
+/// On iPad and Mac there is no tab bar, so it docks on the 14pt bottom inset.
 ///
 /// `height` is 56pt of bar plus the 8pt gap, so surfaces that already
 /// reserve this symbol keep a correct last-line clearance.

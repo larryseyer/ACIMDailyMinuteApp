@@ -95,13 +95,18 @@ extension View {
 /// What `readableContentWidth()` actually gives a child at this parent width
 /// and size class. `ImageRenderer` forces a real layout pass without a window.
 @MainActor
-func column(parent: CGFloat, sizeClass: UserInterfaceSizeClass) -> CGRect {
+func column(
+    parent: CGFloat,
+    sizeClass: UserInterfaceSizeClass,
+    clamps: Bool = false
+) -> CGRect {
     var out: [String: CGRect] = [:]
     let probe = Color.clear
         .frame(height: 8)
         .tracked("column", "page")
         .readableContentWidth()
         .environment(\.horizontalSizeClass, sizeClass)
+        .environment(\.clampsReadableColumn, clamps)
         .frame(width: parent, height: 8)
         .coordinateSpace(name: "page")
         .onPreferenceChange(FrameKey.self) { out = $0 }
@@ -143,8 +148,26 @@ MainActor.assumeIsolated {
               "compact \(Int(parent))pt parent: column origin \(frame.minX)pt")
     }
 
+    // Split-view opt-in. The parent is the detail column, not the window.
+    // Below 672 the cap is invisible; above it the column centres at 672.
+    for parent: CGFloat in [500, 672] {
+        let frame = column(parent: parent, sizeClass: .regular, clamps: true)
+        check(abs(frame.width - parent) < 0.5,
+              "clamped \(Int(parent))pt parent: column is \(frame.width)pt, not the parent")
+        check(abs(frame.minX) < 0.5,
+              "clamped \(Int(parent))pt parent: column origin \(frame.minX)pt")
+    }
+    for parent: CGFloat in [860, 1046] {
+        let frame = column(parent: parent, sizeClass: .regular, clamps: true)
+        check(abs(frame.width - 672) < 0.5,
+              "clamped \(Int(parent))pt parent: column is \(frame.width)pt, not 672")
+        let expectedOrigin = (parent - 672) / 2
+        check(abs(frame.minX - expectedOrigin) < 0.5,
+              "clamped \(Int(parent))pt parent: origin \(frame.minX)pt, expected \(expectedOrigin)")
+    }
+
     if failures == 0 {
-        print("\(checks) checks, the iPad-regular column uses the parent")
+        print("\(checks) checks, the iPad-regular column uses the parent; the split clamp is 672")
         print("OK")
     } else {
         print("\(failures) FAILURE(S) of \(checks) checks")

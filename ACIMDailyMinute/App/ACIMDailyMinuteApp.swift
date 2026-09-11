@@ -163,7 +163,9 @@ struct ACIMDailyMinuteApp: App {
         }
         .modelContainer(sharedModelContainer)
         #if os(macOS)
-        .defaultSize(width: 500, height: 900)
+        // Sidebar 240 + 672pt reading column. The old 500×900 was the
+        // phone-column window; both columns at that width clip the books.
+        .defaultSize(width: 960, height: 740)
         .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(replacing: .appInfo) {

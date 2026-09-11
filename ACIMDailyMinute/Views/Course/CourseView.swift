@@ -45,41 +45,7 @@ struct CourseView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationDestination(for: CourseShelf.self) { book in
-                spine(for: book)
-            }
-            .navigationDestination(for: Int.self) { lessonNumber in
-                LessonDetailView(lessonNumber: lessonNumber, presentsVideo: false)
-            }
-            .navigationDestination(for: MinuteDateRef.self) { ref in
-                MinuteReadingView(
-                    dateString: ref.dateString,
-                    availability: minuteAvailability(of: ref.dateString),
-                    archived: minuteDates
-                )
-            }
-            .navigationDestination(for: TextChapterRef.self) { ref in
-                TextChapterView(chapter: ref.chapter)
-            }
-            .navigationDestination(for: IntroductionRef.self) { ref in
-                WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
-            }
-            .navigationDestination(for: LessonRef.self) { ref in
-                LessonDetailView(
-                    lessonNumber: ref.lessonNumber,
-                    spotlight: ref.spotlight,
-                    presentsVideo: ref.presentsVideo
-                )
-            }
-            .navigationDestination(for: ManualSegmentRef.self) { ref in
-                ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
-            }
-            .navigationDestination(for: ManualSectionRef.self) { ref in
-                ManualSectionView(number: ref.number, spotlight: ref.spotlight)
-            }
-            .navigationDestination(for: SegmentReadingRef.self) { ref in
-                SegmentReadingView(segmentId: ref.segmentId, spotlight: ref.spotlight)
-            }
+            .courseDestinations(path: $path)
             .readingDestinations(path: $path)
             #if !os(tvOS)
             .searchable(text: $searchText, prompt: "Search the Course")
@@ -132,20 +98,6 @@ struct CourseView: View {
             .readableContentWidth()
         }
         .acimInkBackground()
-    }
-
-    @ViewBuilder
-    private func spine(for book: CourseShelf) -> some View {
-        switch book {
-        case .minute:
-            CourseMinuteSpine(path: $path)
-        case .lesson:
-            CourseWorkbookSpine(path: $path)
-        case .text:
-            CourseTextSpine()
-        case .manual:
-            CourseManualSpine()
-        }
     }
 
     // MARK: - Book rows
@@ -363,15 +315,6 @@ struct CourseView: View {
         return dates
     }
 
-    private func minuteAvailability(of dateString: String) -> MinuteSchedule.Availability {
-        guard let day = LessonSchedule.day(from: dateString) else { return .unknown }
-        return MinuteSchedule.availability(
-            of: day,
-            archived: minuteDates,
-            today: MinuteSchedule.utcToday(now: Date())
-        )
-    }
-
     private var currentWorkbookLesson: Int? {
         #if os(tvOS)
         nil
@@ -411,6 +354,101 @@ struct CourseView: View {
 
 private extension Int {
     var nonZero: Int? { self > 0 ? self : nil }
+}
+
+/// One book's spine. Course contents pushes this; the iPad/Mac split
+/// shows it as the detail root.
+struct CourseSpineView: View {
+    let book: CourseShelf
+    @Binding var path: NavigationPath
+
+    var body: some View {
+        switch book {
+        case .minute:
+            CourseMinuteSpine(path: $path)
+        case .lesson:
+            CourseWorkbookSpine(path: $path)
+        case .text:
+            CourseTextSpine()
+        case .manual:
+            CourseManualSpine()
+        }
+    }
+}
+
+extension View {
+    /// Book, lesson, minute, Text, Manual, and segment destinations for a
+    /// Course stack. `readingDestinations` is separate and still required.
+    func courseDestinations(path: Binding<NavigationPath>) -> some View {
+        modifier(CourseDestinationsModifier(path: path))
+    }
+}
+
+private struct CourseDestinationsModifier: ViewModifier {
+    @Binding var path: NavigationPath
+
+    @Query(
+        filter: #Predicate<ArchivedReading> { $0.channel == "daily-minute" },
+        sort: \ArchivedReading.dateString
+    )
+    private var archivedMinutes: [ArchivedReading]
+    @Query private var storedMinutes: [DailyMinute]
+
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: CourseShelf.self) { book in
+                CourseSpineView(book: book, path: $path)
+            }
+            .navigationDestination(for: Int.self) { lessonNumber in
+                LessonDetailView(lessonNumber: lessonNumber, presentsVideo: false)
+            }
+            .navigationDestination(for: MinuteDateRef.self) { ref in
+                MinuteReadingView(
+                    dateString: ref.dateString,
+                    availability: minuteAvailability(of: ref.dateString),
+                    archived: minuteDates
+                )
+            }
+            .navigationDestination(for: TextChapterRef.self) { ref in
+                TextChapterView(chapter: ref.chapter)
+            }
+            .navigationDestination(for: IntroductionRef.self) { ref in
+                WorkbookIntroductionView(lessonNumber: ref.lessonNumber, spotlight: ref.spotlight)
+            }
+            .navigationDestination(for: LessonRef.self) { ref in
+                LessonDetailView(
+                    lessonNumber: ref.lessonNumber,
+                    spotlight: ref.spotlight,
+                    presentsVideo: ref.presentsVideo
+                )
+            }
+            .navigationDestination(for: ManualSegmentRef.self) { ref in
+                ManualSegmentView(segmentId: ref.segmentId, spotlight: ref.spotlight)
+            }
+            .navigationDestination(for: ManualSectionRef.self) { ref in
+                ManualSectionView(number: ref.number, spotlight: ref.spotlight)
+            }
+            .navigationDestination(for: SegmentReadingRef.self) { ref in
+                SegmentReadingView(segmentId: ref.segmentId, spotlight: ref.spotlight)
+            }
+    }
+
+    private var minuteDates: Set<String> {
+        var dates = Set(archivedMinutes.map(\.dateString).filter { !$0.isEmpty })
+        for minute in storedMinutes where !minute.date.isEmpty {
+            dates.insert(minute.date)
+        }
+        return dates
+    }
+
+    private func minuteAvailability(of dateString: String) -> MinuteSchedule.Availability {
+        guard let day = LessonSchedule.day(from: dateString) else { return .unknown }
+        return MinuteSchedule.availability(
+            of: day,
+            archived: minuteDates,
+            today: MinuteSchedule.utcToday(now: Date())
+        )
+    }
 }
 
 struct CoursePip: Identifiable {

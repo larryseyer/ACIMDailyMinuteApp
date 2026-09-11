@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+#if os(iOS)
+import UIKit
+#endif
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -8,6 +11,11 @@ struct ContentView: View {
     @State private var connectivity = ConnectivityManager()
     @State private var selectedTab = 0
     @State private var coursePath = NavigationPath()
+    #if os(iOS) || os(macOS)
+    @State private var splitItem = SplitItem.today
+    @State private var splitPath = NavigationPath()
+    @State private var preserveSplitPath = false
+    #endif
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
     /// One player for Today and Video. Installing `openPlayer` on a single
@@ -183,18 +191,32 @@ struct ContentView: View {
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.lesson)
+            #if os(iOS) || os(macOS)
+            openSplit(.book(.lesson), path: NavigationPath())
+            #endif
         case "video", "archive":
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.minute)
             if let day = LessonSchedule.day(from: "2026-09-02") {
-                coursePath.append(MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: day)))
+                let ref = MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: day))
+                coursePath.append(ref)
+                #if os(iOS) || os(macOS)
+                var minutePath = NavigationPath()
+                minutePath.append(ref)
+                openSplit(.book(.minute), path: minutePath)
+                #endif
+            } else {
+                #if os(iOS) || os(macOS)
+                openSplit(.book(.minute), path: NavigationPath())
+                #endif
             }
         case "saved":
             #if os(tvOS)
             selectedTab = 0
             #else
             selectedTab = 2
+            openSplit(.saved, path: NavigationPath())
             #endif
         case "lesson":
             selectedTab = 1
@@ -203,6 +225,11 @@ struct ContentView: View {
             // Unpublished: bundled text, no YouTube. A recorded lesson
             // auto-presents video and the store shot becomes the overlay.
             coursePath.append(256)
+            #if os(iOS) || os(macOS)
+            var lessonPath = NavigationPath()
+            lessonPath.append(256)
+            openSplit(.book(.lesson), path: lessonPath)
+            #endif
         case "settings":
             showSettings = true
         default:
@@ -215,24 +242,44 @@ struct ContentView: View {
         switch route {
         case .today:
             selectedTab = 0
+            #if os(iOS) || os(macOS)
+            openSplit(.today, path: NavigationPath())
+            #endif
         case .lessons:
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.lesson)
+            #if os(iOS) || os(macOS)
+            openSplit(.book(.lesson), path: NavigationPath())
+            #endif
         case .listen:
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.lesson)
+            #if os(iOS) || os(macOS)
+            openSplit(.book(.lesson), path: NavigationPath())
+            #endif
         case .lesson(let n):
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.lesson)
             coursePath.append(n)
+            #if os(iOS) || os(macOS)
+            var lessonPath = NavigationPath()
+            lessonPath.append(n)
+            openSplit(.book(.lesson), path: lessonPath)
+            #endif
         case .archive(let d):
             selectedTab = 1
             coursePath = NavigationPath()
             coursePath.append(CourseShelf.minute)
-            coursePath.append(MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: d)))
+            let ref = MinuteDateRef(dateString: MinuteSchedule.utcDateString(from: d))
+            coursePath.append(ref)
+            #if os(iOS) || os(macOS)
+            var minutePath = NavigationPath()
+            minutePath.append(ref)
+            openSplit(.book(.minute), path: minutePath)
+            #endif
         case .saved:
             // Tag 2 does not exist on the television. Selecting a tag no
             // tab carries leaves a TabView showing nothing at all.
@@ -240,9 +287,18 @@ struct ContentView: View {
             selectedTab = 0
             #else
             selectedTab = 2
+            openSplit(.saved, path: NavigationPath())
             #endif
         }
     }
+
+    #if os(iOS) || os(macOS)
+    private func openSplit(_ item: SplitItem, path: NavigationPath) {
+        preserveSplitPath = true
+        splitItem = item
+        splitPath = path
+    }
+    #endif
 
     /// Escape closes a macOS sheet by writing `false` through this binding.
     /// A setter that discarded the value left the introduction with no way
@@ -271,6 +327,19 @@ struct ContentView: View {
                 .tag(1)
         }
         #elseif os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            splitChrome
+        } else {
+            phoneTabs
+        }
+        #else
+        splitChrome
+        #endif
+    }
+
+    #if os(iOS)
+    /// iPhone only. iPad leaves the tabs for `NavigationSplitView`.
+    private var phoneTabs: some View {
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedTab) {
                 TodayView()
@@ -292,29 +361,10 @@ struct ContentView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             Color.clear.frame(height: ACIMTabBar.clearance)
         }
-        #else
-        ZStack(alignment: .bottom) {
-            Group {
-                switch selectedTab {
-                case 1: CourseView(path: $coursePath)
-                case 2: SavedView()
-                default: TodayView()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            floatingChrome
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: ACIMTabBar.clearance)
-        }
-        #endif
     }
 
-    #if os(iOS) || os(macOS)
     /// Tab bar plus, when audio is active, the compact Now Playing bar 8pt
-    /// above it. The television has neither: the composed player is full
-    /// screen, and a mini player on the tabs is a focus trap.
+    /// above it.
     private var floatingChrome: some View {
         VStack(spacing: 8) {
             if audioManager.hasActiveAudio && !showNowPlaying {
@@ -325,6 +375,25 @@ struct ContentView: View {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 14)
+    }
+    #endif
+
+    #if os(iOS) || os(macOS)
+    /// iPad and Mac. No tab bar; the mini player docks on the bottom inset.
+    private var splitChrome: some View {
+        ZStack(alignment: .bottom) {
+            ACIMSplitView(
+                selection: $splitItem,
+                path: $splitPath,
+                preservePath: $preserveSplitPath
+            )
+            if audioManager.hasActiveAudio && !showNowPlaying {
+                MiniPlayerView()
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 14)
+                    .transition(.move(edge: .bottom))
+            }
+        }
     }
     #endif
 }

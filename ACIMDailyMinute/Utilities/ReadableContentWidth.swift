@@ -4,36 +4,58 @@ import SwiftUI
 /// than the platform's column — the pure-SwiftUI equivalent of UIKit's
 /// `UIView.readableContentGuide`.
 ///
-/// macOS only. A window is user-resizable up to screen width, and the
+/// Default on: macOS. A window is user-resizable up to screen width, and the
 /// 672pt base is wrapped in `@ScaledMetric` so the column grows with
 /// Dynamic Type. A narrow window (down to the 420pt minWidth) shrinks
 /// naturally; the clamp only visibly activates when the parent exceeds
 /// the scaled width.
 ///
-/// Not on iOS/iPadOS. Regular size class is the iPad's full-width canvas,
-/// and 672pt leaves empty wings — 74pt each side on 820pt portrait, 254pt
-/// each side on 1180pt landscape. The iPad uses the screen; the surfaces'
-/// own padding is the inset. Compact (iPhone, and iPad Slide Over / Split
-/// View) already filled the parent.
+/// Default off on iOS/iPadOS. The iPhone fills the parent. The iPad used
+/// to fill the window too — 672pt left empty wings on a full-screen
+/// canvas. The split view on iPad opts in via `clampsReadableColumn`,
+/// because its parent is the detail column, not the window.
 ///
 /// Not on tvOS. A television reports `.regular` too, but that is the iPad's
 /// answer to a different question. tvOS already draws at 10-foot type; the
 /// clamp is what made a thin page. The television uses the screen, and the
 /// surfaces' own padding is the inset.
+private struct ClampsReadableColumnKey: EnvironmentKey {
+    static var defaultValue: Bool {
+        #if os(macOS)
+        true
+        #else
+        false
+        #endif
+    }
+}
+
+extension EnvironmentValues {
+    /// When true, `readableContentWidth()` caps at the scaled 672pt column
+    /// and centres the remainder. macOS defaults on; iOS defaults off so
+    /// the phone and a full-window iPad probe keep filling the parent.
+    var clampsReadableColumn: Bool {
+        get { self[ClampsReadableColumnKey.self] }
+        set { self[ClampsReadableColumnKey.self] = newValue }
+    }
+}
+
 struct ReadableContentWidthModifier: ViewModifier {
-    #if os(macOS)
+    @Environment(\.clampsReadableColumn) private var clampsReadableColumn
     @ScaledMetric private var maxReadableWidth: CGFloat = 672
-    #endif
 
     func body(content: Content) -> some View {
-        #if os(macOS)
+        if clampsReadableColumn {
+            clamped(content)
+        } else {
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func clamped(_ content: Content) -> some View {
         content
             .frame(maxWidth: maxReadableWidth, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .center)
-        #else
-        content
-            .frame(maxWidth: .infinity, alignment: .leading)
-        #endif
     }
 }
 
