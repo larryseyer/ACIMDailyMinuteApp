@@ -318,11 +318,11 @@ SWIFT
 VIEWS="$REPO/ACIMDailyMinute/Views"
 SDK="$(xcrun --sdk iphonesimulator --show-sdk-path)"
 
-# ⛔ The compile line names the header and the three real controls — and their
-# palette, which is the only thing they reach for. Nothing else may enter. A
-# control that starts needing a model or a service is a control this harness can
-# no longer measure, and the only way left to see it would be a phone whose text
-# size happens to match the reader's.
+# ⛔ The compile line names the header and the three real controls — and the
+# palette and type scale they reach for. Nothing else may enter. A control
+# that starts needing a model or a service is a control this harness can
+# no longer measure, and the only way left to see it would be a phone whose
+# text size happens to match the reader's.
 xcrun -sdk iphonesimulator swiftc -O \
     -target arm64-apple-ios18.1-simulator -sdk "$SDK" \
     "$VIEWS/CardHeaderRow.swift" \
@@ -330,6 +330,7 @@ xcrun -sdk iphonesimulator swiftc -O \
     "$VIEWS/SaveButton.swift" \
     "$VIEWS/ShareButton.swift" \
     "$VIEWS/ACIMColors.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/ACIMType.swift" \
     "$WORK/main.swift" \
     -o "$WORK/verify"
 

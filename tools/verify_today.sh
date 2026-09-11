@@ -60,6 +60,18 @@ grep -q 'PracticePlanner' "$PRACTICE" || fail "PracticeCard does not read Practi
 grep -q 'cadenceSummary' "$PRACTICE" || fail "PracticeCard does not use cadenceSummary"
 grep -q 'WorkbookPracticeCatalog' "$PRACTICE" || fail "PracticeCard does not read the catalog"
 grep -q 'UNUserNotification' "$PRACTICE" && fail "PracticeCard reached into notifications"
+grep -q '\.sheet' "$PRACTICE" || fail "PracticeCard does not open a sheet"
+
+# Practice sheet is the same surface, still not a scheduler.
+SHEET="$REPO/ACIMDailyMinute/Views/Practice/PracticeSheet.swift"
+[[ -f "$SHEET" ]] || fail "PracticeSheet.swift is missing"
+grep -q 'PracticePlanner' "$SHEET" || fail "PracticeSheet does not read PracticePlanner"
+grep -q 'cadenceSummary' "$SHEET" || fail "PracticeSheet does not use cadenceSummary"
+grep -q 'slots(for:' "$SHEET" || fail "PracticeSheet does not read slots"
+grep -q 'WorkbookPracticeCatalog' "$SHEET" || fail "PracticeSheet does not read the catalog"
+grep -q 'UNUserNotification' "$SHEET" && fail "PracticeSheet reached into notifications"
+grep -q 'Timer' "$SHEET" && fail "PracticeSheet invented a timer"
+grep -q 'PracticePlanner.plan' "$SHEET" && fail "PracticeSheet called plan(_:) for a day's slots"
 
 # Review grouping: lesson 84 is Review II, never part of the address.
 python3 - "$REPO" <<'PY'

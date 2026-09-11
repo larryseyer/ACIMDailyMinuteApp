@@ -1,12 +1,12 @@
 # continue.md
 
-LIVE: `2026-09-11-Design_Plan.md` step 3 — the practice sheet. Work on
+LIVE: `2026-09-11-Design_Plan.md` step 4 — the Course tab. Work on
 `main` only. No feature branch. No subagent. No worktree.
 
 REMEMBER THIS: ALWAYS WORK ON MAIN — NO BRANCHES EVER UNLESS THE USER
 ASKS FOR THEM.
 
-NEXT after that: step 4, the Course tab.
+NEXT after that: step 5, the reading and the medium band.
 
 The design file is the spec. Visual intent:
 `docs/design/2026-09-11-ios-presentation.html`. The Design Plan wins
@@ -15,59 +15,35 @@ wherever they differ. Do not build from
 renders Lesson 84 as `W·r2·84`). Plan mode at the top of the numbered
 step, present the approach, wait for approval, then edit.
 
-## Step 3
+## Step 4
 
-The practice card on Today opens a sheet. Surface only. Write no
-scheduling logic.
+The structural step. Read §E6 before writing a line — every deep link,
+notification observer, debug hook, onboarding page and mini-player
+predicate that breaks is fixed here, not deferred. §E7 lists the gates
+that will correctly turn red; rewrite them in this step with the reason
+in the commit message. Do not contort the new code to satisfy them.
 
-Spec: §5 step 3, and the "Practice card and sheet" paragraph in §S5.
-Mockup: the second Today figure in `docs/design/`.
+Spec: §5 step 4, §S5 Course contents / a spine, §E6, §E7.
+Mockup: the Course figures in `docs/design/`.
 
-Card already exists: `Views/Today/PracticeCard.swift` (app target only,
-`#if !os(tvOS)`). It is not tappable. Make it open the sheet. Do not
-redraw the card.
+- Delete `Views/Lessons/LessonsView.swift`, `Views/Listen/ListenView.swift`,
+  `Views/Archive/ArchiveView.swift`. Replace with
+  `Views/Course/CourseView.swift` plus one spine per book.
+- Three `@State CourseShelf` properties become one. Tabs drop from five
+  to three. `ACIMTabBar` replaces the system tab bar and `MacBottomTabBar`,
+  which retires `TabBarHeightReader`.
+- Delete `Views/Listen/LiteYouTubeCard.swift` (no remaining call sites).
+- Rewrite onboarding here, not in step 10.
 
-New file: `Views/Practice/PracticeSheet.swift` — app target only, not
-tvOS. New directory, so a new `PBXGroup`. Confirm unused serials with
-`python3` against `project.pbxproj` before taking one. File-ref
-`AA000002995` is free. App build-file `AA000001NNN` serials 980–999 are
-taken; use a 24-hex build-file UUID. Then `./clean.sh`.
-
-Sheet, from the spec:
-
-- `.sheet` at radius `Metric.sheet` (26)
-- grab handle 38 × 5, `.tertiary` at 50%
-- title "Practice for Lesson N" at 23 serif
-- cadence sentence at 13 `.secondary` from
-  `PracticePlanner.cadenceSummary`
-- one row per slot from `PracticePlanner.slots(for:in:)` with
-  `PracticeReminderService.window()`: time in gold serif in a 66pt
-  column, label 14 with an 11.5 `.tertiary` sub, 8pt dot trailing
-- past slots at 40% opacity; the next slot's dot is gold with a 4pt
-  gold-22% ring
-- leading gold action "Begin the evening period" (or whichever slot is
-  next); trailing settings icon pill opens the existing practice
-  settings (`SettingsView` practice section via
-  `.openSettingsRequested`, or present `SettingsView` — do not rewrite
-  Settings)
-- slot copy from `PracticePlanner.Slot.sessionName` and `.minutes`.
-  `title(lesson:)` and `body(record:title:)` are `fileprivate` reminder
-  strings — do not promote them. Do not invent a timer.
-
-The spec does not name what "Begin the … period" does. Present that in
-plan mode. Do not invent a timer. A lesson reading
-(`LessonRef`, `presentsVideo: false`) is the only destination already
-on Today's stack.
-
-Data: `PracticePlanner.plan(_:)`, `.slots(for:in:)`,
-`.cadenceSummary(_:)`, `WorkbookPracticeCatalog.record(for:)`,
-`PracticeReminderService.currentLesson()` / `.window()`. Same keys
-Settings already uses.
+Confirm unused serials with `python3` against `project.pbxproj` before
+taking one. App build-file `AA000001NNN` serials 980–999 are taken;
+`AA000002995` is now `PracticeSheet.swift`. New directories need a new
+`PBXGroup`. Then `./clean.sh`.
 
 ## Done when
 
 1. `./build.sh` green for all four platforms
-2. Stay-green gates in §V still green, plus `./tools/verify_today.sh`
+2. Stay-green gates in §V still green; §E7 gates rewritten, not left red
 3. No `TODO`/`FIXME`/stub, no dead code
 4. Anything deferred in `todo.md` as one sentence
 5. Commit on `main` and push. Stage explicitly — do not `git add .` /

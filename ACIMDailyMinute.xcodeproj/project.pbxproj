@@ -307,6 +307,7 @@
 		AA000001980 /* TodayMasthead.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002992 /* TodayMasthead.swift */; };
 		AA000001981 /* TodayActionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002993 /* TodayActionRow.swift */; };
 		AA000001982 /* PracticeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002994 /* PracticeCard.swift */; };
+		C3F8A91B4E2D6C7A8B0D1E5F /* PracticeSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002995 /* PracticeSheet.swift */; };
 		D7A11A92B0D34F6A8E1B2992 /* TodayMasthead.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002992 /* TodayMasthead.swift */; };
 		D7A11A92B0D34F6A8E1B2993 /* TodayActionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002993 /* TodayActionRow.swift */; };
 		AA000001992 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
@@ -623,6 +624,7 @@
 		AA000002992 /* TodayMasthead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMasthead.swift; sourceTree = "<group>"; };
 		AA000002993 /* TodayActionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayActionRow.swift; sourceTree = "<group>"; };
 		AA000002994 /* PracticeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCard.swift; sourceTree = "<group>"; };
+		AA000002995 /* PracticeSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSheet.swift; sourceTree = "<group>"; };
 		AA000002704 /* PracticePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlanner.swift; sourceTree = "<group>"; };
 		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
 		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
@@ -809,6 +811,7 @@
 			isa = PBXGroup;
 			children = (
 				AA000005020 /* Today */,
+				AA000005021 /* Practice */,
 				AA000005022 /* Lessons */,
 				AA000005023 /* Text */,
 				AA000005024 /* Manual */,
@@ -1026,6 +1029,14 @@
 				AA000002994 /* PracticeCard.swift */,
 			);
 			path = Today;
+			sourceTree = "<group>";
+		};
+		AA000005021 /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002995 /* PracticeSheet.swift */,
+			);
+			path = Practice;
 			sourceTree = "<group>";
 		};
 		AA000005022 /* Lessons */ = {
@@ -1348,6 +1359,7 @@
 				AA000001980 /* TodayMasthead.swift in Sources */,
 				AA000001981 /* TodayActionRow.swift in Sources */,
 				AA000001982 /* PracticeCard.swift in Sources */,
+				C3F8A91B4E2D6C7A8B0D1E5F /* PracticeSheet.swift in Sources */,
 				AA000001210 /* LessonMeta.swift in Sources */,
 				AA000001211 /* LessonRow.swift in Sources */,
 				AA000001212 /* LessonsView.swift in Sources */,
