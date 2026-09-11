@@ -45,12 +45,25 @@ struct MinuteReadingView: View {
         Group {
             if let minute = minutes.first {
                 readingScroll {
-                    DailyMinuteCard(minute: minute)
+                    DailyMinuteCard(minute: minute, isPage: true)
                 }
+                .readingMediumBand(
+                    title: "Daily Minute",
+                    segmentId: minute.segmentId,
+                    surfaceAudioURL: minute.audioURL,
+                    surfaceYouTubeID: minute.youtubeID,
+                    composeItem: .minute(minute)
+                )
             } else if let reading = readings.first {
                 readingScroll {
-                    ArchivedReadingCard(reading: reading)
+                    ArchivedReadingCard(reading: reading, isPage: true)
                 }
+                .readingMediumBand(
+                    title: "Daily Minute",
+                    surfaceAudioURL: reading.audioURL,
+                    surfaceYouTubeID: reading.youtubeID,
+                    composeItem: .archived(reading)
+                )
             } else {
                 empty
             }

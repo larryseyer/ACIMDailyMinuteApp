@@ -15,17 +15,15 @@ struct ManualSectionRef: Hashable {
 
 /// One passage of the Manual for Teachers, read.
 ///
-/// The Manual is bundled as 105 word-count cuts with no titles and no
-/// addresses, so this screen has no table of contents behind it and no
-/// Previous or Next: it exists so a search hit or a saved mark in the Manual
-/// has somewhere to open. Annotations key on `manual:<segmentId>`, which is
-/// why giving the Manual a real structure later cannot move anything made here.
+/// Kept so a search hit or a saved mark on an old `manual:<segmentId>` key
+/// still opens. The running head uses the structured section when one
+/// contains this cut, so the two Manual screens do not look like different
+/// books. The body and its annotations stay keyed on `.manual(segmentId)`.
 struct ManualSegmentView: View {
     let segmentId: Int
     var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(AudioManager.self) private var audio
     @Query private var bookmarks: [Bookmark]
 
     private let corpus = CorpusService.shared
@@ -39,9 +37,11 @@ struct ManualSegmentView: View {
     var body: some View {
         Group {
             if let reading = corpus.manualSegment(id: segmentId) {
+                let section = corpus.manualSection(containingSegmentId: segmentId)
                 ScrollView {
                     ReadingScaffold(
-                        eyebrow: "Manual",
+                        parent: "Manual",
+                        citation: section?.stem ?? reading.citation,
                         footer: ReadingFooter(
                             measure: ReadingTime.describe(
                                 wordCount: ReadingTime.wordCount(of: reading.body)
@@ -49,27 +49,46 @@ struct ManualSegmentView: View {
                         )
                     ) {
                     } trailing: {
-                        ShareButton(text: ShareTextBuilder.manualShareText(
-                            body: reading.body,
-                            citation: reading.citation
-                        ))
-                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
                     } titleBlock: {
+                        if let section {
+                            Text(section.title)
+                                .font(.acimDisplayTitle)
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.bottom, 24)
+                        }
                     } body: {
                         AnnotatableReadingText(
                             raw: reading.body,
                             key: .manual(segmentId),
                             design: .serif,
-                            lineSpacing: 3,
+                            lineSpacing: Metric.readingPushedGap,
+                            basePointSize: 18,
                             spotlight: spotlight
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(20)
+                    .padding(Metric.gutter)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .readableContentWidth()
                 }
+                .readingMediumBand(
+                    title: section?.title ?? "Manual",
+                    composeItem: .manual(segmentId)
+                )
+                #if !os(tvOS)
+                .toolbar {
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        ShareButton(text: ShareTextBuilder.manualShareText(
+                            body: reading.body,
+                            citation: reading.citation
+                        ))
+                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                    }
+                }
+                #endif
             } else {
                 ContentUnavailableView {
                     Label("Passage unavailable", systemImage: "book.closed")
@@ -78,8 +97,6 @@ struct ManualSegmentView: View {
                 }
             }
         }
-        // The nav bar names the BOOK. A cut still has no question title of
-        // its own; `ManualSectionView` is the structured reading.
         .navigationTitle("Manual for Teachers")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -135,27 +152,27 @@ struct ManualSectionView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ReadingScaffold(
-                    eyebrow: "Manual",
+                    parent: "Manual",
+                    citation: reading.stem,
                     footer: ReadingFooter(
-                        citation: reading.stem,
                         measure: ReadingTime.describe(wordCount: reading.wordCount)
                     )
                 ) {
                 } trailing: {
-                    ShareButton(text: ShareTextBuilder.manualSectionShareText(reading))
-                    SaveButton(isSaved: isBookmarked, action: toggleBookmark)
                 } titleBlock: {
                     Text(reading.title)
-                        .font(.system(.title2, design: .serif).weight(.semibold))
+                        .font(.acimDisplayTitle)
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 24)
                 } body: {
                     AnnotatableReadingText(
                         raw: reading.body,
                         key: .manualSection(number),
                         design: .serif,
-                        lineSpacing: 3,
+                        lineSpacing: Metric.readingPushedGap,
+                        basePointSize: 18,
                         spotlight: spotlight,
                         recordsPosition: true
                     )
@@ -165,10 +182,22 @@ struct ManualSectionView: View {
 
                 neighbours
             }
-            .padding(20)
+            .padding(Metric.gutter)
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableContentWidth()
         }
+        .readingMediumBand(
+            title: reading.title,
+            composeItem: .manualSection(number: number)
+        )
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareButton(text: ShareTextBuilder.manualSectionShareText(reading))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
+        #endif
     }
 
     @ViewBuilder
@@ -177,7 +206,7 @@ struct ManualSectionView: View {
         let next = corpus.manualSectionAfter(number)
         if previous != nil || next != nil {
             VStack(alignment: .leading, spacing: 8) {
-                Divider().opacity(0.4)
+                Color.acimHairline.frame(height: 1)
                 if let previous {
                     neighbourLink(previous, label: "Previous", systemImage: "chevron.left")
                 }
@@ -203,7 +232,7 @@ struct ManualSectionView: View {
                         .font(.acimCaption2)
                         .foregroundStyle(.secondary)
                     Text(target.title)
-                        .font(.system(.subheadline, design: .serif))
+                        .font(.acimRowTitle)
                         .foregroundStyle(.primary)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)

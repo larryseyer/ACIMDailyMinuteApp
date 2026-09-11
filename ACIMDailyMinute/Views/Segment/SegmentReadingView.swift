@@ -34,47 +34,45 @@ struct SegmentReadingView: View {
             if let segment = corpus.segment(id: segmentId) {
                 ScrollView {
                     ReadingScaffold(
-                        // What the app already calls this reading everywhere
-                        // else — `ReadingKeyNaming` writes "Daily Minute — Text
-                        // (T-5.3)" into every export — and the same eyebrow the
-                        // Today card carries, so arriving here from a note is
-                        // arriving at the same reading.
-                        eyebrow: "Daily Minute",
+                        parent: segment.bookName,
+                        citation: segment.citation,
+                        opensReading: true,
                         footer: ReadingFooter(
-                            citation: segment.citation,
-                            bookName: segment.bookName,
-                            // ⛔ The one pushed screen whose address names
-                            // somewhere else. Elsewhere a pushed reading's
-                            // address names the passage already on screen and
-                            // a link there teaches the reader links are broken.
-                            // Here it names where the passage begins in the
-                            // book, with the pages around it — note, then
-                            // passage, then the book.
-                            opensReading: true,
                             measure: ReadingTime.describe(
                                 wordCount: ReadingTime.wordCount(of: segment.body)
                             )
                         )
                     ) {
-                        ReadingPlayControl(title: "Daily Minute", segmentId: segmentId)
                     } trailing: {
-                        ShareButton(text: ShareTextBuilder.segmentShareText(segment))
                     } titleBlock: {
                     } body: {
                         AnnotatableReadingText(
                             raw: segment.body,
                             key: .segment(segmentId),
                             design: .serif,
-                            lineSpacing: 3,
+                            lineSpacing: Metric.readingPushedGap,
+                            basePointSize: 18,
                             spotlight: spotlight
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(20)
+                    .padding(Metric.gutter)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .readableContentWidth()
                 }
+                .readingMediumBand(
+                    title: "Daily Minute",
+                    segmentId: segmentId,
+                    composeItem: .segment(segment)
+                )
+                #if !os(tvOS)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        ShareButton(text: ShareTextBuilder.segmentShareText(segment))
+                    }
+                }
+                #endif
             } else {
                 ContentUnavailableView {
                     Label("Passage unavailable", systemImage: "book.closed")
@@ -83,8 +81,6 @@ struct SegmentReadingView: View {
                 }
             }
         }
-        // The nav bar names the BOOK and the eyebrow names the place, so no
-        // screen says the same phrase twice.
         .navigationTitle(corpus.segment(id: segmentId)?.bookName ?? "A Course in Miracles")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

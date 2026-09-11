@@ -25,5 +25,5 @@ struct LessonRef: Hashable {
     var spotlight: ReadingSpotlight? = nil
     /// False when the reader followed a reference from inside another reading:
     /// that is a request to read, and the video would take the screen.
-    var presentsVideo: Bool = true
+    var presentsVideo: Bool = false
 }

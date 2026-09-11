@@ -18,6 +18,9 @@ struct ReadingFooter {
     /// ⛔ False on every pushed reading screen. There the address names the
     /// passage already on screen, and a link that goes where the reader
     /// already is teaches them the link is broken.
+    ///
+    /// SegmentReadingView is the one pushed exception: its address names
+    /// where the cut begins in the book, so the running-head citation opens.
     var opensReading: Bool = false
     /// The trailing measure: a read time, or the Archive's own date, which is
     /// that tab's index rather than a publication stamp.
@@ -35,39 +38,44 @@ struct ReadingFooter {
 /// this view's business. That line is what keeps a layout change from becoming
 /// a rewrite of what the readings say.
 ///
-/// Four bands, always:
+/// Four bands in the scroll, always:
 ///
-///   1. header      — the eyebrow on its own line, then the controls
+///   1. header      — running head (parent + citation) and optional controls
 ///   2. title block — optional; a parent title above a title, or neither
 ///   3. body        — the reading
-///   4. footer      — the address, and the measure
+///   4. footer      — the address (Today cards) and the measure
 ///
-/// It exists because the app drew a reading in ten places and none of them
-/// stated the order, so each drifted to whatever was locally sensible: Save
-/// ended up in the nav toolbar on four screens and in the header on three,
-/// Share moved below the body or vanished, and the play control was
-/// hand-rolled three times at a different size. A surface that passes slots
-/// cannot make those choices, which is the point.
+/// The medium band is chrome, pinned by `readingMediumBand` on the screen,
+/// not a fifth child of this stack — a band that scrolls away is not the
+/// mockup.
 ///
 /// Container chrome — a card's padding and background, a screen's `ScrollView`
 /// and readable width — stays with the surface. This view lays out bands.
 struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingBody: View>: View {
-    private let eyebrow: String
+    private let parent: String
+    private let citation: String?
+    private let opensReading: Bool
     private let footer: ReadingFooter
     private let leading: Leading
     private let trailing: Trailing
     private let titleBlock: TitleBlock
     private let readingBody: ReadingBody
 
+    @Environment(\.openReading) private var openReading
+
     init(
-        eyebrow: String,
+        parent: String = "",
+        citation: String? = nil,
+        opensReading: Bool = false,
         footer: ReadingFooter = .none,
         @ViewBuilder leading: () -> Leading,
         @ViewBuilder trailing: () -> Trailing,
         @ViewBuilder titleBlock: () -> TitleBlock,
         @ViewBuilder body: () -> ReadingBody
     ) {
-        self.eyebrow = eyebrow
+        self.parent = parent
+        self.citation = citation
+        self.opensReading = opensReading
         self.footer = footer
         self.leading = leading()
         self.trailing = trailing()
@@ -76,27 +84,42 @@ struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingB
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 0) {
             if showsHeader {
-                CardHeaderRow(eyebrow) {
+                CardHeaderRow(
+                    parent: parent,
+                    citation: citation,
+                    onOpenCitation: citationAction
+                ) {
                     leading
                 } trailing: {
                     trailing
                 }
             }
 
-            titleBlock
-
-            readingBody
+            VStack(alignment: .leading, spacing: 0) {
+                titleBlock
+                readingBody
+            }
+            .padding(.top, showsHeader ? 20 : 0)
 
             if !footer.isEmpty { footerBand }
         }
     }
 
     private var showsHeader: Bool {
-        !eyebrow.isEmpty
+        !parent.isEmpty
+            || !(citation ?? "").isEmpty
             || Leading.self != EmptyView.self
             || Trailing.self != EmptyView.self
+    }
+
+    private var citationAction: (() -> Void)? {
+        guard opensReading, let citation else { return nil }
+        guard let parsed = Citation(rawValue: citation),
+              let destination = CitationResolver.destination(for: parsed)
+        else { return nil }
+        return { openReading(destination) }
     }
 
     private var footerBand: some View {
@@ -126,6 +149,6 @@ struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingB
                 }
             }
         }
-        .padding(.top, 4)
+        .padding(.top, 16)
     }
 }

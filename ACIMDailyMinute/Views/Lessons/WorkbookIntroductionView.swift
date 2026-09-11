@@ -35,7 +35,8 @@ struct WorkbookIntroductionView: View {
             if let reading {
                 ScrollView {
                     ReadingScaffold(
-                        eyebrow: "Introduction",
+                        parent: "Workbook",
+                        citation: reading.citationStem,
                         footer: ReadingFooter(
                             measure: ReadingTime.describe(
                                 wordCount: ReadingTime.wordCount(of: reading.body)
@@ -43,31 +44,45 @@ struct WorkbookIntroductionView: View {
                         )
                     ) {
                     } trailing: {
-                        ShareButton(text: ShareTextBuilder.introductionShareText(
-                            title: reading.title, body: reading.body
-                        ))
-                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
                     } titleBlock: {
                         Text(reading.title)
-                            .font(.system(.title2, design: .serif).weight(.semibold))
+                            .font(.acimDisplayTitle)
                             .foregroundStyle(.primary)
                             .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.bottom, 24)
                     } body: {
                         AnnotatableReadingText(
                             raw: reading.body,
                             key: .lesson(lessonNumber),
                             design: .serif,
-                            lineSpacing: 3,
+                            lineSpacing: Metric.readingPushedGap,
+                            basePointSize: 18,
                             spotlight: spotlight,
                             recordsPosition: true
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(20)
+                    .padding(Metric.gutter)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .readableContentWidth()
                 }
+                .readingMediumBand(
+                    title: reading.title,
+                    lessonNumber: lessonNumber,
+                    composeItem: .workbookLesson(lessonNumber)
+                )
+                #if !os(tvOS)
+                .toolbar {
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        ShareButton(text: ShareTextBuilder.introductionShareText(
+                            title: reading.title, body: reading.body
+                        ))
+                        SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                    }
+                }
+                #endif
             } else {
                 ContentUnavailableView {
                     Label("Introduction unavailable", systemImage: "book.closed")
@@ -76,7 +91,6 @@ struct WorkbookIntroductionView: View {
                 }
             }
         }
-        // The nav bar names the BOOK; the eyebrow names the place.
         .navigationTitle("Workbook")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

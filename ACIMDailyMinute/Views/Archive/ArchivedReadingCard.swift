@@ -1,12 +1,14 @@
 import SwiftUI
 import SwiftData
 
-/// Renders a single `ArchivedReading` row inside the Video tab's per-date detail.
+/// Renders a single `ArchivedReading` row inside a date's detail, or the
+/// body of a pushed Course minute when `isPage` is true.
 ///
 /// Dispatches on `reading.channel`:
 ///   * `"daily-minute"` — the passage body through `AnnotatableReadingText`,
 ///     keyed by the day's `yyyy-MM-dd` so a highlight or note has somewhere
-///     to live. Book name and date sit in the footer.
+///     to live. Book name and date sit in the footer on the card; the page
+///     moves the address to the running head.
 ///   * `"daily-lesson"` — "Lesson N" and the title (stored in `reading.text`
 ///     per `ArchiveService.persistInlineLessons`). Archive lesson entries ship
 ///     no body, so the scaffold's body slot is empty and its footer follows the
@@ -21,6 +23,7 @@ import SwiftData
 ///     Today/Lessons bookmarks since lesson number is stable.
 struct ArchivedReadingCard: View {
     let reading: ArchivedReading
+    var isPage: Bool = false
 
     @Environment(\.modelContext) private var modelContext
     @Query private var bookmarks: [Bookmark]
@@ -56,37 +59,64 @@ struct ArchivedReadingCard: View {
     }
 
     var body: some View {
-        ReadingScaffold(eyebrow: headerLabel, footer: footer) {
-            ReadingPlayControl(
-                title: listenTitle,
-                lessonNumber: isMinute ? 0 : (reading.lessonNumber ?? 0),
-                surfaceAudioURL: reading.audioURL,
-                surfaceYouTubeID: reading.youtubeID
-            )
+        ReadingScaffold(
+            parent: headerLabel,
+            citation: nil,
+            footer: footer
+        ) {
+            if !isPage {
+                ReadingPlayControl(
+                    title: listenTitle,
+                    lessonNumber: isMinute ? 0 : (reading.lessonNumber ?? 0),
+                    surfaceAudioURL: reading.audioURL,
+                    surfaceYouTubeID: reading.youtubeID
+                )
+            }
         } trailing: {
-            ShareButton(text: shareText)
-            SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            if !isPage {
+                ShareButton(text: shareText)
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
         } titleBlock: {
             if !isMinute {
                 Text(reading.text.isEmpty ? headerLabel : reading.text)
-                    .font(.system(.title3, design: .serif).weight(.semibold))
+                    .font(isPage ? .acimDisplayTitle : .acimCardTitle)
                     .foregroundStyle(.primary)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.bottom, isPage ? 24 : 0)
             }
         } body: {
             if isMinute {
                 AnnotatableReadingText(
                     raw: reading.text,
                     key: .minuteDate(reading.dateString),
-                    design: .serif
+                    design: .serif,
+                    lineSpacing: isPage ? Metric.readingPushedGap : 0,
+                    basePointSize: isPage ? 18 : nil
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(16)
-        .background(Color.acimCard)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(isPage ? 0 : Metric.card)
+        .background(isPage ? Color.clear : Color.acimSurface)
+        .clipShape(RoundedRectangle(cornerRadius: isPage ? 0 : Metric.card))
+        .overlay {
+            if !isPage {
+                RoundedRectangle(cornerRadius: Metric.card)
+                    .stroke(Color.acimHairline, lineWidth: 1)
+            }
+        }
+        #if !os(tvOS)
+        .toolbar {
+            if isPage {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    ShareButton(text: shareText)
+                    SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+                }
+            }
+        }
+        #endif
     }
 
     /// An archived row carries no word count, so it shows no read time. Its

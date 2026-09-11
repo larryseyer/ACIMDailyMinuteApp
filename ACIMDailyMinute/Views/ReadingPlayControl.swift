@@ -18,6 +18,8 @@ struct ReadingPlayControl: View {
         case header
         /// Today's action row: gold Listen, Watch as its own pill.
         case today
+        /// Pushed reading: the Read / Listen / Watch band.
+        case medium
     }
 
     let title: String
@@ -26,8 +28,10 @@ struct ReadingPlayControl: View {
     var surfaceAudioURL: String? = nil
     var surfaceYouTubeID: String? = nil
     var placement: Placement = .header
+    var composeItem: TVPlayerItem? = nil
 
     @Environment(AudioManager.self) private var audio
+    @Environment(\.openPlayer) private var openPlayer
     @Query private var segmentRows: [SegmentMedia]
     @Query private var lessonRows: [DailyLesson]
     @Query private var archiveRows: [ArchivedReading]
@@ -40,7 +44,8 @@ struct ReadingPlayControl: View {
         lessonNumber: Int = 0,
         surfaceAudioURL: String? = nil,
         surfaceYouTubeID: String? = nil,
-        placement: Placement = .header
+        placement: Placement = .header,
+        composeItem: TVPlayerItem? = nil
     ) {
         self.title = title
         self.segmentId = segmentId
@@ -48,6 +53,7 @@ struct ReadingPlayControl: View {
         self.surfaceAudioURL = surfaceAudioURL
         self.surfaceYouTubeID = surfaceYouTubeID
         self.placement = placement
+        self.composeItem = composeItem
         _segmentRows = Query(
             filter: #Predicate<SegmentMedia> { $0.segmentId == segmentId }
         )
@@ -114,12 +120,34 @@ struct ReadingPlayControl: View {
     #if !os(tvOS)
     @ViewBuilder
     private var content: some View {
-        HStack(spacing: 9) {
-            if let hit, hit.showsListen {
-                listenButton(for: hit)
-            }
-            if placement == .today, let hit, hit.showsWatch {
-                watchPill
+        Group {
+            if placement == .medium {
+                MediumBand(
+                    medium: ReadingMedium(
+                        title: title,
+                        audioURL: hit?.audioURL ?? "",
+                        youtubeID: hit?.youtubeID ?? "",
+                        canCompose: composeItem != nil
+                    ),
+                    onListen: {
+                        guard let hit, hit.showsListen else { return }
+                        audio.playOrToggle(
+                            url: hit.audioURL,
+                            title: title,
+                            episodeID: episodeID(for: hit.audioURL)
+                        )
+                    },
+                    onWatch: watch
+                )
+            } else {
+                HStack(spacing: 9) {
+                    if let hit, hit.showsListen {
+                        listenButton(for: hit)
+                    }
+                    if placement == .today, let hit, hit.showsWatch {
+                        watchPill
+                    }
+                }
             }
         }
         #if os(iOS)
@@ -136,6 +164,14 @@ struct ReadingPlayControl: View {
             }
         }
         #endif
+    }
+
+    private func watch() {
+        if let hit, hit.showsWatch {
+            isShowingVideo = true
+        } else if let composeItem {
+            openPlayer(composeItem)
+        }
     }
 
     @ViewBuilder
@@ -181,5 +217,36 @@ struct ReadingPlayControl: View {
     private func episodeID(for audioURL: String) -> String {
         let resolved = AudioManager.resolve(audioURL)
         return podcasts.first { AudioManager.resolve($0.audioURL) == resolved }?.id ?? ""
+    }
+}
+
+extension View {
+    /// Pins the Read / Listen / Watch band at the bottom of a pushed reading.
+    func readingMediumBand(
+        title: String,
+        segmentId: Int = 0,
+        lessonNumber: Int = 0,
+        surfaceAudioURL: String? = nil,
+        surfaceYouTubeID: String? = nil,
+        composeItem: TVPlayerItem? = nil
+    ) -> some View {
+        #if os(tvOS)
+        _ = (title, segmentId, lessonNumber, surfaceAudioURL, surfaceYouTubeID, composeItem)
+        return self
+        #else
+        return safeAreaInset(edge: .bottom, spacing: 0) {
+            ReadingPlayControl(
+                title: title,
+                segmentId: segmentId,
+                lessonNumber: lessonNumber,
+                surfaceAudioURL: surfaceAudioURL,
+                surfaceYouTubeID: surfaceYouTubeID,
+                placement: .medium,
+                composeItem: composeItem
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
+        }
+        #endif
     }
 }

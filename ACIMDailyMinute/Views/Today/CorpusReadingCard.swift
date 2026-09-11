@@ -16,7 +16,6 @@ struct CorpusReadingCard: View {
 
     var body: some View {
         ReadingScaffold(
-            eyebrow: "",
             footer: ReadingFooter(
                 citation: segment.citation,
                 bookName: segment.bookName,

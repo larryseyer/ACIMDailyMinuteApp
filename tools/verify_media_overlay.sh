@@ -138,9 +138,10 @@ grep -q 'SegmentMedia.record' "$REPO/ACIMDailyMinute/Services/ArchiveService.swi
     || fail "persistInlineMinutes never records SegmentMedia from archive segment_id"
 
 # The Course reading of a Daily Minute passage is the overlay's home.
-# A surface that still inlines ListenButton against its own audioURL is
-# not keyed by segment.
-grep -q 'ReadingPlayControl' "$REPO/ACIMDailyMinute/Views/Segment/SegmentReadingView.swift" \
+# The medium band is that overlay now — it still resolves through
+# ReadingPlayControl / MediaOverlay, keyed by segment. A surface that
+# inlines ListenButton against its own audioURL is not keyed by segment.
+grep -q 'readingMediumBand' "$REPO/ACIMDailyMinute/Views/Segment/SegmentReadingView.swift" \
     || fail "SegmentReadingView has no feed-driven play overlay"
 
 echo "media overlay is feed-keyed"

@@ -13,11 +13,13 @@
 		AA000001809 /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
 		AA000001824 /* CourseTextSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002824 /* CourseTextSpine.swift */; };
 		AA000001825 /* CourseManualSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002825 /* CourseManualSpine.swift */; };
+		AA000001826 /* MediumBand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002826 /* MediumBand.swift */; };
 		C4A1B2C3D4E5F60718293A4B /* CourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002807 /* CourseView.swift */; };
 		D5B2C3D4E5F60718293A4B5C /* CourseMinuteSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002808 /* CourseMinuteSpine.swift */; };
 		E6C3D4E5F60718293A4B5C6D /* CourseWorkbookSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002809 /* CourseWorkbookSpine.swift */; };
 		F7D4E5F60718293A4B5C6D7E /* CourseTextSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002824 /* CourseTextSpine.swift */; };
 		A8E5F60718293A4B5C6D7E8F /* CourseManualSpine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002825 /* CourseManualSpine.swift */; };
+		B1C2D3E4F5061728394A5B6C /* MediumBand.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002826 /* MediumBand.swift */; };
 		00D41811AAA4D849DDA89F39 /* ACIMManual.json in Resources */ = {isa = PBXBuildFile; fileRef = AA000002230 /* ACIMManual.json */; };
 		AA000001900 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
 		AA000001901 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA000002900 /* PrivacyInfo.xcprivacy */; };
@@ -454,6 +456,7 @@
 		AA000002809 /* CourseWorkbookSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseWorkbookSpine.swift; sourceTree = "<group>"; };
 		AA000002824 /* CourseTextSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseTextSpine.swift; sourceTree = "<group>"; };
 		AA000002825 /* CourseManualSpine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseManualSpine.swift; sourceTree = "<group>"; };
+		AA000002826 /* MediumBand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumBand.swift; sourceTree = "<group>"; };
 		0CDFC301C7300FDDF3A05542 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		2ABE88025269FF8066CBF284 /* PracticeReminderKeys.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PracticeReminderKeys.swift; sourceTree = "<group>"; };
 		5A8077211C8F4B6077935CCA /* ACIMDailyMinuteTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinuteTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -686,6 +689,14 @@
 			path = Course;
 			sourceTree = "<group>";
 		};
+		AA000005027 /* Reading */ = {
+			isa = PBXGroup;
+			children = (
+				AA000002826 /* MediumBand.swift */,
+			);
+			path = Reading;
+			sourceTree = "<group>";
+		};
 		1CE45C1A29E09A4473DF8253 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -816,6 +827,7 @@
 				AA000005023 /* Text */,
 				AA000005024 /* Manual */,
 				AA000005025 /* Segment */,
+				AA000005027 /* Reading */,
 				AA000005008 /* Listen */,
 				AA000005011 /* Archive */,
 				AA000005012 /* Settings */,
@@ -1286,6 +1298,7 @@
 				AA000001809 /* CourseWorkbookSpine.swift in Sources */,
 				AA000001824 /* CourseTextSpine.swift in Sources */,
 				AA000001825 /* CourseManualSpine.swift in Sources */,
+				AA000001826 /* MediumBand.swift in Sources */,
 				AA000001100 /* DailyMinute.swift in Sources */,
 				AA000001103 /* DailyLesson.swift in Sources */,
 				AA000001106 /* ArchivedReading.swift in Sources */,
@@ -1520,6 +1533,7 @@
 				E6C3D4E5F60718293A4B5C6D /* CourseWorkbookSpine.swift in Sources */,
 				F7D4E5F60718293A4B5C6D7E /* CourseTextSpine.swift in Sources */,
 				A8E5F60718293A4B5C6D7E8F /* CourseManualSpine.swift in Sources */,
+				B1C2D3E4F5061728394A5B6C /* MediumBand.swift in Sources */,
 				E01D81AFF75DE4CECD830551 /* DailyMinute.swift in Sources */,
 				12010653E7E440A0DB51F8F8 /* DailyLesson.swift in Sources */,
 				B8F4C3D789C48924B38D5408 /* ArchivedReading.swift in Sources */,

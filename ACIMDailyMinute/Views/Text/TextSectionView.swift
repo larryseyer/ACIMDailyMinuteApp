@@ -43,7 +43,6 @@ struct TextSectionView: View {
                 }
             }
         }
-        // The nav bar names the BOOK; the eyebrow names the place inside it.
         .navigationTitle("Text")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -57,42 +56,29 @@ struct TextSectionView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ReadingScaffold(
-                    eyebrow: chapter == 0 ? "Preface" : "Chapter \(chapter)",
+                    parent: chapter == 0 ? "Preface" : reading.chapterTitle,
+                    citation: CitationResolver.stem(
+                        for: .textSection(chapter: chapter, section: section)
+                    ),
                     footer: ReadingFooter(
-                        // Printed, never tappable: it names the passage the
-                        // reader is already looking at.
-                        citation: CitationResolver.stem(
-                            for: .textSection(chapter: chapter, section: section)
-                        ),
                         measure: ReadingTime.describe(wordCount: reading.wordCount)
                     )
                 ) {
                 } trailing: {
-                    ShareButton(text: ShareTextBuilder.textSectionShareText(reading))
-                    SaveButton(isSaved: isBookmarked, action: toggleBookmark)
                 } titleBlock: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        // The chapter's name cannot go in the eyebrow: they
-                        // reach 35 characters and that band breaks its words
-                        // rather than wrapping. Here it wraps freely.
-                        if chapter != 0 {
-                            Text(reading.chapterTitle)
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(.secondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        Text(reading.sectionTitle)
-                            .font(.system(.title2, design: .serif).weight(.semibold))
-                            .foregroundStyle(.primary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(reading.sectionTitle)
+                        .font(.acimDisplayTitle)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 24)
                 } body: {
                     AnnotatableReadingText(
                         raw: reading.body,
                         key: .textSection(chapter: chapter, section: section),
                         design: .serif,
-                        lineSpacing: 3,
+                        lineSpacing: Metric.readingPushedGap,
+                        basePointSize: 18,
                         spotlight: spotlight,
                         recordsPosition: true
                     )
@@ -102,10 +88,22 @@ struct TextSectionView: View {
 
                 neighbours
             }
-            .padding(20)
+            .padding(Metric.gutter)
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableContentWidth()
         }
+        .readingMediumBand(
+            title: reading.sectionTitle,
+            composeItem: .textSection(chapter: chapter, section: section)
+        )
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareButton(text: ShareTextBuilder.textSectionShareText(reading))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
+        #endif
     }
 
     /// Previous and next cross chapter boundaries. Without them the Text is a
@@ -117,7 +115,7 @@ struct TextSectionView: View {
 
         if previous != nil || next != nil {
             VStack(alignment: .leading, spacing: 8) {
-                Divider().opacity(0.4)
+                Color.acimHairline.frame(height: 1)
                 if let previous {
                     neighbourLink(previous, label: "Previous", systemImage: "chevron.left")
                 }
@@ -145,7 +143,7 @@ struct TextSectionView: View {
                         .font(.acimCaption2)
                         .foregroundStyle(.secondary)
                     Text(target.sectionTitle)
-                        .font(.system(.subheadline, design: .serif))
+                        .font(.acimRowTitle)
                         .foregroundStyle(.primary)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)

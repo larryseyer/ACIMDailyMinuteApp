@@ -16,9 +16,6 @@ import SwiftData
 struct LessonDetailView: View {
     let lessonNumber: Int
     var spotlight: ReadingSpotlight? = nil
-    /// Read's lesson spine passes false: choosing a lesson there is a request
-    /// to read it. True auto-presents video when a recording exists.
-    var presentsVideo: Bool = true
 
     @Environment(\.modelContext) private var modelContext
     @Query private var lessonMatches: [DailyLesson]
@@ -58,10 +55,12 @@ struct LessonDetailView: View {
         bookmarks.contains(where: { $0.itemKey == itemKey })
     }
 
-    init(lessonNumber: Int, spotlight: ReadingSpotlight? = nil, presentsVideo: Bool = true) {
+    init(lessonNumber: Int, spotlight: ReadingSpotlight? = nil, presentsVideo: Bool = false) {
         self.lessonNumber = lessonNumber
         self.spotlight = spotlight
-        self.presentsVideo = presentsVideo
+        // Watch is a tap on the medium band. The flag is kept so existing
+        // LessonRef call sites still compile.
+        _ = presentsVideo
         _lessonMatches = Query(
             filter: #Predicate<DailyLesson> { $0.lessonNumber == lessonNumber }
         )
@@ -72,27 +71,7 @@ struct LessonDetailView: View {
         )
     }
 
-    /// Choosing a lesson *is* the request to watch it, so the video opens
-    /// full screen and playing rather than making the reader find and tap a
-    /// play button and then a fullscreen button. Dismissing it lands on the
-    /// lesson text, which is still here underneath.
-    @State private var hasAutoPresentedVideo = false
-    @State private var isShowingVideo = false
     @AppStorage(WorkbookCompletion.defaultsKey) private var completedLessonsData: Data = Data()
-
-    /// This lesson's own video, or `nil` when we don't know it.
-    ///
-    /// Never falls back to a playlist position: YouTube ignores `index` on a
-    /// `videoseries` embed and plays the newest upload, so lesson 27 opened
-    /// lesson 81. Showing the wrong lesson is worse than showing none.
-    private var lessonVideoURL: String? {
-        // Scans every match rather than trusting `.first`: duplicate archive
-        // rows from the old title-hash identity may still be on disk until the
-        // next successful fetch collapses them, and only one carries the video.
-        let candidates = lessonMatches.compactMap(\.youtubeID) + archiveMatches.compactMap(\.youtubeID)
-        guard let videoID = candidates.first(where: { !$0.isEmpty }) else { return nil }
-        return "https://www.youtube.com/embed/\(videoID)"
-    }
 
     var body: some View {
         Group {
@@ -121,7 +100,7 @@ struct LessonDetailView: View {
                 )
             }
         }
-        // The nav bar names the BOOK; the scaffold's eyebrow names the place.
+        // The nav bar names the BOOK; the running head names the place.
         // Saying "Lesson 84" in both put the same phrase twice within 40 points.
         .navigationTitle("Workbook")
         #if !os(tvOS)
@@ -144,17 +123,6 @@ struct LessonDetailView: View {
         #endif
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-        .fullScreenCover(isPresented: $isShowingVideo) {
-            if let videoURL = lessonVideoURL {
-                FullScreenVideoCover(videoURL: videoURL)
-            }
-        }
-        .onAppear {
-            // Read passes false. True is a request to watch.
-            guard presentsVideo, !hasAutoPresentedVideo, spotlight == nil, lessonVideoURL != nil else { return }
-            hasAutoPresentedVideo = true
-            isShowingVideo = true
-        }
         #endif
     }
 
@@ -165,6 +133,37 @@ struct LessonDetailView: View {
 
 
 
+
+private func lessonParent(_ number: Int) -> String {
+    WorkbookBodiesCatalog.reviewTitle(for: number) ?? "Workbook"
+}
+
+private func lessonCitation(_ number: Int) -> String? {
+    CitationResolver.stem(for: .lesson(number))
+}
+
+private struct LessonTitleBlock: View {
+    let number: Int
+    let line: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(number == 0 ? "Introduction" : "Lesson \(number)")
+                .font(.acimDisplayTitle)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
+            if !line.isEmpty {
+                Text(line)
+                    .font(.system(size: 17, design: .serif))
+                    .italic()
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.bottom, 24)
+    }
+}
 
 // MARK: - Full state
 
@@ -177,40 +176,45 @@ private struct FullLessonView: View {
     var body: some View {
         ScrollView {
             ReadingScaffold(
-                eyebrow: "Lesson \(lesson.lessonNumber)",
+                parent: lessonParent(lesson.lessonNumber),
+                citation: lessonCitation(lesson.lessonNumber),
                 footer: ReadingFooter(measure: ReadingTime.describe(wordCount: lesson.wordCount))
             ) {
-                ReadingPlayControl(
-                    title: "Lesson \(lesson.lessonNumber)",
-                    lessonNumber: lesson.lessonNumber,
-                    surfaceAudioURL: lesson.audioURL,
-                    surfaceYouTubeID: lesson.youtubeID
-                )
             } trailing: {
-                ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {
-                Text(lesson.lessonTitle)
-                    .font(.system(.title2, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
-                    .fixedSize(horizontal: false, vertical: true)
+                LessonTitleBlock(number: lesson.lessonNumber, line: lesson.lessonTitle)
             } body: {
                 AnnotatableReadingText(
                     raw: lesson.text,
                     key: .lesson(lesson.lessonNumber),
                     design: .serif,
-                    lineSpacing: 3,
+                    lineSpacing: Metric.readingPushedGap,
+                    basePointSize: 18,
                     spotlight: spotlight,
                     recordsPosition: true
                 )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(20)
+            .padding(Metric.gutter)
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableContentWidth()
         }
-
+        .readingMediumBand(
+            title: "Lesson \(lesson.lessonNumber)",
+            lessonNumber: lesson.lessonNumber,
+            surfaceAudioURL: lesson.audioURL,
+            surfaceYouTubeID: lesson.youtubeID,
+            composeItem: .lesson(lesson)
+        )
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareButton(text: ShareTextBuilder.lessonShareText(lesson))
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
+        #endif
     }
 }
 
@@ -227,11 +231,6 @@ private struct MetadataOnlyLessonView: View {
         WorkbookCatalog.title(for: lessonNumber) ?? (archive.text.isEmpty ? "Lesson \(lessonNumber)" : archive.text)
     }
 
-    private var embedURL: String? {
-        guard let videoID = archive.youtubeID, !videoID.isEmpty else { return nil }
-        return "https://www.youtube.com/embed/\(videoID)"
-    }
-
     /// The bundled body, when there is one. A lesson the feed has not published
     /// still has all 365 bodies behind it.
     private var bundledBody: String? {
@@ -241,52 +240,49 @@ private struct MetadataOnlyLessonView: View {
     var body: some View {
         ScrollView {
             ReadingScaffold(
-                eyebrow: "Lesson \(lessonNumber)",
+                parent: lessonParent(lessonNumber),
+                citation: lessonCitation(lessonNumber),
                 footer: ReadingFooter(
                     measure: bundledBody.flatMap {
                         ReadingTime.describe(wordCount: ReadingTime.wordCount(of: $0))
                     }
                 )
             ) {
-                ReadingPlayControl(
-                    title: "Lesson \(lessonNumber)",
-                    lessonNumber: lessonNumber,
-                    surfaceAudioURL: archive.audioURL,
-                    surfaceYouTubeID: archive.youtubeID
-                )
             } trailing: {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {
-                Text(title)
-                    .font(.system(.title2, design: .serif).weight(.semibold))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                LessonTitleBlock(number: lessonNumber, line: title)
             } body: {
                 if let bundledBody {
                     AnnotatableReadingText(
                         raw: bundledBody,
                         key: .lesson(lessonNumber),
-                        design: .standard,
+                        design: .serif,
+                        lineSpacing: Metric.readingPushedGap,
+                        basePointSize: 18,
                         spotlight: spotlight,
                         recordsPosition: true
                     )
-                } else if lessonNumber > 0, let embedURL {
-                    // ⛔ The video stand-in is iOS only — tvOS has no WebKit. The
-                    // fence is INSIDE the branch, not around it: a `#if` between
-                    // `}` and `else` severs the if-else chain and the compiler
-                    // reports only "expected expression". All 365 lesson bodies
-                    // are bundled, so this branch is a fallback a reader is not
-                    // expected to reach.
-                    #if os(iOS)
-                    YouTubePlayerView(videoURL: embedURL)
-                        .aspectRatio(16.0/9.0, contentMode: .fit)
-                    #endif
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(Metric.gutter)
             .readableContentWidth()
         }
-
+        .readingMediumBand(
+            title: "Lesson \(lessonNumber)",
+            lessonNumber: lessonNumber,
+            surfaceAudioURL: archive.audioURL,
+            surfaceYouTubeID: archive.youtubeID,
+            composeItem: .archived(archive)
+        )
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
+        #endif
     }
 }
 
@@ -321,24 +317,17 @@ private struct AbsentLessonView: View {
     var body: some View {
         ScrollView {
             ReadingScaffold(
-                eyebrow: "Lesson \(lessonNumber)",
+                parent: lessonParent(lessonNumber),
+                citation: lessonCitation(lessonNumber),
                 footer: ReadingFooter(
                     measure: bundledBody.flatMap {
                         ReadingTime.describe(wordCount: ReadingTime.wordCount(of: $0))
                     }
                 )
             ) {
-                ReadingPlayControl(
-                    title: lessonNumber == 0 ? "Introduction" : "Lesson \(lessonNumber)",
-                    lessonNumber: lessonNumber,
-                    surfaceAudioURL: lessonNumber == 0 ? introAudioURL : nil
-                )
             } trailing: {
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {
-                Text(title)
-                    .font(.system(.title2, design: .serif).weight(.semibold))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                LessonTitleBlock(number: lessonNumber, line: title)
             } body: {
                 VStack(alignment: .leading, spacing: 16) {
                     if let availableOn {
@@ -350,23 +339,38 @@ private struct AbsentLessonView: View {
                         .foregroundStyle(.secondary)
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                        .background(Color.acimRaised, in: RoundedRectangle(cornerRadius: Metric.card))
                     }
                     if let bundledBody {
                         AnnotatableReadingText(
                             raw: bundledBody,
                             key: .lesson(lessonNumber),
-                            design: .standard,
+                            design: .serif,
+                            lineSpacing: Metric.readingPushedGap,
+                            basePointSize: 18,
                             spotlight: spotlight,
                             recordsPosition: true
                         )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(Metric.gutter)
             .readableContentWidth()
         }
-
+        .readingMediumBand(
+            title: lessonNumber == 0 ? "Introduction" : "Lesson \(lessonNumber)",
+            lessonNumber: lessonNumber,
+            surfaceAudioURL: lessonNumber == 0 ? introAudioURL : nil,
+            composeItem: .workbookLesson(lessonNumber, audioURL: lessonNumber == 0 ? introAudioURL : nil)
+        )
+        #if !os(tvOS)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
+            }
+        }
+        #endif
     }
 }
