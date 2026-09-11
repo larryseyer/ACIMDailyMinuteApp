@@ -32,6 +32,13 @@ struct ListenView: View {
     )
     private var cachedLessons: [CachedPodcastEpisode]
 
+    @Query(sort: \DailyLesson.lessonNumber) private var lessons: [DailyLesson]
+    @Query(
+        filter: #Predicate<ArchivedReading> { $0.channel == "daily-lesson" },
+        sort: \ArchivedReading.lessonNumber
+    )
+    private var archivedLessons: [ArchivedReading]
+
     /// Downloads live on disk, not in SwiftData, so nothing observes them.
     /// Bumping this is what tells the list a row's download state changed.
     @State private var downloadRevision = 0
@@ -87,7 +94,7 @@ struct ListenView: View {
                 Group {
                     switch shelf {
                     case .minute: EmptyView()
-                    case .lesson: EmptyView()
+                    case .lesson: lessonShelf
                     case .text: EmptyView()
                     case .manual: EmptyView()
                     }
@@ -176,6 +183,103 @@ struct ListenView: View {
             )
         }
         return minutes + lessons
+    }
+
+    // MARK: - Lesson shelf
+
+    private var lessonShelf: some View {
+        List {
+            ForEach(lessonCatalogue, id: \.id) { row in
+                listenRow(row)
+            }
+        }
+        .listStyle(.plain)
+        .readableContentWidth()
+    }
+
+    private var lessonCatalogue: [ListenLibrary.Row] {
+        var audio: [Int: String] = [:]
+        var ids: [Int: String] = [:]
+        let podcasts = cachedLessons.map { (id: $0.id, title: $0.title, audioURL: $0.audioURL) }
+        for n in 0...365 {
+            let daily = lessons.first { $0.lessonNumber == n }?.audioURL
+            let archived = archivedLessons.first { $0.lessonNumber == n }?.audioURL
+            let podcast = LessonNarration.podcastURL(forLesson: n, episodes: podcasts)
+            let url = LessonNarration.url(daily: daily, archived: archived, podcast: podcast) ?? ""
+            if ListenLibrary.showsPlay(audioURL: url) {
+                audio[n] = url
+                if let episode = cachedLessons.first(where: {
+                    LessonNarration.number(fromGUID: $0.id) == n
+                        || LessonNarration.number(fromTitle: $0.title) == n
+                }) {
+                    ids[n] = episode.id
+                }
+            }
+        }
+        var titles: [Int: String] = WorkbookCatalog.all
+        for lesson in lessons where !lesson.lessonTitle.isEmpty {
+            titles[lesson.lessonNumber] = lesson.lessonTitle
+        }
+        let intros = WorkbookBodiesCatalog.allIntroductions.map {
+            (number: $0.lessonNumber, title: $0.title, insertBefore: $0.insertBefore)
+        }
+        return ListenLibrary.lessonRows(
+            titles: titles,
+            audioByLesson: audio,
+            episodeIDByLesson: ids,
+            introductions: intros
+        )
+    }
+
+    @ViewBuilder
+    private func listenRow(_ row: ListenLibrary.Row) -> some View {
+        ListenPlayableRow(
+            row: row,
+            isActive: isActive(row),
+            isPlaying: audio.isPlaying,
+            playedAt: listenedEpisodes[row.episodeID],
+            onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
+        )
+        #if !os(tvOS)
+        .listRowSeparator(.visible)
+        .swipeActions(edge: .trailing) {
+            if ListenLibrary.showsPlay(audioURL: row.audioURL) {
+                let listened = PlaybackHistory.playedAt(row.episodeID)
+                Button {
+                    toggleListened(episodeID: row.episodeID, audioURL: row.audioURL)
+                } label: {
+                    Label(
+                        listened == nil ? "Mark listened" : "Mark unplayed",
+                        systemImage: listened == nil ? "checkmark.circle" : "circle"
+                    )
+                }
+                .tint(listened == nil ? .green : .gray)
+
+                if AudioDownloadStore.isDownloaded(row.episodeID) {
+                    Button {
+                        AudioDownloadStore.delete(row.episodeID)
+                        downloadRevision += 1
+                    } label: {
+                        Label("Remove download", systemImage: "trash")
+                    }
+                    .tint(.orange)
+                } else {
+                    Button {
+                        let id = row.episodeID
+                        let remote = row.audioURL
+                        Task {
+                            try? await AudioDownloadStore.download(episodeID: id, remoteURL: remote)
+                            downloadRevision += 1
+                        }
+                    } label: {
+                        Label("Download", systemImage: "arrow.down.circle")
+                    }
+                    .tint(.blue)
+                }
+            }
+        }
+        #endif
+        .id("\(row.id)-\(downloadRevision)")
     }
 
     // MARK: - Actions
