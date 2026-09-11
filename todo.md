@@ -4,9 +4,12 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
+## LIVE — #1
+
+- [ ] Video tab: a day must show the YouTube video, not only the reading text and the MP3. Right now the tab is the old Archive calendar; Listen is tap, Watch is a long-press, and many rows have no `youtube_id`.
+
 ## HIS CALL
 
-- [ ] Watch face slot: the opening of today's passage (real words, cut off when they run out of room), or a short label like the app's name?
 - [ ] The small label above a reading ("Daily Minute", "Lesson 84") wraps onto two lines when system text is huge, and the header gets taller. Is that OK?
 - [ ] Preface citations: `Pref.4` does not say which of the two Preface parts it is in. Changing that changes backups already exported. Leave it?
 - [ ] Companion note under Settings > About: three wording departures are his to veto.
@@ -20,13 +23,6 @@ Store record exists (iOS, macOS, tvOS). Do not add a visionOS platform. Do not u
 - [ ] Deploy the CloudKit schema from Development to Production before any release build.
 - [ ] Remake every store screenshot after iPhone, iPad, Watch, Apple TV, and widgets are finished. The current set still says Archive; the Mac shot is the wrong size.
 - [ ] Tick compatible iPhone/iPad on Vision Pro in App Store Connect, then submit. The support page is already on the site.
-
-## WATCH SIM
-
-No physical watch. WCSession cannot be exercised unpaired.
-
-- [ ] Place the complication in circular, rectangular, and inline on the watch simulator. Those two store shots wait.
-- [ ] The watch app keeps the existing icon.
 
 ## AFTER 13 SEPTEMBER 2026
 
