@@ -30,6 +30,15 @@ enum ListenLibrary {
         !audioURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    /// What a row without an enclosure says. A formatted day is named; an
+    /// empty or missing day is not invented — Text and Manual have no
+    /// recording calendar yet, and a guessed date would be a lie.
+    static func unrecordedCaption(availableOnFormatted: String?) -> String {
+        let day = (availableOnFormatted ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        if day.isEmpty { return "Audio hasn't been published yet." }
+        return "Available \(day)"
+    }
+
     static func minuteAudio(daily: String?, archived: String?, podcast: String?) -> String {
         LessonNarration.url(daily: daily, archived: archived, podcast: podcast) ?? ""
     }

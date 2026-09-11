@@ -10,6 +10,9 @@ struct ListenPlayableRow: View {
     var isActive: Bool = false
     var isPlaying: Bool = false
     var playedAt: Date? = nil
+    /// Shown under the title when this row has no enclosure. Empty means
+    /// the title stands alone — recorded rows never pass a sentence.
+    var unrecordedCaption: String? = nil
     let onTap: () -> Void
 
     private var canPlay: Bool { ListenLibrary.showsPlay(audioURL: row.audioURL) }
@@ -60,11 +63,19 @@ struct ListenPlayableRow: View {
 
     private var rowContent: some View {
         HStack(spacing: 12) {
-            Text(row.title)
-                .font(.system(.subheadline, design: .serif))
-                .foregroundStyle(.primary)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(row.title)
+                    .font(.system(.subheadline, design: .serif))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                if !canPlay, let unrecordedCaption, !unrecordedCaption.isEmpty {
+                    Text(unrecordedCaption)
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
             Spacer(minLength: 8)
             Image(systemName: playedAt == nil ? "circle" : "checkmark.circle.fill")
                 .font(.system(size: 18))
@@ -88,7 +99,9 @@ struct ListenPlayableRow: View {
         } else {
             parts.append("Not listened")
         }
-        if !canPlay { parts.append("No audio") }
+        if !canPlay {
+            parts.append(unrecordedCaption ?? "No audio")
+        }
         return parts.joined(separator: ", ")
     }
 

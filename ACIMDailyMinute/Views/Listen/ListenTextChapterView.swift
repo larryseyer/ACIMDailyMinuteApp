@@ -26,6 +26,7 @@ struct ListenTextChapterView: View {
                         isActive: isActive(row),
                         isPlaying: isPlaying,
                         playedAt: played[row.episodeID],
+                        unrecordedCaption: ListenLibrary.unrecordedCaption(availableOnFormatted: nil),
                         onTap: { onPlay(row) }
                     )
                     #if !os(tvOS)

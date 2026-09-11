@@ -257,8 +257,18 @@ struct TVPlayerView: View {
             playerCanvas(at: context.date)
         }
         .ignoresSafeArea()
-        .onAppear(perform: start)
-        .onDisappear(perform: stop)
+        .onAppear {
+            start()
+            #if os(iOS)
+            OrientationController.lockLandscape()
+            #endif
+        }
+        .onDisappear {
+            stop()
+            #if os(iOS)
+            OrientationController.unlock()
+            #endif
+        }
         .onChange(of: audio.isPlaying) { _, playing in
             clock.sync(media: audio.currentTime, playing: playing)
         }
@@ -313,6 +323,11 @@ struct TVPlayerView: View {
                 if isFinished {
                     endCard
                 }
+
+                #if os(iOS) || os(macOS)
+                closeButton
+                    .zIndex(1)
+                #endif
             }
         }
     }
@@ -352,11 +367,6 @@ struct TVPlayerView: View {
             }
             .buttonStyle(.plain)
 
-            #if os(iOS) || os(macOS)
-            Button("Close") { dismiss() }
-                .foregroundStyle(.white)
-            #endif
-
             if audio.duration > 0 {
                 let fraction = max(0, min(1, audio.currentTime / audio.duration))
                 GeometryReader { g in
@@ -376,6 +386,34 @@ struct TVPlayerView: View {
             Spacer()
         }
     }
+
+    #if os(iOS) || os(macOS)
+    /// Always on screen, including a silent crawl. Gating Close on audio
+    /// left Text and Manual with no way off the picture until the crawl
+    /// ended — and on a phone, no way off at all if that wait was missed.
+    private var closeButton: some View {
+        VStack {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(Color.black.opacity(0.55), in: Circle())
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .padding(12)
+                .safeAreaPadding()
+                .accessibilityLabel("Close video")
+                Spacer()
+            }
+            Spacer()
+        }
+    }
+    #endif
 
     private var timeLabel: String {
         func fmt(_ t: Double) -> String {

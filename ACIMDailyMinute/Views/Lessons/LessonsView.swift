@@ -38,6 +38,12 @@ struct LessonsView: View {
         sort: \ArchivedReading.dateString
     ) private var archivedMinutes: [ArchivedReading]
     @Query private var storedMinutes: [DailyMinute]
+    @Query(
+        filter: #Predicate<CachedPodcastEpisode> { $0.channel == "minute" },
+        sort: \CachedPodcastEpisode.publishedAt,
+        order: .reverse
+    )
+    private var cachedMinutes: [CachedPodcastEpisode]
 
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
@@ -75,6 +81,19 @@ struct LessonsView: View {
                 // Hidden while a query is typed: the results list replaces the
                 // shelf, and where the reader stopped is not an answer to what
                 // they are searching for.
+                if trimmedQuery.isEmpty, shelf == .minute, let item = minuteResume {
+                    ListenResumeRibbon(
+                        item: item,
+                        isActive: audio.isActive(url: item.audioURL)
+                            || (!item.episodeID.isEmpty && audio.currentEpisodeID == item.episodeID),
+                        isPlaying: audio.isPlaying,
+                        onTap: {
+                            play(url: item.audioURL, title: item.title, episodeID: item.episodeID)
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                }
+
                 if trimmedQuery.isEmpty, let book = ribbonBook {
                     ContinueReadingRow(book: book)
                         .padding(.horizontal, 20)
@@ -158,61 +177,104 @@ struct LessonsView: View {
         return MinuteSchedule.availability(of: day, archived: minuteDates, today: ArchiveView.today())
     }
 
+    private var minuteResume: ListenLibrary.Resume? {
+        ListenLibrary.resume(
+            hasActiveAudio: audio.hasActiveAudio,
+            nowPlayingTitle: audio.currentTitle,
+            nowPlayingURL: audio.currentURL,
+            nowPlayingEpisodeID: audio.currentEpisodeID,
+            inProgress: []
+        )
+    }
+
+    private func selectedMinuteRow(_ row: ListenLibrary.Row) -> some View {
+        let dateString = ArchiveView.dateString(from: minuteCalendar.selection)
+        let sentence = minuteAvailability(of: dateString).sentence
+
+        return HStack(alignment: .center, spacing: 8) {
+            ListenPlayableRow(
+                row: row,
+                isActive: isMinuteActive(row),
+                isPlaying: audio.isPlaying,
+                unrecordedCaption: ListenLibrary.showsPlay(audioURL: row.audioURL)
+                    ? nil
+                    : (sentence ?? ListenLibrary.unrecordedCaption(availableOnFormatted: nil)),
+                onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
+            )
+            Button {
+                path.append(MinuteDateRef(dateString: dateString))
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 28, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Open reading")
+        }
+        .padding(14)
+        .background(Color.acimCard)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
     private var minuteShelf: some View {
-        ScrollView {
+        let row = minuteRow(for: ArchiveView.dateString(from: minuteCalendar.selection))
+        return ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                selectedMinuteRow(row)
+
                 ArchiveCalendarView(
                     selection: $minuteCalendar.selection,
                     visibleMonth: $minuteCalendar.visibleMonth,
                     availableDateStrings: minuteDates
                 )
                 .frame(maxWidth: .infinity)
-
-                selectedMinuteRow
             }
             .padding(20)
             .readableContentWidth()
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
                     withAnimation {
-                        minuteCalendar.revealToday(now: Date())
+                        minuteCalendar.revealToday(now: Date(), availableDateStrings: minuteDates)
                     }
                 }
             }
         }
     }
 
-    private var selectedMinuteRow: some View {
-        let dateString = ArchiveView.dateString(from: minuteCalendar.selection)
-        let sentence = minuteAvailability(of: dateString).sentence
-
-        return Button {
-            path.append(MinuteDateRef(dateString: dateString))
-        } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(ArchiveView.longDateString(from: minuteCalendar.selection))
-                        .font(.body.weight(.medium))
-                        .foregroundStyle(.primary)
-                    Text(sentence ?? "Open reading")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .padding(14)
-            .background(Color.acimCard)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+    private func minuteRow(for dateString: String) -> ListenLibrary.Row {
+        let daily = storedMinutes.first { $0.date == dateString }?.audioURL
+        let archived = archivedMinutes.first { $0.dateString == dateString }?.audioURL
+        let podcast = cachedMinutes.first {
+            ArchiveView.dateString(from: $0.publishedAt) == dateString
         }
-        .buttonStyle(.plain)
+        let audioURL = ListenLibrary.minuteAudio(
+            daily: daily,
+            archived: archived,
+            podcast: podcast?.audioURL
+        )
+        return ListenLibrary.Row(
+            id: "minute:\(dateString)",
+            title: ArchiveView.longDateString(from: minuteCalendar.selection),
+            audioURL: audioURL,
+            episodeID: podcast?.id ?? dateString
+        )
+    }
+
+    private func play(url: String, title: String, episodeID: String) {
+        guard ListenLibrary.showsPlay(audioURL: url) else { return }
+        audio.playOrToggle(url: url, title: title, episodeID: episodeID)
+    }
+
+    private func isMinuteActive(_ row: ListenLibrary.Row) -> Bool {
+        if ListenLibrary.showsPlay(audioURL: row.audioURL), audio.isActive(url: row.audioURL) {
+            return true
+        }
+        guard audio.hasActiveAudio, !audio.currentEpisodeID.isEmpty else { return false }
+        return audio.currentEpisodeID == row.episodeID
     }
 
     private var manualShelf: some View {
@@ -248,9 +310,6 @@ struct LessonsView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
     }
 
     private var workbookShelf: some View {
@@ -268,9 +327,6 @@ struct LessonsView: View {
         )
         .listStyle(.plain)
         .readableContentWidth()
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button {
@@ -508,5 +564,5 @@ private struct FilteredLessonsList: View {
 #Preview {
     LessonsView()
         .preferredColorScheme(.dark)
-        .modelContainer(for: [DailyLesson.self, DailyMinute.self, ArchivedReading.self, Bookmark.self], inMemory: true)
+        .modelContainer(for: [DailyLesson.self, DailyMinute.self, ArchivedReading.self, Bookmark.self, CachedPodcastEpisode.self], inMemory: true)
 }

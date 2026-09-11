@@ -114,6 +114,7 @@
 		C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
 		C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
 		C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
+		C0DE0001A11CE0B1000019 /* AudioTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002760 /* AudioTransport.swift */; };
 		C0DE0001A11CE0B1000017 /* VideoPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002751 /* VideoPlayableRow.swift */; };
 		C0DE0001A11CE0B1000018 /* VideoTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002752 /* VideoTextChapterView.swift */; };
 		C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
@@ -304,6 +305,7 @@
 		AA000001742 /* ListenPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002742 /* ListenPlayableRow.swift */; };
 		AA000001743 /* ListenTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002743 /* ListenTextChapterView.swift */; };
 		AA000001750 /* VideoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002750 /* VideoLibrary.swift */; };
+		AA000001760 /* AudioTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002760 /* AudioTransport.swift */; };
 		AA000001751 /* VideoPlayableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002751 /* VideoPlayableRow.swift */; };
 		AA000001752 /* VideoTextChapterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002752 /* VideoTextChapterView.swift */; };
 		AA000001801 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
@@ -604,6 +606,7 @@
 		AA000002742 /* ListenPlayableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenPlayableRow.swift; sourceTree = "<group>"; };
 		AA000002743 /* ListenTextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenTextChapterView.swift; sourceTree = "<group>"; };
 		AA000002750 /* VideoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLibrary.swift; sourceTree = "<group>"; };
+		AA000002760 /* AudioTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTransport.swift; sourceTree = "<group>"; };
 		AA000002751 /* VideoPlayableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayableRow.swift; sourceTree = "<group>"; };
 		AA000002752 /* VideoTextChapterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTextChapterView.swift; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
@@ -845,6 +848,7 @@
 				AA000002730 /* CourseShelf.swift */,
 				AA000002740 /* ListenLibrary.swift */,
 				AA000002750 /* VideoLibrary.swift */,
+				AA000002760 /* AudioTransport.swift */,
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
@@ -1352,6 +1356,7 @@
 				AA000001742 /* ListenPlayableRow.swift in Sources */,
 				AA000001743 /* ListenTextChapterView.swift in Sources */,
 				AA000001750 /* VideoLibrary.swift in Sources */,
+				AA000001760 /* AudioTransport.swift in Sources */,
 				AA000001751 /* VideoPlayableRow.swift in Sources */,
 				AA000001752 /* VideoTextChapterView.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
@@ -1572,6 +1577,7 @@
 				C0DE0001A11CE0B1000014 /* ListenPlayableRow.swift in Sources */,
 				C0DE0001A11CE0B1000015 /* ListenTextChapterView.swift in Sources */,
 				C0DE0001A11CE0B1000016 /* VideoLibrary.swift in Sources */,
+				C0DE0001A11CE0B1000019 /* AudioTransport.swift in Sources */,
 				C0DE0001A11CE0B1000017 /* VideoPlayableRow.swift in Sources */,
 				C0DE0001A11CE0B1000018 /* VideoTextChapterView.swift in Sources */,
 				F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */,

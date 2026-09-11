@@ -106,9 +106,6 @@ struct TextSectionView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableContentWidth()
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
     }
 
     /// Previous and next cross chapter boundaries. Without them the Text is a

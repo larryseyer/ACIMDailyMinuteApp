@@ -27,8 +27,6 @@ struct SegmentReadingView: View {
     let segmentId: Int
     var spotlight: ReadingSpotlight? = nil
 
-    @Environment(AudioManager.self) private var audio
-
     private let corpus = CorpusService.shared
 
     var body: some View {
@@ -76,9 +74,6 @@ struct SegmentReadingView: View {
                     .padding(20)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .readableContentWidth()
-                }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
                 }
             } else {
                 ContentUnavailableView {

@@ -94,7 +94,7 @@ struct ArchiveView: View {
             }
             #if os(iOS)
             .fullScreenCover(item: $youtubeClip) { clip in
-                youtubeClipCover(clip)
+                FullScreenVideoCover(videoURL: clip.embedURL)
             }
             #elseif os(macOS)
             .sheet(item: $youtubeClip) { clip in
@@ -114,10 +114,9 @@ struct ArchiveView: View {
     private var minuteShelf: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                selectedDateRow
                 calendar
                     .frame(maxWidth: .infinity)
-
-                selectedDateRow
                 fallOpenRow
             }
             .padding(20)
@@ -127,7 +126,7 @@ struct ArchiveView: View {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
                     withAnimation {
-                        archiveCalendar.revealToday(now: Date())
+                        archiveCalendar.revealToday(now: Date(), availableDateStrings: datesWithReadings)
                     }
                 }
             }
@@ -432,23 +431,17 @@ struct ArchiveView: View {
         #endif
     }
 
-    #if os(iOS) || os(macOS)
+    #if os(macOS)
     @ViewBuilder
     private func youtubeClipCover(_ clip: VideoYouTubeClip) -> some View {
         NavigationStack {
-            ScrollView {
-                LiteYouTubeCard(videoIDs: clip.videoIDs, accessibilityTitle: clip.title)
-                    .padding(20)
-            }
-            .navigationTitle(clip.title)
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") { youtubeClip = nil }
+            YouTubePlayerView(videoURL: clip.embedURL, autoplay: true)
+                .navigationTitle(clip.title)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Done") { youtubeClip = nil }
+                    }
                 }
-            }
         }
     }
     #endif
@@ -630,6 +623,13 @@ private struct VideoYouTubeClip: Identifiable {
     var id: String { title + ":" + videoIDs.joined(separator: ",") }
     let title: String
     let videoIDs: [String]
+
+    var embedURL: String {
+        let id = videoIDs
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty } ?? ""
+        return "https://www.youtube.com/embed/\(id)"
+    }
 }
 #endif
 

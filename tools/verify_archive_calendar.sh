@@ -116,6 +116,57 @@ check(
     "the calendar opens on this month"
 )
 
+// MARK: - A day with no recording is not a selection
+
+func key(_ date: Date) -> String {
+    ArchiveCalendarState.dateString(from: date, calendar: grid)
+}
+
+let recordedDay = instant("2026-09-08 10:00:00", timeZone: chicago)
+let recorded = Set([key(recordedDay)])
+
+check(
+    ArchiveCalendarState.isRecorded(recordedDay, availableDateStrings: recorded, calendar: grid),
+    "a published day is recorded"
+)
+check(
+    !ArchiveCalendarState.isRecorded(now, availableDateStrings: recorded, calendar: grid),
+    "today before the run is not recorded"
+)
+
+check(
+    ArchiveCalendarState.selection(preferring: now, availableDateStrings: recorded, calendar: grid)
+        .map { grid.isDate($0, inSameDayAs: recordedDay) } == true,
+    "preferring an unrecorded today lands on the latest recorded day"
+)
+check(
+    ArchiveCalendarState.selection(preferring: recordedDay, availableDateStrings: recorded, calendar: grid)
+        .map { grid.isDate($0, inSameDayAs: recordedDay) } == true,
+    "a recorded preference is kept"
+)
+check(
+    ArchiveCalendarState.selection(preferring: now, availableDateStrings: [], calendar: grid) == nil,
+    "an empty archive has nothing to select"
+)
+
+var snapped = ArchiveCalendarState.starting(now: now, calendar: grid)
+snapped.revealToday(now: now, availableDateStrings: recorded, calendar: grid)
+check(
+    grid.isDate(snapped.selection, inSameDayAs: recordedDay),
+    "Today when today is unpublished lands on the latest recorded day, not \(snapped.selection)"
+)
+check(
+    grid.isDate(snapped.visibleMonth, equalTo: recordedDay, toGranularity: .month),
+    "Today when today is unpublished still shows that month"
+)
+
+var kept = ArchiveCalendarState.starting(now: now, calendar: grid)
+kept.revealToday(now: now, availableDateStrings: Set([key(now)]), calendar: grid)
+check(
+    grid.isDate(kept.selection, inSameDayAs: now),
+    "Today when today is recorded still selects today"
+)
+
 if failures == 0 {
     print("\(checks) checks, Today lands on today's month and today's day")
     print("OK")

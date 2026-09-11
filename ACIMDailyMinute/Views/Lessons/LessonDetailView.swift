@@ -174,8 +174,6 @@ private struct FullLessonView: View {
     let isBookmarked: Bool
     let toggleBookmark: () -> Void
 
-    @Environment(AudioManager.self) private var audio
-
     var body: some View {
         ScrollView {
             ReadingScaffold(
@@ -212,9 +210,7 @@ private struct FullLessonView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .readableContentWidth()
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
+
     }
 }
 
@@ -226,8 +222,6 @@ private struct MetadataOnlyLessonView: View {
     var spotlight: ReadingSpotlight? = nil
     let isBookmarked: Bool
     let toggleBookmark: () -> Void
-
-    @Environment(AudioManager.self) private var audio
 
     private var title: String {
         WorkbookCatalog.title(for: lessonNumber) ?? (archive.text.isEmpty ? "Lesson \(lessonNumber)" : archive.text)
@@ -292,9 +286,7 @@ private struct MetadataOnlyLessonView: View {
             .padding(.vertical, 16)
             .readableContentWidth()
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
+
     }
 }
 
@@ -311,8 +303,6 @@ private struct AbsentLessonView: View {
 
     @Query(filter: #Predicate<CachedPodcastEpisode> { $0.channel == "lesson" })
     private var cachedLessons: [CachedPodcastEpisode]
-
-    @Environment(AudioManager.self) private var audio
 
     private var introAudioURL: String? {
         cachedLessons.first(where: {
@@ -377,8 +367,6 @@ private struct AbsentLessonView: View {
             .padding(.vertical, 16)
             .readableContentWidth()
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
+
     }
 }

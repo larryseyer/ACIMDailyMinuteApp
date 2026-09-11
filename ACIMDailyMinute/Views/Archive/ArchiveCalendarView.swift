@@ -26,6 +26,8 @@ struct ArchiveCalendarView: View {
         .padding(14)
         .background(Color.acimCard)
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .onAppear { clampSelection() }
+        .onChange(of: availableDateStrings) { _, _ in clampSelection() }
         .onChange(of: selection) { _, newValue in
             if !calendar.isDate(newValue, equalTo: visibleMonth, toGranularity: .month) {
                 visibleMonth = newValue
@@ -103,6 +105,7 @@ struct ArchiveCalendarView: View {
         let day = calendar.component(.day, from: date)
 
         Button {
+            guard ArchiveCalendarState.isRecorded(date, availableDateStrings: availableDateStrings) else { return }
             selection = date
         } label: {
             ZStack {
@@ -144,9 +147,11 @@ struct ArchiveCalendarView: View {
             .contentShape(Circle())
         }
         .buttonStyle(.plain)
+        .disabled(!hasReadings)
         .opacity(isInCurrentMonth ? 1.0 : 0.35)
         .accessibilityLabel(accessibilityLabel(for: date, hasReadings: hasReadings))
         .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+        .accessibilityHint(hasReadings ? "" : "Not yet recorded")
     }
 
     private func foregroundColor(selected: Bool, today: Bool, hasReadings: Bool) -> Color {
@@ -170,11 +175,19 @@ struct ArchiveCalendarView: View {
     private static let onAccent = Color.acimOnGold
 
     static func dateString(from date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
+        ArchiveCalendarState.dateString(from: date)
+    }
+
+    /// An unpublished today is not a selection. Snap to the latest recorded
+    /// day so the highlight and the action row always name a real reading.
+    private func clampSelection() {
+        guard let next = ArchiveCalendarState.selection(
+            preferring: selection,
+            availableDateStrings: availableDateStrings
+        ) else { return }
+        if !calendar.isDate(next, inSameDayAs: selection) {
+            selection = next
+        }
     }
 
     // MARK: - Computed

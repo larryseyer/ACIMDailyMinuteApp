@@ -45,9 +45,6 @@ struct TextChapterView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
         // ⛔ A Text chapter has no audio. Leaving a Workbook session up would
         // keep the previous lesson in the mini player under this page.
         .onAppear { audio.dismissForTextReading() }

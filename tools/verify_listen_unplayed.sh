@@ -119,6 +119,19 @@ check(manual.count == 2, "Manual sections without audio still appear")
 check(manual.allSatisfy { !ListenLibrary.showsPlay(audioURL: $0.audioURL) },
       "Manual without enclosures omits play")
 
+check(
+    ListenLibrary.unrecordedCaption(availableOnFormatted: "2026-09-14") == "Available 2026-09-14",
+    "a known day is named"
+)
+check(
+    ListenLibrary.unrecordedCaption(availableOnFormatted: nil) == "Audio hasn't been published yet.",
+    "Text and Manual without a schedule still say so"
+)
+check(
+    ListenLibrary.unrecordedCaption(availableOnFormatted: "  ") == "Audio hasn't been published yet.",
+    "whitespace is not a day"
+)
+
 let idle = ListenLibrary.resume(
     hasActiveAudio: false,
     nowPlayingTitle: "",

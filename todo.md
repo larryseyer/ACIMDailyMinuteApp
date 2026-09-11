@@ -6,14 +6,13 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ## LIVE — #1
 
-- [ ] Shared shelf chrome so Read / Listen / Video cannot drift.
-- [ ] iOS/macOS composed player with no MP3 has no Close until the crawl ends (transport is gated on audio).
 - [ ] Mac Video sheets have no min frame; Listen’s YouTube sheet is 720×405.
 - [ ] Unnarrated compose does not stop Listen audio that is already playing.
 
 ## HIS CALL
 
-- [ ] Video tab YouTube on iPhone, Mac, and iPad sim — he is checking that a day plays the video (thumbnail, tap to play).
+- [ ] iPhone chrome: seek slider on Today/Listen, Read Minute matching Listen, unrecorded dates not selectable, Video landscape with Close. Sign off before other platforms.
+- [ ] Video tab YouTube on iPhone — tap a lesson/day/text row, confirm landscape full screen, confirm Close returns to the list.
 - [ ] The small label above a reading ("Daily Minute", "Lesson 84") wraps onto two lines when system text is huge, and the header gets taller. Is that OK?
 - [ ] Preface citations: `Pref.4` does not say which of the two Preface parts it is in. Changing that changes backups already exported. Leave it?
 - [ ] Companion note under Settings > About: three wording departures are his to veto.

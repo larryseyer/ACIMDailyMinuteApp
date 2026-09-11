@@ -5,8 +5,6 @@ import SwiftUI
 /// Searching — titles and words alike — is the Read tab's one search field;
 /// this is only the contents page.
 struct TextChaptersView: View {
-    @Environment(AudioManager.self) private var audio
-
     private let corpus = CorpusService.shared
 
     var body: some View {
@@ -31,9 +29,6 @@ struct TextChaptersView: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
     }
 
     private func chapterRow(_ chapter: CorpusTextChapter) -> some View {

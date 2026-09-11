@@ -31,9 +31,10 @@ fail() { echo "FAIL: $1"; exit 1; }
 grep -q 'openPlayer' "$FILE" \
     || fail "tvOS Video day no longer opens the MP3-built player"
 
-# Phone, iPad, Mac: the day is a YouTube player.
-grep -q 'LiteYouTubeCard' "$FILE" \
-    || fail "iOS/macOS Video day has no YouTube player"
+# Phone: the day is a landscape YouTube cover, not an inline embed
+# whose fullscreen cannot be left.
+grep -q 'FullScreenVideoCover' "$FILE" \
+    || fail "iOS Video day has no full-screen YouTube cover"
 
 [[ -f "$SHELF" ]] || fail "CourseShelf.swift missing"
 
@@ -45,8 +46,8 @@ grep -q 'VideoTextChapterView' "$ARCHIVE" \
     || fail "Video has no Text chapter destination"
 grep -q 'openPlayer' "$ARCHIVE" \
     || fail "Video no longer opens the composed player"
-grep -q 'LiteYouTubeCard' "$DETAIL" \
-    || fail "iOS/macOS Video day has no YouTube player"
+grep -q 'FullScreenVideoCover' "$DETAIL" \
+    || fail "iOS Video day has no full-screen YouTube cover"
 grep -q 'openPlayer' "$DETAIL" \
     || fail "a day without YouTube no longer composes"
 

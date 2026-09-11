@@ -9,7 +9,6 @@ import SwiftUI
 struct ReadSearchResultsList: View {
     let query: String
 
-    @Environment(AudioManager.self) private var audio
     @State private var results: SearchResults?
     @State private var index: SearchIndex?
 
@@ -75,9 +74,6 @@ struct ReadSearchResultsList: View {
         }
         .listStyle(.plain)
         .readableContentWidth()
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
-        }
         .task(id: query) {
             // Cleared up front so a superseded query's rows do not linger
             // while the new one's pause and scan are still running.

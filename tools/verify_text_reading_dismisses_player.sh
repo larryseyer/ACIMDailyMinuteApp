@@ -3,7 +3,7 @@
 # chapter or section.
 #
 # What this guards: Listen on a lesson docks the mini player globally
-# (ContentView shows it on every tab except Listen). Opening Read > Text >
+# (ContentView shows it on Today, Video, and Saved). Opening Read > Text >
 # a chapter then still showed that lesson at the bottom of the chapter page.
 # The Text is a different book and has no audio of its own, so arriving on
 # a chapter or section must dismiss the session. hasActiveAudio going false
@@ -65,6 +65,7 @@ swiftc -O -parse-as-library \
     -framework AVFoundation \
     -framework MediaPlayer \
     "$REPO/ACIMDailyMinute/Utilities/PlaybackProgress.swift" \
+    "$REPO/ACIMDailyMinute/Utilities/AudioTransport.swift" \
     "$REPO/ACIMDailyMinute/Services/PlaybackProgressStore.swift" \
     "$REPO/ACIMDailyMinute/Services/AudioManager.swift" \
     "$WORK/main.swift" \

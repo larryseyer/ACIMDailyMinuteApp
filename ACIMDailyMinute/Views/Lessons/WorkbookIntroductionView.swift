@@ -18,7 +18,6 @@ struct WorkbookIntroductionView: View {
     var spotlight: ReadingSpotlight? = nil
 
     @Environment(\.modelContext) private var modelContext
-    @Environment(AudioManager.self) private var audio
     @Query private var bookmarks: [Bookmark]
 
     private var itemKey: String { "lesson:\(lessonNumber)" }
@@ -68,9 +67,6 @@ struct WorkbookIntroductionView: View {
                     .padding(20)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .readableContentWidth()
-                }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
                 }
             } else {
                 ContentUnavailableView {

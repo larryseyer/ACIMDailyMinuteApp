@@ -20,7 +20,6 @@ struct MinuteReadingView: View {
     let availability: MinuteSchedule.Availability
     let archived: Set<String>
 
-    @Environment(AudioManager.self) private var audio
     @Query private var minutes: [DailyMinute]
     @Query private var readings: [ArchivedReading]
 
@@ -68,9 +67,6 @@ struct MinuteReadingView: View {
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .readableContentWidth()
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
         }
     }
 

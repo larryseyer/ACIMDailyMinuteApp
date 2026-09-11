@@ -214,20 +214,21 @@ struct ListenView: View {
         let row = minuteRow(for: ArchiveView.dateString(from: minuteCalendar.selection))
         return ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                ListenPlayableRow(
+                    row: row,
+                    isActive: isActive(row),
+                    isPlaying: audio.isPlaying,
+                    playedAt: listenedEpisodes[row.episodeID],
+                    unrecordedCaption: minuteCaption(for: row),
+                    onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
+                )
+
                 ArchiveCalendarView(
                     selection: $minuteCalendar.selection,
                     visibleMonth: $minuteCalendar.visibleMonth,
                     availableDateStrings: minuteDates
                 )
                 .frame(maxWidth: .infinity)
-
-                ListenPlayableRow(
-                    row: row,
-                    isActive: isActive(row),
-                    isPlaying: audio.isPlaying,
-                    playedAt: listenedEpisodes[row.episodeID],
-                    onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
-                )
             }
             .padding(20)
             .readableContentWidth()
@@ -235,7 +236,9 @@ struct ListenView: View {
         .toolbar {
             ToolbarItem(placement: jumpPlacement) {
                 Button("Today") {
-                    withAnimation { minuteCalendar.revealToday(now: Date()) }
+                    withAnimation {
+                        minuteCalendar.revealToday(now: Date(), availableDateStrings: minuteDates)
+                    }
                 }
             }
         }
@@ -331,6 +334,7 @@ struct ListenView: View {
             isActive: isActive(row),
             isPlaying: audio.isPlaying,
             playedAt: listenedEpisodes[row.episodeID],
+            unrecordedCaption: caption(for: row),
             onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
         )
         #if !os(tvOS)
@@ -446,6 +450,46 @@ struct ListenView: View {
     }
 
     // MARK: - Actions
+
+    private func caption(for row: ListenLibrary.Row) -> String? {
+        guard !ListenLibrary.showsPlay(audioURL: row.audioURL) else { return nil }
+        if row.id.hasPrefix("lesson:") || row.id.hasPrefix("intro:") {
+            let number = LessonNarration.number(fromPlayerID: row.id) ?? 0
+            let anchor = recordedAnchor()
+            if let date = anchor.date,
+               let available = LessonSchedule.availabilityDate(
+                for: number,
+                latestRecorded: anchor.number,
+                latestDate: date
+               ) {
+                return ListenLibrary.unrecordedCaption(
+                    availableOnFormatted: LessonSchedule.formatted(available)
+                )
+            }
+        }
+        return ListenLibrary.unrecordedCaption(availableOnFormatted: nil)
+    }
+
+    private func minuteCaption(for row: ListenLibrary.Row) -> String? {
+        guard !ListenLibrary.showsPlay(audioURL: row.audioURL) else { return nil }
+        let dateString = ArchiveView.dateString(from: minuteCalendar.selection)
+        guard let day = LessonSchedule.day(from: dateString) else {
+            return ListenLibrary.unrecordedCaption(availableOnFormatted: nil)
+        }
+        return MinuteSchedule.availability(
+            of: day,
+            archived: minuteDates,
+            today: ArchiveView.today()
+        ).sentence ?? ListenLibrary.unrecordedCaption(availableOnFormatted: nil)
+    }
+
+    private func recordedAnchor() -> (number: Int, date: Date?) {
+        let anchor = LessonSchedule.anchor(
+            from: lessons.map { ($0.lessonNumber, $0.publishedAt) }
+                + archivedLessons.map { ($0.lessonNumber ?? 0, $0.timestamp) }
+        )
+        return (anchor?.number ?? 0, anchor?.date)
+    }
 
     private func play(url: String, title: String, episodeID: String) {
         guard ListenLibrary.showsPlay(audioURL: url) else { return }

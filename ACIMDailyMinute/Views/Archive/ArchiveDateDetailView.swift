@@ -26,6 +26,9 @@ struct ArchiveDateDetailView: View {
     @Query private var lessons: [DailyLesson]
     @Query private var podcasts: [CachedPodcastEpisode]
     @Environment(\.openPlayer) private var openPlayer
+    #if os(iOS) || os(macOS)
+    @State private var youtubeClip: VideoDayYouTubeClip?
+    #endif
 
     init(
         dateString: String,
@@ -56,6 +59,21 @@ struct ArchiveDateDetailView: View {
         .navigationTitle(formattedTitle)
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(item: $youtubeClip) { clip in
+            FullScreenVideoCover(videoURL: clip.embedURL)
+        }
+        #elseif os(macOS)
+        .sheet(item: $youtubeClip) { clip in
+            NavigationStack {
+                YouTubePlayerView(videoURL: clip.embedURL, autoplay: true)
+                    .navigationTitle(clip.title)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Done") { youtubeClip = nil }
+                        }
+                    }
+            }
+        }
         #endif
     }
 
@@ -78,9 +96,15 @@ struct ArchiveDateDetailView: View {
 
     #if os(iOS) || os(macOS)
     private var videoList: some View {
-        VideoDayStack(items: videoItems) { reading in
-            openPlayer(.archived(reading))
-        }
+        VideoDayStack(
+            items: videoItems,
+            onYouTube: { item in
+                youtubeClip = VideoDayYouTubeClip(title: item.title, videoIDs: item.videoIDs)
+            },
+            onCompose: { reading in
+                openPlayer(.archived(reading))
+            }
+        )
     }
 
     private var videoItems: [VideoDayItem] {
@@ -221,8 +245,22 @@ private struct VideoDayItem: Identifiable {
     let reading: ArchivedReading
 }
 
+private struct VideoDayYouTubeClip: Identifiable {
+    var id: String { title + ":" + videoIDs.joined(separator: ",") }
+    let title: String
+    let videoIDs: [String]
+
+    var embedURL: String {
+        let id = videoIDs
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { !$0.isEmpty } ?? ""
+        return "https://www.youtube.com/embed/\(id)"
+    }
+}
+
 private struct VideoDayStack: View {
     let items: [VideoDayItem]
+    var onYouTube: (VideoDayItem) -> Void = { _ in }
     let onCompose: (ArchivedReading) -> Void
 
     var body: some View {
@@ -231,13 +269,8 @@ private struct VideoDayStack: View {
                 ForEach(items) { item in
                     switch VideoLibrary.play(videoIDs: item.videoIDs, youtubeAvailable: true) {
                     case .youtube:
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(item.title)
-                                .font(.headline)
-                            LiteYouTubeCard(
-                                videoIDs: item.videoIDs,
-                                accessibilityTitle: item.title
-                            )
+                        VideoPlayableRow(title: item.title) {
+                            onYouTube(item)
                         }
                     case .compose:
                         VideoPlayableRow(title: item.title) {

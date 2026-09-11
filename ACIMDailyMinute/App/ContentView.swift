@@ -286,8 +286,12 @@ struct ContentView: View {
             // over the tabs is the phone's bar, and on tvOS it is a focus trap:
             // its play button holds Select and the cards and Menu cannot be
             // reached. Absence, not a disabled bar.
+            //
+            // Read is the words. A leftover Today session must not sit on
+            // it; Listen draws this bar itself. Overlay is Today, Video,
+            // and Saved.
             #if os(iOS)
-            if audioManager.hasActiveAudio && selectedTab != 2 {
+            if audioManager.hasActiveAudio && selectedTab != 1 && selectedTab != 2 {
                 MiniPlayerView()
                     .onTapGesture { selectedTab = 2 }
                     .padding(.bottom, tabBarHeight)
@@ -313,7 +317,7 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                if audioManager.hasActiveAudio && selectedTab != 2 {
+                if audioManager.hasActiveAudio && selectedTab != 1 && selectedTab != 2 {
                     MiniPlayerView()
                         .onTapGesture { selectedTab = 2 }
                         .transition(.move(edge: .bottom))

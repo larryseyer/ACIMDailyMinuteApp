@@ -146,9 +146,25 @@ final class AudioManager {
     }
 
     func skip(by seconds: Double) {
+        seek(to: currentTime + seconds)
+    }
+
+    /// Move to an absolute place in the current file. The slider, skip
+    /// buttons, and lock-screen scrub all go through here so a drag past
+    /// the end is the end, never a NaN the player would ignore.
+    func seek(to seconds: Double) {
         guard let player else { return }
-        let newTime = CMTime(seconds: currentTime + seconds, preferredTimescale: 600)
-        player.seek(to: newTime)
+        let clamped = AudioTransport.clampedPosition(seconds, duration: duration)
+        currentTime = clamped
+        let time = CMTime(seconds: clamped, preferredTimescale: 600)
+        player.seek(to: time) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.updateNowPlayingInfo()
+                self.persistProgress()
+            }
+        }
+        updateNowPlayingInfo()
     }
 
     func stop() {
@@ -332,6 +348,14 @@ final class AudioManager {
         center.skipBackwardCommand.preferredIntervals = [15]
         center.skipBackwardCommand.addTarget { [weak self] _ in
             Task { @MainActor in self?.skip(by: -15) }
+            return .success
+        }
+
+        center.changePlaybackPositionCommand.addTarget { [weak self] event in
+            guard let event = event as? MPChangePlaybackPositionCommandEvent else {
+                return .commandFailed
+            }
+            Task { @MainActor in self?.seek(to: event.positionTime) }
             return .success
         }
     }
