@@ -77,10 +77,12 @@ struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingB
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            CardHeaderRow(eyebrow) {
-                leading
-            } trailing: {
-                trailing
+            if showsHeader {
+                CardHeaderRow(eyebrow) {
+                    leading
+                } trailing: {
+                    trailing
+                }
             }
 
             titleBlock
@@ -91,25 +93,39 @@ struct ReadingScaffold<Leading: View, Trailing: View, TitleBlock: View, ReadingB
         }
     }
 
+    private var showsHeader: Bool {
+        !eyebrow.isEmpty
+            || Leading.self != EmptyView.self
+            || Trailing.self != EmptyView.self
+    }
+
     private var footerBand: some View {
-        HStack(spacing: 8) {
-            if footer.opensReading, let bookName = footer.bookName {
-                CitationButton(citation: footer.citation, bookName: bookName)
-            } else if let address = footer.citation ?? footer.bookName {
-                Text(address)
-                    .font(.footnote.italic())
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            if let measure = footer.measure {
-                Text(measure)
-                    .font(.caption2)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Color.acimChip)
-                    .clipShape(Capsule())
-                    .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 13) {
+            Rectangle()
+                .fill(Color.acimHairline)
+                .frame(height: 1)
+            HStack(spacing: 8) {
+                if footer.opensReading, let bookName = footer.bookName {
+                    CitationButton(citation: footer.citation, bookName: bookName)
+                } else if let citation = footer.citation {
+                    CitationLabel(raw: citation)
+                } else if let bookName = footer.bookName {
+                    Text(bookName)
+                        .font(.acimAddress)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                if let measure = footer.measure {
+                    Text(measure)
+                        .font(.acimChipText)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color.acimRaised)
+                        .clipShape(Capsule())
+                }
             }
         }
+        .padding(.top, 4)
     }
 }

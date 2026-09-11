@@ -84,4 +84,22 @@ public enum WorkbookBodiesCatalog {
     }
 
     public static var isEmpty: Bool { entries.isEmpty }
+
+    /// The review period a numbered lesson sits in, or nil before Review I.
+    /// Copy only — never part of the lesson's address.
+    public static func reviewTitle(for lessonNumber: Int) -> String? {
+        reviewTitle(for: lessonNumber, in: allIntroductions)
+    }
+
+    static func reviewTitle(
+        for lessonNumber: Int,
+        in introductions: [WorkbookIntroduction]
+    ) -> String? {
+        guard (1...365).contains(lessonNumber) else { return nil }
+        return introductions
+            .filter { $0.title.hasPrefix("Review ") }
+            .sorted { $0.insertBefore < $1.insertBefore }
+            .last { $0.insertBefore <= lessonNumber }?
+            .title
+    }
 }

@@ -304,6 +304,11 @@
 		AA000001989 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
 		AA000001990 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
 		AA000001991 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
+		AA000001980 /* TodayMasthead.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002992 /* TodayMasthead.swift */; };
+		AA000001981 /* TodayActionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002993 /* TodayActionRow.swift */; };
+		AA000001982 /* PracticeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002994 /* PracticeCard.swift */; };
+		D7A11A92B0D34F6A8E1B2992 /* TodayMasthead.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002992 /* TodayMasthead.swift */; };
+		D7A11A92B0D34F6A8E1B2993 /* TodayActionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002993 /* TodayActionRow.swift */; };
 		AA000001992 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002989 /* Metric.swift */; };
 		AA000001993 /* ACIMType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002990 /* ACIMType.swift */; };
 		AA000001994 /* CitationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002991 /* CitationLabel.swift */; };
@@ -615,6 +620,9 @@
 		AA000002989 /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
 		AA000002990 /* ACIMType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMType.swift; sourceTree = "<group>"; };
 		AA000002991 /* CitationLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitationLabel.swift; sourceTree = "<group>"; };
+		AA000002992 /* TodayMasthead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMasthead.swift; sourceTree = "<group>"; };
+		AA000002993 /* TodayActionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayActionRow.swift; sourceTree = "<group>"; };
+		AA000002994 /* PracticeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCard.swift; sourceTree = "<group>"; };
 		AA000002704 /* PracticePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlanner.swift; sourceTree = "<group>"; };
 		AA000002705 /* WorkbookPractice.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = WorkbookPractice.json; sourceTree = "<group>"; };
 		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
@@ -1013,6 +1021,9 @@
 				AA000002201 /* DailyMinuteCard.swift */,
 				AA000002311 /* CorpusReadingCard.swift */,
 				AA000002202 /* DailyLessonCard.swift */,
+				AA000002992 /* TodayMasthead.swift */,
+				AA000002993 /* TodayActionRow.swift */,
+				AA000002994 /* PracticeCard.swift */,
 			);
 			path = Today;
 			sourceTree = "<group>";
@@ -1334,6 +1345,9 @@
 				AA000001201 /* DailyMinuteCard.swift in Sources */,
 				AA000001313 /* CorpusReadingCard.swift in Sources */,
 				AA000001202 /* DailyLessonCard.swift in Sources */,
+				AA000001980 /* TodayMasthead.swift in Sources */,
+				AA000001981 /* TodayActionRow.swift in Sources */,
+				AA000001982 /* PracticeCard.swift in Sources */,
 				AA000001210 /* LessonMeta.swift in Sources */,
 				AA000001211 /* LessonRow.swift in Sources */,
 				AA000001212 /* LessonsView.swift in Sources */,
@@ -1570,6 +1584,8 @@
 				FCF93B82DD9F6532861D2690 /* DailyMinuteCard.swift in Sources */,
 				461C7D6D16C7513BEAF0EE36 /* CorpusReadingCard.swift in Sources */,
 				D14B1B295BEE215D89B581FF /* DailyLessonCard.swift in Sources */,
+				D7A11A92B0D34F6A8E1B2992 /* TodayMasthead.swift in Sources */,
+				D7A11A92B0D34F6A8E1B2993 /* TodayActionRow.swift in Sources */,
 				B23ACF917A318E353BB7DE8D /* LessonMeta.swift in Sources */,
 				04ABF36E957B0A1FDC15C378 /* LessonRow.swift in Sources */,
 				04DF3BCEACFD289EF9BD48A3 /* LessonsView.swift in Sources */,

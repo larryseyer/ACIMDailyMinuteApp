@@ -1,18 +1,20 @@
 # continue.md
 
-LIVE: `2026-09-11-Design_Plan.md` step 2 — Today as a page. Work on `main`
-only. No feature branch.
+LIVE: `2026-09-11-Design_Plan.md` step 3 — the practice sheet over
+`PracticePlanner`. Work on `main` only. No feature branch.
 
-NEXT after that: step 3, the practice sheet over `PracticePlanner`.
+REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
+
+NEXT after that: step 4, the Course tab.
 
 The design file is the spec. Visual intent:
 `docs/design/2026-09-11-ios-presentation.html` — the Design Plan wins
 wherever they differ. Plan mode at the top of the numbered step, present
 the approach, wait for approval, then edit.
 
-Step 2 is: dateline masthead, passage as a page, citation band, action
-row, lesson card, practice card. `Views/Today/CorpusReadingCard.swift`
-takes the identical treatment. Do not retype anything else.
+Step 3 is: the practice card on Today opens a sheet. Surface only —
+`PracticePlanner.plan`, `.slots`, `.cadenceSummary`, and
+`WorkbookPracticeCatalog.record`. Write no scheduling logic.
 
 Do not pick up any other item in `todo.md` until step 10 is on the
 devices. Do not rebuild `TVPlayerView`. Do not invent TTS. Do not host

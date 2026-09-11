@@ -13,6 +13,7 @@ struct AnnotatableReadingText: View {
     let key: ReadingKey
     var design: SelectableReadingText.Design = .serif
     var lineSpacing: CGFloat = 0
+    var basePointSize: CGFloat? = nil
     /// Passed straight through: a reading opened from a search hit re-anchors
     /// and paints it, every other caller leaves it nil.
     var spotlight: ReadingSpotlight? = nil
@@ -41,6 +42,7 @@ struct AnnotatableReadingText: View {
         key: ReadingKey,
         design: SelectableReadingText.Design = .serif,
         lineSpacing: CGFloat = 0,
+        basePointSize: CGFloat? = nil,
         spotlight: ReadingSpotlight? = nil,
         recordsPosition: Bool = false
     ) {
@@ -48,6 +50,7 @@ struct AnnotatableReadingText: View {
         self.key = key
         self.design = design
         self.lineSpacing = lineSpacing
+        self.basePointSize = basePointSize
         self.spotlight = spotlight
         self.recordsPosition = recordsPosition
         _resume = State(
@@ -70,6 +73,7 @@ struct AnnotatableReadingText: View {
                 raw: raw,
                 design: design,
                 lineSpacing: lineSpacing,
+                basePointSize: basePointSize,
                 highlights: storedHighlights,
                 menuActions: menuActions,
                 spotlight: spotlight,

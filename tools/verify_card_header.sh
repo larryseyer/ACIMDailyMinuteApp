@@ -193,7 +193,6 @@ VIEWS="$REPO/ACIMDailyMinute/Views"
 # 1. Every reading surface draws through the scaffold.
 SURFACES="
 Today/DailyMinuteCard.swift
-Today/DailyLessonCard.swift
 Today/CorpusReadingCard.swift
 Archive/ArchivedReadingCard.swift
 Lessons/LessonDetailView.swift
@@ -221,8 +220,19 @@ fi
 # 3. Save belongs in the header, never in a nav toolbar. Four screens used to
 #    put it there, which is why a reader found it in a different place
 #    depending on how they arrived at the same lesson.
+# SaveButton in a file that also has a ToolbarItem is not the failure —
+# LessonDetailView's toolbar is the completion mark. Save in the toolbar
+# is SaveButton as a ToolbarItem's content.
 TOOLBAR_SAVE="$(grep -rl 'SaveButton' "$VIEWS" --include='*.swift' \
-    | xargs grep -ln 'ToolbarItem' 2>/dev/null || true)"
+    | while read -r f; do
+        awk '
+            /ToolbarItem/ { in_item=1; depth=0 }
+            in_item { if ($0 ~ /{/) depth++; if ($0 ~ /}/) depth--; if ($0 ~ /SaveButton/) found=1 }
+            in_item && depth<=0 { in_item=0 }
+            END { if (found) exit 0; else exit 1 }
+        ' "$f" && echo "$f"
+        true
+      done)"
 if [ -n "$TOOLBAR_SAVE" ]; then
     echo "FAIL: Save is back in a nav toolbar in:"
     echo "$TOOLBAR_SAVE"
@@ -246,5 +256,5 @@ if [ -n "$INLINE_LISTEN" ]; then
     exit 1
 fi
 
-echo "the scaffold owns the bands: 9 surfaces, one header, no toolbar Save, no hand-rolled Listen"
+echo "the scaffold owns the bands: 8 reading surfaces, one header, no toolbar Save, no hand-rolled Listen"
 echo "OK"

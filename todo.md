@@ -12,7 +12,8 @@ Plan: `2026-09-11-Design_Plan.md`. Visual: `docs/design/2026-09-11-ios-presentat
 This plan supersedes every other UI plan. Do not pick up any other section until
 step 10 is on the devices.
 
-- [ ] Step 2 — Today: masthead, passage as a page, citation band, action row, lesson and practice cards.
+REMEMBER THIS:  ALWAYS WORK ON  MAIN - NO BRANCHES EVER UNLESS USER ASKS FOR THEM!!!!
+
 - [ ] Step 3 — the practice sheet over `PracticePlanner`.
 - [ ] Step 4 — the Course tab: three shelves collapse to one, five tabs to three, `ACIMTabBar`, onboarding.
 - [ ] Step 5 — the reading and the medium band, through `ReadingScaffold`.

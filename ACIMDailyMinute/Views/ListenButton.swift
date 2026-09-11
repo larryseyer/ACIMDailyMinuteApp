@@ -26,9 +26,17 @@ import SwiftUI
 /// omits this button entirely rather than showing it disabled, and nothing else
 /// in the row shifts position when one does appear.
 struct ListenButton: View {
+    enum Style {
+        /// The chip on a card header.
+        case chip
+        /// Today's gold leading pill.
+        case gold
+    }
+
     let title: String
     var isActive: Bool = false
     var isPlaying: Bool = false
+    var style: Style = .chip
     let action: () -> Void
 
     private var showsPause: Bool { isActive && isPlaying }
@@ -51,12 +59,14 @@ struct ListenButton: View {
                 label,
                 systemImage: showsPause ? "pause.fill" : "play.fill"
             )
-                .font(.caption.weight(.medium))
+                .font(style == .gold ? .acimChrome : .caption.weight(.medium))
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.acimChip, in: Capsule())
+                .foregroundStyle(style == .gold ? Color.acimOnGold : Color.primary)
+                .padding(.horizontal, style == .gold ? 14 : 10)
+                .padding(.vertical, style == .gold ? 0 : 5)
+                .frame(height: style == .gold ? 38 : nil)
+                .background(style == .gold ? Color.acimGold : Color.acimChip, in: Capsule())
         }
         .buttonStyle(.plain)
         // The capsule renders at its natural size; the tap target is padded out

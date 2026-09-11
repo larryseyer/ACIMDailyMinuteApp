@@ -14,6 +14,10 @@ struct TodayView: View {
     @State private var isRefreshing = false
     @State private var showOfflineToast = false
     @State private var path = NavigationPath()
+    @AppStorage("todayMotionDate") private var motionDate = ""
+    @State private var ruleProgress: CGFloat = 1
+    @State private var passageOpacity: Double = 1
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     #if os(tvOS)
     @Environment(\.openPlayer) private var openPlayer
     #endif
@@ -21,13 +25,20 @@ struct TodayView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 0) {
                     if !connectivity.isConnected && (minutes.first != nil || lessons.first != nil) {
                         offlineBanner
+                            .padding(.bottom, Metric.tight)
                     }
 
                     if minutes.isEmpty && lessons.isEmpty && corpusReading == nil {
                         emptyState
+                    } else {
+                        TodayMasthead(
+                            date: Date(),
+                            lessonNumber: workbookDay,
+                            ruleProgress: ruleProgress
+                        )
                     }
 
                     if let minute = minutes.first, !isMinuteStale {
@@ -35,18 +46,26 @@ struct TodayView: View {
                         Button { openPlayer(.minute(minute)) } label: {
                             DailyMinuteCard(minute: minute)
                         }
-                        .buttonStyle(.card)
+                        .buttonStyle(.plain)
+                        .padding(.top, Metric.block)
+                        .opacity(passageOpacity)
                         #else
                         DailyMinuteCard(minute: minute)
+                            .padding(.top, Metric.block)
+                            .opacity(passageOpacity)
                         #endif
                     } else if let segment = corpusReading {
                         #if os(tvOS)
                         Button { openPlayer(.segment(segment)) } label: {
                             CorpusReadingCard(segment: segment)
                         }
-                        .buttonStyle(.card)
+                        .buttonStyle(.plain)
+                        .padding(.top, Metric.block)
+                        .opacity(passageOpacity)
                         #else
                         CorpusReadingCard(segment: segment)
+                            .padding(.top, Metric.block)
+                            .opacity(passageOpacity)
                         #endif
                     }
 
@@ -55,19 +74,29 @@ struct TodayView: View {
                         Button { openPlayer(.lesson(lesson)) } label: {
                             DailyLessonCard(lesson: lesson)
                         }
-                        .buttonStyle(.card)
+                        .buttonStyle(.plain)
+                        .padding(.top, 26)
                         #else
                         DailyLessonCard(lesson: lesson)
+                            .padding(.top, 26)
                         #endif
                     }
+
+                    #if !os(tvOS)
+                    PracticeCard()
+                        .padding(.top, 14)
+                    #endif
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, Metric.gutter)
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .readableContentWidth()
             }
             .acimInkBackground()
-            .navigationTitle("Today")
+            .navigationTitle("")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .readingDestinations(path: $path)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -91,11 +120,13 @@ struct TodayView: View {
                 }
             }
             #endif
+            .onAppear { playOpeningIfNeeded() }
             .task {
                 if !hasLoadedOnce {
                     await refresh(force: true)
                     hasLoadedOnce = true
                 }
+                playOpeningIfNeeded()
             }
             .onChange(of: scenePhase) { _, newPhase in
                 guard newPhase == .active, hasLoadedOnce else { return }
@@ -125,6 +156,33 @@ struct TodayView: View {
     private var corpusReading: CorpusSegment? {
         guard isMinuteStale else { return nil }
         return CorpusFallback.segment(for: Date())
+    }
+
+    private var workbookDay: Int? {
+        #if os(tvOS)
+        lessons.first?.lessonNumber
+        #else
+        PracticeReminderService.currentLesson() ?? lessons.first?.lessonNumber
+        #endif
+    }
+
+    private var todayStamp: String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar.current
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
+
+    private func playOpeningIfNeeded() {
+        guard minutes.first != nil || corpusReading != nil else { return }
+        guard motionDate != todayStamp else { return }
+        motionDate = todayStamp
+        guard !reduceMotion else { return }
+        ruleProgress = 0
+        passageOpacity = 0
+        withAnimation(.easeInOut(duration: 0.4)) { ruleProgress = 1 }
+        withAnimation(.easeInOut(duration: 0.3).delay(0.4)) { passageOpacity = 1 }
     }
 
     private var offlineBanner: some View {

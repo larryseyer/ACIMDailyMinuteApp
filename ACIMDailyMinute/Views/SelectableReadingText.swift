@@ -34,6 +34,9 @@ struct SelectableReadingText: View {
     let raw: String
     var design: Design = .serif
     var lineSpacing: CGFloat = 0
+    /// Point size before Dynamic Type and `ReaderTextSize`. Nil keeps the
+    /// platform body size so surfaces this step does not restyle stay put.
+    var basePointSize: CGFloat? = nil
     /// Already re-anchored by `AnnotationStore.highlights(for:displayString:in:)`.
     var highlights: [Highlight] = []
     /// What the selection menu offers. Empty means nothing is added to the
@@ -163,7 +166,8 @@ struct SelectableReadingText: View {
                 highlightedRanges: paintedRanges,
                 spotlightRange: spotlightRange,
                 links: links,
-                sizeMultiplier: bodySizeMultiplier
+                sizeMultiplier: bodySizeMultiplier,
+                basePointSize: basePointSize
             ),
             display: display,
             menuActions: menuActions,
@@ -251,7 +255,8 @@ struct SelectableReadingText: View {
         highlightedRanges: [Range<Int>] = [],
         spotlightRange: Range<Int>? = nil,
         links: [(range: Range<Int>, url: URL)] = [],
-        sizeMultiplier: CGFloat = 1
+        sizeMultiplier: CGFloat = 1,
+        basePointSize: CGFloat? = nil
     ) -> NSAttributedString {
         let display = ReadingText.displayString(from: raw)
         let paragraph = NSMutableParagraphStyle()
@@ -260,7 +265,7 @@ struct SelectableReadingText: View {
         let result = NSMutableAttributedString(
             string: display,
             attributes: [
-                .font: font(for: design, sizeMultiplier: sizeMultiplier),
+                .font: font(for: design, sizeMultiplier: sizeMultiplier, basePointSize: basePointSize),
                 .foregroundColor: Self.bodyColor,
                 .paragraphStyle: paragraph
             ]
@@ -365,22 +370,35 @@ struct SelectableReadingText: View {
         #endif
     }
 
-    private static func font(for design: Design, sizeMultiplier: CGFloat = 1) -> PlatformFont {
-        let base = PlatformFont.preferredFont(forTextStyle: .body)
-        let size = base.pointSize * sizeMultiplier
+    private static func font(
+        for design: Design,
+        sizeMultiplier: CGFloat = 1,
+        basePointSize: CGFloat? = nil
+    ) -> PlatformFont {
+        let body = PlatformFont.preferredFont(forTextStyle: .body)
+        let point: CGFloat
+        if let basePointSize {
+            #if os(iOS) || os(tvOS)
+            point = UIFontMetrics(forTextStyle: .body).scaledValue(for: basePointSize) * sizeMultiplier
+            #else
+            point = basePointSize * sizeMultiplier
+            #endif
+        } else {
+            point = body.pointSize * sizeMultiplier
+        }
         switch design {
         case .standard:
             #if os(iOS) || os(tvOS)
-            return PlatformFont(descriptor: base.fontDescriptor, size: size)
+            return PlatformFont(descriptor: body.fontDescriptor, size: point)
             #else
-            return PlatformFont(descriptor: base.fontDescriptor, size: size) ?? base
+            return PlatformFont(descriptor: body.fontDescriptor, size: point) ?? body
             #endif
         case .serif:
-            let serif = base.fontDescriptor.withDesign(.serif) ?? base.fontDescriptor
+            let serif = body.fontDescriptor.withDesign(.serif) ?? body.fontDescriptor
             #if os(iOS) || os(tvOS)
-            return PlatformFont(descriptor: serif, size: size)
+            return PlatformFont(descriptor: serif, size: point)
             #else
-            return PlatformFont(descriptor: serif, size: size) ?? base
+            return PlatformFont(descriptor: serif, size: point) ?? body
             #endif
         }
     }

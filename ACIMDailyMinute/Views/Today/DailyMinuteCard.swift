@@ -24,33 +24,38 @@ struct DailyMinuteCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ReadingScaffold(eyebrow: "Daily Minute", footer: footer) {
-                ReadingPlayControl(
-                    title: "Daily Minute",
-                    segmentId: minute.segmentId,
-                    surfaceAudioURL: minute.audioURL,
-                    surfaceYouTubeID: minute.youtubeID
-                )
+        VStack(alignment: .leading, spacing: 0) {
+            ReadingScaffold(eyebrow: "", footer: footer) {
             } trailing: {
-                ShareButton(text: ShareTextBuilder.minuteShareText(minute))
-                SaveButton(isSaved: isBookmarked, action: toggleBookmark)
             } titleBlock: {
             } body: {
-                AnnotatableReadingText(raw: minute.text, key: readingKey, design: .serif)
+                AnnotatableReadingText(
+                    raw: minute.text,
+                    key: readingKey,
+                    design: .serif,
+                    lineSpacing: Metric.readingGap,
+                    basePointSize: 19
+                )
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
             }
+            TodayActionRow(
+                title: "Daily Minute",
+                segmentId: minute.segmentId,
+                surfaceAudioURL: minute.audioURL,
+                surfaceYouTubeID: minute.youtubeID,
+                shareText: ShareTextBuilder.minuteShareText(minute),
+                isSaved: isBookmarked,
+                onSave: toggleBookmark
+            )
             if let error = audio.lastError {
                 Text(error)
                     .font(.caption)
                     .foregroundStyle(.red)
+                    .padding(.top, 8)
             }
         }
-        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.acimCard)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     /// The full address, not the stem: this footer names a passage, and the

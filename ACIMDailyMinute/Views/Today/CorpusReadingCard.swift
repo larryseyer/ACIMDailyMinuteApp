@@ -16,7 +16,7 @@ struct CorpusReadingCard: View {
 
     var body: some View {
         ReadingScaffold(
-            eyebrow: segment.bookName,
+            eyebrow: "",
             footer: ReadingFooter(
                 citation: segment.citation,
                 bookName: segment.bookName,
@@ -29,14 +29,13 @@ struct CorpusReadingCard: View {
             AnnotatableReadingText(
                 raw: segment.body,
                 key: .segment(segment.segmentId),
-                design: .serif
+                design: .serif,
+                lineSpacing: Metric.readingGap,
+                basePointSize: 19
             )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.acimCard)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }

@@ -13,11 +13,19 @@ import SwiftData
 /// control: absence is the normal state, and a Watch-only leading button
 /// would be a second control the scaffold does not have a slot for.
 struct ReadingPlayControl: View {
+    enum Placement {
+        /// Card header: Listen, with Watch in the long-press menu.
+        case header
+        /// Today's action row: gold Listen, Watch as its own pill.
+        case today
+    }
+
     let title: String
     private let segmentId: Int
     private let lessonNumber: Int
     var surfaceAudioURL: String? = nil
     var surfaceYouTubeID: String? = nil
+    var placement: Placement = .header
 
     @Environment(AudioManager.self) private var audio
     @Query private var segmentRows: [SegmentMedia]
@@ -31,13 +39,15 @@ struct ReadingPlayControl: View {
         segmentId: Int = 0,
         lessonNumber: Int = 0,
         surfaceAudioURL: String? = nil,
-        surfaceYouTubeID: String? = nil
+        surfaceYouTubeID: String? = nil,
+        placement: Placement = .header
     ) {
         self.title = title
         self.segmentId = segmentId
         self.lessonNumber = lessonNumber
         self.surfaceAudioURL = surfaceAudioURL
         self.surfaceYouTubeID = surfaceYouTubeID
+        self.placement = placement
         _segmentRows = Query(
             filter: #Predicate<SegmentMedia> { $0.segmentId == segmentId }
         )
@@ -104,34 +114,59 @@ struct ReadingPlayControl: View {
     #if !os(tvOS)
     @ViewBuilder
     private var content: some View {
-        if let hit, hit.showsListen {
-            ListenButton(
-                title: title,
-                isActive: audio.isActive(url: hit.audioURL),
-                isPlaying: audio.isPlaying
-            ) {
-                audio.playOrToggle(url: hit.audioURL, title: title, episodeID: episodeID(for: hit.audioURL))
+        HStack(spacing: 9) {
+            if let hit, hit.showsListen {
+                listenButton(for: hit)
             }
-            .contextMenu {
-                if hit.showsWatch {
-                    Button("Watch video") { isShowingVideo = true }
-                }
+            if placement == .today, let hit, hit.showsWatch {
+                watchPill
             }
-            #if os(iOS)
-            .fullScreenCover(isPresented: $isShowingVideo) {
-                if let videoURL {
-                    FullScreenVideoCover(videoURL: videoURL)
-                }
-            }
-            #elseif os(macOS)
-            .sheet(isPresented: $isShowingVideo) {
-                if let videoURL {
-                    YouTubePlayerView(videoURL: videoURL, autoplay: true)
-                        .frame(minWidth: 720, minHeight: 405)
-                }
-            }
-            #endif
         }
+        #if os(iOS)
+        .fullScreenCover(isPresented: $isShowingVideo) {
+            if let videoURL {
+                FullScreenVideoCover(videoURL: videoURL)
+            }
+        }
+        #elseif os(macOS)
+        .sheet(isPresented: $isShowingVideo) {
+            if let videoURL {
+                YouTubePlayerView(videoURL: videoURL, autoplay: true)
+                    .frame(minWidth: 720, minHeight: 405)
+            }
+        }
+        #endif
+    }
+
+    @ViewBuilder
+    private func listenButton(for hit: MediaOverlay.Hit) -> some View {
+        ListenButton(
+            title: title,
+            isActive: audio.isActive(url: hit.audioURL),
+            isPlaying: audio.isPlaying,
+            style: placement == .today ? .gold : .chip
+        ) {
+            audio.playOrToggle(url: hit.audioURL, title: title, episodeID: episodeID(for: hit.audioURL))
+        }
+        .contextMenu {
+            if placement == .header, hit.showsWatch {
+                Button("Watch video") { isShowingVideo = true }
+            }
+        }
+    }
+
+    private var watchPill: some View {
+        Button { isShowingVideo = true } label: {
+            Image(systemName: "play.rectangle")
+                .font(.acimChrome)
+                .foregroundStyle(.primary)
+                .frame(width: 38, height: 38)
+                .background(Color.acimRaised, in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .frame(minWidth: 44, minHeight: 44)
+        .contentShape(Rectangle())
+        .accessibilityLabel("Watch")
     }
     #endif
 

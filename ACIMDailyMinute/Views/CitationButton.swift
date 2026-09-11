@@ -26,15 +26,15 @@ struct CitationButton: View {
             Button {
                 openReading(destination.target)
             } label: {
-                Text(destination.label)
-                    .font(.footnote.italic())
-                    .foregroundStyle(Color.accentColor)
+                CitationLabel(raw: destination.label)
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Open \(destination.label) in the Course")
+        } else if citation != nil {
+            CitationLabel(raw: citation)
         } else {
-            Text(citation ?? bookName)
-                .font(.footnote.italic())
+            Text(bookName)
+                .font(.acimAddress)
                 .foregroundStyle(.secondary)
         }
     }
