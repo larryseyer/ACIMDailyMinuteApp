@@ -8,4 +8,4 @@ Do not rebuild text size. Watch is done. Do not touch the backend, prd.json, or 
 
 Video tab: `ArchiveDateDetailView` shows `LiteYouTubeCard`. Minute ids come from the podcast `<link>` first (`ArchiveView.refreshPodcasts`); lesson ids come from `DailyLesson` first. `LiteYouTubeCard` walks a 404 thumbnail to the next id. Prove with `./tools/verify_video_tab.sh`.
 
-Branch `ralph/acim-3.9-to-5-finish-2026-04-14`. HEAD `a043f18`.
+Branch `ralph/acim-3.9-to-5-finish-2026-04-14`. HEAD `a5b611d`.
