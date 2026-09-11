@@ -1,10 +1,10 @@
 # continue.md
 
-LIVE: Listen tab — same four shelves (Minute / Lesson / Text / Manual), resume ribbon on top; unplayed audio is visible. Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`. He approved it.
+LIVE: Implement Listen four shelves from `docs/superpowers/plans/2026-09-10-listen-four-shelves.md`. Spec: `docs/superpowers/specs/2026-09-10-tab-ia-design.md`.
 
 NEXT: Video four shelves, then tvOS Read opens the reading. Copy last.
 
-Plan Listen first. Do not run `./build.sh` or any verify until that plan is finished. Then implement only Listen. Do not start Video. Do not redo Read.
+Plan is finished. Implement only Listen. Do not start Video. Do not redo Read.
 
 Do not rebuild text size. Watch is done. Do not touch the backend, prd.json, or native visionOS. Do not invent TTS. Do not host MP4s. Do not rebuild `TVPlayerView`.
 
