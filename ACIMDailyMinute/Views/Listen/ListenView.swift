@@ -49,7 +49,6 @@ struct ListenView: View {
     /// Downloads live on disk, not in SwiftData, so nothing observes them.
     /// Bumping this is what tells the list a row's download state changed.
     @State private var downloadRevision = 0
-    @State private var loadState: LoadState = .idle
     @State private var hasLoadedOnce = false
     @State private var shelf: CourseShelf = .lesson
     @State private var minuteCalendar = ArchiveCalendarState.starting(now: Date())
@@ -503,21 +502,11 @@ struct ListenView: View {
 
     private func reload(force: Bool) async {
         let hasCache = !cachedMinutes.isEmpty || !cachedLessons.isEmpty
-
-        if hasCache {
-            loadState = .loaded
-        }
-
         if hasCache && hasLoadedOnce && !force {
             return
         }
-
-        if !hasCache { loadState = .loading }
-
-        let minuteOK = await fetchAndPersistFeed(.minute, force: force)
-        let lessonOK = await fetchAndPersistFeed(.lesson, force: force)
-
-        loadState = (minuteOK || lessonOK || hasCache) ? .loaded : .failed
+        _ = await fetchAndPersistFeed(.minute, force: force)
+        _ = await fetchAndPersistFeed(.lesson, force: force)
         hasLoadedOnce = true
     }
 
@@ -549,11 +538,4 @@ struct ListenView: View {
 enum PodcastFeed: String, Hashable {
     case minute
     case lesson
-}
-
-private enum LoadState: Equatable {
-    case idle
-    case loading
-    case loaded
-    case failed
 }
