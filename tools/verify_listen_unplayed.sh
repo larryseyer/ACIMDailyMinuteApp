@@ -29,6 +29,8 @@ echo "$STRIPPED" | grep -q 'LiteYouTubeCard' && fail "ListenView opens LiteYouTu
 echo "$STRIPPED" | grep -q 'FullScreenVideoCover' && fail "ListenView opens FullScreenVideoCover"
 echo "$STRIPPED" | grep -q 'TVPlayerItem' && fail "ListenView opens TVPlayerView"
 echo "$STRIPPED" | grep -q 'Nothing to resume' && fail "ListenView still has the activity empty state"
+grep -q 'ArchiveCalendarView' "$VIEW" \
+    || fail "Minute shelf does not reuse ArchiveCalendarView"
 
 count=$(grep -c "ListenLibrary.swift" "$PBX" || true)
 [[ "$count" -ge 6 ]] || fail "ListenLibrary.swift has $count pbxproj lines; need the four build entries plus group child"

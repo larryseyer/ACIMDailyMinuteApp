@@ -39,6 +39,13 @@ struct ListenView: View {
     )
     private var archivedLessons: [ArchivedReading]
 
+    @Query(
+        filter: #Predicate<ArchivedReading> { $0.channel == "daily-minute" },
+        sort: \ArchivedReading.dateString
+    )
+    private var archivedMinutes: [ArchivedReading]
+    @Query private var storedMinutes: [DailyMinute]
+
     /// Downloads live on disk, not in SwiftData, so nothing observes them.
     /// Bumping this is what tells the list a row's download state changed.
     @State private var downloadRevision = 0
@@ -93,7 +100,7 @@ struct ListenView: View {
 
                 Group {
                     switch shelf {
-                    case .minute: EmptyView()
+                    case .minute: minuteShelf
                     case .lesson: lessonShelf
                     case .text: EmptyView()
                     case .manual: EmptyView()
@@ -183,6 +190,84 @@ struct ListenView: View {
             )
         }
         return minutes + lessons
+    }
+
+    // MARK: - Minute shelf
+
+    private var minuteDates: Set<String> {
+        var dates = Set(archivedMinutes.map(\.dateString).filter { !$0.isEmpty })
+        for minute in storedMinutes where !minute.date.isEmpty {
+            dates.insert(minute.date)
+        }
+        return dates
+    }
+
+    private var minuteShelf: some View {
+        let row = minuteRow(for: ArchiveView.dateString(from: minuteCalendar.selection))
+        return ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ArchiveCalendarView(
+                    selection: $minuteCalendar.selection,
+                    visibleMonth: $minuteCalendar.visibleMonth,
+                    availableDateStrings: minuteDates
+                )
+                .frame(maxWidth: .infinity)
+
+                ListenPlayableRow(
+                    row: row,
+                    isActive: isActive(row),
+                    isPlaying: audio.isPlaying,
+                    playedAt: listenedEpisodes[row.episodeID],
+                    onTap: { play(url: row.audioURL, title: row.title, episodeID: row.episodeID) }
+                )
+            }
+            .padding(20)
+            .readableContentWidth()
+        }
+        .toolbar {
+            ToolbarItem(placement: jumpPlacement) {
+                Button("Today") {
+                    withAnimation { minuteCalendar.revealToday(now: Date()) }
+                }
+            }
+        }
+    }
+
+    private func minuteRow(for dateString: String) -> ListenLibrary.Row {
+        let daily = storedMinutes.first { $0.date == dateString }?.audioURL
+        let archived = archivedMinutes.first { $0.dateString == dateString }?.audioURL
+        let podcast = cachedMinutes.first { Self.utcDayString(from: $0.publishedAt) == dateString }
+        let audioURL = ListenLibrary.minuteAudio(
+            daily: daily,
+            archived: archived,
+            podcast: podcast?.audioURL
+        )
+        let episodeID = podcast?.id ?? dateString
+        return ListenLibrary.Row(
+            id: "minute:\(dateString)",
+            title: ArchiveView.longDateString(from: minuteCalendar.selection),
+            audioURL: audioURL,
+            episodeID: episodeID
+        )
+    }
+
+    private var jumpPlacement: ToolbarItemPlacement {
+        #if os(iOS)
+        .topBarTrailing
+        #elseif os(tvOS)
+        .automatic
+        #else
+        .primaryAction
+        #endif
+    }
+
+    private static func utcDayString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
     }
 
     // MARK: - Lesson shelf
