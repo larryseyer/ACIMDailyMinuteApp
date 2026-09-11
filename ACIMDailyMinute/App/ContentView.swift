@@ -9,13 +9,11 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showSettings = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
-    #if os(tvOS)
     /// One player for every tab. Installing `openPlayer` on a single
     /// NavigationStack does not reach `navigationDestination` content on
     /// tvOS — TextChapterView Select then hits the default
     /// `assertionFailure` (crash ACIMDailyMinuteTV-2026-09-09-104129.ips).
     @State private var playerItem: TVPlayerItem?
-    #endif
     #if os(iOS) || os(tvOS)
     /// The real height of the tab bar the mini player has to clear.
     ///
@@ -38,7 +36,6 @@ struct ContentView: View {
         tabContainer
             .environment(audioManager)
             .environment(connectivity)
-            #if os(tvOS)
             .environment(\.openPlayer, OpenPlayerAction { presentPlayer($0) })
             .fullScreenCover(item: $playerItem) { item in
                 // The cover is a new presentation. On tvOS it does not
@@ -49,7 +46,6 @@ struct ContentView: View {
                     .environment(audioManager)
             }
             .task { await warmPodcastCache() }
-            #endif
             .animation(.easeInOut(duration: 0.2), value: audioManager.hasActiveAudio)
             .onAppear {
                 connectivity.start()
@@ -95,7 +91,6 @@ struct ContentView: View {
             #endif
     }
 
-    #if os(tvOS)
     /// Attach a published MP3 before the cover appears. Updating the item
     /// afterwards would not rebuild `fullScreenCover` — identity is the
     /// lesson id, and that does not change when the URL arrives.
@@ -157,7 +152,6 @@ struct ContentView: View {
             try? PodcastService.persist(minutes, channel: "minute", in: modelContext)
         }
     }
-    #endif
 
     /// Debug-only: `defaults write … ACIM_SCREENSHOT_TAB read` (or listen,
     /// video, saved, lesson, settings) opens that surface without going

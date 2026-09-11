@@ -1,6 +1,11 @@
 import SwiftUI
-#if os(tvOS)
+#if canImport(UIKit)
 import UIKit
+typealias TVPlayerFont = UIFont
+#elseif canImport(AppKit)
+import AppKit
+typealias TVPlayerFont = NSFont
+#endif
 
 /// What the television plays: the YouTube video, rebuilt in the app.
 ///
@@ -266,6 +271,7 @@ struct TVPlayerView: View {
         .onChange(of: audio.didFinishPlayback) { _, finished in
             if finished { markFinished() }
         }
+        #if os(tvOS)
         .onPlayPauseCommand {
             guard hasAudio, audio.hasActiveAudio else { return }
             audio.togglePlayback()
@@ -273,6 +279,10 @@ struct TVPlayerView: View {
         }
         .onMoveCommand(perform: move)
         .onExitCommand { dismiss() }
+        #endif
+        #if os(iOS) || os(macOS)
+        .onTapGesture { revealTransport() }
+        #endif
     }
 
     private func playerCanvas(at date: Date) -> some View {
@@ -318,7 +328,11 @@ struct TVPlayerView: View {
                     .textCase(.uppercase)
                     .foregroundStyle(.white.opacity(0.7))
                 Button("Choose another") { dismiss() }
+                    #if os(tvOS)
                     .buttonStyle(.card)
+                    #elseif os(iOS) || os(macOS)
+                    .buttonStyle(.borderedProminent)
+                    #endif
             }
         }
         .ignoresSafeArea()
@@ -337,6 +351,11 @@ struct TVPlayerView: View {
                     .frame(width: 56, height: 56)
             }
             .buttonStyle(.plain)
+
+            #if os(iOS) || os(macOS)
+            Button("Close") { dismiss() }
+                .foregroundStyle(.white)
+            #endif
 
             if audio.duration > 0 {
                 let fraction = max(0, min(1, audio.currentTime / audio.duration))
@@ -379,7 +398,9 @@ struct TVPlayerView: View {
     private func start() {
         startedAt = Date()
         isFinished = false
+        #if os(iOS) || os(tvOS)
         UIApplication.shared.isIdleTimerDisabled = true
+        #endif
         revealTransport()
         watchForEnd()
         guard let url = item.audioURL, !url.isEmpty else { return }
@@ -398,7 +419,9 @@ struct TVPlayerView: View {
         endWatchTask?.cancel()
         endDismissTask?.cancel()
         hideTransportTask?.cancel()
+        #if os(iOS) || os(tvOS)
         UIApplication.shared.isIdleTimerDisabled = false
+        #endif
         if hasAudio { audio.stop() }
     }
 
@@ -438,6 +461,7 @@ struct TVPlayerView: View {
         }
     }
 
+    #if os(tvOS)
     private func move(_ direction: MoveCommandDirection) {
         switch direction {
         case .left:
@@ -456,6 +480,7 @@ struct TVPlayerView: View {
             break
         }
     }
+    #endif
 
     private func revealTransport() {
         showTransport = true
@@ -498,11 +523,11 @@ private enum TVPlayerText {
             .joined(separator: " ")
     }
 
-    static func helvetica(_ size: CGFloat) -> UIFont {
-        UIFont(name: TVPlayerLayout.fontName, size: size) ?? .systemFont(ofSize: size)
+    static func helvetica(_ size: CGFloat) -> TVPlayerFont {
+        TVPlayerFont(name: TVPlayerLayout.fontName, size: size) ?? .systemFont(ofSize: size)
     }
 
-    static func wrap(_ text: String, font: UIFont, textWidth: CGFloat) -> [String] {
+    static func wrap(_ text: String, font: TVPlayerFont, textWidth: CGFloat) -> [String] {
         let sample = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         let avg = (sample as NSString)
             .size(withAttributes: [.font: font]).width / CGFloat(sample.count)
@@ -510,9 +535,9 @@ private enum TVPlayerText {
         return wrapWords(text, width: width)
     }
 
-    /// Pillow `font.getbbox("Ay")` height: cap plus descender, not UIFont's
+    /// Pillow `font.getbbox("Ay")` height: cap plus descender, not TVPlayerFont's
     /// line height. Plus `line_spacing = 16`.
-    static func lineStride(font: UIFont, scale: CGFloat) -> CGFloat {
+    static func lineStride(font: TVPlayerFont, scale: CGFloat) -> CGFloat {
         (font.capHeight - font.descender) + TVPlayerLayout.lineSpacing * scale
     }
 
@@ -647,7 +672,7 @@ private struct TVPlayerScrollLayer: View {
         context: inout GraphicsContext,
         size: CGSize,
         lines: [String],
-        font: UIFont,
+        font: TVPlayerFont,
         fontSize: CGFloat,
         yOffset: CGFloat,
         stride: CGFloat,
@@ -734,4 +759,3 @@ private struct PlayheadClock {
         self.playing = playing
     }
 }
-#endif
