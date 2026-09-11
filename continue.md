@@ -20,4 +20,4 @@ Existing checks: `./tools/verify_video_tab.sh`, `verify_tv_player.sh`, `verify_a
 
 New Swift files need four `project.pbxproj` lines each, both app and tvOS Sources phases. Pattern: `SegmentReadingView.swift`. Listen already used `AA000002740`–`743`.
 
-HEAD `07ff6c3` on `ralph/acim-3.9-to-5-finish-2026-04-14`.
+HEAD `61790fc` on `ralph/acim-3.9-to-5-finish-2026-04-14`.
