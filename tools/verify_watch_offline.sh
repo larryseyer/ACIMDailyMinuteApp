@@ -265,3 +265,24 @@ swiftc -O \
     -o "$WORK/verify" 2>&1 | grep -v "^$" || true
 
 "$WORK/verify" "$WORK/bundle"
+
+# The wrist used to cap a reading at six lines with no way to reach the rest.
+grep -q 'lineLimit(6)' "$REPO/ACIMDailyMinuteWatch/WatchStoryRow.swift" \
+    && { echo "FAIL: WatchStoryRow still caps the reading at six lines"; exit 1; }
+
+grep -q 'DailyLesson' "$REPO/ACIMDailyMinuteWatch/WatchContentView.swift" \
+    || { echo "FAIL: the watch app does not show a Daily Lesson"; exit 1; }
+
+# One WCSession dictionary: a second send would replace the first.
+grep -q 'lessonText' "$REPO/ACIMDailyMinute/Services/PhoneWatchSyncService.swift" \
+    || { echo "FAIL: the phone never puts the lesson in the watch payload"; exit 1; }
+
+# The chime the bundle copies is the one in assets/, not a second file in Resources.
+grep -q 'path = assets/ACIMChime.caf' "$PROJECT" \
+    || { echo "FAIL: the project does not copy ACIMChime.caf from assets/"; exit 1; }
+if [[ -f "$REPO/ACIMDailyMinute/Resources/ACIMChime.caf" ]]; then
+    echo "FAIL: Resources/ACIMChime.caf is still a second copy"
+    exit 1
+fi
+[[ -f "$REPO/assets/ACIMChime.caf" ]] \
+    || { echo "FAIL: assets/ACIMChime.caf is missing"; exit 1; }

@@ -4,117 +4,34 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 ---
 
-## WATCHING — nightly catch-up
+## HIS CALL
 
-- [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
-
-## TEST — on the phone, after the install
-
-He tests on the iPhone. Put the build there first. Do not walk this list for him.
-
-- [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
-- [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
-- [ ] Settings > Appearance > Text size: Default / Large / Larger resizes the serif body on the phone, iPad, and Mac; titles stay put; a fresh iPad is Large.
-- [ ] The watch on a wrist: today's Daily Minute under **Today**, bundled fallback under **From the Course** with the phone off; place the complication in all three shapes.
-- [ ] Listen is activity: now playing, part finished, downloaded, finished; an unplayed undownloaded reading is not in the list.
-- [ ] Listen rows: no `01:00` chips; a finished row says `Listened <date>`; swipe offers Mark unplayed; downloaded and part-finished rows show no date.
-- [ ] Listen activity rows: the row control is Listen, then Pause while playing and Play while paused; the mini player on this tab pauses too.
-- [ ] Saved tab: a saved lesson opens the lesson, a saved minute opens the passage; swipe either direction deletes — say if the leading edge should require a tap on Delete instead.
-- [ ] An unpublished lesson (1–80) shows the full bundled text, no YouTube stand-in.
-- [ ] Lesson 90 opens; the clock line and the row agree on the same available date.
-- [ ] Video calendar: 2026-09-10 / 05-31 / 03-01 each show the sentence that belongs to that kind of empty day; a missed day also lists the three earlier days that have a reading, and a tap opens one.
-- [ ] Let it fall open on Video: a published minute; with no archive, a bundled Text passage.
-- [ ] Workbook lesson 84: the circle in the nav marks it done; the row grows a check; a Listen tap does not.
-- [ ] Listen with the network off: activity rows still play; video is on the Video tab.
-- [ ] acimdailyminute://listen opens the Listen tab.
-- [ ] An archive minute can be highlighted; Save on Today and on that day's Video row is one Saved row.
-- [ ] Share on the Mac draws bare, like the phone.
-- [ ] Airplane mode, delete and reinstall, cold launch: Today shows a bundled reading with no save, share, or Listen.
-- [ ] Listen swipe Download, then Remove download; a downloaded row plays from disk in airplane mode; look at the swipe at 375pt.
-- [ ] A reading should scroll to its place on macOS too (spotlight and ribbon).
-- [ ] The ribbon on the phone at 375pt: Continue reading names the right section and opens it.
-- [ ] A search hit two screens down is on screen, words tinted blue.
+- [ ] Watch face slot: the opening of today's passage (real words, cut off when they run out of room), or a short label like the app's name?
+- [ ] The small label above a reading ("Daily Minute", "Lesson 84") wraps onto two lines when system text is huge, and the header gets taller. Is that OK?
+- [ ] Preface citations: `Pref.4` does not say which of the two Preface parts it is in. Changing that changes backups already exported. Leave it?
 - [ ] Companion note under Settings > About: three wording departures are his to veto.
-- [ ] Privacy policy is reachable from Settings > About.
-- [ ] Highlights and notes end to end; there is no mic button.
-- [ ] Saved is three segments: empty states, both swipe edges, a highlight or note row opens its reading.
-- [ ] Export hands over plain text a stranger could follow, with only the reader's dates.
-- [ ] Six surfaces now draw through a text view: serif, spacing, no clip, long-press selects. Phone is what is left.
-- [ ] Publication dates are gone from Today, Lessons, Listen, widgets, and the privacy policy.
-- [ ] Tab 1 is Read (Workbook / Text); a widget or notification tap on a lesson still opens that lesson.
-- [ ] Chapter 1 Principles of Miracles is 53 numbered paragraphs.
-- [ ] Chapter 1.2 (34,385 characters) scrolls without stutter on the phone.
-- [ ] Previous and Next cross chapter boundaries; the first Preface section offers no Previous.
-- [ ] Highlight and Note work in the Text; Saved rows open the passage; a Manual question opens with Previous and Next.
-- [ ] Spacing repair reads as the book; today's minute on the phone and lock screen is clean.
-- [ ] Part 1 Introduction above Lesson 1; Part 2 Introduction between 180 and 181.
-- [ ] Citations are `T-5.3` Arabic, not the widely-cited edition — that judgement is his to overturn.
-- [ ] The two Workbook Part Introductions are not named Lesson 0 or Lesson 500 in Saved or export.
-- [ ] Chapter 16 opens on recovered prose, not True Empathy; today's `T-16.1` is `T-16.2`.
-- [ ] Card header: title on its own line, Listen leading, Share and Save trailing; tap Save does not shift the layout.
-- [ ] Tap Save, leave, come back, tap again: it saves then un-saves every time.
-- [ ] Backup & Restore produces a file that reads as a document.
-- [ ] Restoring merges rather than duplicates; a second restore of the same file adds nothing; conflicting notes keep both versions.
 - [ ] Import summary wording is his to keep or change.
-- [ ] Introduction last page is Continue, then the companion note, then Get Started; check at 375pt.
-- [ ] Saving, then deleting from the Saved tab, goes through BookmarkStore.
-- [ ] Highlights and notes survived the store split on the phone; Archive refilled.
-- [ ] Folder copy: a chosen Dropbox or iCloud Drive folder gets a per-device file; nothing is ever read from it.
-- [ ] Search the Course: hits in book order with citation and snippet; a lesson opened this way does not open its video first.
-- [ ] A Manual highlight, note, or saved row opens its passage.
-- [ ] Cross-reference links: tap `[67]` on a review lesson; Daily Minute footer is tappable; Back returns.
-- [ ] One reading shape everywhere: Share and Save together on the trailing edge; Save gone from the nav bar.
-- [ ] Daily Minute passage screen (a Saved row): Share and not Save; tappable footer `W-290.3` lands in the Workbook.
+- [ ] Citations stay `T-5.3` Arabic unless he overturns that.
 
-## BEFORE SUBMIT — after the phone pass
+## BEFORE SUBMIT — after he has tested this build
 
 Store record exists (iOS, macOS, tvOS). Do not add a visionOS platform. Do not upload the current shots.
 
-- [ ] Before any release build: deploy the CloudKit schema from Development to Production.
-- [ ] Remake every store screenshot. The current set still says Archive and the Mac shot is the wrong size.
-- [ ] Support URL is `https://www.acimdailyminute.org/support.html`. Tick compatible iPhone/iPad on Vision Pro. Then submit.
+- [ ] Deploy the CloudKit schema from Development to Production before any release build.
+- [ ] Remake every store screenshot after iPhone, iPad, Watch, Apple TV, and widgets are finished. The current set still says Archive; the Mac shot is the wrong size.
+- [ ] Tick compatible iPhone/iPad on Vision Pro in App Store Connect, then submit. The support page is already on the site.
 
-## OPEN — Apple Watch (shape is his)
+## WATCH SIM
 
-- [ ] HIS CALL — does the watch show the Daily Lesson as well as the Daily Minute?
-- [ ] HIS CALL — whether plain-and-true is what a complication should say.
-- [ ] HIS CALL — the wrist shows six lines and offers no way to reach the rest.
-- [ ] `.accessoryCircular` and `.accessoryInline` have never been placed; only a real watch can, and those two store shots are still missing.
-- [ ] HIS CALL — the watch app icon at grid size reads as a photograph.
-- [ ] No Apple Watch is paired to this Mac; WCSession cannot be exercised unpaired.
+No physical watch. WCSession cannot be exercised unpaired.
 
-## OPEN — Apple TV
+- [ ] Place the complication in circular, rectangular, and inline on the watch simulator. Those two store shots wait.
+- [ ] The watch app keeps the existing icon.
 
-The TV is a player, and it carries no annotation. Do not re-open either.
+## AFTER 13 SEPTEMBER 2026
 
-## OPEN — content and pipeline
+1.0 is iPhone, iPad, Mac, Watch, and Apple TV. Vision Pro 1.0 is iPhone-compatible mode, not a native target.
 
-- [ ] Pipeline must emit `segment_id` and `youtube_id` on `/daily-minute.json` archive rows so historical minutes get the play overlay. The app already records them when present.
-- [ ] HIS CALL — `Pref.N` names two paragraphs; fixing it changes a citation already printed into exports.
-
-## OPEN — small
-
-- [ ] HIS CALL — the eyebrow cannot hold at accessibility text sizes without wrapping, which changes header height.
-- [ ] HIS CALL — `ACIMChime.caf` is duplicated in `assets/` and `Resources/`; copy step or one source.
-- [ ] HIS CALL — `prd.json` names the forbidden string inside the rule that forbids it.
-
-## OPEN — after 13 September 2026
-
-Do not start any of this until 1.0 (iPhone, iPad, Mac, Watch, Apple TV) has shipped. Compatible-mode on Vision Pro is not this work.
-
-### Vision OS (first)
-
-- [ ] Native visionOS target sharing the app source list, like tvOS — not iPhone-compatible mode.
-- [ ] Windowed reader with the same five tabs as iPhone/Mac; ornaments for chrome; not immersive.
-- [ ] Highlights, notes, Saved, and iCloud round-trip with the other Apple devices.
-- [ ] YouTube via WKWebView (visionOS has WebKit); Listen uses the same archive.org MP3s.
-- [ ] Home View widgets: small, medium, large — no Live Activity.
-- [ ] `#if os(visionOS)` fences; hover instead of tap emphasis; no WatchConnectivity.
-- [ ] Store shots on the Vision Pro simulator + App Store Connect visionOS destination.
-
-### Windows, Linux, and possibly Android (after Vision OS)
-
-- [ ] A static reader from acimdailyminute.org over the same bundled JSON, installable as a PWA.
-- [ ] It must read and write the same backup `.json`.
-- [ ] The rules are ported, never re-invented.
-- [ ] HIS CALL — whether Android is that same PWA, or a later native app.
+- [ ] Native visionOS later.
+- [ ] A static PWA reader for Windows/Linux after 1.0, same backup `.json`, rules ported not re-invented.
+- [ ] Whether Android is that PWA or a later native app — after 1.0.

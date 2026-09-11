@@ -468,7 +468,7 @@
 		AA000002063 /* ACIMDailyMinuteWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ACIMDailyMinuteWatch.entitlements; sourceTree = "<group>"; };
 		AA000002064 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002065 /* WatchDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDataService.swift; sourceTree = "<group>"; };
-		AA000002066 /* ACIMChime.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; path = ACIMChime.caf; sourceTree = "<group>"; };
+		AA000002066 /* ACIMChime.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = ACIMChime.caf; path = assets/ACIMChime.caf; sourceTree = SOURCE_ROOT; };
 		AA000002067 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA000002068 /* PlatformTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformTypography.swift; sourceTree = "<group>"; };
 		AA000002069 /* ArchiveCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendarView.swift; sourceTree = "<group>"; };

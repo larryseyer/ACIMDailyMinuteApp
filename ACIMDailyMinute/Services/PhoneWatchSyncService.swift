@@ -16,24 +16,36 @@ final class PhoneWatchSyncService: NSObject, WCSessionDelegate, @unchecked Senda
         WCSession.default.activate()
     }
 
-    func sendLatestMinute(_ minute: DailyMinute) {
+    /// One payload. `WCSession.updateApplicationContext` keeps a single
+    /// dictionary: a second send would replace the first, so the minute and
+    /// the lesson travel together or the watch would only ever hold one.
+    func sendLatest(minute: DailyMinute?, lesson: DailyLesson?) {
         guard WCSession.isSupported() else { return }
         let session = WCSession.default
         guard session.activationState == .activated else { return }
 
-        // ⛔ `segmentId` is the passage's ADDRESS and `segmentHash` is the row's
-        // IDENTITY. The watch needs both and they do different jobs: the hash
-        // says whether this is a reading it already holds, the id is what lets
-        // it name where the passage sits in the book through the same bundled
-        // corpus lookup `DailyMinuteCard` uses. Without the id the watch can
-        // draw the words and say nothing true about them.
-        let payload: [String: Any] = [
-            "text": minute.text,
-            "publishedAt": minute.publishedAt.timeIntervalSince1970,
-            "date": minute.date,
-            "segmentHash": minute.segmentHash,
-            "segmentId": minute.segmentId
-        ]
+        var payload: [String: Any] = [:]
+        if let minute {
+            // ⛔ `segmentId` is the passage's ADDRESS and `segmentHash` is the
+            // row's IDENTITY. The watch needs both and they do different jobs:
+            // the hash says whether this is a reading it already holds, the id
+            // is what lets it name where the passage sits in the book through
+            // the same bundled corpus lookup `DailyMinuteCard` uses.
+            payload["text"] = minute.text
+            payload["publishedAt"] = minute.publishedAt.timeIntervalSince1970
+            payload["date"] = minute.date
+            payload["segmentHash"] = minute.segmentHash
+            payload["segmentId"] = minute.segmentId
+        }
+        if let lesson {
+            payload["lessonText"] = lesson.text
+            payload["lessonTitle"] = lesson.lessonTitle
+            payload["lessonNumber"] = lesson.lessonNumber
+            payload["lessonDate"] = lesson.date
+            payload["lessonPublishedAt"] = lesson.publishedAt.timeIntervalSince1970
+            payload["lessonHash"] = lesson.segmentHash
+        }
+        guard !payload.isEmpty else { return }
 
         if session.isReachable {
             session.sendMessage(payload, replyHandler: nil, errorHandler: nil)

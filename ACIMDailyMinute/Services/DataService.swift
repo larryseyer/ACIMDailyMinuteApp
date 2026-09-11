@@ -259,7 +259,7 @@ struct DataService: Sendable {
                 publishedDate: publishedAt
             )
         }
-        PhoneWatchSyncService.shared.sendLatestMinute(minute)
+        PhoneWatchSyncService.shared.sendLatest(minute: minute, lesson: latestLesson(in: context))
         #endif
 
         return dto
@@ -323,9 +323,28 @@ struct DataService: Sendable {
                 lessonNumber: lessonNumber
             )
         }
+        PhoneWatchSyncService.shared.sendLatest(minute: latestMinute(in: context), lesson: lesson)
         #endif
 
         return dto
+    }
+
+    @MainActor
+    private static func latestMinute(in context: ModelContext) -> DailyMinute? {
+        var descriptor = FetchDescriptor<DailyMinute>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        return try? context.fetch(descriptor).first
+    }
+
+    @MainActor
+    private static func latestLesson(in context: ModelContext) -> DailyLesson? {
+        var descriptor = FetchDescriptor<DailyLesson>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = 1
+        return try? context.fetch(descriptor).first
     }
 
     // MARK: - Date Parsing

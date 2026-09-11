@@ -62,31 +62,20 @@ final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
     /// reading the watch already holds. The id is what lets the watch name where
     /// the passage sits in the book, through the same bundled corpus lookup the
     /// phone's card uses — so the two surfaces cannot disagree about an address.
+    ///
+    /// The lesson keys are independent. A payload may carry the minute, the
+    /// lesson, or both; missing keys skip that half rather than dropping the
+    /// other.
     private func handleIncomingPayload(_ payload: [String: Any]) {
-        guard let text = payload["text"] as? String,
-              let publishedInterval = payload["publishedAt"] as? TimeInterval,
-              let dateString = payload["date"] as? String,
-              let segmentHash = payload["segmentHash"] as? String else { return }
-        // Absent on a payload sent by an older build of the phone. Zero is the
-        // model's own default and resolves to no citation, which is exactly what
-        // an unaddressable passage should show.
-        let segmentId = payload["segmentId"] as? Int ?? 0
-
-        let publishedAt = Date(timeIntervalSince1970: publishedInterval)
+        // Values are lifted off the session thread first: `[String: Any]` is
+        // not Sendable, and hopping with the dictionary itself is a data race.
+        let minute = IncomingMinute(payload)
+        let lesson = IncomingLesson(payload)
         Task { @MainActor in
-            let descriptor = FetchDescriptor<DailyMinute>(
-                predicate: #Predicate { $0.segmentHash == segmentHash }
-            )
-            let existing = try? container.mainContext.fetch(descriptor)
-            let minute = existing?.first ?? DailyMinute()
-            let isNew = minute.segmentHash.isEmpty
-
-            minute.segmentId = segmentId
-            minute.segmentHash = segmentHash
-            minute.date = dateString
-            minute.publishedAt = publishedAt
-            minute.text = text
-            if isNew { container.mainContext.insert(minute) }
+            var changed = false
+            if let minute, persist(minute) { changed = true }
+            if let lesson, persist(lesson) { changed = true }
+            guard changed else { return }
             try? container.mainContext.save()
             // ⛔ The complication does NOT observe the store. Its provider is
             // asked once and then not again until the timeline's own hour is
@@ -99,5 +88,84 @@ final class WatchDataService: NSObject, WCSessionDelegate, @unchecked Sendable {
             WidgetCenter.shared.reloadAllTimelines()
             #endif
         }
+    }
+
+    private struct IncomingMinute: Sendable {
+        let text: String
+        let publishedAt: Date
+        let date: String
+        let segmentHash: String
+        let segmentId: Int
+
+        init?(_ payload: [String: Any]) {
+            guard let text = payload["text"] as? String,
+                  let publishedInterval = payload["publishedAt"] as? TimeInterval,
+                  let date = payload["date"] as? String,
+                  let segmentHash = payload["segmentHash"] as? String else { return nil }
+            self.text = text
+            self.publishedAt = Date(timeIntervalSince1970: publishedInterval)
+            self.date = date
+            self.segmentHash = segmentHash
+            self.segmentId = payload["segmentId"] as? Int ?? 0
+        }
+    }
+
+    private struct IncomingLesson: Sendable {
+        let text: String
+        let number: Int
+        let title: String
+        let date: String
+        let publishedAt: Date
+        let hash: String
+
+        init?(_ payload: [String: Any]) {
+            guard let text = payload["lessonText"] as? String,
+                  let number = payload["lessonNumber"] as? Int,
+                  let publishedInterval = payload["lessonPublishedAt"] as? TimeInterval,
+                  let date = payload["lessonDate"] as? String else { return nil }
+            self.text = text
+            self.number = number
+            self.title = payload["lessonTitle"] as? String ?? ""
+            self.date = date
+            self.publishedAt = Date(timeIntervalSince1970: publishedInterval)
+            self.hash = payload["lessonHash"] as? String ?? ""
+        }
+    }
+
+    @MainActor
+    private func persist(_ incoming: IncomingMinute) -> Bool {
+        let segmentHash = incoming.segmentHash
+        let descriptor = FetchDescriptor<DailyMinute>(
+            predicate: #Predicate { $0.segmentHash == segmentHash }
+        )
+        let existing = try? container.mainContext.fetch(descriptor)
+        let minute = existing?.first ?? DailyMinute()
+        let isNew = minute.segmentHash.isEmpty
+        minute.segmentId = incoming.segmentId
+        minute.segmentHash = incoming.segmentHash
+        minute.date = incoming.date
+        minute.publishedAt = incoming.publishedAt
+        minute.text = incoming.text
+        if isNew { container.mainContext.insert(minute) }
+        return true
+    }
+
+    @MainActor
+    private func persist(_ incoming: IncomingLesson) -> Bool {
+        let number = incoming.number
+        let descriptor = FetchDescriptor<DailyLesson>(
+            predicate: #Predicate { $0.lessonNumber == number }
+        )
+        let existing = try? container.mainContext.fetch(descriptor)
+        let lesson = existing?.first ?? DailyLesson()
+        let isNew = existing?.first == nil
+        lesson.lessonNumber = incoming.number
+        lesson.lessonTitle = incoming.title
+        lesson.segmentHash = incoming.hash
+        lesson.date = incoming.date
+        lesson.publishedAt = incoming.publishedAt
+        lesson.text = incoming.text
+        if isNew { container.mainContext.insert(lesson) }
+        return true
     }
 }

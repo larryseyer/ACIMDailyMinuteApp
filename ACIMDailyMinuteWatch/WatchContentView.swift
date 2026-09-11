@@ -8,12 +8,19 @@ struct WatchContentView: View {
     /// changes. A query redraws when the row lands.
     @Query(sort: \DailyMinute.publishedAt, order: .reverse)
     private var minutes: [DailyMinute]
+    @Query(sort: \DailyLesson.publishedAt, order: .reverse)
+    private var lessons: [DailyLesson]
 
     var body: some View {
         NavigationStack {
             List {
-                Section(header: Text(sectionTitle)) {
-                    if let reading {
+                Section(header: Text(minuteSectionTitle)) {
+                    if let reading = minuteReading {
+                        WatchStoryRow(address: reading.address, text: reading.text)
+                    }
+                }
+                if let reading = lessonReading {
+                    Section(header: Text("Today's Lesson")) {
                         WatchStoryRow(address: reading.address, text: reading.text)
                     }
                 }
@@ -37,10 +44,14 @@ struct WatchContentView: View {
         CorpusFallback.isStale(newest: minutes.first?.publishedAt)
     }
 
+    private var isLessonStale: Bool {
+        CorpusFallback.isStale(newest: lessons.first?.publishedAt)
+    }
+
     /// There is no state in which the watch has nothing to say. The bundle is
     /// permanent and answers for every date, so the old "No content yet"
     /// placeholder no longer has a case to cover.
-    private var reading: Reading? {
+    private var minuteReading: Reading? {
         if !isMinuteStale, let minute = minutes.first {
             // The feed is the authority for today's words; the bundled corpus
             // is what turns the passage's id into its address. That is the
@@ -50,6 +61,17 @@ struct WatchContentView: View {
         }
         guard let segment = CorpusFallback.segment(for: Date()) else { return nil }
         return Reading(address: address(of: segment), text: segment.body)
+    }
+
+    /// Only the publisher's lesson, pushed by the phone. The watch does not
+    /// guess a lesson number from the calendar — that would not be today's
+    /// lesson. No phone, no lesson section.
+    private var lessonReading: Reading? {
+        guard !isLessonStale, let lesson = lessons.first else { return nil }
+        let name = lesson.lessonTitle.isEmpty
+            ? "Lesson \(lesson.lessonNumber)"
+            : "Lesson \(lesson.lessonNumber): \(lesson.lessonTitle)"
+        return Reading(address: name, text: lesson.displayText)
     }
 
     /// The passage's own address, or the name of the book it came from. ⛔
@@ -62,7 +84,7 @@ struct WatchContentView: View {
 
     /// The heading tells the truth about what is under it. A bundled reading is
     /// not the publisher's choice for today and must not claim to be.
-    private var sectionTitle: String {
+    private var minuteSectionTitle: String {
         isMinuteStale ? "From the Course" : "Today"
     }
 }

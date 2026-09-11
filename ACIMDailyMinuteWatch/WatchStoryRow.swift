@@ -18,10 +18,9 @@ struct WatchStoryRow: View {
                     .foregroundStyle(.tint)
             }
             // The watch has no reading surface, so it repairs the feed's
-            // spacing where it draws it.
+            // spacing where it draws it. No line cap: the list scrolls.
             Text(PunctuationSpacing.repaired(text))
                 .font(.footnote)
-                .lineLimit(6)
         }
     }
 }
