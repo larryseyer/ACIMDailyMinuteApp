@@ -107,6 +107,8 @@
 		9DEFA29DD5E981B9D8E91272 /* HashUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002206 /* HashUtility.swift */; };
 		A05A3DDF2978D9956855AD60 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002070 /* AboutView.swift */; };
 		A4C885040911B61DA3B5B2AC /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
+		C0DE0001A11CE0B1000010 /* CourseShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002730 /* CourseShelf.swift */; };
+		C0DE0001A11CE0B1000011 /* MinuteReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002731 /* MinuteReadingView.swift */; };
 		C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		C0DE0001A11CE0B1000002 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
 		C0DE0001A11CE0B1000003 /* ReaderTextSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002627 /* ReaderTextSize.swift */; };
@@ -288,6 +290,8 @@
 		AA000001706 /* WorkbookPracticeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002706 /* WorkbookPracticeCatalog.swift */; };
 		AA000001707 /* PracticeReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002707 /* PracticeReminderService.swift */; };
 		AA000001720 /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
+		AA000001730 /* CourseShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002730 /* CourseShelf.swift */; };
+		AA000001731 /* MinuteReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002731 /* MinuteReadingView.swift */; };
 		AA000001801 /* CorpusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002306 /* CorpusService.swift */; };
 		AA000001802 /* Citation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002360 /* Citation.swift */; };
 		AA000001803 /* CorpusFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002310 /* CorpusFallback.swift */; };
@@ -579,6 +583,8 @@
 		AA000002706 /* WorkbookPracticeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbookPracticeCatalog.swift; sourceTree = "<group>"; };
 		AA000002707 /* PracticeReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeReminderService.swift; sourceTree = "<group>"; };
 		AA000002720 /* SegmentReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentReadingView.swift; sourceTree = "<group>"; };
+		AA000002730 /* CourseShelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseShelf.swift; sourceTree = "<group>"; };
+		AA000002731 /* MinuteReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinuteReadingView.swift; sourceTree = "<group>"; };
 		AA000002999 /* SaveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButton.swift; sourceTree = "<group>"; };
 		AA000003001 /* ACIMDailyMinute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACIMDailyMinute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA000003002 /* ACIMDailyMinuteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ACIMDailyMinuteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -812,6 +818,7 @@
 				AA000002602 /* YouTubeID.swift */,
 				AA000002601 /* LessonSchedule.swift */,
 				AA000002624 /* ArchiveCalendar.swift */,
+				AA000002730 /* CourseShelf.swift */,
 				AA000002417 /* MinuteSchedule.swift */,
 				AA000002068 /* PlatformTypography.swift */,
 				AA000002052 /* ShareTextBuilder.swift */,
@@ -964,6 +971,7 @@
 				AA000002214 /* JumpToLessonSheet.swift */,
 				AA000002405 /* WorkbookIntroductionView.swift */,
 				AA000002613 /* ReadSearchResultsList.swift */,
+				AA000002731 /* MinuteReadingView.swift */,
 			);
 			path = Lessons;
 			sourceTree = "<group>";
@@ -1309,6 +1317,8 @@
 				AA000001613 /* ReadSearchResultsList.swift in Sources */,
 				AA000001614 /* ManualSegmentView.swift in Sources */,
 				AA000001720 /* SegmentReadingView.swift in Sources */,
+				AA000001730 /* CourseShelf.swift in Sources */,
+				AA000001731 /* MinuteReadingView.swift in Sources */,
 				AA000001615 /* CrossReference.swift in Sources */,
 				AA000001616 /* ReadingNavigation.swift in Sources */,
 				AA000001617 /* CitationButton.swift in Sources */,
@@ -1520,6 +1530,8 @@
 				4CB077B047D6391CEAD04177 /* ReadSearchResultsList.swift in Sources */,
 				D446FF62BB92D46FADC81165 /* ManualSegmentView.swift in Sources */,
 				A4C885040911B61DA3B5B2AC /* SegmentReadingView.swift in Sources */,
+				C0DE0001A11CE0B1000010 /* CourseShelf.swift in Sources */,
+				C0DE0001A11CE0B1000011 /* MinuteReadingView.swift in Sources */,
 				F30B9F852F5EAC8667EE96AA /* CrossReference.swift in Sources */,
 				F49A219ED0FD25EE8D11715B /* ReadingNavigation.swift in Sources */,
 				6F86F0102C9A82D4990E3D10 /* CitationButton.swift in Sources */,

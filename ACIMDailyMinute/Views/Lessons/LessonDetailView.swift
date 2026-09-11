@@ -16,8 +16,8 @@ import SwiftData
 struct LessonDetailView: View {
     let lessonNumber: Int
     var spotlight: ReadingSpotlight? = nil
-    /// Choosing a lesson from a list is a request to watch it; following a
-    /// reference or a search hit into it is a request to read it.
+    /// Read's lesson spine passes false: choosing a lesson there is a request
+    /// to read it. True auto-presents video when a recording exists.
     var presentsVideo: Bool = true
 
     @Environment(\.modelContext) private var modelContext
@@ -150,8 +150,7 @@ struct LessonDetailView: View {
             }
         }
         .onAppear {
-            // Choosing a lesson from the list is a request to watch it; choosing
-            // a sentence from a search is a request to read it.
+            // Read passes false. True is a request to watch.
             guard presentsVideo, !hasAutoPresentedVideo, spotlight == nil, lessonVideoURL != nil else { return }
             hasAutoPresentedVideo = true
             isShowingVideo = true

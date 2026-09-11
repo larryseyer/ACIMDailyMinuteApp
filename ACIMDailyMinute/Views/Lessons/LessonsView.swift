@@ -34,16 +34,11 @@ struct LessonsView: View {
     ) private var archivedLessons: [ArchivedReading]
     @Query private var bookmarks: [Bookmark]
 
-    /// The three books in one volume share a tab. A sixth tab would collapse
-    /// into the iOS "More" list, which is the same reason the Saved tab
-    /// carries three segments.
-    private enum Shelf: String, CaseIterable, Identifiable {
-        case workbook = "Workbook"
-        case text = "Text"
-        case manual = "Manual"
-
-        var id: String { rawValue }
-    }
+    @Query(
+        filter: #Predicate<ArchivedReading> { $0.channel == "daily-minute" },
+        sort: \ArchivedReading.dateString
+    ) private var archivedMinutes: [ArchivedReading]
+    @Query private var storedMinutes: [DailyMinute]
 
     @State private var path = NavigationPath()
     @State private var searchText: String = ""
@@ -51,7 +46,8 @@ struct LessonsView: View {
     #if os(tvOS)
     @State private var pendingJump: Int?
     #endif
-    @State private var shelf: Shelf = .workbook
+    @State private var shelf: CourseShelf = .lesson
+    @State private var minuteCalendar = ArchiveCalendarState.starting(now: Date())
     /// Bound so the spine redraws when a lesson is marked done on its screen.
     @AppStorage(WorkbookCompletion.defaultsKey) private var completedLessonsData: Data = Data()
 
@@ -63,7 +59,7 @@ struct LessonsView: View {
         NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 Picker("Shelf", selection: $shelf) {
-                    ForEach(Shelf.allCases) { Text($0.rawValue).tag($0) }
+                    ForEach(CourseShelf.allCases) { Text($0.rawValue).tag($0) }
                 }
                 #if !os(tvOS)
                 .pickerStyle(.segmented)
@@ -80,15 +76,16 @@ struct LessonsView: View {
                 // Hidden while a query is typed: the results list replaces the
                 // shelf, and where the reader stopped is not an answer to what
                 // they are searching for.
-                if trimmedQuery.isEmpty {
-                    ContinueReadingRow(book: ribbonBook)
+                if trimmedQuery.isEmpty, let book = ribbonBook {
+                    ContinueReadingRow(book: book)
                         .padding(.horizontal, 20)
                 }
 
                 Group {
                     if trimmedQuery.isEmpty {
                         switch shelf {
-                        case .workbook: workbookShelf
+                        case .minute: minuteShelf
+                        case .lesson: workbookShelf
                         case .text: TextChaptersView()
                         case .manual: manualShelf
                         }
@@ -105,7 +102,14 @@ struct LessonsView: View {
             .searchable(text: $searchText, prompt: "Search the Course")
             #endif
             .navigationDestination(for: Int.self) { lessonNumber in
-                LessonDetailView(lessonNumber: lessonNumber)
+                LessonDetailView(lessonNumber: lessonNumber, presentsVideo: false)
+            }
+            .navigationDestination(for: MinuteDateRef.self) { ref in
+                MinuteReadingView(
+                    dateString: ref.dateString,
+                    availability: minuteAvailability(of: ref.dateString),
+                    archived: minuteDates
+                )
             }
             .navigationDestination(for: TextChapterRef.self) { ref in
                 TextChapterView(chapter: ref.chapter)
@@ -127,7 +131,7 @@ struct LessonsView: View {
                 guard let n = note.object as? Int, (1...365).contains(n) else { return }
                 // A widget or notification tap on a lesson must never land on a
                 // chapter list.
-                shelf = .workbook
+                shelf = .lesson
                 #if os(tvOS)
                 openPlayer(.workbookLesson(n))
                 #else
@@ -137,12 +141,83 @@ struct LessonsView: View {
         }
     }
 
-    private var ribbonBook: ReadingPosition.Book {
+    private var ribbonBook: ReadingPosition.Book? {
         switch shelf {
-        case .workbook: .workbook
+        case .minute: nil
+        case .lesson: .workbook
         case .text: .text
         case .manual: .manual
         }
+    }
+
+    private var minuteDates: Set<String> {
+        var dates = Set(archivedMinutes.map(\.dateString).filter { !$0.isEmpty })
+        for minute in storedMinutes where !minute.date.isEmpty {
+            dates.insert(minute.date)
+        }
+        return dates
+    }
+
+    private func minuteAvailability(of dateString: String) -> MinuteSchedule.Availability {
+        guard let day = LessonSchedule.day(from: dateString) else { return .unknown }
+        return MinuteSchedule.availability(of: day, archived: minuteDates, today: ArchiveView.today())
+    }
+
+    private var minuteShelf: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ArchiveCalendarView(
+                    selection: $minuteCalendar.selection,
+                    visibleMonth: $minuteCalendar.visibleMonth,
+                    availableDateStrings: minuteDates
+                )
+                .frame(maxWidth: .infinity)
+
+                selectedMinuteRow
+            }
+            .padding(20)
+            .readableContentWidth()
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
+        }
+        .toolbar {
+            ToolbarItem(placement: jumpPlacement) {
+                Button("Today") {
+                    withAnimation {
+                        minuteCalendar.revealToday(now: Date())
+                    }
+                }
+            }
+        }
+    }
+
+    private var selectedMinuteRow: some View {
+        let dateString = ArchiveView.dateString(from: minuteCalendar.selection)
+        let sentence = minuteAvailability(of: dateString).sentence
+
+        return Button {
+            path.append(MinuteDateRef(dateString: dateString))
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(ArchiveView.longDateString(from: minuteCalendar.selection))
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(.primary)
+                    Text(sentence ?? "Open reading")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(14)
+            .background(Color.acimCard)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
     }
 
     private var manualShelf: some View {
@@ -444,5 +519,5 @@ private struct FilteredLessonsList: View {
 #Preview {
     LessonsView()
         .preferredColorScheme(.dark)
-        .modelContainer(for: [DailyLesson.self, ArchivedReading.self, Bookmark.self], inMemory: true)
+        .modelContainer(for: [DailyLesson.self, DailyMinute.self, ArchivedReading.self, Bookmark.self], inMemory: true)
 }
