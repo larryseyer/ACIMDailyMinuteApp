@@ -99,11 +99,12 @@ struct ArchiveDateDetailView: View {
 
     private var videoItems: [VideoDayItem] {
         readings.compactMap { reading in
-            guard let id = youtubeID(for: reading) else { return nil }
+            let ids = youtubeIDs(for: reading)
+            guard !ids.isEmpty else { return nil }
             return VideoDayItem(
                 id: reading.lineHash,
                 title: title(for: reading),
-                videoID: id
+                videoIDs: ids
             )
         }
     }
@@ -114,33 +115,43 @@ struct ArchiveDateDetailView: View {
         return "Lesson"
     }
 
-    /// Archive row, then today's stored minute/lesson, then the podcast
-    /// `<link>`. Minute archive JSON ships no `youtube_id`; the podcast
-    /// feed does.
-    private func youtubeID(for reading: ArchivedReading) -> String? {
-        if let id = YouTubeID.resolve(reading.youtubeID) { return id }
+    /// Minute: podcast `<link>` first — the daily JSON can still name
+    /// yesterday. Lesson: daily JSON first — the archive row can keep a
+    /// dead re-upload. `LiteYouTubeCard` walks a 404 thumbnail to the next id.
+    private func youtubeIDs(for reading: ArchivedReading) -> [String] {
         if reading.channel == "daily-minute" {
-            if let id = YouTubeID.resolve(
-                minutes.first(where: { $0.date == reading.dateString })?.youtubeID
-            ) { return id }
             let day = reading.dateString
-            return podcasts.compactMap { episode -> String? in
+            let podcastIDs = podcasts.compactMap { episode -> String? in
                 guard episode.channel == "minute" else { return nil }
                 guard LessonSchedule.formatted(episode.publishedAt) == day else { return nil }
-                return YouTubeID.resolve(episode.youtubeURL)
-            }.first
+                return episode.youtubeURL
+            }
+            return YouTubeID.candidates(
+                kind: .minute,
+                archiveID: reading.youtubeID,
+                dailyID: minutes.first(where: { $0.date == reading.dateString })?.youtubeID,
+                podcastIDs: podcastIDs
+            )
         }
         if let number = reading.lessonNumber {
-            if let id = YouTubeID.resolve(
-                lessons.first(where: { $0.lessonNumber == number })?.youtubeID
-            ) { return id }
-            return podcasts.compactMap { episode -> String? in
+            let podcastIDs = podcasts.compactMap { episode -> String? in
                 guard episode.channel == "lesson" else { return nil }
                 guard LessonNarration.number(fromTitle: episode.title) == number else { return nil }
-                return YouTubeID.resolve(episode.youtubeURL)
-            }.first
+                return episode.youtubeURL
+            }
+            return YouTubeID.candidates(
+                kind: .lesson,
+                archiveID: reading.youtubeID,
+                dailyID: lessons.first(where: { $0.lessonNumber == number })?.youtubeID,
+                podcastIDs: podcastIDs
+            )
         }
-        return nil
+        return YouTubeID.candidates(
+            kind: .minute,
+            archiveID: reading.youtubeID,
+            dailyID: nil,
+            podcastIDs: []
+        )
     }
     #endif
 
@@ -221,8 +232,7 @@ struct ArchiveDateDetailView: View {
 private struct VideoDayItem: Identifiable {
     let id: String
     let title: String
-    let videoID: String
-    var playerURL: String { "https://www.youtube.com/embed/\(videoID)" }
+    let videoIDs: [String]
 }
 
 private struct VideoDayStack: View {
@@ -236,8 +246,7 @@ private struct VideoDayStack: View {
                         Text(item.title)
                             .font(.headline)
                         LiteYouTubeCard(
-                            videoID: item.videoID,
-                            playerURL: item.playerURL,
+                            videoIDs: item.videoIDs,
                             accessibilityTitle: item.title
                         )
                     }

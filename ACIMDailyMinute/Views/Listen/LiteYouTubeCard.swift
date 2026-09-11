@@ -15,22 +15,31 @@ import SwiftUI
 /// straight from `img.youtube.com`, with a play button drawn over it. The real
 /// player is only created once the reader taps, at which point the chrome is
 /// wanted anyway because they are watching. Loading no web view until then also
-/// keeps the Listen tab cheap to open.
+/// keeps the Video tab cheap to open. A 404 thumbnail is not the end of the
+/// day: `videoIDs` is the list `YouTubeID.candidates` built, and this card
+/// walks it until one image loads.
 struct LiteYouTubeCard: View {
-    /// The video whose thumbnail stands in for the playlist — normally whichever
-    /// one the playlist is going to start on.
-    let videoID: String?
+    /// Ids to try, live one first. A dead re-upload 404s every thumbnail
+    /// size; the next id is today's video.
+    let videoIDs: [String]
 
-    /// The URL handed to the real player on tap. A playlist embed, so playlist
-    /// semantics survive the swap.
-    let playerURL: String
-
-    /// Spoken by VoiceOver in place of the image, e.g. "Daily Minute playlist".
+    /// Spoken by VoiceOver in place of the image, e.g. "Daily Minute".
     let accessibilityTitle: String
 
     @State private var isActivated = false
+    @State private var index = 0
     @State private var useFallbackThumbnail = false
     @State private var artworkFailed = false
+
+    private var videoID: String? {
+        guard videoIDs.indices.contains(index) else { return nil }
+        return videoIDs[index]
+    }
+
+    private var playerURL: String {
+        guard let videoID else { return "" }
+        return "https://www.youtube.com/embed/\(videoID)"
+    }
 
     var body: some View {
         Group {
@@ -74,16 +83,18 @@ struct LiteYouTubeCard: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure:
-                    // `maxresdefault` only exists for uploads that supplied a
-                    // high-resolution thumbnail; `hqdefault` is always present.
-                    // Retry once at the lower size before giving up on artwork.
+                    // `maxresdefault` is missing on some real uploads;
+                    // `hqdefault` 404s only when the id itself is dead.
                     Color.clear
                         .onAppear {
-                            if useFallbackThumbnail {
-                                artworkFailed = true
-                            } else {
-                                useFallbackThumbnail = true
-                            }
+                            let step = YouTubeID.thumbnailAdvance(
+                                useFallback: useFallbackThumbnail,
+                                index: index,
+                                count: videoIDs.count
+                            )
+                            index = step.index
+                            useFallbackThumbnail = step.useFallback
+                            artworkFailed = step.giveUp
                         }
                 case .empty:
                     ProgressView().tint(.white)
@@ -101,7 +112,7 @@ struct LiteYouTubeCard: View {
     }
 
     private var unavailable: some View {
-        Text("Video is unavailable. Audio still plays from the list below.")
+        Text("Video is unavailable.")
             .font(.callout)
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)

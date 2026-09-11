@@ -8,6 +8,67 @@ import Foundation
 /// `LiteYouTubeCard` (which needs it to build a thumbnail URL) so the two cannot
 /// disagree about what a given feed link points at.
 enum YouTubeID {
+    /// Which catalogue a Video-tab day is reading.
+    ///
+    /// Minute archive JSON ships no `youtube_id`, and the daily JSON can
+    /// still name yesterday after today's upload is already in the podcast
+    /// feed. Lesson archive rows can keep a dead re-upload after the daily
+    /// JSON has the live id.
+    enum DayKind {
+        case minute
+        case lesson
+    }
+
+    /// Deduped ids to try, live one first. A 404 thumbnail is not a miss
+    /// of the day — `thumbnailAdvance` walks the rest.
+    static func candidates(
+        kind: DayKind,
+        archiveID: String?,
+        dailyID: String?,
+        podcastIDs: [String]
+    ) -> [String] {
+        var ids: [String] = []
+        func add(_ raw: String?) {
+            guard let id = resolve(raw), !ids.contains(id) else { return }
+            ids.append(id)
+        }
+        switch kind {
+        case .minute:
+            for raw in podcastIDs { add(raw) }
+            add(dailyID)
+            add(archiveID)
+        case .lesson:
+            add(dailyID)
+            add(archiveID)
+            for raw in podcastIDs { add(raw) }
+        }
+        return ids
+    }
+
+    struct ThumbnailAdvance: Equatable {
+        var index: Int
+        var useFallback: Bool
+        var giveUp: Bool
+    }
+
+    /// `maxresdefault` is missing on some real uploads, so one miss retries
+    /// `hqdefault` of the same id. Both missing means this id is dead.
+    static func thumbnailAdvance(
+        useFallback: Bool,
+        index: Int,
+        count: Int
+    ) -> ThumbnailAdvance {
+        if count <= 0 { return ThumbnailAdvance(index: 0, useFallback: false, giveUp: true) }
+        if !useFallback {
+            return ThumbnailAdvance(index: index, useFallback: true, giveUp: false)
+        }
+        let next = index + 1
+        if next < count {
+            return ThumbnailAdvance(index: next, useFallback: false, giveUp: false)
+        }
+        return ThumbnailAdvance(index: index, useFallback: true, giveUp: true)
+    }
+
     /// A video id from whatever shape the feed stored: a watch URL, a
     /// youtu.be link, an embed URL, or the bare 11-character id itself.
     static func resolve(_ raw: String?) -> String? {

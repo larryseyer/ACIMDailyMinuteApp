@@ -29,6 +29,11 @@ grep -q 'LiteYouTubeCard' "$FILE" \
 
 # Bare ids and watch URLs both resolve — archive rows ship one, the
 # podcast <link> ships the other.
+#
+# A day that prefers DailyMinute.youtubeID over the podcast plays
+# yesterday when the JSON has not caught up. A lesson that prefers the
+# archive row over DailyLesson.youtubeID plays a dead re-upload. A card
+# that gives up after one 404 thumbnail never reaches the live id.
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 cat > "$WORK/main.swift" <<'SWIFT'
@@ -39,6 +44,38 @@ check(YouTubeID.resolve("https://www.youtube.com/watch?v=SlAhY7QszJo") == "SlAhY
 check(YouTubeID.resolve("https://youtu.be/Spt75SO4HhE") == "Spt75SO4HhE", "short URL")
 check(YouTubeID.resolve("") == nil, "empty")
 check(YouTubeID.resolve(nil) == nil, "nil")
+
+let minute = YouTubeID.candidates(
+    kind: .minute,
+    archiveID: nil,
+    dailyID: "2_eAO5jBbHM",
+    podcastIDs: [
+        "https://www.youtube.com/watch?v=SlAhY7QszJo",
+        "https://www.youtube.com/watch?v=i_eRulGtwmI"
+    ]
+)
+check(minute.first != "2_eAO5jBbHM", "minute must not play yesterday from daily JSON")
+check(minute.contains("i_eRulGtwmI"), "minute keeps today's podcast id")
+check(minute.first == "SlAhY7QszJo" || minute.first == "i_eRulGtwmI", "minute starts on a podcast id")
+
+let lesson = YouTubeID.candidates(
+    kind: .lesson,
+    archiveID: "KndugwfvYNM",
+    dailyID: "Bk398csx8As",
+    podcastIDs: [
+        "https://www.youtube.com/watch?v=Bk398csx8As",
+        "https://www.youtube.com/watch?v=KndugwfvYNM"
+    ]
+)
+check(lesson.first == "Bk398csx8As", "lesson prefers the live daily id")
+
+let hq = YouTubeID.thumbnailAdvance(useFallback: false, index: 0, count: 2)
+check(hq.index == 0 && hq.useFallback && !hq.giveUp, "maxres miss retries hq of the same id")
+let next = YouTubeID.thumbnailAdvance(useFallback: true, index: 0, count: 2)
+check(next.index == 1 && !next.useFallback && !next.giveUp, "hq miss advances to the next id")
+let last = YouTubeID.thumbnailAdvance(useFallback: true, index: 1, count: 2)
+check(last.giveUp, "last hq miss gives up")
+
 print("youtube ids resolve")
 print("OK")
 SWIFT

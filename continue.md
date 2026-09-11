@@ -6,6 +6,6 @@ NEXT: HIS CALL items wait on him. Then CloudKit Development → Production befor
 
 Do not rebuild text size. Watch is done. Do not touch the backend, prd.json, or native visionOS. Apple TV still rebuilds video from the MP3s — leave that path.
 
-Video tab: `ArchiveDateDetailView` shows `LiteYouTubeCard`. Minute archive JSON has no `youtube_id`; IDs come from the row, `DailyMinute`/`DailyLesson`, or the podcast `<link>` (`ArchiveView.refreshPodcasts`). Prove with `./tools/verify_video_tab.sh`.
+Video tab: `ArchiveDateDetailView` shows `LiteYouTubeCard`. Minute ids come from the podcast `<link>` first (`ArchiveView.refreshPodcasts`); lesson ids come from `DailyLesson` first. `LiteYouTubeCard` walks a 404 thumbnail to the next id. Prove with `./tools/verify_video_tab.sh`.
 
 Branch `ralph/acim-3.9-to-5-finish-2026-04-14`. HEAD `a043f18`.
