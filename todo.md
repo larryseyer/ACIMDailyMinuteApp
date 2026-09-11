@@ -8,9 +8,9 @@ One sentence per item, two at the most. Current and future only. Git is history.
 
 - [ ] Two catch-up gaps remain: 2026-05-31 and 08-14. One per night.
 
-## PARKED — one test pass, at the end, on his phone
+## TEST — on the phone, after the install
 
-C is in. Do not ask him to walk this list. He is already using the phone and reporting what he finds.
+He tests on the iPhone. Put the build there first. Do not walk this list for him.
 
 - [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
