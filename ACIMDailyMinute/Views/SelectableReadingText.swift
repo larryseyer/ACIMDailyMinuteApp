@@ -703,6 +703,15 @@ private final class ReadingNSTextView: NSTextView {
     @discardableResult
     override func scrollToVisible(_ rect: NSRect) -> Bool { false }
     override func scrollRangeToVisible(_ range: NSRange) {}
+
+    /// The clip view, once this representable is inside SwiftUI's
+    /// `ScrollView`. The override above is what stops a too-early call
+    /// moving our bounds over the title.
+    @discardableResult
+    func scrollEnclosingClip(to rect: NSRect) -> Bool {
+        guard enclosingScrollView != nil else { return false }
+        return super.scrollToVisible(rect)
+    }
 }
 
 private struct TextViewRepresentable: NSViewRepresentable {
@@ -746,37 +755,111 @@ private struct TextViewRepresentable: NSViewRepresentable {
         context.coordinator.openLink = openLink
         guard let storage = view.textStorage else { return }
         if !storage.isEqual(to: attributed) { storage.setAttributedString(attributed) }
-        // ⛔ **Nothing scrolls here, and that is deliberate.** Asking an
-        // `NSTextView` to bring a rectangle into view moves its own bounds
-        // inside the frame it was given, so the reading draws forty points
-        // above where it was laid out, over the top of its own title, while
-        // the title stays put. A `UITextView` cannot do this: the iOS half
-        // switches its own scrolling off outright. `ReadingNSTextView` is
-        // the macOS equivalent — it ignores `scrollToVisible`.
-        //
-        // So a spotlight and a ribbon both open a macOS reading at its top. The
-        // words are still painted and the reader still lands on the right
-        // passage. Doing it properly means scrolling from the SwiftUI side,
-        // where the `ScrollView` itself can be told; that is on the ledger.
+        if let spotlight, context.coordinator.scrolledSpotlight != spotlight {
+            context.coordinator.scrolledSpotlight = spotlight
+            Self.scroll(view, to: spotlight, anchor: .spotlight, attempt: 0)
+        }
+        if let resume, context.coordinator.scrolledResume != resume {
+            context.coordinator.scrolledResume = resume
+            Self.scroll(view, to: resume, anchor: .top, attempt: 0)
+        }
         installReporter(on: view, display: display)
     }
 
     /// Hands the owner a way to ask where the reader is now. See the iOS half:
     /// the answer is wanted once, when the reading leaves the screen.
+    ///
+    /// ⛔ The text view's own `visibleRect` is the whole passage: SwiftUI is
+    /// the scroller, and this view is sized to its content. Reading that
+    /// rectangle saved every ribbon at offset 0. The clip view's
+    /// `documentVisibleRect` is the page the reader is looking at.
     private func installReporter(on view: NSTextView, display: String) {
         guard let positionReporter else { return }
         positionReporter.read = { [weak view] in
             guard let view else { return nil }
-            let visible = view.visibleRect
+            guard let scrollView = view.enclosingScrollView,
+                  let document = scrollView.documentView
+            else { return nil }
+            let visible = view.convert(
+                scrollView.contentView.documentVisibleRect, from: document
+            )
             guard visible.height > 0 else { return nil }
-            guard visible.minY > 0 else { return 0 }
-            guard visible.minY < view.bounds.height else { return nil }
+            let topY = view.isFlipped ? visible.minY : visible.maxY
+            guard topY > 0 else { return 0 }
+            guard topY < view.bounds.height else { return nil }
             let utf16 = view.characterIndexForInsertion(
-                at: CGPoint(x: visible.minX, y: visible.minY)
+                at: CGPoint(x: visible.minX, y: topY)
             )
             return SelectableReadingText.characterRange(
                 of: NSRange(location: utf16, length: 0), in: display
             )?.lowerBound
+        }
+    }
+
+    /// The rectangle a range occupies in the text view's own coordinates.
+    ///
+    /// Same TextKit 2 walk as the iOS half. `layoutManager` is not consulted:
+    /// reading it would drop the view onto TextKit 1, and a zero-height
+    /// fragment below the fold is what the retry loop then cannot tell from
+    /// "not laid out yet".
+    @MainActor
+    private static func laidOutRect(of range: NSRange, in view: NSTextView) -> CGRect? {
+        guard let layout = view.textLayoutManager,
+              let content = layout.textContentManager,
+              let start = content.location(content.documentRange.location, offsetBy: range.location),
+              let end = content.location(start, offsetBy: max(range.length, 1)),
+              let textRange = NSTextRange(location: start, end: end)
+        else { return nil }
+        layout.ensureLayout(for: textRange)
+        var found: CGRect?
+        layout.enumerateTextSegments(in: textRange, type: .standard, options: []) { _, frame, _, _ in
+            found = frame
+            return false
+        }
+        return found
+    }
+
+    /// Walks the clip view, not the text view. `ReadingNSTextView` swallows
+    /// `scrollToVisible` so a call made before the representable is in the
+    /// SwiftUI `ScrollView` cannot move the text view's own bounds over its
+    /// title. `scrollEnclosingClip` is the same ask as the iOS half's
+    /// `UIScrollView.scrollRectToVisible`, and it no-ops until an
+    /// `NSScrollView` ancestor exists, which is why this retries.
+    @MainActor
+    private static func scroll(
+        _ view: NSTextView, to range: NSRange, anchor: ScrollAnchor, attempt: Int
+    ) {
+        Task { @MainActor in
+            if attempt > 0 {
+                try? await Task.sleep(nanoseconds: SelectableReadingText.scrollRetryDelay)
+            }
+            let rect = laidOutRect(of: range, in: view) ?? .zero
+            guard let scrollView = view.enclosingScrollView else {
+                if attempt < SelectableReadingText.scrollAttempts {
+                    scroll(view, to: range, anchor: anchor, attempt: attempt + 1)
+                }
+                return
+            }
+            let viewport = scrollView.contentView.bounds.height
+            guard rect.height > 0, rect.height.isFinite, viewport > 0 else {
+                if attempt < SelectableReadingText.scrollAttempts {
+                    scroll(view, to: range, anchor: anchor, attempt: attempt + 1)
+                }
+                return
+            }
+            let target: NSRect
+            switch anchor {
+            case .spotlight:
+                target = rect.insetBy(dx: 0, dy: -viewport / 3)
+            case .top:
+                target = NSRect(
+                    x: rect.minX,
+                    y: rect.minY - SelectableReadingText.resumeTopMargin,
+                    width: max(rect.width, 1),
+                    height: viewport
+                )
+            }
+            (view as? ReadingNSTextView)?.scrollEnclosingClip(to: target)
         }
     }
 
@@ -791,6 +874,8 @@ private struct TextViewRepresentable: NSViewRepresentable {
     final class Coordinator: NSObject, NSTextViewDelegate {
         var display: String = ""
         var menuActions: [SelectableReadingText.MenuAction] = []
+        var scrolledSpotlight: NSRange?
+        var scrolledResume: NSRange?
         private weak var textView: NSTextView?
         var openLink: (URL) -> Void = { _ in }
 
