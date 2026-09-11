@@ -71,6 +71,7 @@ struct BookmarkRow: View {
             NavigationLink(value: destination) {
                 rowContent
             }
+            .buttonStyle(.plain)
         } else {
             rowContent
         }
@@ -130,68 +131,49 @@ struct BookmarkRow: View {
     }
 
     private var rowContent: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: rowIcon)
-                .foregroundStyle(Color.acimGold)
-                .font(.title3)
-                .frame(width: 28, alignment: .center)
-                .padding(.top, 2)
-
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Text(headerLabel)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                    Text("·")
-                        .foregroundStyle(.secondary)
-                    Text(bookmark.createdAt, style: .date)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                if let text = resolvedText {
-                    Text(text)
-                        .font(.acimBody)
-                        .foregroundStyle(.primary)
-                        .lineLimit(2)
-                } else {
-                    Text("Reading no longer available")
-                        .font(.acimBody)
-                        .foregroundStyle(.secondary)
-                        .italic()
-                        .lineLimit(2)
-                }
-            }
-
-            Spacer(minLength: 0)
-        }
-        .padding(.vertical, 4)
-        .contentShape(Rectangle())
+        SavedMarkChrome(
+            quote: resolvedText ?? "Reading no longer available",
+            citationRaw: citationRaw,
+            dateText: SavedMarkCopy.dateText(kind: "Saved", at: bookmark.createdAt)
+        )
     }
 
-    private var rowIcon: String {
+    /// `Bookmark.itemKey` is not a `ReadingKey`. Map the channels this row
+    /// already understands onto one so the stem can be looked up, and nowhere
+    /// else.
+    private var readingKey: ReadingKey? {
         switch parsedChannel {
-        case "lesson": "book.closed.fill"
-        case "text", "manual", "manual-q": "text.book.closed"
-        default: "sun.max.fill"
+        case "lesson":
+            guard let n = Int(parsedToken) else { return nil }
+            return .lesson(n)
+        case "text":
+            guard let address = textAddress else { return nil }
+            return .textSection(chapter: address.chapter, section: address.section)
+        case "manual":
+            guard let id = Int(parsedToken) else { return nil }
+            return .manual(id)
+        case "manual-q":
+            guard let n = Int(parsedToken) else { return nil }
+            return .manualSection(n)
+        case "minute":
+            if let m = minutes.first, m.segmentId > 0 {
+                return .segment(m.segmentId)
+            }
+            if let m = minutes.first, !m.date.isEmpty {
+                return .minuteDate(m.date)
+            }
+            if let r = archiveMinutes.first, !r.dateString.isEmpty {
+                return .minuteDate(r.dateString)
+            }
+            return nil
+        default:
+            return nil
         }
     }
 
-    private var headerLabel: String {
-        if parsedChannel == "lesson" {
-            guard let n = Int(parsedToken) else { return "Lesson" }
-            if WorkbookBodiesCatalog.isIntroduction(n) { return "Introduction" }
-            return "Lesson \(n)"
-        }
-        if parsedChannel == "text" {
-            guard let address = textAddress else { return "Text" }
-            return address.chapter == 0 ? "Preface" : "Chapter \(address.chapter)"
-        }
-        if parsedChannel == "manual" || parsedChannel == "manual-q" {
-            return "Manual for Teachers"
-        }
-        return "Daily Minute"
+    private var citationRaw: String? {
+        guard let readingKey else { return nil }
+        return SavedCitation.stem(for: readingKey)
     }
 
     private var resolvedText: String? {

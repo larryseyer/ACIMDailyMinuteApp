@@ -1,13 +1,13 @@
 # continue.md
 
-LIVE: `2026-09-11-Design_Plan.md` step 7 — Saved as one filtered stream.
+LIVE: `2026-09-11-Design_Plan.md` step 8 — iPad and Mac `NavigationSplitView`;
+the two questions in §O.
 Work on `main` only. No feature branch. No subagent. No worktree.
 
 REMEMBER THIS: ALWAYS WORK ON MAIN — NO BRANCHES EVER UNLESS THE USER
 ASKS FOR THEM.
 
-NEXT after that: step 8, iPad and Mac `NavigationSplitView`; the two
-questions in §O.
+NEXT after that: step 9, Apple TV, Watch, widgets.
 
 The design file is the spec. Visual intent:
 `docs/design/2026-09-11-ios-presentation.html`. The Design Plan wins
@@ -16,16 +16,19 @@ wherever they differ. Do not build from
 renders Lesson 84 as `W·r2·84`). Plan mode at the top of the numbered
 step, present the approach, wait for approval, then edit.
 
-## Step 7
+## Step 8
 
-Three segmented lists become one filtered stream. Filter chips at the
-top — All / Highlights / Notes / Bookmarks. A highlight is shown as a
-highlight; a note sits under its passage in italic. Orphaned highlights
-render at 50% opacity. Export stays in the toolbar. Order is when the
-reader marked them, newest first.
+iPad and Mac leave the phone's three tabs. `NavigationSplitView`: sidebar
+holds Today, the four books, and Saved; the detail column is the reading.
+No tab bar, no `ACIMTabBar` on these two. Mac keeps its 420pt minimum
+width. Revisit `ReadableContentWidth` — 672pt is macOS-only today and
+the iPad needs its own answer once a sidebar takes width.
 
-Spec: §5 step 7, §S5 Saved.
-Mockup: the Saved figure in `docs/design/`.
+The two remaining decisions are in §O. Decide them against a running
+build, not on paper. They are the only two. Do not invent a third.
+
+Spec: §5 step 8, §S7 iPad and Mac, §O.
+Mockup: intent only; sidebar chrome is specified here, not in the drawing.
 
 Confirm unused serials with `python3` against `project.pbxproj` before
 taking one. App build-file `AA000001NNN` serials 980–999, 806–809,

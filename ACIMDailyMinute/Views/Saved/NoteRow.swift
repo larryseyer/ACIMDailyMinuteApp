@@ -2,13 +2,17 @@ import SwiftUI
 import SwiftData
 
 /// One thing the reader wrote, in the Saved tab.
+///
+/// A note sits under the passage it belongs to. A note with a `highlightID` is
+/// a thought about a passage; a note without one is a thought about the whole
+/// reading. Both are ordinary, and only the first has a quote to sit under.
 struct NoteRow: View {
     let note: Note
 
-    /// The passage this note hangs on, where it hangs on one. A note with a
-    /// `highlightID` is a thought about a passage and a note without one is a
-    /// thought about the whole reading; both are ordinary, and only the first
-    /// has somewhere narrower than the top of the reading to open.
+    /// The passage this note hangs on, where it hangs on one. A fresh UUID
+    /// matches no row, which is how a standalone note asks for nothing. A
+    /// predicate on an optional would fetch every highlight in the store for
+    /// each row of the list instead.
     @Query private var anchors: [Highlight]
 
     private let key: ReadingKey?
@@ -16,9 +20,6 @@ struct NoteRow: View {
     init(note: Note) {
         self.note = note
         self.key = ReadingKey(rawValue: note.readingKey)
-        // A fresh UUID matches no row, which is how a standalone note asks for
-        // nothing. A predicate on an optional would fetch every highlight in
-        // the store for each row of the list instead.
         let wanted = note.highlightID ?? UUID()
         _anchors = Query(filter: #Predicate<Highlight> { $0.id == wanted })
     }
@@ -41,43 +42,33 @@ struct NoteRow: View {
     var body: some View {
         if let destination = key?.savedDestination(spotlight: spotlight) {
             NavigationLink(value: destination) { rowContent }
+                .buttonStyle(.plain)
         } else {
             rowContent
         }
     }
 
     private var rowContent: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "square.and.pencil")
-                .foregroundStyle(Color.acimGold)
-                .font(.title3)
-                .frame(width: 28, alignment: .center)
-                .padding(.top, 2)
+        SavedMarkChrome(
+            quote: passage,
+            note: note.body,
+            citationRaw: citationRaw,
+            dateText: SavedMarkCopy.dateText(kind: "Note", at: note.createdAt)
+        )
+    }
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Text(key?.displayName() ?? "Reading")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                    Text("·")
-                        .foregroundStyle(.secondary)
-                    Text(note.createdAt, style: .date)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                Text(note.body)
-                    .font(.acimBody)
-                    .foregroundStyle(.primary)
-                    .lineLimit(3)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Spacer(minLength: 0)
+    private var passage: String? {
+        guard note.highlightID != nil, let quote = anchors.first?.quote, !quote.isEmpty else {
+            return nil
         }
-        .padding(.vertical, 4)
-        .contentShape(Rectangle())
+        return quote
+    }
+
+    private var citationRaw: String? {
+        if note.highlightID != nil, let anchor = anchors.first {
+            return SavedCitation.raw(for: anchor)
+        }
+        guard let key else { return nil }
+        return SavedCitation.stem(for: key)
     }
 }

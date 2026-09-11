@@ -2,15 +2,35 @@ import SwiftUI
 import SwiftData
 
 struct SavedView: View {
-    /// Saved, Highlights and Notes are three views of one shelf, so they share a
-    /// tab. A sixth tab would collapse into the iOS "More" list and bury Saved
-    /// underneath a disclosure row.
-    private enum Segment: String, CaseIterable, Identifiable {
-        case saved = "Saved"
+    private enum Filter: String, CaseIterable, Identifiable {
+        case all = "All"
         case highlights = "Highlights"
         case notes = "Notes"
+        case bookmarks = "Bookmarks"
 
         var id: String { rawValue }
+    }
+
+    private enum Item: Identifiable {
+        case highlight(Highlight)
+        case note(Note)
+        case bookmark(Bookmark)
+
+        var id: PersistentIdentifier {
+            switch self {
+            case .highlight(let highlight): highlight.persistentModelID
+            case .note(let note): note.persistentModelID
+            case .bookmark(let bookmark): bookmark.persistentModelID
+            }
+        }
+
+        var createdAt: Date {
+            switch self {
+            case .highlight(let highlight): highlight.createdAt
+            case .note(let note): note.createdAt
+            case .bookmark(let bookmark): bookmark.createdAt
+            }
+        }
     }
 
     @Environment(\.modelContext) private var modelContext
@@ -18,29 +38,18 @@ struct SavedView: View {
     @Query(sort: \Bookmark.createdAt, order: .reverse) private var bookmarks: [Bookmark]
     @Query(sort: \Highlight.createdAt, order: .reverse) private var highlights: [Highlight]
     @Query(sort: \Note.createdAt, order: .reverse) private var notes: [Note]
-    @State private var segment: Segment = .saved
+    @State private var filter: Filter = .all
     @State private var path = NavigationPath()
 
     var body: some View {
         NavigationStack(path: $path) {
             VStack(spacing: 0) {
-                Picker("Shelf", selection: $segment) {
-                    ForEach(Segment.allCases) { Text($0.rawValue).tag($0) }
+                header
+                if items.isEmpty {
+                    emptyState
+                } else {
+                    stream
                 }
-                #if !os(tvOS)
-                .pickerStyle(.segmented)
-                #endif
-                .padding(.horizontal, 20)
-                .padding(.bottom, 8)
-
-                Group {
-                    switch segment {
-                    case .saved: savedList
-                    case .highlights: highlightList
-                    case .notes: noteList
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .acimInkBackground()
             // ⛔ The mini player floats over this screen, so the last row owes
@@ -49,12 +58,15 @@ struct SavedView: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 Color.clear.frame(height: audio.hasActiveAudio ? MiniPlayerView.height : 0)
             }
-            .navigationTitle("Saved")
+            .navigationTitle("")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     // There is no server and no account, so this is the only way
                     // a reader's own words ever leave the app. It is offered on
-                    // every segment because it exports all of them.
+                    // every filter because it exports all of them.
                     if !highlights.isEmpty || !notes.isEmpty {
                         #if !os(tvOS)
                         ShareLink(item: exportText) {
@@ -92,103 +104,143 @@ struct SavedView: View {
         }
     }
 
-    @ViewBuilder
-    private var savedList: some View {
-        if bookmarks.isEmpty {
-            ContentUnavailableView {
-                Label("No Bookmarks", systemImage: "bookmark")
-            } description: {
-                Text("Tap Save on any Daily Minute, Lesson, or Video entry to keep it here.")
-            }
-        } else {
-            List {
-                ForEach(bookmarks) { bookmark in
-                    BookmarkRow(bookmark: bookmark)
-                        // Both edges delete. `.onDelete` only ever produces a
-                        // trailing swipe, and a saved item is the kind of thing
-                        // people flick away in either direction.
-                        // Through `BookmarkStore`, not `modelContext.delete`:
-                        // `itemKey` no longer carries a unique index, so a
-                        // passage can be held by more than one row and only the
-                        // store removes all of them.
-                        #if !os(tvOS)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
-                        }
-                        #endif
-                        #if !os(tvOS)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            deleteButton { BookmarkStore.remove(key: bookmark.itemKey, in: modelContext) }
-                        }
-                        #endif
-                        .listRowBackground(Color.clear)
-                }
-            }
-            .listStyle(.plain)
-            .readableContentWidth()
-            .acimInkListBackground()
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Saved")
+                .font(.acimMasthead)
+                .foregroundStyle(.primary)
+                .lineSpacing(Metric.mastheadGap)
+            chips
+                .padding(.top, 10)
         }
+        .padding(.horizontal, Metric.gutter)
+        .padding(.top, 12)
+        .padding(.bottom, 2)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var chips: some View {
+        HStack(spacing: 7) {
+            ForEach(Filter.allCases) { chip in
+                Button {
+                    filter = chip
+                } label: {
+                    Text(chip.rawValue)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(filter == chip ? Color.acimOnGold : Color.secondary)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 13)
+                        .background(
+                            filter == chip ? Color.acimGold : Color.acimRaised,
+                            in: Capsule()
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(filter == chip ? .isSelected : [])
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.bottom, 14)
+    }
+
+    private var stream: some View {
+        List {
+            ForEach(items) { item in
+                row(for: item)
+                    #if !os(tvOS)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        deleteButton { delete(item) }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        deleteButton { delete(item) }
+                    }
+                    #endif
+                    .listRowBackground(Color.clear)
+                    #if !os(tvOS)
+                    .listRowSeparator(.hidden)
+                    #endif
+                    .listRowInsets(EdgeInsets(
+                        top: 0,
+                        leading: Metric.gutter,
+                        bottom: 0,
+                        trailing: Metric.gutter
+                    ))
+            }
+        }
+        .listStyle(.plain)
+        #if !os(tvOS)
+        .environment(\.defaultMinListRowHeight, 0)
+        #endif
+        .readableContentWidth()
+        .acimInkListBackground()
     }
 
     @ViewBuilder
-    private var highlightList: some View {
-        if highlights.isEmpty {
-            ContentUnavailableView {
-                Label("No Highlights", systemImage: "highlighter")
-            } description: {
-                Text("Select any passage while you are reading and choose Highlight to keep it here.")
-            }
-        } else {
-            List {
-                ForEach(highlights) { highlight in
-                    HighlightRow(highlight: highlight)
-                        #if !os(tvOS)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            deleteButton { AnnotationStore.delete(highlight, in: modelContext) }
-                        }
-                        #endif
-                        #if !os(tvOS)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            deleteButton { AnnotationStore.delete(highlight, in: modelContext) }
-                        }
-                        #endif
-                        .listRowBackground(Color.clear)
-                }
-            }
-            .listStyle(.plain)
-            .readableContentWidth()
-            .acimInkListBackground()
+    private var emptyState: some View {
+        ContentUnavailableView {
+            Label(emptyTitle, systemImage: emptyImage)
+        } description: {
+            Text(emptyDescription)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder
-    private var noteList: some View {
-        if notes.isEmpty {
-            ContentUnavailableView {
-                Label("No Notes", systemImage: "square.and.pencil")
-            } description: {
-                Text("Tap Add note under any reading to write something down and keep it here.")
-            }
-        } else {
-            List {
-                ForEach(notes) { note in
-                    NoteRow(note: note)
-                        #if !os(tvOS)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            deleteButton { AnnotationStore.delete(note, in: modelContext) }
-                        }
-                        #endif
-                        #if !os(tvOS)
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            deleteButton { AnnotationStore.delete(note, in: modelContext) }
-                        }
-                        #endif
-                        .listRowBackground(Color.clear)
-                }
-            }
-            .listStyle(.plain)
-            .readableContentWidth()
-            .acimInkListBackground()
+    private func row(for item: Item) -> some View {
+        switch item {
+        case .highlight(let highlight):
+            HighlightRow(highlight: highlight)
+        case .note(let note):
+            NoteRow(note: note)
+        case .bookmark(let bookmark):
+            BookmarkRow(bookmark: bookmark)
+        }
+    }
+
+    private var items: [Item] {
+        let merged: [Item]
+        switch filter {
+        case .all:
+            merged = highlights.map(Item.highlight)
+                + notes.map(Item.note)
+                + bookmarks.map(Item.bookmark)
+        case .highlights:
+            merged = highlights.map(Item.highlight)
+        case .notes:
+            merged = notes.map(Item.note)
+        case .bookmarks:
+            merged = bookmarks.map(Item.bookmark)
+        }
+        return merged.sorted { $0.createdAt > $1.createdAt }
+    }
+
+    private var emptyTitle: String {
+        switch filter {
+        case .all: "No Saved Marks"
+        case .highlights: "No Highlights"
+        case .notes: "No Notes"
+        case .bookmarks: "No Bookmarks"
+        }
+    }
+
+    private var emptyImage: String {
+        switch filter {
+        case .all, .bookmarks: "bookmark"
+        case .highlights: "highlighter"
+        case .notes: "square.and.pencil"
+        }
+    }
+
+    private var emptyDescription: String {
+        switch filter {
+        case .all:
+            "Highlight a passage, write a note, or tap Save on a reading to keep it here."
+        case .highlights:
+            "Select any passage while you are reading and choose Highlight to keep it here."
+        case .notes:
+            "Tap Add note under any reading to write something down and keep it here."
+        case .bookmarks:
+            "Tap Save on any reading to keep it here."
         }
     }
 
@@ -200,11 +252,24 @@ struct SavedView: View {
         )
     }
 
+    private func delete(_ item: Item) {
+        switch item {
+        case .highlight(let highlight):
+            AnnotationStore.delete(highlight, in: modelContext)
+        case .note(let note):
+            AnnotationStore.delete(note, in: modelContext)
+        case .bookmark(let bookmark):
+            // Through `BookmarkStore`, not `modelContext.delete`:
+            // `itemKey` no longer carries a unique index, so a
+            // passage can be held by more than one row and only the
+            // store removes all of them.
+            BookmarkStore.remove(key: bookmark.itemKey, in: modelContext)
+        }
+        try? modelContext.save()
+    }
+
     private func deleteButton(_ action: @escaping () -> Void) -> some View {
-        Button(role: .destructive) {
-            action()
-            try? modelContext.save()
-        } label: {
+        Button(role: .destructive, action: action) {
             Label("Delete", systemImage: "trash")
         }
     }
@@ -275,6 +340,147 @@ extension ReadingKey {
             guard CorpusService.shared.manualSection(n) != nil else { return nil }
             return .manualSection(ManualSectionRef(number: n, spotlight: spotlight))
         }
+    }
+}
+
+/// Shared Saved-row chrome: gold rule, quote, optional italic note, citation
+/// and the reader's own date. Highlight / note / bookmark rows feed this.
+struct SavedMarkChrome: View {
+    var quote: String?
+    var paintsHighlight: Bool = false
+    var note: String?
+    var citationRaw: String?
+    var dateText: String
+    var isDimmed: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if hasQuote {
+                quoteBlock
+            }
+            if let note, !note.isEmpty {
+                Text(note)
+                    .font(.system(size: 14.5, design: .serif))
+                    .italic()
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, hasQuote ? 10 : 0)
+                    .padding(.leading, hasQuote ? 15 : 13)
+                    .overlay(alignment: .leading) {
+                        if !hasQuote {
+                            rule
+                        }
+                    }
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 9) {
+                CitationLabel(raw: citationRaw, font: .acimAddressSmall)
+                Text(dateText)
+                    .font(.acimRowSub)
+                    .foregroundStyle(.tertiary)
+                Spacer(minLength: 0)
+            }
+            .padding(.top, 9)
+            .padding(.leading, 15)
+        }
+        .padding(.vertical, 15)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        .opacity(isDimmed ? 0.5 : 1)
+        .overlay(alignment: .bottom) {
+            Color.acimHairline.frame(height: 1)
+        }
+    }
+
+    private var hasQuote: Bool {
+        if let quote, !quote.isEmpty { return true }
+        return false
+    }
+
+    @ViewBuilder
+    private var quoteBlock: some View {
+        Group {
+            if paintsHighlight, let quote {
+                Text(marked(quote))
+            } else if let quote {
+                Text(quote)
+            }
+        }
+        .font(.acimRowTitle)
+        .foregroundStyle(.primary)
+        .lineSpacing(8)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.leading, 13)
+        .overlay(alignment: .leading) { rule }
+    }
+
+    private var rule: some View {
+        Rectangle()
+            .fill(Color.acimGold)
+            .frame(width: Metric.quoteRule)
+    }
+
+    private func marked(_ quote: String) -> AttributedString {
+        var text = AttributedString(quote)
+        text.backgroundColor = Color.acimMark
+        return text
+    }
+}
+
+/// Kind + the reader's own date, never a publication date.
+enum SavedMarkCopy {
+    static func dateText(kind: String, at date: Date) -> String {
+        if Calendar.current.isDateInToday(date) {
+            return "\(kind) today"
+        }
+        return "\(kind) · \(compactString(from: date))"
+    }
+
+    private static func compactString(from date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = .current
+        formatter.setLocalizedDateFormatFromTemplate("dMMM")
+        return formatter.string(from: date)
+    }
+}
+
+/// Display citation for a Saved mark. Rendered only; never fed back into a lookup.
+enum SavedCitation {
+    /// Paragraph address of a highlight, or the reading stem when the quote is gone.
+    static func raw(for highlight: Highlight) -> String? {
+        guard let key = ReadingKey(rawValue: highlight.readingKey) else { return nil }
+        if highlight.isOrphaned {
+            return CitationResolver.stem(for: key)
+        }
+        if case .segment = key {
+            return CitationResolver.citation(
+                for: key,
+                characterOffset: highlight.startOffset
+            )?.rawValue
+        }
+        guard let display = CitationResolver.displayString(for: key) else {
+            return CitationResolver.stem(for: key)
+        }
+        let offset: Int
+        switch AnchorResolver.resolve(
+            startOffset: highlight.startOffset,
+            length: highlight.length,
+            quote: highlight.quote,
+            in: display
+        ) {
+        case .exact(let range), .moved(let range):
+            offset = range.lowerBound
+        case .orphaned:
+            return CitationResolver.stem(for: key)
+        }
+        return CitationResolver.citation(
+            for: key,
+            characterOffset: offset,
+            displayString: display
+        )?.rawValue
+    }
+
+    static func stem(for key: ReadingKey) -> String? {
+        CitationResolver.stem(for: key)
     }
 }
 
