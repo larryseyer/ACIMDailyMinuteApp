@@ -1,7 +1,17 @@
 # continue.md
 
-LIVE: iPhone sign-off of `0a9ede6` on the 11 Pro Max. Seek, Read chrome, unrecorded dates, Video landscape Close.
+LIVE: the iOS presentation redesign. Plan:
+`docs/superpowers/plans/2026-09-11-ios-presentation-redesign.md`. Spec: open
+`docs/design/2026-09-11-ios-presentation.html` in a browser — that page wins over
+the plan wherever they differ.
 
-NEXT: After he says iPhone is right — Mac Video sheets have no min frame; Listen’s YouTube sheet is 720×405.
+NEXT: step 1, the token layer — `Metric`, `ACIMType`, `CitationLabel`, and the
+`Ink` / `Surface` / `Raised` / `Rule` colorsets. Nothing moves in step 1.
 
-Do not start iPad, Mac, or tvOS polish until he signs off. Do not rebuild `TVPlayerView`. Do not invent TTS. Do not host MP4s. Do not pull YouTube on tvOS. Do not touch Watch, the backend, prd.json, or native visionOS. Do not rename tabs. Reuse `CourseShelf`. Keep `YouTubeID.candidates`.
+1.0 slips; the redesign is the launch. Tab names and the IA are open — that
+constraint is lifted. Do not submit to the App Store, do not remake store
+screenshots, and do not deploy the CloudKit production schema until the redesign
+is on the devices. Do not rebuild `TVPlayerView`. Do not invent TTS. Do not host
+MP4s. Do not pull YouTube on tvOS. Do not touch the models, the feeds, the
+backup format, the annotation keys, the pipeline, or `prd.json`. Do not raise the
+iOS 17 deployment floor.
