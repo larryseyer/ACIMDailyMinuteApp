@@ -29,6 +29,8 @@ enum BackupService {
         /// Must equal `Appearance.key`; spelled out here because that type
         /// imports SwiftUI and this service does not.
         static let appearance = "appearance"
+        /// Must equal `ReaderTextSize.key`.
+        static let readerTextSize = "readerTextSize"
         static let lessonsLastWatchedIndex = "listen.lessons.lastWatchedIndex"
     }
 
@@ -315,6 +317,7 @@ enum BackupService {
                 ? defaults.string(forKey: ReaderKey.practiceOwnStartDay) : nil,
             notifyLiveActivities: bool(ReaderKey.notifyLiveActivities),
             appearance: defaults.string(forKey: ReaderKey.appearance),
+            readerTextSize: defaults.string(forKey: ReaderKey.readerTextSize),
             lessonsLastWatchedIndex: defaults.object(forKey: ReaderKey.lessonsLastWatchedIndex)
                 == nil ? nil : defaults.integer(forKey: ReaderKey.lessonsLastWatchedIndex),
             readingPositions: positions.isEmpty ? nil : positions
@@ -341,6 +344,9 @@ enum BackupService {
         }
         if let value = settings.appearance {
             defaults.set(value, forKey: ReaderKey.appearance)
+        }
+        if let value = settings.readerTextSize {
+            defaults.set(value, forKey: ReaderKey.readerTextSize)
         }
         if let value = settings.lessonsLastWatchedIndex {
             defaults.set(value, forKey: ReaderKey.lessonsLastWatchedIndex)

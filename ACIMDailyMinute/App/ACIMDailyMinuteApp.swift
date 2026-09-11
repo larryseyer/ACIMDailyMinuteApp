@@ -78,6 +78,7 @@ struct ACIMDailyMinuteApp: App {
         let defaultReminderTime = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
         UserDefaults.standard.register(defaults: [
             Appearance.key: Appearance.dark.rawValue,
+            ReaderTextSize.key: ReaderTextSize.platformDefault.rawValue,
             "notifyLiveActivities": false,
             // `dailyReminder*` is the Daily Minute reminder. The keys predate
             // the split and keep their names so a reader who had the one

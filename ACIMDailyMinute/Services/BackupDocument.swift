@@ -138,6 +138,8 @@ struct BackupDocument: Codable, Equatable, Sendable {
         var notifyLiveActivities: Bool?
         /// The raw value of the reader's appearance choice.
         var appearance: String?
+        /// The raw value of the reading-body size choice.
+        var readerTextSize: String?
         var lessonsLastWatchedIndex: Int?
         /// The reader's ribbons, book → position.
         ///

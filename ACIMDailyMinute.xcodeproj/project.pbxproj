@@ -109,6 +109,7 @@
 		A4C885040911B61DA3B5B2AC /* SegmentReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002720 /* SegmentReadingView.swift */; };
 		C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		C0DE0001A11CE0B1000002 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
+		C0DE0001A11CE0B1000003 /* ReaderTextSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002627 /* ReaderTextSize.swift */; };
 		AA000001001 /* ACIMDailyMinuteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002001 /* ACIMDailyMinuteApp.swift */; };
 		AA000001002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002002 /* ContentView.swift */; };
 		AA000001005 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002005 /* ArchiveView.swift */; };
@@ -273,6 +274,7 @@
 		AA000001624 /* ArchiveCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002624 /* ArchiveCalendar.swift */; };
 		AA000001625 /* MediaOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002625 /* MediaOverlay.swift */; };
 		AA000001626 /* ReadingPlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002626 /* ReadingPlayControl.swift */; };
+		AA000001627 /* ReaderTextSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002627 /* ReaderTextSize.swift */; };
 		A6240000C4A1E0DA62400001 /* ArchiveCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002624 /* ArchiveCalendar.swift */; };
 		AA000001701 /* PracticeAnchorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002701 /* PracticeAnchorStore.swift */; };
 		AA000001702 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002702 /* Appearance.swift */; };
@@ -562,6 +564,7 @@
 		AA000002624 /* ArchiveCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveCalendar.swift; sourceTree = "<group>"; };
 		AA000002625 /* MediaOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaOverlay.swift; sourceTree = "<group>"; };
 		AA000002626 /* ReadingPlayControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPlayControl.swift; sourceTree = "<group>"; };
+		AA000002627 /* ReaderTextSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderTextSize.swift; sourceTree = "<group>"; };
 		AA000002701 /* PracticeAnchorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnchorStore.swift; sourceTree = "<group>"; };
 		AA000002702 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		AA000002703 /* ACIMColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ACIMColors.swift; sourceTree = "<group>"; };
@@ -817,6 +820,7 @@
 				AA000002615 /* CrossReference.swift */,
 				AA000002618 /* ReadingTime.swift */,
 				AA000002625 /* MediaOverlay.swift */,
+				AA000002627 /* ReaderTextSize.swift */,
 				AA000002620 /* ReadingPosition.swift */,
 				AA000002621 /* ReadingKeyNaming.swift */,
 				AA000002702 /* Appearance.swift */,
@@ -1309,6 +1313,7 @@
 				AA000001624 /* ArchiveCalendar.swift in Sources */,
 				AA000001625 /* MediaOverlay.swift in Sources */,
 				AA000001626 /* ReadingPlayControl.swift in Sources */,
+				AA000001627 /* ReaderTextSize.swift in Sources */,
 				AA000001701 /* PracticeAnchorStore.swift in Sources */,
 				AA000001702 /* Appearance.swift in Sources */,
 				AA000001703 /* ACIMColors.swift in Sources */,
@@ -1512,6 +1517,7 @@
 				738248A25EF9F3C7A7EE2E4A /* ReadingScaffold.swift in Sources */,
 				C0DE0001A11CE0B1000001 /* MediaOverlay.swift in Sources */,
 				C0DE0001A11CE0B1000002 /* ReadingPlayControl.swift in Sources */,
+				C0DE0001A11CE0B1000003 /* ReaderTextSize.swift in Sources */,
 				5A9E970DF59E50820CCBE992 /* ReadingPosition.swift in Sources */,
 				849092876F974290EF99C25F /* ReadingKeyNaming.swift in Sources */,
 				AAF7B4F974E7D5E26BA84A39 /* ReadingPositionStore.swift in Sources */,

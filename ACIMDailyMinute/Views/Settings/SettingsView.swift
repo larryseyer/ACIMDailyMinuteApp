@@ -3,6 +3,9 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage(Appearance.key) private var appearance = Appearance.dark.rawValue
+    #if !os(tvOS)
+    @AppStorage(ReaderTextSize.key) private var readerTextSize = ReaderTextSize.platformDefault.rawValue
+    #endif
     /// The Daily Minute reminder. The keys predate the split into two
     /// reminders and keep their names, so a reader who had the one reminder
     /// on still has one at the same time — about the minute.
@@ -37,9 +40,18 @@ struct SettingsView: View {
                         ForEach(Appearance.allCases) { Text($0.label).tag($0.rawValue) }
                     }
                     #if !os(tvOS)
-                .pickerStyle(.segmented)
-                #endif
+                    .pickerStyle(.segmented)
+                    #endif
                     .labelsHidden()
+                    // ⛔ Television does not offer this. The TV body is the
+                    // player's, and a control that cannot be seen while
+                    // reading is not this setting.
+                    #if !os(tvOS)
+                    Picker("Text size", selection: $readerTextSize) {
+                        ForEach(ReaderTextSize.allCases) { Text($0.label).tag($0.rawValue) }
+                    }
+                    .pickerStyle(.segmented)
+                    #endif
                 }
 
                 // ⛔ Every reminder control is absent on tvOS. A television

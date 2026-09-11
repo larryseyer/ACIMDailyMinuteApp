@@ -9,7 +9,6 @@ One sentence per item, two at the most. Current and future only. Git is history.
 Add note stays at the bottom; one play control, audio-first. The calendar tab is named Video. That tab is not archive.org.
 
 - [ ] C — Listen as activity. Needs playback progress, which does not exist yet.
-- [ ] Reader text size on iPhone, iPad, and Mac: Default / Large / Larger, body only; iPad default is Large; Mac default is Default; TV unchanged.
 
 ## WATCHING — nightly catch-up
 
@@ -17,10 +16,11 @@ Add note stays at the bottom; one play control, audio-first. The calendar tab is
 
 ## PARKED — one test pass, at the end, on his phone
 
-Do not ask him to check any of this until C and reader text size are built. His words: otherwise he will just repeat himself on things that have not been done yet.
+Do not ask him to check any of this until C is built. His words: otherwise he will just repeat himself on things that have not been done yet.
 
 - [ ] A reading reaches its last sentence on the phone: Chapter 1 Distortions, a Workbook lesson, the Workbook introduction, a Manual segment; then say whether Chapter 1 Principles of Miracles still scrolls without stutter.
 - [ ] Light appearance at 375pt, and the reminders: Follow the lesson's practice names today's lesson; a tap opens it; Daily Minute and Daily Lesson fire at their own times; nothing arrives during Focus.
+- [ ] Settings > Appearance > Text size: Default / Large / Larger resizes the serif body on the phone, iPad, and Mac; titles stay put; a fresh iPad is Large.
 - [ ] The watch on a wrist: today's Daily Minute under **Today**, bundled fallback under **From the Course** with the phone off; place the complication in all three shapes.
 - [ ] Listen rows: no `01:00` chips; tap leaves a check and `Listened <date>`; swipe offers Mark unplayed; unlistened rows show no date.
 - [ ] Listen Minute and Lessons: the row control is Listen, then Pause while playing and Play while paused; the mini player on this tab pauses too.

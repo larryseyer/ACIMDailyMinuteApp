@@ -111,6 +111,9 @@ struct SelectableReadingText: View {
     /// Where a tapped cross-reference goes. Installed by the enclosing stack's
     /// `readingDestinations(path:)`.
     @Environment(\.openReading) private var openReading
+    #if !os(tvOS)
+    @AppStorage(ReaderTextSize.key) private var readerTextSize = ReaderTextSize.platformDefault.rawValue
+    #endif
 
     /// One item offered on a selection.
     ///
@@ -137,6 +140,16 @@ struct SelectableReadingText: View {
         }
     }
 
+    /// Television always draws at 1.0. The control is not offered there,
+    /// and a restored backup must not resize the player-first body.
+    private var bodySizeMultiplier: CGFloat {
+        #if os(tvOS)
+        1
+        #else
+        ReaderTextSize.resolved(readerTextSize).multiplier
+        #endif
+    }
+
     var body: some View {
         let display = ReadingText.displayString(from: raw)
         let spotlightRange = resolvedSpotlight(in: display)
@@ -149,7 +162,8 @@ struct SelectableReadingText: View {
                 lineSpacing: lineSpacing,
                 highlightedRanges: paintedRanges,
                 spotlightRange: spotlightRange,
-                links: links
+                links: links,
+                sizeMultiplier: bodySizeMultiplier
             ),
             display: display,
             menuActions: menuActions,
@@ -236,7 +250,8 @@ struct SelectableReadingText: View {
         lineSpacing: CGFloat = 0,
         highlightedRanges: [Range<Int>] = [],
         spotlightRange: Range<Int>? = nil,
-        links: [(range: Range<Int>, url: URL)] = []
+        links: [(range: Range<Int>, url: URL)] = [],
+        sizeMultiplier: CGFloat = 1
     ) -> NSAttributedString {
         let display = ReadingText.displayString(from: raw)
         let paragraph = NSMutableParagraphStyle()
@@ -245,7 +260,7 @@ struct SelectableReadingText: View {
         let result = NSMutableAttributedString(
             string: display,
             attributes: [
-                .font: font(for: design),
+                .font: font(for: design, sizeMultiplier: sizeMultiplier),
                 .foregroundColor: Self.bodyColor,
                 .paragraphStyle: paragraph
             ]
@@ -342,17 +357,22 @@ struct SelectableReadingText: View {
         #endif
     }
 
-    private static func font(for design: Design) -> PlatformFont {
+    private static func font(for design: Design, sizeMultiplier: CGFloat = 1) -> PlatformFont {
         let base = PlatformFont.preferredFont(forTextStyle: .body)
+        let size = base.pointSize * sizeMultiplier
         switch design {
         case .standard:
-            return base
-        case .serif:
-            guard let descriptor = base.fontDescriptor.withDesign(.serif) else { return base }
             #if os(iOS) || os(tvOS)
-            return PlatformFont(descriptor: descriptor, size: base.pointSize)
+            return PlatformFont(descriptor: base.fontDescriptor, size: size)
             #else
-            return PlatformFont(descriptor: descriptor, size: base.pointSize) ?? base
+            return PlatformFont(descriptor: base.fontDescriptor, size: size) ?? base
+            #endif
+        case .serif:
+            let serif = base.fontDescriptor.withDesign(.serif) ?? base.fontDescriptor
+            #if os(iOS) || os(tvOS)
+            return PlatformFont(descriptor: serif, size: size)
+            #else
+            return PlatformFont(descriptor: serif, size: size) ?? base
             #endif
         }
     }
